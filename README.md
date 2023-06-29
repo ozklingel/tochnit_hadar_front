@@ -1,3 +1,14 @@
+prerequests:
+
+1.flutter 
+
+2.android studio
+
+3.backend is ready
+
+
+installation:
+
 1.git clone <ripo url>
 
 2.open project on androind studio
