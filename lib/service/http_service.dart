@@ -24,7 +24,7 @@ class HttpService {
       } else {
         await EasyLoading.showSuccess(json[0]);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Dashboard()));
+            context, MaterialPageRoute(builder: (context) => MyHome()));
       }
     } else {
       await EasyLoading.showError(
@@ -45,7 +45,7 @@ class HttpService {
       if (json[0] == 'success') {
         await EasyLoading.showSuccess(json[0]);
         await Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Dashboard()));
+            context, MaterialPageRoute(builder: (context) => MyHome()));
       } else {
         EasyLoading.showError(json[0]);
       }
