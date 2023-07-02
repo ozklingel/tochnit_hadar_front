@@ -44,7 +44,6 @@ class _MyHome extends State<MyHome> {
           ), //Text
         ), //Center
       ), //Scaffold
-      debugShowCheckedModeBanner: false, //Removing Debug Banner
     );
   }
 }
