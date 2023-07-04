@@ -14,6 +14,7 @@ class _MyHome extends State<MyHome> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        ///////////////1
         appBar: AppBar(
           centerTitle: true,
           title: const Text("תוכנית הדר"),
@@ -36,12 +37,88 @@ class _MyHome extends State<MyHome> {
             },
           ),
           systemOverlayStyle: SystemUiOverlayStyle.light,
-        ), //AppBar
-        body: const Center(
-          child: Text(
-            "שלום חבר",
-            style: TextStyle(fontSize: 24),
-          ), //Text
+        ),
+        ///////////2.
+        body: Column(
+            crossAxisAlignment: CrossAxisAlignment
+                .center, //Center Column contents horizontally,
+            children: <Widget>[
+              Row(
+                  //ROW 2
+                  mainAxisAlignment: MainAxisAlignment
+                      .center, //Center Row contents horizontally,
+                  crossAxisAlignment: CrossAxisAlignment
+                      .center, //Center Row contents vertically,
+                  children: [
+                    Center(
+                      child: Text(
+                        "שלום חבר",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    ),
+                  ]),
+              Row(
+                //Center Row contents horizontally,
+                crossAxisAlignment:
+                    CrossAxisAlignment.center, //Center Row contents vertically,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Geeks",
+                        style: TextStyle(color: Colors.white, fontSize: 25),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "For",
+                        style: TextStyle(color: Colors.white, fontSize: 25),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Geeks",
+                        style: TextStyle(color: Colors.white, fontSize: 25),
+                      ),
+                    ),
+                  )
+                ],
+              ), //AppBar
+            ]),
+        ///////3.
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.call),
+              label: 'Calls',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera),
+              label: 'Camera',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: 'Chats',
+            ),
+          ],
         ), //Center
       ), //Scaffold
     );
