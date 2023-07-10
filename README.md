@@ -18,7 +18,3 @@ $ installation:
 3.start your emulator
 
 4.flutter run
-
-5.press register,anter email and password and press the butten.
-
-6.enter http://localhost:5000/ too see DB has been updated
