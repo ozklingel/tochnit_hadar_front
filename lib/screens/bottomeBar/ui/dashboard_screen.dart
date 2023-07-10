@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/screen/bottomeBar/ui/widget/bottom_navigation_widget.dart';
+import '/screens/bottomeBar/ui/widget/bottom_navigation_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
   final Widget child;

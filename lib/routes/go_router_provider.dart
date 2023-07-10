@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '/route/named_route.dart';
-import '/screen/apprentices/apprenticeScreen.dart';
-import '/screen/bottomeBar//ui/dashboard_screen.dart';
-import '/screen/error/route_error_screen.dart';
-import '/screen/homePage/home_screen.dart';
-import '/screen/messages/messagesScreen.dart';
-import '../screen/report/report_screen.dart';
-import '../screen/tasks/TasksScreen.dart';
+import '/routes/named_route.dart';
+import '../screens/apprentices/apprenticeScreen.dart';
+import '../screens/bottomeBar/ui/dashboard_screen.dart';
+import '../screens/error/route_error_screen.dart';
+import '../screens/homePage/home_screen.dart';
+import '../screens/messages/messagesScreen.dart';
+import '../screens/report/report_screen.dart';
+import '../screens/tasks/TasksScreen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 final GlobalKey<NavigatorState> _shellNavigator =
@@ -18,21 +18,15 @@ final GlobalKey<NavigatorState> _shellNavigator =
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootNavigator,
-    initialLocation: '/',
+    initialLocation: Routes.HOME,
     routes: [
-      GoRoute(
-        path: '/home',
-        name: root,
-        builder: (context, state) => HomeScreen(key: state.pageKey),
-      ),
       ShellRoute(
           navigatorKey: _shellNavigator,
           builder: (context, state, child) =>
               DashboardScreen(key: state.pageKey, child: child),
           routes: [
             GoRoute(
-              path: '/',
-              name: home,
+              path: Routes.HOME,
               pageBuilder: (context, state) {
                 return NoTransitionPage(
                     child: HomeScreen(
@@ -41,8 +35,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               },
             ),
             GoRoute(
-              path: '/apprentice',
-              name: cart,
+              path: Routes.APPRENTICE,
               pageBuilder: (context, state) {
                 return NoTransitionPage(
                     child: ApprenticeScreen(
@@ -51,8 +44,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               },
             ),
             GoRoute(
-              path: '/messages',
-              name: setting,
+              path: Routes.MESSAGES,
               pageBuilder: (context, state) {
                 return NoTransitionPage(
                     child: MessagesScreen(
@@ -61,8 +53,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               },
             ),
             GoRoute(
-              path: '/report',
-              name: report,
+              path: Routes.REPORTS,
               pageBuilder: (context, state) {
                 return NoTransitionPage(
                     child: ReportScreen(
@@ -71,8 +62,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               },
             ),
             GoRoute(
-              path: '/tasks',
-              name: tasks,
+              path: Routes.TASKS,
               pageBuilder: (context, state) {
                 return NoTransitionPage(
                     child: TasksScreen(

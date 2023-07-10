@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '/screen/bottomeBar/controller/dashboard_controller.dart';
+import '/screens/bottomeBar/controller/dashboard_controller.dart';
 
 class BottomNavigationWidget extends ConsumerStatefulWidget {
   const BottomNavigationWidget({Key? key}) : super(key: key);
@@ -71,7 +71,7 @@ class _BottomNavigationWidgetState
         context.go('/apprentice');
         break;
       case 2:
-        context.go('/');
+        context.go('/home');
         break;
       case 3:
         context.go('/tasks');
