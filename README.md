@@ -5,7 +5,6 @@
 
 2.android studio
 
-3.backend is ready
 
 $ installation:
 
