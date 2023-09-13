@@ -1,6 +1,6 @@
 {
-    "name": "youtube_sample_app",
-    "short_name": "youtube_sample_app",
+    "name": "hadar_program",
+    "short_name": "hadar_program",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

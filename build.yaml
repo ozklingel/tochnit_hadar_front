@@ -1,0 +1,36 @@
+targets:
+  $default:
+    builders:
+      source_gen|combining_builder:
+        generate_for:
+          - lib/**.dart
+        options:
+          build_extensions:
+            '.dart': '.g.dart'
+      envied_generator|envied:
+        generate_for:
+          - lib/src/core/env/env.dart
+        options:
+          build_extensions:
+            '.dart': '.g.dart'
+      json_serializable|json_serializable:
+        generate_for:
+          - "lib/src/models/**.dto.dart"
+        options:
+          explicit_to_json: false
+      freezed:
+        generate_for:
+          - "lib/src/models/**.dto.dart"
+        options:
+          build_extensions:
+            '.dart': '.f.dart'
+      riverpod_generator|riverpod_generator:
+        generate_for:
+          - "lib/src/views/**.dart"
+          - "lib/src/services/**.dart"
+      go_router_builder|go_router_builder:
+        generate_for:
+          - "lib/src/services/routing/**.dart"
+        options:
+          build_extensions:
+            { ".dart": [".r.dart"] }

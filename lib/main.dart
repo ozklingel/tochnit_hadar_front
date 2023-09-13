@@ -1,33 +1,30 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'routes/go_router_provider.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/core/theming/themes.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    const ProviderScope(
+      child: HadarProgram(),
+    ),
+  );
 }
 
-class MyApp extends ConsumerStatefulWidget {
-  const MyApp({super.key});
+class HadarProgram extends ConsumerWidget {
+  const HadarProgram({super.key});
 
   @override
-  ConsumerState<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends ConsumerState<MyApp> {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final router = ref.watch(goRouterProvider);
 
     return MaterialApp.router(
-      routeInformationParser: router.routeInformationParser,
-      routeInformationProvider: router.routeInformationProvider,
-      routerDelegate: router.routerDelegate,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      routerConfig: router,
+      title: Consts.appTitle,
+      theme: appThemeLight,
+      builder: BotToastInit(),
     );
   }
 }

@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "youtube_sample_app",
+            "name": "hadar_program",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "youtube_sample_app (profile mode)",
+            "name": "hadar_program (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "youtube_sample_app (release mode)",
+            "name": "hadar_program (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
