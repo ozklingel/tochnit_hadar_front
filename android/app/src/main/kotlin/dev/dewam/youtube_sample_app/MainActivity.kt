@@ -1,4 +1,4 @@
-package dev.dewam.youtube_sample_app
+package dev.dewam.hadar_program
 
 import io.flutter.embedding.android.FlutterActivity
 

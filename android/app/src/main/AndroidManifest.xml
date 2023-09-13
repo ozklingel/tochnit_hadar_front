@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.dewam.youtube_sample_app">
+    package="dev.dewam.hadar_program">
    <application
-        android:label="youtube_sample_app"
+        android:label="hadar_program"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

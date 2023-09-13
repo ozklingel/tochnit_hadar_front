@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "dev.dewam" "\0"
-            VALUE "FileDescription", "youtube_sample_app" "\0"
+            VALUE "FileDescription", "hadar_program" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "youtube_sample_app" "\0"
+            VALUE "InternalName", "hadar_program" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2022 dev.dewam. All rights reserved." "\0"
-            VALUE "OriginalFilename", "youtube_sample_app.exe" "\0"
-            VALUE "ProductName", "youtube_sample_app" "\0"
+            VALUE "OriginalFilename", "hadar_program.exe" "\0"
+            VALUE "ProductName", "hadar_program" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
