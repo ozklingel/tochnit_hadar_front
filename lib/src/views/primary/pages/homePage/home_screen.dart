@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.notifications),
-          onPressed: () {},
+          onPressed: () => Toaster.unimplemented(),
         ), //IconButton
       ],
       leading: IconButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TasksScreen extends ConsumerStatefulWidget {
@@ -20,9 +21,9 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           children: [
             const Text('TasksScreen '),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => Toaster.unimplemented(),
               child: const Text('SignOut'),
-            )
+            ),
           ],
         ),
       ),

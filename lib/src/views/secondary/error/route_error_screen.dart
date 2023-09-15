@@ -1,10 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 
 class RouteErrorScreen extends StatefulWidget {
   final String errorMsg;
-  const  RouteErrorScreen({required this.errorMsg, Key? key}) : super(key: key);
+  const RouteErrorScreen({required this.errorMsg, Key? key}) : super(key: key);
 
   @override
   State<RouteErrorScreen> createState() => _RouteErrorScreenState();
@@ -21,7 +19,7 @@ class _RouteErrorScreenState extends State<RouteErrorScreen> {
       body: Center(
         child: Column(
           children: [
-            Text(widget.errorMsg)
+            Text(widget.errorMsg),
           ],
         ),
       ),

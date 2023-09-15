@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ReportScreen extends ConsumerStatefulWidget {
@@ -20,7 +21,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
           children: [
             const Text('report Screen'),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => Toaster.unimplemented(),
               child: const Text('SignOut'),
             ),
           ],
