@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import 'package:hadar_program/src/views/primary/pages/messages/messages_screen.d
 import 'package:hadar_program/src/views/primary/pages/report/report_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/tasks_screen.dart';
 import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart';
+import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router_provider.g.dart';
@@ -22,6 +24,9 @@ GoRouter goRouter(GoRouterRef ref) {
     navigatorKey: _rootNavigator,
     initialLocation: Routes.home,
     debugLogDiagnostics: kDebugMode,
+    observers: [
+      BotToastNavigatorObserver(),
+    ],
     errorBuilder: (context, state) => RouteErrorScreen(
       errorMsg: state.error.toString(),
       key: state.pageKey,
@@ -29,17 +34,16 @@ GoRouter goRouter(GoRouterRef ref) {
     routes: [
       ShellRoute(
         navigatorKey: _shellNavigator,
-        builder: (context, state, child) => DashboardScreen(
-          key: state.pageKey,
-          child: child,
-        ),
+        builder: (context, state, child) => child,
         routes: [
           GoRoute(
             path: Routes.home,
             pageBuilder: (context, state) {
               return NoTransitionPage(
-                child: HomeScreen(
-                  key: state.pageKey,
+                child: DashboardScreen(
+                  child: HomeScreen(
+                    key: state.pageKey,
+                  ),
                 ),
               );
             },
@@ -48,8 +52,10 @@ GoRouter goRouter(GoRouterRef ref) {
             path: Routes.apprentice,
             pageBuilder: (context, state) {
               return NoTransitionPage(
-                child: ApprenticeScreen(
-                  key: state.pageKey,
+                child: DashboardScreen(
+                  child: ApprenticeScreen(
+                    key: state.pageKey,
+                  ),
                 ),
               );
             },
@@ -58,8 +64,10 @@ GoRouter goRouter(GoRouterRef ref) {
             path: Routes.messages,
             pageBuilder: (context, state) {
               return NoTransitionPage(
-                child: MessagesScreen(
-                  key: state.pageKey,
+                child: DashboardScreen(
+                  child: MessagesScreen(
+                    key: state.pageKey,
+                  ),
                 ),
               );
             },
@@ -68,8 +76,10 @@ GoRouter goRouter(GoRouterRef ref) {
             path: Routes.reports,
             pageBuilder: (context, state) {
               return NoTransitionPage(
-                child: ReportScreen(
-                  key: state.pageKey,
+                child: DashboardScreen(
+                  child: ReportScreen(
+                    key: state.pageKey,
+                  ),
                 ),
               );
             },
@@ -78,13 +88,19 @@ GoRouter goRouter(GoRouterRef ref) {
             path: Routes.tasks,
             pageBuilder: (context, state) {
               return NoTransitionPage(
-                child: TasksScreen(
-                  key: state.pageKey,
+                child: DashboardScreen(
+                  child: TasksScreen(
+                    key: state.pageKey,
+                  ),
                 ),
               );
             },
-          )
+          ),
         ],
+      ),
+      GoRoute(
+        path: OnboardingScreen.routeName,
+        builder: (context, state) => const OnboardingScreen(),
       ),
     ],
   );

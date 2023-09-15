@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/views/primary/bottome_bar/ui/widget/bottom_navigation_widget.dart';
+import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final Widget child;
@@ -17,6 +19,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: widget.child,
+      drawerEdgeDragWidth: 60,
+      drawer: kDebugMode
+          ? Drawer(
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, OnboardingScreen.routeName);
+                    },
+                    child: const Text('Onboarding'),
+                  ),
+                ],
+              ),
+            )
+          : null,
       bottomNavigationBar: const BottomNavigationWidget(),
     );
   }

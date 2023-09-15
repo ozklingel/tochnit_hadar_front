@@ -15,6 +15,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.18.0
+
+  #dev
+  logger: ^2.0.2
 
   # state
   hooks_riverpod: ^2.4.0
@@ -30,8 +36,10 @@ dependencies:
   dio: ^5.3.2
   http: ^1.1.0 # todo: remove
 
-  # ui
+  # widgets
   flutter_easyloading: ^3.0.5 # todo: remove
+  pin_code_fields: ^8.0.1
+  dropdown_button2: ^2.3.9
   
 dev_dependencies:
   # testing
