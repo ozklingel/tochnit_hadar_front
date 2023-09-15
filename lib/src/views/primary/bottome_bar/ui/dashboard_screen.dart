@@ -1,40 +1,23 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/views/primary/bottome_bar/ui/widget/bottom_navigation_widget.dart';
-import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DashboardScreen extends StatefulWidget {
-  final Widget child;
+class DashboardScreen extends HookConsumerWidget {
   const DashboardScreen({
-    required this.child,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+    required this.navShell,
+  });
+
+  final StatefulNavigationShell navShell;
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Scaffold(
-      body: widget.child,
-      drawerEdgeDragWidth: 60,
-      drawer: kDebugMode
-          ? Drawer(
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, OnboardingScreen.routeName);
-                    },
-                    child: const Text('Onboarding'),
-                  ),
-                ],
-              ),
-            )
-          : null,
-      bottomNavigationBar: const BottomNavigationWidget(),
+      body: navShell,
+      bottomNavigationBar: BottomNavigationWidget(
+        navShell: navShell,
+      ),
     );
   }
 }

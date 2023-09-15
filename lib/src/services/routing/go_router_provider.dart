@@ -15,13 +15,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router_provider.g.dart';
 
-final _rootNavigator = GlobalKey<NavigatorState>(debugLabel: 'root');
-final _shellNavigator = GlobalKey<NavigatorState>(debugLabel: 'shell');
+final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
 @Riverpod(dependencies: [])
 GoRouter goRouter(GoRouterRef ref) {
   return GoRouter(
-    navigatorKey: _rootNavigator,
+    navigatorKey: _rootNavigatorKey,
     initialLocation: Routes.home,
     debugLogDiagnostics: kDebugMode,
     observers: [
@@ -32,69 +31,63 @@ GoRouter goRouter(GoRouterRef ref) {
       key: state.pageKey,
     ),
     routes: [
-      ShellRoute(
-        navigatorKey: _shellNavigator,
-        builder: (context, state, child) => child,
-        routes: [
-          GoRoute(
-            path: Routes.home,
-            pageBuilder: (context, state) {
-              return NoTransitionPage(
-                child: DashboardScreen(
-                  child: HomeScreen(
-                    key: state.pageKey,
-                  ),
-                ),
-              );
-            },
+      StatefulShellRoute.indexedStack(
+        builder: (
+          BuildContext context,
+          GoRouterState state,
+          StatefulNavigationShell navigationShell,
+        ) =>
+            DashboardScreen(navShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.tasks,
+                builder: (context, state) {
+                  return const TasksScreen();
+                },
+              ),
+            ],
           ),
-          GoRoute(
-            path: Routes.apprentice,
-            pageBuilder: (context, state) {
-              return NoTransitionPage(
-                child: DashboardScreen(
-                  child: ApprenticeScreen(
-                    key: state.pageKey,
-                  ),
-                ),
-              );
-            },
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.reports,
+                builder: (context, state) {
+                  return const ReportScreen();
+                },
+              ),
+            ],
           ),
-          GoRoute(
-            path: Routes.messages,
-            pageBuilder: (context, state) {
-              return NoTransitionPage(
-                child: DashboardScreen(
-                  child: MessagesScreen(
-                    key: state.pageKey,
-                  ),
-                ),
-              );
-            },
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.home,
+                builder: (context, state) {
+                  return const HomeScreen();
+                },
+              ),
+            ],
           ),
-          GoRoute(
-            path: Routes.reports,
-            pageBuilder: (context, state) {
-              return NoTransitionPage(
-                child: DashboardScreen(
-                  child: ReportScreen(
-                    key: state.pageKey,
-                  ),
-                ),
-              );
-            },
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.messages,
+                builder: (context, state) {
+                  return const MessagesScreen();
+                },
+              ),
+            ],
           ),
-          GoRoute(
-            path: Routes.tasks,
-            pageBuilder: (context, state) {
-              return NoTransitionPage(
-                child: DashboardScreen(
-                  child: TasksScreen(
-                    key: state.pageKey,
-                  ),
-                ),
-              );
-            },
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.apprentice,
+                builder: (context, state) {
+                  return const ApprenticeScreen();
+                },
+              ),
+            ],
           ),
         ],
       ),

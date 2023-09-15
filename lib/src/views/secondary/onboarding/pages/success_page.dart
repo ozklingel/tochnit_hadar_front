@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/views/widgets/placeholder.dart';
+import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 
 class OnboardingSuccessPage extends StatelessWidget {
   const OnboardingSuccessPage.otpSuccess({

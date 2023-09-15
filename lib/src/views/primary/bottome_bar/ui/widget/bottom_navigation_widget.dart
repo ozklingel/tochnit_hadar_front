@@ -1,90 +1,71 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hadar_program/src/services/routing/named_route.dart';
-import 'package:hadar_program/src/views/primary/bottome_bar/controller/dashboard_controller.dart';
+import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/core/theming/themes.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class BottomNavigationWidget extends ConsumerStatefulWidget {
-  const BottomNavigationWidget({Key? key}) : super(key: key);
+class BottomNavigationWidget extends ConsumerWidget {
+  const BottomNavigationWidget({
+    super.key,
+    required this.navShell,
+  });
+
+  final StatefulNavigationShell navShell;
 
   @override
-  ConsumerState<BottomNavigationWidget> createState() =>
-      _BottomNavigationWidgetState();
-}
-
-class _BottomNavigationWidgetState
-    extends ConsumerState<BottomNavigationWidget> {
-  @override
-  Widget build(BuildContext context) {
-    final position = ref.watch(dashboardControllerProvider);
-
-    return BottomNavigationBar(
-      backgroundColor: Colors.blueGrey,
-      currentIndex: position,
-      onTap: (value) => _onTap(value),
-      selectedItemColor: Colors.white,
-      type: BottomNavigationBarType.fixed,
-      unselectedItemColor: Colors.grey,
-      selectedLabelStyle: const TextStyle(
-        color: Colors.white,
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
+  Widget build(BuildContext context, ref) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, -4),
+          ),
+        ],
       ),
-      unselectedLabelStyle: const TextStyle(
-        color: Colors.grey,
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
+      child: BottomNavigationBar(
+        backgroundColor: AppColors.scafooldBottomNavBackgroundColor,
+        currentIndex: navShell.currentIndex,
+        onTap: (value) => navShell.goBranch(value),
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: AppColors.blue03,
+        selectedLabelStyle: TextStyles.bodyB1Bold.copyWith(
+          color: AppColors.blue03,
+        ),
+        unselectedItemColor: AppColors.grey3,
+        unselectedLabelStyle: TextStyles.bodyB1.copyWith(
+          color: AppColors.grey3,
+        ),
+        items: const [
+          BottomNavigationBarItem(
+            activeIcon: Icon(FluentIcons.tasks_app_24_regular),
+            icon: Icon(FluentIcons.tasks_app_24_regular),
+            label: 'משימות',
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(FluentIcons.checkmark_circle_24_regular),
+            icon: Icon(FluentIcons.checkmark_circle_24_regular),
+            label: 'דיווחים',
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(FluentIcons.home_24_regular),
+            icon: Icon(FluentIcons.home_24_regular),
+            label: 'בית',
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(FluentIcons.mail_24_regular),
+            icon: Icon(FluentIcons.mail_24_regular),
+            label: 'הודעות',
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(FluentIcons.person_24_regular),
+            icon: Icon(FluentIcons.person_24_regular),
+            label: 'חניכים',
+          ),
+        ],
       ),
-      items: const [
-        BottomNavigationBarItem(
-          activeIcon: Icon(Icons.home),
-          icon: Icon(Icons.home_work),
-          label: 'דיווח',
-        ),
-        BottomNavigationBarItem(
-          activeIcon: Icon(Icons.home),
-          icon: Icon(Icons.shopping_bag),
-          label: 'חניכים',
-        ),
-        BottomNavigationBarItem(
-          activeIcon: Icon(Icons.shopify),
-          icon: Icon(Icons.shopping_bag),
-          label: 'בית',
-        ),
-        BottomNavigationBarItem(
-          activeIcon: Icon(Icons.settings),
-          icon: Icon(Icons.settings_applications),
-          label: 'משימות',
-        ),
-        BottomNavigationBarItem(
-          activeIcon: Icon(Icons.settings),
-          icon: Icon(Icons.settings_applications),
-          label: 'הודעות',
-        ),
-      ],
     );
-  }
-
-  void _onTap(int index) {
-    ref.read(dashboardControllerProvider.notifier).setPosition(index);
-
-    switch (index) {
-      case 0:
-        context.go(Routes.reports);
-        break;
-      case 1:
-        context.go(Routes.apprentice);
-        break;
-      case 2:
-        context.go(Routes.home);
-        break;
-      case 3:
-        context.go(Routes.tasks);
-        break;
-      case 4:
-        context.go(Routes.messages);
-        break;
-      default:
-    }
   }
 }
