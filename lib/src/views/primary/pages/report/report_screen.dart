@@ -1,31 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class ReportScreen extends ConsumerStatefulWidget {
-  const ReportScreen({Key? key}) : super(key: key);
+class ReportScreen extends StatelessWidget {
+  const ReportScreen({super.key});
 
-  @override
-  ConsumerState<ReportScreen> createState() => _ReportScreenState();
-}
-
-class _ReportScreenState extends ConsumerState<ReportScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('report'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text('report Screen'),
-            ElevatedButton(
-              onPressed: () => Toaster.unimplemented(),
-              child: const Text('SignOut'),
-            ),
-          ],
-        ),
+    return ColoredBox(
+      color: Colors.red,
+      child: Center(
+        child: Text(GoRouterState.of(context).path ?? ''),
       ),
     );
   }

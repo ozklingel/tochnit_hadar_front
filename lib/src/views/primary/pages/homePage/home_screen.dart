@@ -1,42 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:go_router/go_router.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: getAppBar(),
-      ),
-    );
-  }
-
-  getAppBar() {
-    return AppBar(
-      systemOverlayStyle: SystemUiOverlayStyle.light,
-      backgroundColor: Colors.grey,
-      elevation: 50.0,
-      centerTitle: true,
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.notifications),
-          onPressed: () => Toaster.unimplemented(),
-        ), //IconButton
-      ],
-      leading: IconButton(
-        icon: const Icon(Icons.menu),
-        tooltip: 'Menu Icon',
-        onPressed: () {
-          //implement hamburger  here
-        },
+    return ColoredBox(
+      color: Colors.blue,
+      child: Center(
+        child: Text(GoRouterState.of(context).path ?? ''),
       ),
     );
   }

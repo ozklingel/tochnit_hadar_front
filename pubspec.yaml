@@ -36,6 +36,12 @@ dependencies:
   dio: ^5.3.2
   http: ^1.1.0 # todo: remove
 
+  # integrations
+  flutter_svg: ^2.0.7
+
+  # icons
+  fluentui_system_icons: ^1.1.215
+
   # widgets
   flutter_easyloading: ^3.0.5 # todo: remove
   pin_code_fields: ^8.0.1
@@ -81,6 +87,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -115,3 +122,5 @@ flutter:
 
 flutter_gen:
   output: lib/src/gen/
+  integrations:
+    flutter_svg: true

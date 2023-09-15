@@ -39,6 +39,13 @@ abstract class TextStyles {
     ],
   );
 
+  static const bodyB1 = TextStyle(
+    fontSize: 12,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const bodyB2Bold = TextStyle(
     fontSize: 14,
     fontVariations: [

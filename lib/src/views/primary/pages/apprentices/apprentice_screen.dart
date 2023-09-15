@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class ApprenticeScreen extends StatefulWidget {
-  const ApprenticeScreen({Key? key}) : super(key: key);
+class ApprenticeScreen extends StatelessWidget {
+  const ApprenticeScreen({super.key});
 
-  @override
-  State<ApprenticeScreen> createState() => _ApprenticeScreenState();
-}
-
-class _ApprenticeScreenState extends State<ApprenticeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Apprentice'),
-      ),
-      body: const Center(
-        child: Column(
-          children: [Text('חניכים')],
-        ),
+    return ColoredBox(
+      color: Colors.orange,
+      child: Center(
+        child: Text(GoRouterState.of(context).path ?? ''),
       ),
     );
   }
