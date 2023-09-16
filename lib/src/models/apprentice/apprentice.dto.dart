@@ -4,7 +4,7 @@ part 'apprentice.dto.f.dart';
 part 'apprentice.dto.g.dart';
 
 @JsonSerializable()
-@Freezed()
+@Freezed(fromJson: false)
 class ApprenticeDto with _$ApprenticeDto {
   const factory ApprenticeDto({
     @Default('') String id,

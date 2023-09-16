@@ -61,6 +61,7 @@ abstract class AppColors {
   static const loadingComplete = Color(0xFF0057FF);
   static const loadingStart = Color(0x00C4C4C4);
 
+  static const grey1 = Color(0xFF929292);
   static const grey2 = Color(0xFF373737);
   static const grey3 = Color(0xFF494949);
   static const grey5 = Color(0xFF929292);

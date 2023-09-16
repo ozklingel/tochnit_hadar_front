@@ -6,6 +6,7 @@ import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:hadar_program/src/views/primary/bottome_bar/ui/dashboard_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/apprentice_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/homePage/home_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/message_subscreen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/messages_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/report/report_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/tasks_screen.dart';
@@ -76,6 +77,18 @@ GoRouter goRouter(GoRouterRef ref) {
                 builder: (context, state) {
                   return const MessagesScreen();
                 },
+                routes: [
+                  GoRoute(
+                    path: ':id',
+                    builder: (context, state) {
+                      final id = state.pathParameters['id']!;
+
+                      return MessageSubScreen(
+                        messageId: id,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),
