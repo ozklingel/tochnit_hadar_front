@@ -9,9 +9,17 @@ import 'package:hadar_program/src/core/theming/themes.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timeago/timeago.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   Paint.enableDithering = true;
+
+  setLocaleMessages(
+    Consts.defaultLocale.languageCode,
+    HeMessages(),
+  );
 
   runApp(
     const ProviderScope(

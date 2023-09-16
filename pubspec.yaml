@@ -29,6 +29,9 @@ dependencies:
   riverpod_annotation: ^2.0.0
   bot_toast: ^4.1.1
 
+  # util
+  timeago: ^3.5.0
+  
   # routing
   go_router: ^10.1.2
 

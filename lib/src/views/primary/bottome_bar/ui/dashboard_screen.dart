@@ -5,9 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DashboardScreen extends HookConsumerWidget {
   const DashboardScreen({
-    super.key,
+    Key? key,
     required this.navShell,
-  });
+  }) : super(key: key ?? const ValueKey('navShellDashboardScreen'));
 
   final StatefulNavigationShell navShell;
 

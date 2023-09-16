@@ -5,7 +5,7 @@ part 'message.dto.f.dart';
 part 'message.dto.g.dart';
 
 @JsonSerializable()
-@Freezed()
+@Freezed(fromJson: false)
 class MessageDto with _$MessageDto {
   const factory MessageDto({
     @Default('') String id,

@@ -4,18 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 
 abstract class TextStyles {
+  static const bodyB4 = TextStyle(
+    fontSize: 24,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const bodyB4Bold = TextStyle(
     fontSize: 24,
     fontVariations: [
       FontVariation('wght', 500),
     ],
-  );
-  static const bodyB3 = TextStyle(
     color: AppColors.grey2,
-    fontSize: 16,
-    fontVariations: [
-      FontVariation('wght', 400),
-    ],
   );
 
   static const bodyB41Bold = TextStyle(
@@ -25,10 +26,33 @@ abstract class TextStyles {
     ],
   );
 
+  static const messageTitle = TextStyle(
+    fontSize: 18,
+    color: AppColors.shade09,
+    fontVariations: [
+      FontVariation('wght', 600),
+    ],
+  );
+
+  static const bodyB3 = TextStyle(
+    color: AppColors.grey2,
+    fontSize: 16,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const bodyB2 = TextStyle(
     fontSize: 14,
     fontVariations: [
       FontVariation('wght', 400),
+    ],
+  );
+
+  static const bodyB2Bold = TextStyle(
+    fontSize: 14,
+    fontVariations: [
+      FontVariation('wght', 500),
     ],
   );
 
@@ -46,10 +70,12 @@ abstract class TextStyles {
     ],
   );
 
-  static const bodyB2Bold = TextStyle(
-    fontSize: 14,
+  static const aospBodySmall = TextStyle(
+    fontFamily: 'Roboto',
+    fontSize: 12,
+    color: AppColors.grey5,
     fontVariations: [
-      FontVariation('wght', 500),
+      FontVariation('wght', 400),
     ],
   );
 }
@@ -59,6 +85,24 @@ ThemeData get appThemeLight {
     useMaterial3: true,
     brightness: Brightness.light,
     fontFamily: 'rubik',
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
+      titleTextStyle: TextStyles.bodyB4Bold,
+    ),
+    chipTheme: ChipThemeData(
+      iconTheme: const IconThemeData(
+        color: AppColors.grey1,
+      ),
+      labelStyle: TextStyles.bodyB2Bold.copyWith(
+        color: AppColors.grey1,
+      ),
+      side: const BorderSide(
+        color: AppColors.blue07,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(36),
+      ),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyles.bodyB3,
       errorStyle: TextStyles.bodyB1Bold,
