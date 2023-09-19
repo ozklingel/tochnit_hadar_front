@@ -3,6 +3,8 @@ import 'dart:ui';
 abstract class AppColors {
   static const scafooldBottomNavBackgroundColor = Color(0xFFFFFFFF);
 
+  static const mainCTA = Color(0xFF24517A);
+
   static const blue01 = Color(0xFF0C3153);
   static const blue02 = Color(0xFF24517A);
   static const blue03 = Color(0xFF0C70B8);
@@ -56,10 +58,14 @@ abstract class AppColors {
   static const shade02 = Color(0xFFF9F9FB);
   static const shade01 = Color(0xFFFFFFFF);
 
+  static const shades300 = Color(0xFFDBDBDB);
+
   static const red02 = Color(0xFFEA4E45);
 
   static const loadingComplete = Color(0xFF0057FF);
   static const loadingStart = Color(0x00C4C4C4);
+
+  static const gray1 = Color(0xFF242424);
 
   static const grey1 = Color(0xFF929292);
   static const grey2 = Color(0xFF373737);

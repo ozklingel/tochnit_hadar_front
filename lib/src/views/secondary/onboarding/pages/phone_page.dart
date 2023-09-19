@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
-import 'package:hadar_program/src/core/theming/themes.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/secondary/onboarding/widgets/next_button.dart';
+import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 
 class OnboardingPhonePage extends HookWidget {
   const OnboardingPhonePage({super.key});
@@ -143,7 +143,8 @@ class OnboardingPhonePage extends HookWidget {
               ],
             ),
             const Spacer(),
-            NextButton(
+            LargeFilledRoundedButton(
+              label: 'המשך',
               onPressed:
                   isFormValid.value ? () => Toaster.unimplemented() : null,
             ),

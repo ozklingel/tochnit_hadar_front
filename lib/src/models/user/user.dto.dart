@@ -5,7 +5,7 @@ part 'user.dto.f.dart';
 part 'user.dto.g.dart';
 
 @JsonSerializable()
-@Freezed()
+@Freezed(fromJson: false)
 class UserDto with _$UserDto {
   const factory UserDto({
     @Default('') String id,

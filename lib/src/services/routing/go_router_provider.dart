@@ -6,9 +6,10 @@ import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:hadar_program/src/views/primary/bottome_bar/ui/dashboard_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/apprentice_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/homePage/home_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/messages/message_subscreen.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/messages_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/report/report_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/report/view/report_details_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/report/view/reports_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/tasks_screen.dart';
 import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
@@ -32,6 +33,11 @@ GoRouter goRouter(GoRouterRef ref) {
       key: state.pageKey,
     ),
     routes: [
+      GoRoute(
+        path: OnboardingScreen.routeName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const OnboardingScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (
           BuildContext context,
@@ -55,8 +61,39 @@ GoRouter goRouter(GoRouterRef ref) {
               GoRoute(
                 path: Routes.reports,
                 builder: (context, state) {
-                  return const ReportScreen();
+                  return const ReportsScreen();
                 },
+                routes: [
+                  GoRoute(
+                    path: Routes.reportsNew,
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      return const ReportDetailsScreen(
+                        reportId: '',
+                        isDetailsOnly: false,
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: '${Routes.reportsEdit}/:id',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      return ReportDetailsScreen(
+                        reportId: state.pathParameters['id'] ?? '',
+                        isDetailsOnly: false,
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: '${Routes.reportsDetails}/:id',
+                    builder: (context, state) {
+                      return ReportDetailsScreen(
+                        reportId: state.pathParameters['id'] ?? '',
+                        isDetailsOnly: true,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -83,7 +120,7 @@ GoRouter goRouter(GoRouterRef ref) {
                     builder: (context, state) {
                       final id = state.pathParameters['id']!;
 
-                      return MessageSubScreen(
+                      return MessageDetailsScreen(
                         messageId: id,
                       );
                     },
@@ -103,10 +140,6 @@ GoRouter goRouter(GoRouterRef ref) {
             ],
           ),
         ],
-      ),
-      GoRoute(
-        path: OnboardingScreen.routeName,
-        builder: (context, state) => const OnboardingScreen(),
       ),
     ],
   );

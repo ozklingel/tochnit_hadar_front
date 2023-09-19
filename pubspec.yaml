@@ -19,8 +19,11 @@ dependencies:
     sdk: flutter
   intl: ^0.18.0
 
-  #dev
+  # dev
   logger: ^2.0.2
+
+  # native
+  file_picker: ^5.5.0
 
   # state
   hooks_riverpod: ^2.4.0
@@ -41,6 +44,7 @@ dependencies:
 
   # integrations
   flutter_svg: ^2.0.7
+  cached_network_image: ^3.2.3
 
   # icons
   fluentui_system_icons: ^1.1.215

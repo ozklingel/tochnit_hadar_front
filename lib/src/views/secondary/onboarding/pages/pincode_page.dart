@@ -4,7 +4,7 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/utils/hooks/interval.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/secondary/onboarding/widgets/next_button.dart';
+import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 const _kPinCodeLength = 6;
@@ -137,7 +137,8 @@ class OnboardingPinCodePage extends HookWidget {
                   ),
             ),
           ),
-          NextButton(
+          LargeFilledRoundedButton(
+            label: 'המשך',
             onPressed: pinCodeController.text.length != _kPinCodeLength
                 ? null
                 : () => Toaster.unimplemented(),

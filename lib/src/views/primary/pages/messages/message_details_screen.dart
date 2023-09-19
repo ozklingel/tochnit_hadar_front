@@ -4,8 +4,8 @@ import 'package:hadar_program/src/views/primary/pages/messages/controller/messag
 import 'package:hadar_program/src/views/primary/pages/messages/widgets/message_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MessageSubScreen extends ConsumerWidget {
-  const MessageSubScreen({
+class MessageDetailsScreen extends ConsumerWidget {
+  const MessageDetailsScreen({
     super.key,
     required this.messageId,
   });

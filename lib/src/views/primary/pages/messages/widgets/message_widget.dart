@@ -2,7 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
-import 'package:hadar_program/src/core/theming/themes.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:timeago/timeago.dart';

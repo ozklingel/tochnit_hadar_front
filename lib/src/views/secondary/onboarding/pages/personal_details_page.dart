@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/secondary/onboarding/widgets/next_button.dart';
+import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 
 import '../../../../core/constants/consts.dart';
 
@@ -215,7 +215,8 @@ class OnboardingPersonalDetails extends HookWidget {
               ],
             ),
           ),
-          NextButton(
+          LargeFilledRoundedButton(
+            label: 'המשך',
             onPressed: isTermsOfServiceAccepted.value
                 ? () => Toaster.unimplemented()
                 : null,

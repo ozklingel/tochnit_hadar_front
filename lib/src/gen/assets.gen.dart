@@ -25,8 +25,11 @@ class $AssetsImagesGen {
   SvgGenImage get noMessages =>
       const SvgGenImage('assets/images/no-messages.svg');
 
+  /// File path: assets/images/success.svg
+  SvgGenImage get success => const SvgGenImage('assets/images/success.svg');
+
   /// List of all assets
-  List<dynamic> get values => [logo, logomark, noMessages];
+  List<dynamic> get values => [logo, logomark, noMessages, success];
 }
 
 class Assets {
