@@ -9,9 +9,37 @@ ThemeData get appThemeLight {
     useMaterial3: true,
     brightness: Brightness.light,
     fontFamily: 'rubik',
+    scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
       centerTitle: true,
       titleTextStyle: TextStyles.bodyB4Bold,
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.transparent,
+    ),
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: Colors.white,
+    ),
+    searchBarTheme: SearchBarThemeData(
+      hintStyle: MaterialStateProperty.all(
+        TextStyles.bodyB3.copyWith(
+          color: AppColors.gray5,
+        ),
+      ),
+      textStyle: MaterialStateProperty.all(
+        TextStyles.bodyB3.copyWith(
+          color: AppColors.gray2,
+        ),
+      ),
+    ),
+    popupMenuTheme: PopupMenuThemeData(
+      color: Colors.white,
+      elevation: 10,
+      surfaceTintColor: Colors.white,
+      labelTextStyle: MaterialStateProperty.all(
+        TextStyles.bodyB3.copyWith(
+          color: AppColors.gray2,
+        ),
+      ),
     ),
     chipTheme: ChipThemeData(
       iconTheme: const IconThemeData(

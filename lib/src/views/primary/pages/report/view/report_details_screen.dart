@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
@@ -16,25 +17,23 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 // ignore: unused_import
 import 'package:logger/logger.dart';
 
 const _kButtonHeight = 100.0;
-final _labelTextStyle = TextStyles.bodyB2.copyWith(
-  color: AppColors.grey5,
-);
 
 class ReportDetailsScreen extends HookConsumerWidget {
   const ReportDetailsScreen({
     super.key,
     required this.reportId,
-    required this.isDetailsOnly,
+    required this.isReadOnly,
   });
 
   final String reportId;
-  final bool isDetailsOnly;
+  final bool isReadOnly;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -50,7 +49,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     final selectedApprentices = useState(<ApprenticeDto>[]);
     final selectedEventType = useState(ReportEventType.none);
 
-    if (isDetailsOnly) {
+    if (isReadOnly) {
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -75,7 +74,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                   ),
                 ];
               },
-              child: const Icon(FluentIcons.more_vertical_24_regular),
+              icon: const Icon(FluentIcons.more_vertical_24_regular),
             ),
             const SizedBox(width: 16),
           ],
@@ -90,32 +89,33 @@ class ReportDetailsScreen extends HookConsumerWidget {
                 style: TextStyles.bodyB41,
               ),
               const SizedBox(height: 12),
-              _RowItem(
+              DetailsRowItem(
                 label: 'תאריך',
-                data:
-                    report.dateTimeInMsSinceEpoch.toDateTime.toLocalizedString,
+                data: report.dateTime.asDateTime.ddMMyy,
               ),
               const SizedBox(height: 12),
-              _RowItem(
+              DetailsRowItem(
                 label: 'סוג האירוע',
                 data: report.reportEventType.name,
               ),
               const SizedBox(height: 12),
-              _RowItem(
+              DetailsRowItem(
                 label: 'משתתפים',
                 data: report.apprentices
                     .map((e) => '${e.firstName} ${e.lastName}')
                     .join(', '),
               ),
               const SizedBox(height: 12),
-              _RowItem(
+              DetailsRowItem(
                 label: 'פירוט',
                 data: report.description,
               ),
               const SizedBox(height: 12),
               Text(
                 'תמונות',
-                style: _labelTextStyle,
+                style: TextStyles.bodyB2.copyWith(
+                  color: AppColors.grey5,
+                ),
               ),
               const SizedBox(height: 12),
               SizedBox(
@@ -617,39 +617,6 @@ class ReportDetailsScreen extends HookConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _RowItem extends StatelessWidget {
-  const _RowItem({
-    required this.label,
-    required this.data,
-  });
-
-  final String label;
-  final String data;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 120,
-          child: Text(
-            label,
-            style: _labelTextStyle,
-          ),
-        ),
-        SizedBox(
-          width: 320,
-          child: Text(
-            data,
-            style: TextStyles.bodyB2,
-            maxLines: 4,
-          ),
-        ),
-      ],
     );
   }
 }

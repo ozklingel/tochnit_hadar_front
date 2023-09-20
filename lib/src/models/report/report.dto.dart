@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:intl/intl.dart';
 
 part 'report.dto.f.dart';
 part 'report.dto.g.dart';
@@ -14,7 +13,8 @@ class ReportDto with _$ReportDto {
     @Default(ReportEventType.none) ReportEventType reportEventType,
     @Default([]) List<ApprenticeDto> apprentices,
     @Default([]) List<String> attachments,
-    @Default(0) int dateTimeInMsSinceEpoch,
+    // in milliseconds since epoch
+    @Default(0) int dateTime,
   }) = _ReportDto;
 
   factory ReportDto.fromJson(Map<String, dynamic> json) =>
@@ -47,12 +47,4 @@ enum ReportEventType {
         return '';
     }
   }
-}
-
-extension ReportFromMillisecondsSinceEpochX on int {
-  DateTime get toDateTime => DateTime.fromMillisecondsSinceEpoch(this);
-}
-
-extension ReportDateTimeX on DateTime {
-  String get toLocalizedString => DateFormat('dd/MM/yy').format(this);
 }

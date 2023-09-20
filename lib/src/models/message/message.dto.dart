@@ -13,7 +13,8 @@ class MessageDto with _$MessageDto {
     @Default('') String title,
     @Default('') String content,
     @Default([]) List<String> attachments,
-    @Default(0) int dateTimeInMsSinceEpoch,
+    // in milliseconds since epoch
+    @Default(0) int dateTime,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
