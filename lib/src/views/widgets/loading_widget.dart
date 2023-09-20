@@ -13,18 +13,20 @@ class LoadingWidget extends HookWidget {
       duration: const Duration(seconds: 1),
     )..repeat();
 
-    return RotationTransition(
-      turns: Tween(
-        begin: 0.0,
-        end: 1.0,
-      ).animate(animController),
-      child: SizedBox.square(
-        dimension: 60,
-        child: CustomPaint(
-          painter: CirclePaint(
-            strokeWidth: 6,
-            primaryColor: AppColors.loadingComplete,
-            secondaryColor: AppColors.loadingStart,
+    return Center(
+      child: RotationTransition(
+        turns: Tween(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(animController),
+        child: SizedBox.square(
+          dimension: 60,
+          child: CustomPaint(
+            painter: CirclePaint(
+              strokeWidth: 6,
+              primaryColor: AppColors.loadingComplete,
+              secondaryColor: AppColors.loadingStart,
+            ),
           ),
         ),
       ),

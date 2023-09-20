@@ -9,12 +9,14 @@ class LargeFilledRoundedButton extends StatelessWidget {
     this.onPressed,
     this.backgroundColor = AppColors.blue02,
     this.foregroundColor = Colors.white,
+    this.textStyle = TextStyles.bodyB4Bold,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final Color backgroundColor;
   final Color foregroundColor;
+  final TextStyle textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class LargeFilledRoundedButton extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyles.bodyB4Bold.copyWith(
+        style: textStyle.copyWith(
           color: foregroundColor,
         ),
       ),

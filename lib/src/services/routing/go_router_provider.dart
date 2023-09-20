@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:hadar_program/src/views/primary/bottome_bar/ui/dashboard_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/apprentice_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentice_details.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentice_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/homePage/home_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/messages_screen.dart';
@@ -32,6 +33,7 @@ GoRouter goRouter(GoRouterRef ref) {
       errorMsg: state.error.toString(),
       key: state.pageKey,
     ),
+    // TODO(noga-dev): codegen
     routes: [
       GoRoute(
         path: OnboardingScreen.routeName,
@@ -70,7 +72,7 @@ GoRouter goRouter(GoRouterRef ref) {
                     builder: (context, state) {
                       return const ReportDetailsScreen(
                         reportId: '',
-                        isDetailsOnly: false,
+                        isReadOnly: false,
                       );
                     },
                   ),
@@ -80,7 +82,7 @@ GoRouter goRouter(GoRouterRef ref) {
                     builder: (context, state) {
                       return ReportDetailsScreen(
                         reportId: state.pathParameters['id'] ?? '',
-                        isDetailsOnly: false,
+                        isReadOnly: false,
                       );
                     },
                   ),
@@ -89,7 +91,7 @@ GoRouter goRouter(GoRouterRef ref) {
                     builder: (context, state) {
                       return ReportDetailsScreen(
                         reportId: state.pathParameters['id'] ?? '',
-                        isDetailsOnly: true,
+                        isReadOnly: true,
                       );
                     },
                   ),
@@ -136,6 +138,16 @@ GoRouter goRouter(GoRouterRef ref) {
                 builder: (context, state) {
                   return const ApprenticeScreen();
                 },
+                routes: [
+                  GoRoute(
+                    path: '${Routes.apprenticeDetails}/:id',
+                    builder: (context, state) {
+                      return ApprenticeDetailsScreen(
+                        apprenticeId: state.pathParameters['id'] ?? '',
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),

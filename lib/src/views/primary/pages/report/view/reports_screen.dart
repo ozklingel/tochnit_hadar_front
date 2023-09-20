@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -151,7 +152,7 @@ class ReportsScreen extends HookConsumerWidget {
       body: RefreshIndicator.adaptive(
         onRefresh: () => ref.refresh(reportsControllerProvider.future),
         child: ref.watch(reportsControllerProvider).when(
-              loading: () => const Center(child: LoadingWidget()),
+              loading: () => const LoadingWidget(),
               error: (error, s) => CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
@@ -238,7 +239,8 @@ class ReportsScreen extends HookConsumerWidget {
                                   children: [
                                     Row(
                                       children: [
-                                        if (e.apprentices.first.avatar.isEmpty)
+                                        if (e.apprentices.isEmpty ||
+                                            e.apprentices.first.avatar.isEmpty)
                                           const CircleAvatar(
                                             radius: 12,
                                             backgroundColor: AppColors.grey6,
@@ -283,7 +285,7 @@ class ReportsScreen extends HookConsumerWidget {
                                                 .format(
                                                   DateTime
                                                       .fromMillisecondsSinceEpoch(
-                                                    e.dateTimeInMsSinceEpoch,
+                                                    e.dateTime,
                                                   ),
                                                 )
                                                 .toString(),
@@ -291,10 +293,7 @@ class ReportsScreen extends HookConsumerWidget {
                                           const TextSpan(text: ', '),
                                           TextSpan(
                                             text: format(
-                                              DateTime
-                                                  .fromMillisecondsSinceEpoch(
-                                                e.dateTimeInMsSinceEpoch,
-                                              ),
+                                              e.dateTime.asDateTime,
                                               locale: Localizations.localeOf(
                                                 context,
                                               ).languageCode,

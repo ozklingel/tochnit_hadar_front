@@ -24,6 +24,9 @@ dependencies:
 
   # native
   file_picker: ^5.5.0
+  google_maps_flutter: ^2.5.0
+  url_launcher: ^6.1.14
+  # geolocator: ^10.0.1 
 
   # state
   hooks_riverpod: ^2.4.0
@@ -34,6 +37,7 @@ dependencies:
 
   # util
   timeago: ^3.5.0
+  faker: ^2.1.0
   
   # routing
   go_router: ^10.1.2
@@ -71,7 +75,7 @@ dev_dependencies:
   riverpod_generator: ^2.3.2
   flutter_gen_runner: ^5.3.1
   json_serializable: ^6.7.1
-  # go_router_builder: ^2.3.1 # todo: 2.3.1 incompatible with analyzer 6
+  go_router_builder: ^2.3.2
 
 dependency_overrides:
   flutter_gen_core:

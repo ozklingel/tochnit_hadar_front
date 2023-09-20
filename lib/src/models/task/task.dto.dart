@@ -12,13 +12,14 @@ enum TaskType {
 }
 
 @JsonSerializable()
-@Freezed()
+@Freezed(fromJson: false)
 class TaskDto with _$TaskDto {
   const factory TaskDto({
     @Default('') String id,
     @Default(TaskType.none) TaskType reportEventType,
     @Default(ApprenticeDto()) ApprenticeDto apprentices,
-    @Default(0) int dateTimeInMsSinceEpoch,
+    // InMsSinceEpoch
+    @Default(0) int dateTime,
   }) = _TaskDto;
 
   factory TaskDto.fromJson(Map<String, dynamic> json) =>

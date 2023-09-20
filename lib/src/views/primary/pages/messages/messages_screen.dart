@@ -27,7 +27,7 @@ class MessagesScreen extends ConsumerWidget {
       body: RefreshIndicator.adaptive(
         onRefresh: () => ref.refresh(messagesControllerProvider.future),
         child: ref.watch(messagesControllerProvider).when(
-              loading: () => const Center(child: LoadingWidget()),
+              loading: () => const LoadingWidget(),
               error: (error, s) => CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
