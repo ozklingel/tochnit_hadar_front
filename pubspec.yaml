@@ -24,9 +24,9 @@ dependencies:
 
   # native
   file_picker: ^5.5.0
-  google_maps_flutter: ^2.5.0
   url_launcher: ^6.1.14
-  # geolocator: ^10.0.1 
+  google_maps_flutter: ^2.5.0
+  location: ^5.0.3
 
   # state
   hooks_riverpod: ^2.4.0
@@ -36,10 +36,11 @@ dependencies:
   bot_toast: ^4.1.1
 
   # util
+  collection: ^1.17.2
   timeago: ^3.5.0
   faker: ^2.1.0
-  collection: ^1.17.2
-  
+  kosher_dart: ^2.0.16
+
   # routing
   go_router: ^10.1.2
 

@@ -6,6 +6,7 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -330,7 +331,8 @@ class _TohnitHadarTabView extends ConsumerWidget {
         _Card(
           title: 'דיווחים אחרונים',
           trailing: TextButton(
-            onPressed: () => const ReportsRouteData().go(context),
+            onPressed: () =>
+                ReportsRouteData(apprenticeId: apprentice.id).push(context),
             child: const Text(
               'הצג הכל',
               style: TextStyles.actionButton,
@@ -344,13 +346,20 @@ class _TohnitHadarTabView extends ConsumerWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) => children
                     .map(
-                      (e) => const _AnnouncementItem(
-                        text: 'כ”א שבט, 30.5. עברו 60 יום',
+                      (e) => _AnnouncementItem(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(text: e.dateTime.asDateTime.he),
+                            const TextSpan(text: ', '),
+                            TextSpan(text: e.dateTime.asDateTime.ddMM),
+                            const TextSpan(text: '. '),
+                            TextSpan(text: e.dateTime.asDateTime.timeAgo),
+                          ],
+                        ),
                       ),
                     )
                     .toList()[index],
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 12),
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemCount: children.length,
               );
             },
@@ -733,7 +742,7 @@ class _AnnouncementItem extends StatelessWidget {
     required this.text,
   });
 
-  final String text;
+  final TextSpan text;
 
   @override
   Widget build(BuildContext context) {
@@ -741,7 +750,7 @@ class _AnnouncementItem extends StatelessWidget {
       children: [
         const Icon(FluentIcons.person_24_regular),
         const SizedBox(width: 18),
-        Text(
+        Text.rich(
           text,
           style: TextStyles.bodyB2.copyWith(
             color: AppColors.gray5,
@@ -779,12 +788,12 @@ class _PersonalInfoTabView extends StatelessWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'כתובת',
-                data: apprentice.address,
+                data: apprentice.address.fullAddress,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'אזור',
-                data: apprentice.region,
+                data: apprentice.address.region,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(

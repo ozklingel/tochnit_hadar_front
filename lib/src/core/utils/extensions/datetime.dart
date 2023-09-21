@@ -1,4 +1,7 @@
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:intl/intl.dart';
+import 'package:kosher_dart/kosher_dart.dart';
+import 'package:timeago/timeago.dart';
 
 extension ReportFromMillisecondsSinceEpochX on int {
   DateTime get asDateTime => DateTime.fromMillisecondsSinceEpoch(this);
@@ -6,4 +9,18 @@ extension ReportFromMillisecondsSinceEpochX on int {
 
 extension ReportDateTimeX on DateTime {
   String get ddMMyy => DateFormat('dd.MM.yy').format(this);
+  String get ddMM => DateFormat('dd.MM').format(this);
+  String get timeAgo {
+    return format(
+      this,
+      locale: Consts.defaultLocale.languageCode,
+    );
+  }
+
+  String get he {
+    final hdf = HebrewDateFormatter();
+    hdf.hebrewFormat = true;
+    final jewishDateTime = JewishDate.fromDateTime(this);
+    return hdf.format(jewishDateTime);
+  }
 }

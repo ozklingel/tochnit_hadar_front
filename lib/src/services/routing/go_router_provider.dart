@@ -319,11 +319,17 @@ class HomeRouteData extends GoRouteData {
 }
 
 class ReportsRouteData extends GoRouteData {
-  const ReportsRouteData();
+  const ReportsRouteData({
+    this.apprenticeId = '',
+  });
+
+  final String apprenticeId;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const ReportsScreen();
+    return ReportsScreen(
+      apprenticeId: apprenticeId,
+    );
   }
 }
 

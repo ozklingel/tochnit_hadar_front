@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 
 part 'apprentice.dto.f.dart';
@@ -15,17 +16,8 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') String phone,
     @Default('') String email,
     @Default('') String avatar,
-    @Default('') String city,
-    @Default('') String street,
-    @Default('') String houseNumber,
-    @Default('') String apartment,
-    @Default('') String region,
-    @Default('') String entrance,
-    @Default('') String floor,
-    @Default('') String postalCode,
     @Default('') String maritalStatus,
     @Default('') String highSchoolInstitution,
-    // ריש מתיבתא
     @Default('') String highSchoolRavMelamed,
     @Default('') String workStatus,
     @Default('') String workOccupation,
@@ -38,17 +30,17 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') String thRavMelamedYearA,
     @Default('') String thRavMelamedYearB,
     @Default('') String thMentor,
-    @Default('') String militaryBase,
     @Default('') String militaryUnit,
     @Default('') String militaryPositionOld,
     @Default('') String militaryPositionNew,
+    @Default('') String militaryBase,
     @Default(0) int militaryDateOfEnlistment,
     @Default(0) int militaryDateOfDischarge,
+    @Default(0) int dateOfBirth,
+    @Default(AddressDto()) AddressDto address,
     @Default([]) List<ContactDto> contacts,
     @Default([]) List<EventDto> events,
     @Default([]) List<ReportDto> reports,
-    // InMillisecondsSinceEpoch
-    @Default(0) int dateOfBirth,
   }) = _Apprentice;
 
   factory ApprenticeDto.fromJson(Map<String, dynamic> json) =>
@@ -57,7 +49,6 @@ class ApprenticeDto with _$ApprenticeDto {
 
 extension ApprenticeX on ApprenticeDto {
   String get fullName => '$firstName $lastName';
-  String get address => '$city, $street $houseNumber';
 }
 
 @JsonSerializable()

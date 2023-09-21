@@ -1,4 +1,5 @@
 import 'package:faker/faker.dart';
+import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -28,17 +29,19 @@ class ApprenticesController extends _$ApprenticesController {
                 : faker.phoneNumber.us(),
         email: faker.randomGenerator.boolean() ? '' : faker.internet.email(),
         teudatZehut: faker.randomGenerator.numberOfLength(9),
-        city: faker.address.city(),
-        apartment: faker.randomGenerator.integer(99999, min: 1).toString(),
-        street: faker.address.streetName(),
+        address: AddressDto(
+          city: faker.address.city(),
+          apartment: faker.randomGenerator.integer(99999, min: 1).toString(),
+          street: faker.address.streetName(),
+          houseNumber: faker.randomGenerator.integer(999, min: 1).toString(),
+          postalCode: faker.address.zipCode(),
+          floor: faker.randomGenerator.integer(99, min: 1).toString(),
+          entrance: faker.lorem.word()[0],
+          region: faker.address.state(),
+        ),
         dateOfBirth: faker.date
             .dateTime(minYear: 1971, maxYear: 2004)
             .millisecondsSinceEpoch,
-        houseNumber: faker.randomGenerator.integer(999, min: 1).toString(),
-        postalCode: faker.address.zipCode(),
-        floor: faker.randomGenerator.integer(99, min: 1).toString(),
-        entrance: faker.lorem.word()[0],
-        region: faker.address.state(),
         maritalStatus: faker.lorem.word(),
         educationFaculty: faker.lorem.word(),
         educationalInstitution: faker.lorem.word(),
@@ -66,7 +69,9 @@ class ApprenticesController extends _$ApprenticesController {
           (index) => ReportDto(
             id: faker.guid.guid(),
             description: faker.lorem.sentence(),
-            dateTime: faker.date.dateTime(minYear: 1971).millisecondsSinceEpoch,
+            dateTime: faker.date
+                .dateTime(minYear: 1971, maxYear: 2111)
+                .millisecondsSinceEpoch,
           ),
         ),
         events: List.generate(

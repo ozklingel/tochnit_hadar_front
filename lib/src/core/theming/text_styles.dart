@@ -109,6 +109,24 @@ abstract class TextStyles {
     ],
   );
 
+  static const baseSubtitle = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 14,
+    color: AppColors.gray2,
+    fontVariations: [
+      FontVariation('wght', 300),
+    ],
+  );
+
+  static const baseApprentices = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 13,
+    color: AppColors.blue05,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const bodyB1Bold = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 12,
