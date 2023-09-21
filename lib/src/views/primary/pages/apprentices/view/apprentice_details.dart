@@ -70,10 +70,6 @@ class ApprenticeDetailsScreen extends HookConsumerWidget {
                   ),
                   bottom: TabBar(
                     controller: tabController,
-                    indicatorPadding: EdgeInsets.zero,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicatorColor: AppColors.blue02,
-                    dividerColor: Colors.transparent,
                     tabs: const [
                       Tab(text: 'תוכנית הדר'),
                       Tab(text: 'פרטים אישיים'),
@@ -299,14 +295,14 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: 'תאריך גיוס',
-                        data: apprentice
-                            .militaryDateOfEnlistment.asDateTime.ddMMyy,
+                        data: apprentice.militaryDateOfEnlistment.asDateTime
+                            .asDayMonthYearShort,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: 'תאריך שחרור',
-                        data: apprentice
-                            .militaryDateOfDischarge.asDateTime.ddMMyy,
+                        data: apprentice.militaryDateOfDischarge.asDateTime
+                            .asDayMonthYearShort,
                       ),
                     ],
                   ),
@@ -351,9 +347,9 @@ class _TohnitHadarTabView extends ConsumerWidget {
                           children: [
                             TextSpan(text: e.dateTime.asDateTime.he),
                             const TextSpan(text: ', '),
-                            TextSpan(text: e.dateTime.asDateTime.ddMM),
+                            TextSpan(text: e.dateTime.asDateTime.asDayMonth),
                             const TextSpan(text: '. '),
-                            TextSpan(text: e.dateTime.asDateTime.timeAgo),
+                            TextSpan(text: e.dateTime.asDateTime.asTimeAgo),
                           ],
                         ),
                       ),
@@ -442,7 +438,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                 ),
                               ),
                               Text(
-                                e.dateTime.asDateTime.ddMMyy,
+                                e.dateTime.asDateTime.asDayMonthYearShort,
                                 style: TextStyles.bodyB2.copyWith(
                                   color: AppColors.gray2,
                                 ),

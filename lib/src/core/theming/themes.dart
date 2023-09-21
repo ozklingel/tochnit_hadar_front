@@ -19,6 +19,14 @@ ThemeData get appThemeLight {
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: Colors.white,
     ),
+    tabBarTheme: TabBarTheme(
+      indicatorSize: TabBarIndicatorSize.tab,
+      indicatorColor: AppColors.blue02,
+      dividerColor: Colors.transparent,
+      labelStyle: TextStyles.bodyB2.copyWith(
+        color: AppColors.gray2,
+      ),
+    ),
     searchBarTheme: SearchBarThemeData(
       hintStyle: MaterialStateProperty.all(
         TextStyles.bodyB3.copyWith(

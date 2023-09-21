@@ -17,7 +17,7 @@ class TaskDto with _$TaskDto {
   const factory TaskDto({
     @Default('') String id,
     @Default(TaskType.none) TaskType reportEventType,
-    @Default(ApprenticeDto()) ApprenticeDto apprentices,
+    @Default(ApprenticeDto()) ApprenticeDto apprentice,
     // InMsSinceEpoch
     @Default(0) int dateTime,
   }) = _TaskDto;

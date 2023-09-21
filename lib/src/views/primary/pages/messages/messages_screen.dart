@@ -1,11 +1,11 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/widgets/message_widget.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
+import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class MessagesScreen extends ConsumerWidget {
@@ -40,29 +40,10 @@ class MessagesScreen extends ConsumerWidget {
               ),
               data: (messages) {
                 if (messages.isEmpty) {
-                  return CustomScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    slivers: [
-                      SliverFillRemaining(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Assets.images.noMessages.svg(),
-                            const Text(
-                              'אין הודעות נכנסות',
-                              textAlign: TextAlign.center,
-                              style: TextStyles.bodyB41Bold,
-                            ),
-                            const Text(
-                              'הודעות נכנסות שישלחו, יופיעו כאן',
-                              textAlign: TextAlign.center,
-                              style: TextStyles.bodyB2,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  return EmptyState(
+                    image: Assets.images.noMessages.svg(),
+                    topText: 'אין הודעות נכנסות',
+                    bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
                   );
                 }
 

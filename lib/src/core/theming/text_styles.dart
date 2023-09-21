@@ -66,7 +66,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const reportName = TextStyle(
+  static const cardTitle = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 18,
     color: AppColors.gray1,
@@ -90,6 +90,15 @@ abstract class TextStyles {
     fontSize: 16,
     fontVariations: [
       FontVariation('wght', 500),
+    ],
+  );
+
+  static const cardSubtitle = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 16,
+    color: AppColors.gray2,
+    fontVariations: [
+      FontVariation('wght', 300),
     ],
   );
 
