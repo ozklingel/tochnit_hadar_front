@@ -8,9 +8,9 @@ extension ReportFromMillisecondsSinceEpochX on int {
 }
 
 extension ReportDateTimeX on DateTime {
-  String get ddMMyy => DateFormat('dd.MM.yy').format(this);
-  String get ddMM => DateFormat('dd.MM').format(this);
-  String get timeAgo {
+  String get asDayMonthYearShort => DateFormat('dd.MM.yy').format(this);
+  String get asDayMonth => DateFormat('dd.MM').format(this);
+  String get asTimeAgo {
     return format(
       this,
       locale: Consts.defaultLocale.languageCode,

@@ -302,7 +302,7 @@ class ReportsScreen extends HookConsumerWidget {
                                             .join(', '),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyles.reportName,
+                                        style: TextStyles.cardTitle,
                                       ),
                                     ),
                                   ],

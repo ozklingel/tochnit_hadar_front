@@ -127,7 +127,10 @@ class ApprenticesScreen extends HookConsumerWidget {
                       final apprentices = apprenticesList
                           .where(
                             (element) => element.fullName
-                                .contains(searchController.text),
+                                .toLowerCase()
+                                .contains(
+                                  searchController.text.toLowerCase().trim(),
+                                ),
                           )
                           .take(1)
                           .map(
@@ -142,7 +145,10 @@ class ApprenticesScreen extends HookConsumerWidget {
                       final bases = apprenticesList
                           .where(
                             (element) => element.militaryBase
-                                .contains(searchController.text),
+                                .toLowerCase()
+                                .contains(
+                                  searchController.text.toLowerCase().trim(),
+                                ),
                           )
                           .take(1)
                           .map(
@@ -157,7 +163,10 @@ class ApprenticesScreen extends HookConsumerWidget {
                       final cities = apprenticesList
                           .where(
                             (element) => element.address.city
-                                .contains(searchController.text),
+                                .toLowerCase()
+                                .contains(
+                                  searchController.text.toLowerCase().trim(),
+                                ),
                           )
                           .take(1)
                           .map(
