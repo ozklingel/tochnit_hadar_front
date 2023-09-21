@@ -1,5 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dashboard_controller.g.dart';
@@ -8,42 +8,46 @@ part 'dashboard_controller.g.dart';
 class DashboardController extends _$DashboardController {
   @override
   int build(String? currentRoute) {
-    switch (currentRoute) {
-      case Routes.reports:
-        return 0;
-      case Routes.apprentice:
-        return 1;
-      case Routes.home:
-        return 2;
-      case Routes.tasks:
-        return 3;
-      case Routes.messages:
-        return 4;
-      default:
-        return 2;
+    if (currentRoute == const ReportsRouteData().location) {
+      return 0;
     }
+    if (currentRoute == const ApprenticesRouteData().location) {
+      return 1;
+    }
+    if (currentRoute == const HomeRouteData().location) {
+      return 2;
+    }
+    if (currentRoute == const TasksRouteData().location) {
+      return 3;
+    }
+    if (currentRoute == const MessagesRouteData().location) {
+      return 4;
+    }
+    return 2;
   }
 
-  void setPosition(int value) {
-    final goRouter = ref.read(goRouterProvider);
+  void setPosition({
+    required BuildContext context,
+    required int value,
+  }) {
     switch (value) {
       case 0:
-        goRouter.go(Routes.reports);
+        const ReportsRouteData().go(context);
         break;
       case 1:
-        goRouter.go(Routes.apprentice);
+        const ApprenticesRouteData().go(context);
         break;
       case 2:
-        goRouter.go(Routes.home);
+        const HomeRouteData().go(context);
         break;
       case 3:
-        goRouter.go(Routes.tasks);
+        const TasksRouteData().go(context);
         break;
       case 4:
-        goRouter.go(Routes.messages);
+        const MessagesRouteData().go(context);
         break;
       default:
-        goRouter.go(Routes.home);
+        const HomeRouteData().go(context);
         break;
     }
   }

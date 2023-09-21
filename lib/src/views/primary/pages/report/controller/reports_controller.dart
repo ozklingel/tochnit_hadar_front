@@ -34,7 +34,9 @@ class ReportsController extends _$ReportsController {
             11,
             (index) => faker.image.image(height: 100, width: 100),
           ),
-          dateTime: faker.date.dateTime(minYear: 1971).millisecondsSinceEpoch,
+          dateTime: faker.date
+              .dateTime(minYear: 1971, maxYear: DateTime.now().year)
+              .millisecondsSinceEpoch,
         );
       },
     );

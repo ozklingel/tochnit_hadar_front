@@ -9,7 +9,6 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
@@ -34,9 +33,8 @@ class ReportsScreen extends HookConsumerWidget {
             )
           else if (selectedIds.value.length == 1) ...[
             IconButton(
-              onPressed: () => ref.read(goRouterProvider).push(
-                    '${Routes.reports}/${Routes.reportsEdit}/${selectedIds.value.first}',
-                  ),
+              onPressed: () =>
+                  ReportEditRouteData(id: selectedIds.value.first).go(context),
               icon: const Icon(
                 FluentIcons.edit_24_regular,
                 size: 16,
@@ -53,9 +51,8 @@ class ReportsScreen extends HookConsumerWidget {
                 ),
                 PopupMenuItem(
                   child: const Text('עריכה'),
-                  onTap: () => ref.read(goRouterProvider).push(
-                        '${Routes.reportsEdit}/${selectedIds.value.first}',
-                      ),
+                  onTap: () => ReportEditRouteData(id: selectedIds.value.first)
+                      .go(context),
                 ),
                 PopupMenuItem(
                   child: const Text('מחיקה'),
@@ -145,9 +142,7 @@ class ReportsScreen extends HookConsumerWidget {
         backgroundColor: AppColors.blue02,
         foregroundColor: AppColors.blue06,
         child: const Icon(FluentIcons.add_32_filled),
-        onPressed: () => ref
-            .read(goRouterProvider)
-            .push('${Routes.reports}/${Routes.reportsNew}'),
+        onPressed: () => const ReportNewRouteData().go(context),
       ),
       body: RefreshIndicator.adaptive(
         onRefresh: () => ref.refresh(reportsControllerProvider.future),
@@ -216,9 +211,8 @@ class ReportsScreen extends HookConsumerWidget {
                             ),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(12),
-                              onTap: () => ref.read(goRouterProvider).push(
-                                    '${Routes.reports}/${Routes.reportsDetails}/${e.id}',
-                                  ),
+                              onTap: () =>
+                                  ReportDetailsRouteData(id: e.id).go(context),
                               onLongPress: () {
                                 if (selectedIds.value.contains(e.id)) {
                                   final newList = selectedIds;

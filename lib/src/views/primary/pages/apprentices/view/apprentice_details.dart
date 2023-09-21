@@ -9,7 +9,6 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -331,7 +330,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
         _Card(
           title: 'דיווחים אחרונים',
           trailing: TextButton(
-            onPressed: () => ref.read(goRouterProvider).go(Routes.reports),
+            onPressed: () => const ReportsRouteData().go(context),
             child: const Text(
               'הצג הכל',
               style: TextStyles.actionButton,

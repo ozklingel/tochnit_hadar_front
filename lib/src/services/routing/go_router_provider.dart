@@ -2,10 +2,9 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:hadar_program/src/views/primary/bottome_bar/ui/dashboard_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentice_details.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentice_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentices_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/homePage/home_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/messages_screen.dart';
@@ -18,13 +17,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router_provider.g.dart';
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+final _rootNavKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+final _messagesNavKey = GlobalKey<NavigatorState>(debugLabel: 'messages');
+final _tasksNavKey = GlobalKey<NavigatorState>(debugLabel: 'tasks');
+final _homeNavKey = GlobalKey<NavigatorState>(debugLabel: 'home');
+final _reportsNavKey = GlobalKey<NavigatorState>(debugLabel: 'reports');
+final _apprenticesNavKey = GlobalKey<NavigatorState>(debugLabel: 'apprentices');
 
 @Riverpod(dependencies: [])
 GoRouter goRouter(GoRouterRef ref) {
   return GoRouter(
-    navigatorKey: _rootNavigatorKey,
-    initialLocation: Routes.home,
+    navigatorKey: _rootNavKey,
+    initialLocation: const HomeRouteData().location,
     debugLogDiagnostics: kDebugMode,
     observers: [
       BotToastNavigatorObserver(),
@@ -33,126 +37,378 @@ GoRouter goRouter(GoRouterRef ref) {
       errorMsg: state.error.toString(),
       key: state.pageKey,
     ),
-    // TODO(noga-dev): codegen
-    routes: [
-      GoRoute(
-        path: OnboardingScreen.routeName,
-        parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const OnboardingScreen(),
-      ),
-      StatefulShellRoute.indexedStack(
-        builder: (
-          BuildContext context,
-          GoRouterState state,
-          StatefulNavigationShell navigationShell,
-        ) =>
-            DashboardScreen(navShell: navigationShell),
-        branches: [
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.tasks,
-                builder: (context, state) {
-                  return const TasksScreen();
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.reports,
-                builder: (context, state) {
-                  return const ReportsScreen();
-                },
-                routes: [
-                  GoRoute(
-                    path: Routes.reportsNew,
-                    parentNavigatorKey: _rootNavigatorKey,
-                    builder: (context, state) {
-                      return const ReportDetailsScreen(
-                        reportId: '',
-                        isReadOnly: false,
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    path: '${Routes.reportsEdit}/:id',
-                    parentNavigatorKey: _rootNavigatorKey,
-                    builder: (context, state) {
-                      return ReportDetailsScreen(
-                        reportId: state.pathParameters['id'] ?? '',
-                        isReadOnly: false,
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    path: '${Routes.reportsDetails}/:id',
-                    builder: (context, state) {
-                      return ReportDetailsScreen(
-                        reportId: state.pathParameters['id'] ?? '',
-                        isReadOnly: true,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.home,
-                builder: (context, state) {
-                  return const HomeScreen();
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.messages,
-                builder: (context, state) {
-                  return const MessagesScreen();
-                },
-                routes: [
-                  GoRoute(
-                    path: ':id',
-                    builder: (context, state) {
-                      final id = state.pathParameters['id']!;
+    routes: $appRoutes,
+    // routes: [
+    //   GoRoute(
+    //     path: OnboardingScreen.routeName,
+    //     parentNavigatorKey: _rootNavigatorKey,
+    //     builder: (context, state) => const OnboardingScreen(),
+    //   ),
+    //   StatefulShellRoute.indexedStack(
+    //     builder: (
+    //       BuildContext context,
+    //       GoRouterState state,
+    //       StatefulNavigationShell navigationShell,
+    //     ) =>
+    //         DashboardScreen(navShell: navigationShell),
+    //     branches: [
+    //       StatefulShellBranch(
+    //         routes: [
+    //           GoRoute(
+    //             path: Routes.tasks,
+    //             builder: (context, state) {
+    //               return const TasksScreen();
+    //             },
+    //           ),
+    //         ],
+    //       ),
+    //       StatefulShellBranch(
+    //         routes: [
+    //           GoRoute(
+    //             path: Routes.reports,
+    //             builder: (context, state) {
+    //               return const ReportsScreen();
+    //             },
+    //             routes: [
+    //               GoRoute(
+    //                 path: Routes.reportsNew,
+    //                 parentNavigatorKey: _rootNavigatorKey,
+    //                 builder: (context, state) {
+    //                   return const ReportDetailsScreen(
+    //                     reportId: '',
+    //                     isReadOnly: false,
+    //                   );
+    //                 },
+    //               ),
+    //               GoRoute(
+    //                 path: '${Routes.reportsEdit}/:id',
+    //                 parentNavigatorKey: _rootNavigatorKey,
+    //                 builder: (context, state) {
+    //                   return ReportDetailsScreen(
+    //                     reportId: state.pathParameters['id'] ?? '',
+    //                     isReadOnly: false,
+    //                   );
+    //                 },
+    //               ),
+    //               GoRoute(
+    //                 path: '${Routes.reportsDetails}/:id',
+    //                 builder: (context, state) {
+    //                   return ReportDetailsScreen(
+    //                     reportId: state.pathParameters['id'] ?? '',
+    //                     isReadOnly: true,
+    //                   );
+    //                 },
+    //               ),
+    //             ],
+    //           ),
+    //         ],
+    //       ),
+    //       StatefulShellBranch(
+    //         routes: [
+    //           GoRoute(
+    //             path: Routes.home,
+    //             builder: (context, state) {
+    //               return const HomeScreen();
+    //             },
+    //           ),
+    //         ],
+    //       ),
+    //       StatefulShellBranch(
+    //         routes: [
+    //           GoRoute(
+    //             path: Routes.messages,
+    //             builder: (context, state) {
+    //               return const MessagesScreen();
+    //             },
+    //             routes: [
+    //               GoRoute(
+    //                 path: ':id',
+    //                 builder: (context, state) {
+    //                   final id = state.pathParameters['id']!;
 
-                      return MessageDetailsScreen(
-                        messageId: id,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: Routes.apprentice,
-                builder: (context, state) {
-                  return const ApprenticeScreen();
-                },
-                routes: [
-                  GoRoute(
-                    path: '${Routes.apprenticeDetails}/:id',
-                    builder: (context, state) {
-                      return ApprenticeDetailsScreen(
-                        apprenticeId: state.pathParameters['id'] ?? '',
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    ],
+    //                   return MessageDetailsScreen(
+    //                     messageId: id,
+    //                   );
+    //                 },
+    //               ),
+    //             ],
+    //           ),
+    //         ],
+    //       ),
+    //       StatefulShellBranch(
+    //         routes: [
+    //           GoRoute(
+    //             path: Routes.apprentice,
+    //             builder: (context, state) {
+    //               return const ApprenticeScreen();
+    //             },
+    //             routes: [
+    //               GoRoute(
+    //                 path: '${Routes.apprenticeDetails}/:id',
+    //                 builder: (context, state) {
+    //                   return ApprenticeDetailsScreen(
+    //                     apprenticeId: state.pathParameters['id'] ?? '',
+    //                   );
+    //                 },
+    //               ),
+    //             ],
+    //           ),
+    //         ],
+    //       ),
+    //     ],
+    //   ),
+    // ],
   );
+}
+
+@TypedStatefulShellRoute<DashboardShellRouteData>(
+  branches: [
+    TypedStatefulShellBranch<TasksBranchData>(
+      routes: [
+        TypedGoRoute<TasksRouteData>(path: '/tasks'),
+      ],
+    ),
+    TypedStatefulShellBranch<ReportsBranchData>(
+      routes: [
+        TypedGoRoute<ReportsRouteData>(
+          path: '/reports',
+          routes: [
+            TypedGoRoute<ReportNewRouteData>(
+              path: 'new',
+            ),
+            TypedGoRoute<ReportEditRouteData>(
+              path: 'edit/:id',
+            ),
+            TypedGoRoute<ReportDetailsRouteData>(
+              path: 'details/:id',
+            ),
+          ],
+        ),
+      ],
+    ),
+    TypedStatefulShellBranch<HomeBranchData>(
+      routes: [
+        TypedGoRoute<HomeRouteData>(path: '/home'),
+      ],
+    ),
+    TypedStatefulShellBranch<MessagesBranchData>(
+      routes: [
+        TypedGoRoute<MessagesRouteData>(
+          path: '/messages',
+          routes: [
+            TypedGoRoute<MessageDetailsRouteData>(path: ':id'),
+          ],
+        ),
+      ],
+    ),
+    TypedStatefulShellBranch<ApprenticesBranchData>(
+      routes: [
+        TypedGoRoute<ApprenticesRouteData>(
+          path: '/apprentices',
+          routes: [
+            TypedGoRoute<ApprenticeDetailsRouteData>(
+              path: 'details/:id',
+            ),
+          ],
+        ),
+      ],
+    ),
+  ],
+)
+class DashboardShellRouteData extends StatefulShellRouteData {
+  const DashboardShellRouteData();
+
+  @override
+  Widget builder(
+    BuildContext context,
+    GoRouterState state,
+    StatefulNavigationShell navigationShell,
+  ) {
+    return navigationShell;
+  }
+
+  static const String $restorationScopeId = 'restorationScopeId';
+
+  static Widget $navigatorContainerBuilder(
+    BuildContext context,
+    StatefulNavigationShell navigationShell,
+    List<Widget> children,
+  ) {
+    return DashboardScreen(
+      navShell: navigationShell,
+      children: children,
+    );
+  }
+}
+
+class TasksBranchData extends StatefulShellBranchData {
+  const TasksBranchData();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _tasksNavKey;
+  static const String $restorationScopeId = 'restorationScopeId';
+}
+
+class MessagesBranchData extends StatefulShellBranchData {
+  const MessagesBranchData();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _messagesNavKey;
+  static const String $restorationScopeId = 'restorationScopeId';
+}
+
+class HomeBranchData extends StatefulShellBranchData {
+  const HomeBranchData();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _homeNavKey;
+  static const String $restorationScopeId = 'restorationScopeId';
+}
+
+class ReportsBranchData extends StatefulShellBranchData {
+  const ReportsBranchData();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _reportsNavKey;
+  static const String $restorationScopeId = 'restorationScopeId';
+}
+
+class ApprenticesBranchData extends StatefulShellBranchData {
+  const ApprenticesBranchData();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _apprenticesNavKey;
+  static const String $restorationScopeId = 'restorationScopeId';
+}
+
+class TasksRouteData extends GoRouteData {
+  const TasksRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const TasksScreen();
+  }
+}
+
+class MessagesRouteData extends GoRouteData {
+  const MessagesRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const MessagesScreen();
+  }
+}
+
+class MessageDetailsRouteData extends GoRouteData {
+  const MessageDetailsRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return MessageDetailsScreen(
+      messageId: id,
+    );
+  }
+}
+
+class HomeRouteData extends GoRouteData {
+  const HomeRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const HomeScreen();
+  }
+}
+
+class ReportsRouteData extends GoRouteData {
+  const ReportsRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ReportsScreen();
+  }
+}
+
+class ReportNewRouteData extends GoRouteData {
+  const ReportNewRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ReportDetailsScreen(
+      reportId: '',
+      isReadOnly: false,
+    );
+  }
+}
+
+class ReportEditRouteData extends GoRouteData {
+  const ReportEditRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ReportDetailsScreen(
+      reportId: id,
+      isReadOnly: false,
+    );
+  }
+}
+
+class ReportDetailsRouteData extends GoRouteData {
+  const ReportDetailsRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ReportDetailsScreen(
+      reportId: id,
+      isReadOnly: true,
+    );
+  }
+}
+
+class ApprenticesRouteData extends GoRouteData {
+  const ApprenticesRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ApprenticesScreen();
+  }
+}
+
+class ApprenticeDetailsRouteData extends GoRouteData {
+  const ApprenticeDetailsRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ApprenticeDetailsScreen(
+      apprenticeId: id,
+    );
+  }
+}
+
+@TypedGoRoute<OnboardingRouteData>(
+  path: '/onboarding',
+)
+class OnboardingRouteData extends GoRouteData {
+  const OnboardingRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const OnboardingScreen();
+  }
 }

@@ -9,13 +9,12 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ApprenticeScreen extends HookConsumerWidget {
-  const ApprenticeScreen({super.key});
+class ApprenticesScreen extends HookConsumerWidget {
+  const ApprenticesScreen({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
@@ -161,9 +160,8 @@ class ApprenticeScreen extends HookConsumerWidget {
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(12),
                                       onTap: () =>
-                                          ref.read(goRouterProvider).push(
-                                                '${Routes.apprentice}/${Routes.apprenticeDetails}/${e.id}',
-                                              ),
+                                          ApprenticeDetailsRouteData(id: e.id)
+                                              .go(context),
                                       onLongPress: () {
                                         if (selectedIds.value.contains(e.id)) {
                                           final newList = selectedIds;

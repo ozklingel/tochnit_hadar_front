@@ -14,7 +14,6 @@ import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/services/routing/named_route.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
@@ -45,9 +44,9 @@ class ReportDetailsScreen extends HookConsumerWidget {
                 ) ??
             const ReportDto();
     final apprenticeSearchController = useTextEditingController();
-    final selectedDatetime = useState<DateTime?>(null);
-    final selectedApprentices = useState(<ApprenticeDto>[]);
-    final selectedEventType = useState(ReportEventType.none);
+    final selectedDatetime = useState<DateTime?>(report.dateTime.asDateTime);
+    final selectedApprentices = useState(report.apprentices);
+    final selectedEventType = useState(report.reportEventType);
 
     if (isReadOnly) {
       return Scaffold(
@@ -56,9 +55,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
           title: const Text('פרטי דיווח'),
           actions: [
             IconButton(
-              onPressed: () => ref
-                  .read(goRouterProvider)
-                  .go('${Routes.reports}/${Routes.reportsEdit}/$reportId'),
+              onPressed: () => ReportEditRouteData(id: reportId).go(context),
               icon: const Icon(FluentIcons.edit_24_regular),
             ),
             PopupMenuButton(
@@ -358,7 +355,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         context: context,
                         initialDate: selectedDatetime.value ?? DateTime.now(),
                         firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                        lastDate: DateTime.now(),
+                        lastDate:
+                            DateTime.now().add(const Duration(days: 99000)),
                       );
 
                       if (newDate == null) {
@@ -570,9 +568,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                         ),
                                         const SizedBox(height: 24),
                                         TextButton(
-                                          onPressed: () => ref
-                                              .read(goRouterProvider)
-                                              .go(Routes.home),
+                                          onPressed: () =>
+                                              const HomeRouteData().go(context),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
@@ -604,8 +601,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             label: 'ביטול',
                             backgroundColor: Colors.white,
                             foregroundColor: AppColors.blue02,
-                            onPressed: () =>
-                                ref.read(goRouterProvider).go(Routes.home),
+                            onPressed: () => const HomeRouteData().go(context),
                           ),
                         ),
                       ],
