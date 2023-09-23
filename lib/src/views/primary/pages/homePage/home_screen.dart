@@ -1,15 +1,392 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/models/task/task.dto.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
+import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Colors.blue,
-      child: Center(
-        child: Text(GoRouterState.of(context).path ?? ''),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Toaster.unimplemented(),
+          icon: const Icon(Icons.menu),
+        ),
+        centerTitle: true,
+        title: Assets.images.logo.image(
+          height: 48,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => Toaster.unimplemented(),
+            icon: const Icon(Icons.notifications_none),
+          ),
+        ],
+      ),
+      body: const SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _Header(),
+            SizedBox(height: 44),
+            _UpcomingEvents(),
+            SizedBox(height: 24),
+            _UpcomingTasks(),
+            SizedBox(height: 14),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _UpcomingTasks extends HookConsumerWidget {
+  const _UpcomingTasks();
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
+    final selectedCalls = useState(<TaskDto>[]);
+    final selectedMeetings = useState(<TaskDto>[]);
+    final selectedParents = useState(<TaskDto>[]);
+
+    final calls = tasks
+        .where(
+          (element) => element.reportEventType == TaskType.call,
+        )
+        .take(3)
+        .toList();
+
+    final meetings = tasks
+        .where(
+          (element) => element.reportEventType == TaskType.meeting,
+        )
+        .take(3)
+        .toList();
+
+    final parents = tasks
+        .where(
+          (element) => element.reportEventType == TaskType.parents,
+        )
+        .take(3)
+        .toList();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              const Text(
+                'משימות לביצוע',
+                style: TextStyles.bodyB41Bold,
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () => const TasksRouteData().go(context),
+                child: const Text(
+                  'הצג הכל',
+                  style: TextStyles.subtitle,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _ActionsRow(
+            label: 'שיחות',
+            selectedTasks: selectedCalls.value,
+          ),
+          const SizedBox(height: 6),
+          if (calls.isEmpty)
+            const Text(
+              'אין שיחות שמחכות לביצוע',
+              style: TextStyles.cardSubtitle,
+            )
+          else
+            ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: calls
+                  .map(
+                    (e) => TaskCard(
+                      selectedItems: selectedCalls,
+                      task: e,
+                    ),
+                  )
+                  .toList(),
+            ),
+          const SizedBox(height: 24),
+          _ActionsRow(
+            label: 'מפגשים',
+            selectedTasks: selectedMeetings.value,
+          ),
+          const SizedBox(height: 6),
+          if (meetings.isEmpty)
+            const Text(
+              'אין מפגשים שמחכים לביצוע',
+              style: TextStyles.cardSubtitle,
+            )
+          else
+            ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: meetings
+                  .map(
+                    (e) => TaskCard(
+                      selectedItems: selectedMeetings,
+                      task: e,
+                    ),
+                  )
+                  .toList(),
+            ),
+          const SizedBox(height: 24),
+          _ActionsRow(
+            label: 'שיחות להורים',
+            selectedTasks: selectedParents.value,
+          ),
+          const SizedBox(height: 6),
+          if (parents.isEmpty)
+            const Text(
+              'אין שיחות להורים שמחכות לביצוע',
+              style: TextStyles.cardSubtitle,
+            )
+          else
+            ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: parents
+                  .map(
+                    (e) => TaskCard(
+                      selectedItems: selectedParents,
+                      task: e,
+                    ),
+                  )
+                  .toList(),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActionsRow extends StatelessWidget {
+  const _ActionsRow({
+    required this.label,
+    required this.selectedTasks,
+  });
+
+  final String label;
+  final List<TaskDto> selectedTasks;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: TextStyles.smallHeading,
+          ),
+          const Spacer(),
+          if (selectedTasks.length == 1) ...[
+            IconButton(
+              onPressed: () => Toaster.unimplemented(),
+              icon: const Icon(FluentIcons.call_24_regular),
+            ),
+            IconButton(
+              onPressed: () => Toaster.unimplemented(),
+              icon: const Icon(FluentIcons.chat_24_regular),
+            ),
+            IconButton(
+              onPressed: () => Toaster.unimplemented(),
+              icon: const Icon(FluentIcons.clipboard_checkmark_24_regular),
+            ),
+            PopupMenuButton(
+              offset: const Offset(0, 32),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  onTap: () => Toaster.unimplemented(),
+                  child: const Text('שליחת SMS'),
+                ),
+                PopupMenuItem(
+                  onTap: () => Toaster.unimplemented(),
+                  child: const Text('פרופיל אישי'),
+                ),
+              ],
+              icon: const Icon(FluentIcons.more_vertical_24_regular),
+            ),
+          ] else if (selectedTasks.length > 1)
+            IconButton(
+              onPressed: () => Toaster.unimplemented(),
+              icon: const Icon(FluentIcons.clipboard_checkmark_24_regular),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _UpcomingEvents extends StatelessWidget {
+  const _UpcomingEvents();
+
+  @override
+  Widget build(BuildContext context) {
+    const children = [
+      _EventCard(),
+      _EventCard(),
+      _EventCard(),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: Text(
+            'אירועים קרובים',
+            style: TextStyles.bodyB41Bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 100,
+          child: ListView.separated(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            separatorBuilder: (_, __) => const SizedBox(width: 16),
+            itemCount: children.length,
+            itemBuilder: (context, index) => children[index],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Header extends ConsumerWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(16),
+        ),
+        child: Stack(
+          children: [
+            DecoratedBox(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF5083bb),
+                    Color(0xFF34547c),
+                  ],
+                ),
+              ),
+              child: Assets.images.homePageHeader.svg(
+                height: 140,
+                width: 460,
+                fit: BoxFit.fitHeight,
+              ),
+            ),
+            SizedBox(
+              height: 132,
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'בוקר טוב',
+                          style: TextStyles.homeGreeting,
+                        ),
+                        const TextSpan(text: '\n'),
+                        TextSpan(
+                          text: user.fullName,
+                          style: TextStyles.homeName,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EventCard extends StatelessWidget {
+  const _EventCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 232,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(16),
+          ),
+          gradient: LinearGradient(
+            colors: [
+              Color(0x33ECF2F5),
+              Color(0x333D94D2),
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                width: 160,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'יאיר כהן',
+                      style: TextStyles.bodyB3Bold,
+                    ),
+                    Text(
+                      'בעוד 2 ימים בתאריך א’ סיו וןיום הולדת 23',
+                      style: TextStyles.subtitle,
+                      maxLines: 2,
+                    ),
+                  ],
+                ),
+              ),
+              Spacer(),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Icon(FluentIcons.gift_24_regular),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

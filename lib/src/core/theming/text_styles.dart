@@ -6,6 +6,15 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 const _kFontFamily = 'rubik';
 
 abstract class TextStyles {
+  static const homeName = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 32,
+    color: Colors.white,
+    fontVariations: [
+      FontVariation('wght', 500),
+    ],
+  );
+
   static const titleB4BoldX = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 24,
@@ -48,6 +57,15 @@ abstract class TextStyles {
     ],
   );
 
+  static const homeGreeting = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 20,
+    color: Colors.white,
+    fontVariations: [
+      FontVariation('wght', 300),
+    ],
+  );
+
   static const messageTitle = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 18,
@@ -57,7 +75,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const apprenticeName = TextStyle(
+  static const smallHeading = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 18,
     color: AppColors.gray1,
@@ -118,7 +136,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const baseSubtitle = TextStyle(
+  static const subtitle = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 14,
     color: AppColors.gray2,

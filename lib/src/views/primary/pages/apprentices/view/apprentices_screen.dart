@@ -323,7 +323,7 @@ class _BaseOrCityCard extends StatelessWidget {
                   ),
                   const Text(
                     'כתובת: הנגב 8, בה”ד 1',
-                    style: TextStyles.baseSubtitle,
+                    style: TextStyles.subtitle,
                   ),
                   if (count != null)
                     const Text(
@@ -423,7 +423,7 @@ class _ApprenticeCard extends StatelessWidget {
                     children: [
                       Text(
                         '${apprentice.firstName} ${apprentice.lastName}',
-                        style: TextStyles.apprenticeName,
+                        style: TextStyles.smallHeading,
                       ),
                       SizedBox(
                         width: 300,
