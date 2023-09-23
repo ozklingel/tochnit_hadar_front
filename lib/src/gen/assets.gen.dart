@@ -14,6 +14,10 @@ import 'package:flutter/services.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/home-page-header.svg
+  SvgGenImage get homePageHeader =>
+      const SvgGenImage('assets/images/home-page-header.svg');
+
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
@@ -32,7 +36,8 @@ class $AssetsImagesGen {
   SvgGenImage get success => const SvgGenImage('assets/images/success.svg');
 
   /// List of all assets
-  List<dynamic> get values => [logo, logomark, noMessages, noTasks, success];
+  List<dynamic> get values =>
+      [homePageHeader, logo, logomark, noMessages, noTasks, success];
 }
 
 class Assets {

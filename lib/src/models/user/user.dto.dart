@@ -26,3 +26,7 @@ class UserDto with _$UserDto {
   factory UserDto.fromJson(Map<String, dynamic> json) =>
       _$UserDtoFromJson(json);
 }
+
+extension UserDtoX on UserDto {
+  String get fullName => '$firstName $lastName';
+}

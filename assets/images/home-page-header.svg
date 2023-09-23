@@ -1,0 +1,19 @@
+<svg width="398" height="142" viewBox="0 0 398 142" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_1277_111175" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="22" y="0" width="364" height="142">
+<path d="M22 32C22 16.9151 22 9.37258 26.6863 4.68629C31.3726 0 38.9151 0 54 0H354C369.085 0 376.627 0 381.314 4.68629C386 9.37258 386 16.9151 386 32V110C386 125.085 386 132.627 381.314 137.314C376.627 142 369.085 142 354 142H54C38.9151 142 31.3726 142 26.6863 137.314C22 132.627 22 125.085 22 110V32Z" fill="url(#paint0_linear_1277_111175)"/>
+</mask>
+<g mask="url(#mask0_1277_111175)">
+<ellipse opacity="0.2" cx="368.666" cy="103.697" rx="28.8889" ry="23.3553" fill="white"/>
+<ellipse opacity="0.2" cx="28.9319" cy="118.644" rx="28.8889" ry="23.3553" fill="white"/>
+<ellipse opacity="0.2" cx="219.599" cy="13.0786" rx="4.62222" ry="3.73684" fill="white"/>
+<ellipse opacity="0.2" cx="179.153" cy="91.5523" rx="4.62222" ry="3.73684" fill="white"/>
+<ellipse opacity="0.2" cx="152.575" cy="3.73684" rx="4.62222" ry="3.73684" fill="white"/>
+<ellipse opacity="0.2" cx="228.843" cy="111.171" rx="4.62222" ry="3.73684" fill="white"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_1277_111175" x1="386" y1="142" x2="-83.5664" y2="48.8583" gradientUnits="userSpaceOnUse">
+<stop stop-color="#92A3FD"/>
+<stop offset="1" stop-color="#9DCEFF"/>
+</linearGradient>
+</defs>
+</svg>

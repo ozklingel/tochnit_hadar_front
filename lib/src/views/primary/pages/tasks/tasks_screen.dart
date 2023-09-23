@@ -1,16 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
-import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
+import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -38,7 +36,7 @@ class TasksScreen extends HookConsumerWidget {
     final calls = filteredList
         .where((element) => element.reportEventType == TaskType.call)
         .map<Widget>(
-          (e) => _Card(
+          (e) => TaskCard(
             task: e,
             selectedItems: selectedCalls,
           ),
@@ -48,7 +46,7 @@ class TasksScreen extends HookConsumerWidget {
     final meetings = filteredList
         .where((element) => element.reportEventType == TaskType.meeting)
         .map<Widget>(
-          (e) => _Card(
+          (e) => TaskCard(
             task: e,
             selectedItems: selectedMeetings,
           ),
@@ -58,7 +56,7 @@ class TasksScreen extends HookConsumerWidget {
     final parents = filteredList
         .where((element) => element.reportEventType == TaskType.parents)
         .map<Widget>(
-          (e) => _Card(
+          (e) => TaskCard(
             task: e,
             selectedItems: selectedParents,
           ),
@@ -242,52 +240,6 @@ class TasksScreen extends HookConsumerWidget {
                 ),
               )
               .toList(),
-        ),
-      ),
-    );
-  }
-}
-
-class _Card extends StatelessWidget {
-  const _Card({
-    required this.selectedItems,
-    required this.task,
-  });
-
-  final ValueNotifier<List<TaskDto>> selectedItems;
-  final TaskDto task;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: selectedItems.value.contains(task)
-          ? AppColors.blue07
-          : Colors.transparent,
-      child: InkWell(
-        onLongPress: () {
-          if (selectedItems.value.contains(task)) {
-            final newList = selectedItems.value;
-            newList.remove(task);
-            selectedItems.value = [...newList];
-          } else {
-            selectedItems.value = [...selectedItems.value, task];
-          }
-        },
-        child: ListTile(
-          leading: CircleAvatar(
-            radius: 16,
-            backgroundImage: CachedNetworkImageProvider(
-              task.apprentice.avatar,
-            ),
-          ),
-          title: Text(
-            task.apprentice.fullName,
-            style: TextStyles.cardTitle,
-          ),
-          subtitle: Text(
-            task.dateTime.asDateTime.asTimeAgo,
-            style: TextStyles.cardSubtitle,
-          ),
         ),
       ),
     );
