@@ -15,20 +15,15 @@ part 'reports_controller.g.dart';
 class ReportsController extends _$ReportsController {
   @override
   FutureOr<List<ReportDto>> build() async {
-    // await Future.delayed(const Duration(milliseconds: 200));
-
-    final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+    await Future.delayed(const Duration(milliseconds: 200));
 
     final reports = List.generate(
       44,
       (index) {
-        apprentices.shuffle();
-
         return ReportDto(
           id: faker.guid.guid(),
           description: faker.lorem.sentence(),
-          apprentices: apprentices.take(Random().nextInt(5)).toList(),
+          apprentices: List.generate(13, (index) => faker.guid.guid()),
           reportEventType: ReportEventType.values[Random().nextInt(6)],
           attachments: List.generate(
             11,

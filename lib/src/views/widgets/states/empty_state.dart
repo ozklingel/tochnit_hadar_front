@@ -28,12 +28,12 @@ class EmptyState extends StatelessWidget {
               Text(
                 topText,
                 textAlign: TextAlign.center,
-                style: TextStyles.bodyB41Bold,
+                style: TextStyles.s20w500,
               ),
               Text(
                 bottomText,
                 textAlign: TextAlign.center,
-                style: TextStyles.bodyB2,
+                style: TextStyles.s14w400,
               ),
             ],
           ),

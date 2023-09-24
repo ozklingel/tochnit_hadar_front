@@ -67,7 +67,7 @@ class TasksScreen extends HookConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         title: AnimatedSwitcher(
-          duration: Consts.kDefaultDurationM,
+          duration: Consts.defaultDurationM,
           transitionBuilder: (child, animation) => FadeTransition(
             opacity: animation,
             child: SizeTransition(

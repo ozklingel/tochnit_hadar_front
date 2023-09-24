@@ -15,6 +15,8 @@ class AddressDto with _$AddressDto {
     @Default('') String entrance,
     @Default('') String floor,
     @Default('') String postalCode,
+    @Default(0) double lat,
+    @Default(0) double lng,
   }) = _AddressDto;
 
   factory AddressDto.fromJson(Map<String, dynamic> json) =>

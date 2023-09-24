@@ -84,7 +84,7 @@ class OnboardingPhonePage extends HookWidget {
                   controller: phoneTextEditingController,
                   focusNode: phoneFocusNode,
                   autofocus: true,
-                  style: TextStyles.bodyB3,
+                  style: TextStyles.s16w400cGrey2,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(10),
@@ -123,7 +123,7 @@ class OnboardingPhonePage extends HookWidget {
                         ? Align(
                             alignment: Alignment.centerRight,
                             child: AnimatedDefaultTextStyle(
-                              duration: Consts.kDefaultDurationM,
+                              duration: Consts.defaultDurationM,
                               style: Theme.of(context)
                                   .textTheme
                                   .displaySmall!

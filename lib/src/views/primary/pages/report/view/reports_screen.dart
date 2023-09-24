@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,6 +9,7 @@ import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
@@ -50,7 +50,7 @@ class ReportsScreen extends HookConsumerWidget {
                 .where(
                   (element) => element.apprentices
                       .where(
-                        (e) => e.id == apprenticeId,
+                        (e) => e == apprenticeId,
                       )
                       .isNotEmpty,
                 )
@@ -131,13 +131,13 @@ class ReportsScreen extends HookConsumerWidget {
                                   children: [
                                     TextSpan(
                                       text: 'מחיקת 2 דיווחים',
-                                      style: TextStyles.bodyB4,
+                                      style: TextStyles.s24w400,
                                     ),
                                     TextSpan(text: '\n'),
                                     TextSpan(
                                       text:
                                           'האם אתה מעוניין למחוק את הדיווחים שנבחרו? ',
-                                      style: TextStyles.bodyB3,
+                                      style: TextStyles.s16w400cGrey2,
                                     ),
                                   ],
                                 ),
@@ -211,12 +211,12 @@ class ReportsScreen extends HookConsumerWidget {
                         const Text(
                           'אין הודעות נכנסות',
                           textAlign: TextAlign.center,
-                          style: TextStyles.bodyB41Bold,
+                          style: TextStyles.s20w500,
                         ),
                         const Text(
                           'הודעות נכנסות שישלחו, יופיעו כאן',
                           textAlign: TextAlign.center,
-                          style: TextStyles.bodyB2,
+                          style: TextStyles.s14w400,
                         ),
                       ],
                     ),
@@ -242,7 +242,7 @@ class ReportsScreen extends HookConsumerWidget {
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                       child: AnimatedContainer(
-                        duration: Consts.kDefaultDurationM,
+                        duration: Consts.defaultDurationM,
                         decoration: BoxDecoration(
                           color: selectedIds.value.contains(e.id)
                               ? AppColors.blue08
@@ -271,46 +271,57 @@ class ReportsScreen extends HookConsumerWidget {
                               children: [
                                 Row(
                                   children: [
-                                    if (e.apprentices.isEmpty ||
-                                        e.apprentices.first.avatar.isEmpty)
-                                      const CircleAvatar(
-                                        radius: 12,
-                                        backgroundColor: AppColors.grey6,
-                                        child: Icon(
-                                          FluentIcons.person_24_filled,
-                                          size: 16,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    else
-                                      CircleAvatar(
-                                        radius: 12,
-                                        backgroundImage:
-                                            CachedNetworkImageProvider(
-                                          e.apprentices.first.avatar,
-                                        ),
+                                    const CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: AppColors.grey6,
+                                      child: Icon(
+                                        FluentIcons.person_24_filled,
+                                        size: 16,
+                                        color: Colors.white,
                                       ),
+                                    ),
                                     const SizedBox(width: 8),
                                     SizedBox(
                                       width: 280,
-                                      child: Text(
-                                        e.apprentices
-                                            .map(
-                                              (a) =>
-                                                  '${a.firstName} ${a.lastName}',
-                                            )
-                                            .join(', '),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyles.cardTitle,
-                                      ),
+                                      child: ref
+                                          .watch(apprenticesControllerProvider)
+                                          .when(
+                                            loading: () =>
+                                                const LoadingWidget(),
+                                            error: (error, stack) =>
+                                                const SizedBox(),
+                                            data: (reportApprentices) {
+                                              final apprentices =
+                                                  reportApprentices
+                                                      .where(
+                                                        (element) => e
+                                                            .apprentices
+                                                            .contains(
+                                                          element.id,
+                                                        ),
+                                                      )
+                                                      .toList();
+
+                                              return Text(
+                                                apprentices
+                                                    .map(
+                                                      (a) =>
+                                                          '${a.firstName} ${a.lastName}',
+                                                    )
+                                                    .join(', '),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyles.s18w500cGray1,
+                                              );
+                                            },
+                                          ),
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 16),
                                 Text.rich(
                                   TextSpan(
-                                    style: TextStyles.bodyB2,
+                                    style: TextStyles.s14w400,
                                     children: [
                                       TextSpan(
                                         text: DateFormat('dd.MM.yy')
@@ -337,7 +348,7 @@ class ReportsScreen extends HookConsumerWidget {
                                 const SizedBox(height: 8),
                                 Text(
                                   e.reportEventType.name,
-                                  style: TextStyles.bodyB3,
+                                  style: TextStyles.s16w400cGrey2,
                                 ),
                               ],
                             ),

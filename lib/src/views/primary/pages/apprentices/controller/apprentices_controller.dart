@@ -1,7 +1,7 @@
 import 'package:faker/faker.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'apprentices_controller.g.dart';
@@ -13,9 +13,9 @@ class ApprenticesController extends _$ApprenticesController {
   @override
   FutureOr<List<ApprenticeDto>> build() async {
     return List.generate(
-      22,
+      Consts.mockApprenticeGuids.length,
       (index) => ApprenticeDto(
-        id: faker.guid.guid(),
+        id: Consts.mockApprenticeGuids[index],
         avatar: faker.image.image(
           height: 75,
           width: 75,
@@ -56,7 +56,8 @@ class ApprenticesController extends _$ApprenticesController {
         thPeriod: faker.lorem.word()[0],
         thRavMelamedYearA: '${faker.person.name()} ${faker.phoneNumber.de()}',
         thRavMelamedYearB: '${faker.person.name()} ${faker.phoneNumber.us()}',
-        militaryBase: faker.lorem.word(),
+        militaryCompound:
+            Consts.mockCompoundGuids[index % Consts.mockCompoundGuids.length],
         militaryDateOfDischarge:
             faker.date.dateTime(minYear: 1971).millisecondsSinceEpoch,
         militaryDateOfEnlistment:
@@ -66,13 +67,7 @@ class ApprenticesController extends _$ApprenticesController {
         militaryUnit: faker.lorem.word(),
         reports: List.generate(
           7,
-          (index) => ReportDto(
-            id: faker.guid.guid(),
-            description: faker.lorem.sentence(),
-            dateTime: faker.date
-                .dateTime(minYear: 1971, maxYear: 2111)
-                .millisecondsSinceEpoch,
-          ),
+          (index) => faker.guid.guid(),
         ),
         events: List.generate(
           7,

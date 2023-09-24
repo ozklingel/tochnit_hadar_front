@@ -17,19 +17,19 @@ class DetailsRowItem extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 120,
+          width: 100,
           child: Text(
             label,
-            style: TextStyles.bodyB2.copyWith(
+            style: TextStyles.s14w400.copyWith(
               color: AppColors.grey5,
             ),
           ),
         ),
         SizedBox(
-          width: 220,
+          width: 212,
           child: Text(
             data,
-            style: TextStyles.bodyB2,
+            style: TextStyles.s14w400,
             maxLines: 4,
           ),
         ),

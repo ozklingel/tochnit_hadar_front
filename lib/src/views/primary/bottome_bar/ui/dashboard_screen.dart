@@ -49,10 +49,10 @@ class _AnimatedBranchContainer extends StatelessWidget {
         ) {
           return AnimatedOpacity(
             opacity: index == currentIndex ? 1 : 0,
-            duration: Consts.kDefaultDurationM,
+            duration: Consts.defaultDurationM,
             child: AnimatedSlide(
               offset: index == currentIndex ? Offset.zero : const Offset(0, 1),
-              duration: Consts.kDefaultDurationM,
+              duration: Consts.defaultDurationM,
               child: _branchNavigatorWrapper(index, navigator),
             ),
           );

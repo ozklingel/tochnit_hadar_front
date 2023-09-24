@@ -6,7 +6,7 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 const _kFontFamily = 'rubik';
 
 abstract class TextStyles {
-  static const homeName = TextStyle(
+  static const s32w500cWhite = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 32,
     color: Colors.white,
@@ -15,7 +15,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const titleB4BoldX = TextStyle(
+  static const s24w600 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 24,
     fontVariations: [
@@ -24,7 +24,7 @@ abstract class TextStyles {
     color: AppColors.gray2,
   );
 
-  static const bodyB4 = TextStyle(
+  static const s24w400 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 24,
     fontVariations: [
@@ -32,7 +32,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const bodyB4Bold = TextStyle(
+  static const s24w500cGrey2 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 24,
     fontVariations: [
@@ -41,7 +41,7 @@ abstract class TextStyles {
     color: AppColors.grey2,
   );
 
-  static const bodyB41 = TextStyle(
+  static const s20w400 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 20,
     fontVariations: [
@@ -49,7 +49,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const bodyB41Bold = TextStyle(
+  static const s20w500 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 20,
     fontVariations: [
@@ -57,7 +57,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const homeGreeting = TextStyle(
+  static const s20w300cWhite = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 20,
     color: Colors.white,
@@ -66,7 +66,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const messageTitle = TextStyle(
+  static const s18w600cShade09 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 18,
     color: AppColors.shade09,
@@ -75,7 +75,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const smallHeading = TextStyle(
+  static const s18w400cGray1 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 18,
     color: AppColors.gray1,
@@ -84,7 +84,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const cardTitle = TextStyle(
+  static const s18w500cGray1 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 18,
     color: AppColors.gray1,
@@ -93,7 +93,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const bodyB3 = TextStyle(
+  static const s16w400cGrey2 = TextStyle(
     fontFamily: _kFontFamily,
     color: AppColors.grey2,
     fontSize: 16,
@@ -102,7 +102,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const bodyB3Bold = TextStyle(
+  static const s16w500cGrey2 = TextStyle(
     fontFamily: _kFontFamily,
     color: AppColors.grey2,
     fontSize: 16,
@@ -111,7 +111,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const cardSubtitle = TextStyle(
+  static const s16w300cGray2 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 16,
     color: AppColors.gray2,
@@ -120,7 +120,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const bodyB2 = TextStyle(
+  static const s14w400 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 14,
     fontVariations: [
@@ -128,7 +128,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const bodyB2Bold = TextStyle(
+  static const s14w500 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 14,
     fontVariations: [
@@ -136,7 +136,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const subtitle = TextStyle(
+  static const s14w300cGray2 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 14,
     color: AppColors.gray2,
@@ -145,7 +145,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const baseApprentices = TextStyle(
+  static const s13w400cBlue05 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 13,
     color: AppColors.blue05,
@@ -154,7 +154,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const bodyB1Bold = TextStyle(
+  static const s12w500 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 12,
     fontVariations: [
@@ -168,7 +168,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const aospBodySmall = TextStyle(
+  static const s12w400cGrey5fRoboto = TextStyle(
     fontFamily: 'Roboto',
     fontSize: 12,
     color: AppColors.grey5,
@@ -177,7 +177,7 @@ abstract class TextStyles {
     ],
   );
 
-  static const actionButton = TextStyle(
+  static const s12w300cGray2 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 12,
     color: AppColors.gray2,

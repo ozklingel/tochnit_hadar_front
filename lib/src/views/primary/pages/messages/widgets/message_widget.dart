@@ -38,25 +38,25 @@ class MessageWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 300,
+                  width: 280,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '${message.from.firstName} ${message.from.lastName}',
-                        style: TextStyles.messageTitle,
+                        style: TextStyles.s18w600cShade09,
                       ),
                       if (isExpanded) const SizedBox(height: 16),
                       Text(
                         message.title,
-                        style: TextStyles.bodyB3,
+                        style: TextStyles.s16w400cGrey2,
                       ),
                       if (isExpanded) const SizedBox(height: 16),
                       Text(
                         message.content,
                         maxLines: isExpanded ? null : 1,
                         overflow: isExpanded ? null : TextOverflow.ellipsis,
-                        style: TextStyles.bodyB3,
+                        style: TextStyles.s16w400cGrey2,
                       ),
                       if (message.attachments.isNotEmpty) ...[
                         if (isExpanded) const SizedBox(height: 16),
@@ -82,7 +82,7 @@ class MessageWidget extends StatelessWidget {
                     message.dateTime.asDateTime,
                     locale: Localizations.localeOf(context).languageCode,
                   ),
-                  style: TextStyles.aospBodySmall,
+                  style: TextStyles.s12w400cGrey5fRoboto,
                 ),
               ],
             ),
