@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
-import 'package:hadar_program/src/models/report/report.dto.dart';
 
 part 'apprentice.dto.f.dart';
 part 'apprentice.dto.g.dart';
@@ -30,17 +29,17 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') String thRavMelamedYearA,
     @Default('') String thRavMelamedYearB,
     @Default('') String thMentor,
+    @Default('') String militaryCompound,
     @Default('') String militaryUnit,
     @Default('') String militaryPositionOld,
     @Default('') String militaryPositionNew,
-    @Default('') String militaryBase,
     @Default(0) int militaryDateOfEnlistment,
     @Default(0) int militaryDateOfDischarge,
     @Default(0) int dateOfBirth,
     @Default(AddressDto()) AddressDto address,
     @Default([]) List<ContactDto> contacts,
     @Default([]) List<EventDto> events,
-    @Default([]) List<ReportDto> reports,
+    @Default([]) List<String> reports,
   }) = _Apprentice;
 
   factory ApprenticeDto.fromJson(Map<String, dynamic> json) =>

@@ -42,11 +42,11 @@ class TaskCard extends StatelessWidget {
           ),
           title: Text(
             task.apprentice.fullName,
-            style: TextStyles.cardTitle,
+            style: TextStyles.s18w500cGray1,
           ),
           subtitle: Text(
             task.dateTime.asDateTime.asTimeAgo,
-            style: TextStyles.cardSubtitle,
+            style: TextStyles.s16w300cGray2,
           ),
         ),
       ),

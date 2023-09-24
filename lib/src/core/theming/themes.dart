@@ -12,29 +12,37 @@ ThemeData get appThemeLight {
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
       centerTitle: true,
-      titleTextStyle: TextStyles.bodyB4Bold,
+      titleTextStyle: TextStyles.s24w500cGrey2,
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.transparent,
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: Colors.white,
     ),
+    dialogBackgroundColor: Colors.white,
+    dialogTheme: const DialogTheme(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+    ),
     tabBarTheme: TabBarTheme(
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorColor: AppColors.blue02,
       dividerColor: Colors.transparent,
-      labelStyle: TextStyles.bodyB2.copyWith(
+      labelStyle: TextStyles.s14w400.copyWith(
         color: AppColors.gray2,
       ),
     ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: Colors.white,
+    ),
     searchBarTheme: SearchBarThemeData(
       hintStyle: MaterialStateProperty.all(
-        TextStyles.bodyB3.copyWith(
+        TextStyles.s16w400cGrey2.copyWith(
           color: AppColors.gray5,
         ),
       ),
       textStyle: MaterialStateProperty.all(
-        TextStyles.bodyB3.copyWith(
+        TextStyles.s16w400cGrey2.copyWith(
           color: AppColors.gray2,
         ),
       ),
@@ -44,7 +52,7 @@ ThemeData get appThemeLight {
       elevation: 10,
       surfaceTintColor: Colors.white,
       labelTextStyle: MaterialStateProperty.all(
-        TextStyles.bodyB3.copyWith(
+        TextStyles.s16w400cGrey2.copyWith(
           color: AppColors.gray2,
         ),
       ),
@@ -53,7 +61,7 @@ ThemeData get appThemeLight {
       iconTheme: const IconThemeData(
         color: AppColors.grey1,
       ),
-      labelStyle: TextStyles.bodyB2Bold.copyWith(
+      labelStyle: TextStyles.s14w500.copyWith(
         color: AppColors.grey1,
       ),
       side: const BorderSide(
@@ -64,8 +72,8 @@ ThemeData get appThemeLight {
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
-      hintStyle: TextStyles.bodyB3,
-      errorStyle: TextStyles.bodyB1Bold,
+      hintStyle: TextStyles.s16w400cGrey2,
+      errorStyle: TextStyles.s12w500,
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(36),
         borderSide: const BorderSide(color: AppColors.shades300),
@@ -86,10 +94,10 @@ ThemeData get appThemeLight {
       ),
     ),
     textTheme: const TextTheme(
-      titleMedium: TextStyles.bodyB41Bold,
-      bodyMedium: TextStyles.bodyB2,
-      displayMedium: TextStyles.bodyB2Bold,
-      displaySmall: TextStyles.bodyB1Bold,
+      titleMedium: TextStyles.s20w500,
+      bodyMedium: TextStyles.s14w400,
+      displayMedium: TextStyles.s14w500,
+      displaySmall: TextStyles.s12w500,
       // ?
       bodySmall: TextStyle(
         fontSize: 13,

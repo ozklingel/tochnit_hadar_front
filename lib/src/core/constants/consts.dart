@@ -1,10 +1,147 @@
 import 'dart:ui';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 abstract class Consts {
   static const appTitle = 'תכנית הדר';
   static const defaultLocale = Locale('he', 'IL');
 
-  static const kDefaultDurationM = Duration(milliseconds: 300);
+  static const defaultDurationM = Duration(milliseconds: 300);
+
+  // geolocation
+  static const defaultCameraPosition = CameraPosition(
+    target: LatLng(
+      defaultGeolocationLat,
+      defaultGeolocationLng,
+    ),
+  );
+  static const defaultGeolocationZoom = 12.0;
+  static const defaultGeolocationLat = 32.06834658255528;
+  static const defaultGeolocationLng = 34.78350443313145;
+
+  // mocks
+  static const mockApprenticeGuids = [
+    '464acc72-1b70-4045-aed1-5f9e4b9d4be2',
+    'd2a17853-e5a1-4258-b139-d28dc53fff09',
+    'a7af07a8-a1ef-4f2c-ab4f-1d3b48519844',
+    '4855401c-824a-4512-a68f-678d01c47fef',
+    '5aedb081-8cae-4bb5-98a9-a1ee87a07cb9',
+    '84444fc8-fcba-405a-b442-e67895774467',
+    '94a094d3-3b42-4166-a743-308f32d5ecdc',
+    '3406d633-0a7b-45d1-970c-4b58a70fbd62',
+    'cbc2536e-7295-40c6-9f1a-67a62c2b8470',
+    '0ce3e72a-a90f-40aa-bcf9-7021f2244915',
+    '38eb007b-c039-49c0-a501-8b59b7eddf5a',
+    'b5813aee-ec2c-42ff-bc71-38637ebdbe85',
+    '48e87897-d9f0-4df7-902d-6991447dff5d',
+    '6bf93164-b5e8-4fac-aebd-d34135ab9873',
+    'ab3b4696-6136-4f33-b3b7-e960043c7384',
+    '932c7313-6e36-4877-8a63-5d1f1e8e45ef',
+    'fe63b252-7cd2-44b2-b522-e39ff9bd961c',
+    '5b1f7b2d-8b3b-4b1f-9b28-bfbfb8533330',
+    '5485721f-b540-4607-9344-18ee5e783a89',
+    'f47e3bea-eee9-409b-9bf5-079f9a054375',
+    '705325f5-e40e-42ed-9a2f-c3534bb9f8b7',
+    '0ce4aa5d-a2fe-4c09-8c83-2d6154c226bb',
+    '24db619c-0a16-4ad0-bd2c-d98087118901',
+    'bcea0952-b79f-4fa5-a885-b91630c2d86e',
+    '75daec34-8170-4483-95bc-20ab47b38bdb',
+    '403c92eb-0130-4c4e-a26e-c6e7ae48b45c',
+    '0a042901-03dd-4b56-95a6-6639b27af6fc',
+    '022f5145-a476-42eb-8d3b-8472bbb58884',
+    '9358bf11-f3a8-4ed4-8f9d-49e1ec2cbb41',
+    '1a79e5ac-8e5a-43f5-8a98-62d9bff6618e',
+    'dd2350c2-f28e-4136-884d-aa1b8e29f066',
+    '30442701-dd5d-4e51-91b2-8882fe93fa0c',
+    'ebb5dcbd-529c-40c2-8a92-7531f6be0f15',
+    '02ee3ee0-c57a-4681-a80d-93a0ffe81d34',
+    'bfaf7186-22d9-4825-81a6-b93041a45050',
+    '3a33fbb7-60a8-46af-888f-db049364cb3e',
+    '57abad12-0ec2-40f8-b016-417519fc02a1',
+    '6c82db25-596b-4f3e-95c4-02a5af2d4b0e',
+    '384afc16-ba14-4a9c-b0c0-1bde6b819dd0',
+    'e2631ef4-397c-45ac-8925-a15b9db99beb',
+    '6c6633ad-db80-498b-864a-606d2d4ae104',
+    'ed589b91-88ed-4134-8207-f92d34add297',
+    '0623fd56-7049-489b-8cd5-2de2e6ace6b4',
+    '3cdb7e23-ec9a-4142-a162-dbc8790a482f',
+    'f86c356e-5f22-46fc-b68a-b503552c0c12',
+    'd9f87726-a965-49d9-b4a3-eb9831f5ed0c',
+    '2f131b5c-8bb6-4bb1-a35e-15da28b26eb2',
+    'f0582dcf-3ffc-4991-98fc-c10907156373',
+    '8837c852-a62d-4b6b-b925-332f870f5ce7',
+    'cf691897-e989-424a-ba2b-6e9a0087e5c1',
+    'd4541552-45ff-4a0e-bcec-242ccfd06792',
+    'c6e3dd7a-1d16-44f6-9911-0ead38aa3acc',
+    '023e001b-8cf1-4c9d-8b84-2364245cf827',
+    '0f8ee858-ee81-4ba3-bcaf-de6ae4f53f10',
+    'fe430a07-0dcc-4d45-b711-c146415387b5',
+    'bd207d20-4a53-4b6a-9793-53de3aff68a5',
+    '31172572-1176-4eb2-b1ab-b60730e56b29',
+    '0966638f-a0bd-40ab-b307-c8ba59f9807b',
+    '449e76f7-02f2-43c4-9627-24c64fe0c0cd',
+    '396ded5c-9e23-40c5-97ad-fa8e16e96f1f',
+    '5ac95203-3c31-44e1-9ad2-310205ffb940',
+    'b054d258-8e13-40c0-bb82-428f8f55230c',
+    'da1127c3-8f3c-415b-aeaf-2fa6b52e9633',
+    'c8ecf08f-dac1-40e5-9da1-4378968901d7',
+    'fe5f84fc-76ea-442a-8781-4e2cc4aee94e',
+    'eebd7dd0-b868-452a-947f-bd1308c88df3',
+    '970dedd5-5d30-4ebb-a56e-f43f16832915',
+    'b11afbfa-ad9f-4a4d-91e9-a331201d8628',
+    'a6458f8c-fe72-4d00-abfe-707be6ca1e16',
+    'b2dc3e70-2d8c-402c-a547-114ce3f0df50',
+    'ec0ec3c1-7f8d-4f34-b6c4-c9411dddd4b6',
+    '51f987d3-511e-429e-bf87-da0783783cf5',
+    'ddf36a2d-018e-46c1-8943-d4052f0e1e6a',
+    'df22e340-74ce-4679-aa29-bdd0165e3828',
+    'e521bac5-ffce-48bb-a181-a1e78fa56968',
+    'a4308c52-a070-498e-82f7-3de9c843b830',
+    '952760d4-94c0-4683-b4c7-be1590e358a9',
+    'ae0331c2-0c3f-4d41-88ff-4b731a008b7a',
+    '67e6f7ca-f9c4-4a89-a960-bc54b53a38ee',
+    'cd186e34-f1b7-4675-9822-2552b5b83e0c',
+    'b5c601ed-172b-4557-9bbc-7ede46bcd501',
+    '5fe79d73-5786-493e-904d-9d4cf09c2d72',
+    '05960eb3-0c7e-4422-8c88-1217e982b951',
+    '266e4beb-39ee-480c-9809-1c1258bc6182',
+    '85908f8f-0fe6-44cf-b0e6-cc64c3de952d',
+    'fc67bf3e-1e19-4bee-913d-5aec7761b9a1',
+    'e86d6f94-9d2e-49f4-b395-00c6848539c1',
+    '83157911-4a93-45d9-ad74-068332191e26',
+    '38bab515-aebe-440f-913d-83625c9e5718',
+    '819696a5-9f81-4a18-b066-9a4fdb463787',
+    '5eb69837-654b-49c3-b029-ebb177cfe19a',
+    'b1a63703-ea01-4caa-8d73-30738e1cc3a7',
+    '8a8d1975-d555-41a9-a260-05fa8e082600',
+    '8c719fd6-d2b9-48d9-9ccf-1b6146eef5eb',
+    'ed6f271c-5bef-4229-af8c-55b2f2f2db13',
+    'b1fe84fa-f63b-4a76-a423-3e4894459317',
+    '08a557d4-6c01-43b7-add0-9943cf3c6835',
+    'f1bfbc7c-4c05-4950-8258-91ceddb4643b',
+    'dfb76767-4aff-4fee-ae8c-44012ce5160f',
+    '0f7ca6e7-2b30-4a44-9cd7-333ef78dcf33',
+    '337c0e75-4475-482d-9a92-fed6d6a8af87',
+    '78ef4b17-4c28-4e65-9691-840f025d37d8',
+    '2d4e4b39-2e15-495c-8e0e-28d59f02fb3e',
+    'b8d76dda-0cf2-457e-89b4-eec98ec73cce',
+    '959fecd6-4d08-42d3-b806-d31c54648bbd',
+    '2f205a9b-659f-4f73-9ecb-2fabd5a52df0',
+    '1ba967b0-e496-45a3-9f4e-c48f7d576d81',
+    'e0baefcb-be11-41aa-a907-e2e5e9b44404',
+    'b2011f04-e284-413d-8f45-e6c001b3222a',
+    'cb9cc6d3-a0cc-4560-88d4-a3f7ad678f60',
+  ];
+
+  static const mockCompoundGuids = [
+    '8583aaf6-3210-4b30-9f41-b017857534ee',
+    '8c1f83f9-af44-4742-b3eb-21ee143e6d3d',
+    'c6553bee-f264-498d-accb-62a1f3d230e4',
+    'b71c9ee2-386e-4fed-8c10-ed1174f0d9b7',
+    '082a7e04-8969-487c-87be-93768e6971c8',
+    '8c593e03-6554-444d-9986-3bcb55d18d76',
+    'b1580a5e-8d5c-42a5-bf15-19bc42fa70ac',
+  ];
 
   static const termsOfService = '''
 תנאי שימוש באפליקציה "תוכנית הדר״

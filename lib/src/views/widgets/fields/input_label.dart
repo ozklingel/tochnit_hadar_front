@@ -31,7 +31,7 @@ class InputFieldLabel extends StatelessWidget {
                 ),
               ],
             ],
-            style: TextStyles.bodyB1Bold.copyWith(
+            style: TextStyles.s12w500.copyWith(
               color: AppColors.gray5,
             ),
           ),

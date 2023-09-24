@@ -11,6 +11,7 @@ import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
@@ -126,7 +127,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final isEditMode = useState(false);
     final baseController = useTextEditingController(
-      text: apprentice.militaryBase,
+      text: apprentice.militaryCompound,
       keys: [apprentice],
     );
     final unitController = useTextEditingController(
@@ -143,7 +144,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
     );
 
     return AnimatedSwitcher(
-      duration: Consts.kDefaultDurationM,
+      duration: Consts.defaultDurationM,
       transitionBuilder: (child, animation) => FadeTransition(
         opacity: animation,
         child: SizeTransition(
@@ -177,7 +178,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                     children: [
                       Text(
                         'צבא',
-                        style: TextStyles.bodyB41.copyWith(
+                        style: TextStyles.s20w400.copyWith(
                           color: AppColors.gray1,
                         ),
                       ),
@@ -226,7 +227,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                     )
                                     .editApprentice(
                                       apprentice: apprentice.copyWith(
-                                        militaryBase: baseController.text,
+                                        militaryCompound: baseController.text,
                                         militaryUnit: unitController.text,
                                         militaryPositionNew:
                                             positionNewController.text,
@@ -243,7 +244,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                   );
                                 }
                               },
-                              textStyle: TextStyles.bodyB2Bold,
+                              textStyle: TextStyles.s14w500,
                             ),
                           ),
                           const SizedBox(width: 24),
@@ -253,7 +254,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                               onPressed: () => isEditMode.value = false,
                               backgroundColor: Colors.white,
                               foregroundColor: AppColors.blue02,
-                              textStyle: TextStyles.bodyB2Bold,
+                              textStyle: TextStyles.s14w500,
                             ),
                           ),
                         ],
@@ -275,7 +276,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                     children: [
                       DetailsRowItem(
                         label: 'בסיס',
-                        data: apprentice.militaryBase,
+                        data: apprentice.militaryCompound,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
@@ -331,16 +332,22 @@ class _TohnitHadarTabView extends ConsumerWidget {
                 ReportsRouteData(apprenticeId: apprentice.id).push(context),
             child: const Text(
               'הצג הכל',
-              style: TextStyles.actionButton,
+              style: TextStyles.s12w300cGray2,
             ),
           ),
-          child: Builder(
-            builder: (context) {
-              final children = apprentice.reports.take(3);
+          child: Consumer(
+            builder: (context, ref, child) {
+              final reports =
+                  ref.watch(reportsControllerProvider).valueOrNull?.where(
+                            (element) =>
+                                apprentice.reports.take(3).contains(element.id),
+                          ) ??
+                      [];
+
               return ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => children
+                itemBuilder: (context, index) => reports
                     .map(
                       (e) => _AnnouncementItem(
                         text: TextSpan(
@@ -356,7 +363,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                     )
                     .toList()[index],
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemCount: children.length,
+                itemCount: reports.length,
               );
             },
           ),
@@ -432,14 +439,14 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                 width: 100,
                                 child: Text(
                                   e.title,
-                                  style: TextStyles.bodyB2.copyWith(
+                                  style: TextStyles.s14w400.copyWith(
                                     color: AppColors.gray5,
                                   ),
                                 ),
                               ),
                               Text(
                                 e.dateTime.asDateTime.asDayMonthYearShort,
-                                style: TextStyles.bodyB2.copyWith(
+                                style: TextStyles.s14w400.copyWith(
                                   color: AppColors.gray2,
                                 ),
                               ),
@@ -544,7 +551,7 @@ class _EventBottomSheet extends HookConsumerWidget {
                         children: [
                           Text(
                             event.id.isEmpty ? 'הוספת אירוע' : 'עריכת אירוע',
-                            style: TextStyles.bodyB41.copyWith(
+                            style: TextStyles.s20w400.copyWith(
                               color: AppColors.gray2,
                             ),
                           ),
@@ -565,7 +572,7 @@ class _EventBottomSheet extends HookConsumerWidget {
                                 'כברירת מחדל, התראה תשלח 3 ימים לפני מועד האירוע.'
                                 '\n'
                                 'ניתן לשנות בהגדרות.',
-                                style: TextStyles.bodyB2.copyWith(
+                                style: TextStyles.s14w400.copyWith(
                                   color: AppColors.blue04,
                                 ),
                               ),
@@ -576,7 +583,8 @@ class _EventBottomSheet extends HookConsumerWidget {
                                   controller: titleController,
                                   decoration: InputDecoration(
                                     hintText: 'שם האירוע',
-                                    hintStyle: TextStyles.bodyB3.copyWith(
+                                    hintStyle:
+                                        TextStyles.s16w400cGrey2.copyWith(
                                       color: AppColors.grey5,
                                     ),
                                   ),
@@ -622,7 +630,8 @@ class _EventBottomSheet extends HookConsumerWidget {
                                           ? 'MM/DD/YY'
                                           : DateFormat('dd/MM/yy')
                                               .format(selectedDatetime.value!),
-                                      hintStyle: TextStyles.bodyB3.copyWith(
+                                      hintStyle:
+                                          TextStyles.s16w400cGrey2.copyWith(
                                         color: AppColors.grey5,
                                       ),
                                       suffixIcon: const Padding(
@@ -651,7 +660,7 @@ class _EventBottomSheet extends HookConsumerWidget {
                                 maxLines: 6,
                                 decoration: InputDecoration(
                                   hintText: 'כתוב את תיאור האירוע',
-                                  hintStyle: TextStyles.bodyB3.copyWith(
+                                  hintStyle: TextStyles.s16w400cGrey2.copyWith(
                                     color: AppColors.grey5,
                                   ),
                                 ),
@@ -748,7 +757,7 @@ class _AnnouncementItem extends StatelessWidget {
         const SizedBox(width: 18),
         Text.rich(
           text,
-          style: TextStyles.bodyB2.copyWith(
+          style: TextStyles.s14w400.copyWith(
             color: AppColors.gray5,
           ),
         ),
@@ -827,7 +836,7 @@ class _PersonalInfoTabView extends StatelessWidget {
               children: [
                 Text.rich(
                   TextSpan(
-                    style: TextStyles.bodyB2,
+                    style: TextStyles.s14w400,
                     children: [
                       TextSpan(
                         text: apprentice.contacts[index].relationship,
@@ -846,7 +855,7 @@ class _PersonalInfoTabView extends StatelessWidget {
                   children: [
                     Text(
                       apprentice.contacts[index].phone,
-                      style: TextStyles.bodyB2.copyWith(
+                      style: TextStyles.s14w400.copyWith(
                         color: AppColors.gray2,
                       ),
                     ),
@@ -1000,7 +1009,7 @@ class _Card extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyles.bodyB41.copyWith(
+                    style: TextStyles.s20w400.copyWith(
                       color: AppColors.gray2,
                     ),
                   ),
@@ -1074,12 +1083,12 @@ class _Header extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 '${apprentice.firstName} ${apprentice.lastName}',
-                style: TextStyles.titleB4BoldX,
+                style: TextStyles.s24w600,
               ),
               const SizedBox(width: 2),
               Text(
                 apprentice.phone,
-                style: TextStyles.bodyB3.copyWith(
+                style: TextStyles.s16w400cGrey2.copyWith(
                   color: AppColors.gray5,
                 ),
               ),
@@ -1163,14 +1172,14 @@ class _MissingInformationDialog extends StatelessWidget {
                     children: [
                       Text(
                         'חסרים פרטים',
-                        style: TextStyles.bodyB4,
+                        style: TextStyles.s24w400,
                       ),
                       SizedBox(height: 16),
                       Text(
                         'מספר הטלפון לא מוזן במערכת,'
                         '\n'
                         'ולכן אין אפשרות להתקשר.',
-                        style: TextStyles.bodyB3,
+                        style: TextStyles.s16w400cGrey2,
                       ),
                     ],
                   ),
@@ -1219,7 +1228,7 @@ class _ActionButton extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           text,
-          style: TextStyles.actionButton,
+          style: TextStyles.s12w300cGray2,
         ),
       ],
     );

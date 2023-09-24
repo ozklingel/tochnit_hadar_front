@@ -14,6 +14,7 @@ import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
@@ -43,9 +44,15 @@ class ReportDetailsScreen extends HookConsumerWidget {
                   orElse: () => const ReportDto(),
                 ) ??
             const ReportDto();
+    final reportApprentices = ref
+            .watch(apprenticesControllerProvider)
+            .valueOrNull
+            ?.where((element) => report.apprentices.contains(element.id))
+            .toList() ??
+        [];
     final apprenticeSearchController = useTextEditingController();
     final selectedDatetime = useState<DateTime?>(report.dateTime.asDateTime);
-    final selectedApprentices = useState(report.apprentices);
+    final selectedApprentices = useState(reportApprentices);
     final selectedEventType = useState(report.reportEventType);
 
     if (isReadOnly) {
@@ -83,7 +90,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
             children: [
               const Text(
                 'קבוצת בה”ד 1',
-                style: TextStyles.bodyB41,
+                style: TextStyles.s20w400,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
@@ -98,7 +105,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'משתתפים',
-                data: report.apprentices
+                data: reportApprentices
                     .map((e) => '${e.firstName} ${e.lastName}')
                     .join(', '),
               ),
@@ -110,7 +117,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
               const SizedBox(height: 12),
               Text(
                 'תמונות',
-                style: TextStyles.bodyB2.copyWith(
+                style: TextStyles.s14w400.copyWith(
                   color: AppColors.grey5,
                 ),
               ),
@@ -230,7 +237,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             enabledBorder: InputBorder.none,
                             prefixIcon: Icon(Icons.search),
                             hintText: 'חיפוש',
-                            hintStyle: TextStyles.bodyB2,
+                            hintStyle: TextStyles.s14w400,
                           ),
                         ),
                       ),
@@ -373,7 +380,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                               ? 'MM/DD/YY'
                               : DateFormat('dd/MM/yy')
                                   .format(selectedDatetime.value!),
-                          hintStyle: TextStyles.bodyB3.copyWith(
+                          hintStyle: TextStyles.s16w400cGrey2.copyWith(
                             color: AppColors.grey5,
                           ),
                           suffixIcon: const Padding(
@@ -472,7 +479,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                     maxLines: 8,
                     decoration: InputDecoration(
                       hintText: 'כתוב את תיאור האירוע',
-                      hintStyle: TextStyles.bodyB3.copyWith(
+                      hintStyle: TextStyles.s16w400cGrey2.copyWith(
                         color: AppColors.grey5,
                       ),
                     ),
@@ -483,7 +490,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                     child: TextButton.icon(
                       style: TextButton.styleFrom(
                         foregroundColor: AppColors.mainCTA,
-                        textStyle: TextStyles.bodyB3Bold,
+                        textStyle: TextStyles.s16w500cGrey2,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(36),
                         ),
@@ -558,12 +565,12 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                         const Text(
                                           'הדיווח הושלם בהצלחה!',
                                           textAlign: TextAlign.center,
-                                          style: TextStyles.bodyB41Bold,
+                                          style: TextStyles.s20w500,
                                         ),
                                         const SizedBox(height: 24),
                                         const Text(
                                           'יישר כח!',
-                                          style: TextStyles.bodyB3,
+                                          style: TextStyles.s16w400cGrey2,
                                           textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(height: 24),
@@ -574,8 +581,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               'חזרה לעמוד הבית',
-                                              style: TextStyles.bodyB2Bold
-                                                  .copyWith(
+                                              style:
+                                                  TextStyles.s14w500.copyWith(
                                                 color: AppColors.blue02,
                                               ),
                                             ),

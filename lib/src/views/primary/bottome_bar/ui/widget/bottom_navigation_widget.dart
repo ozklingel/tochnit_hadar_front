@@ -31,7 +31,7 @@ class BottomNavigationWidget extends ConsumerWidget {
         onTap: (value) => navShell.goBranch(value),
         type: BottomNavigationBarType.fixed,
         selectedItemColor: AppColors.blue03,
-        selectedLabelStyle: TextStyles.bodyB1Bold.copyWith(
+        selectedLabelStyle: TextStyles.s12w500.copyWith(
           color: AppColors.blue03,
         ),
         unselectedItemColor: AppColors.grey3,

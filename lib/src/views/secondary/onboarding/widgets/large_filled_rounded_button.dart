@@ -9,7 +9,7 @@ class LargeFilledRoundedButton extends StatelessWidget {
     this.onPressed,
     this.backgroundColor = AppColors.blue02,
     this.foregroundColor = Colors.white,
-    this.textStyle = TextStyles.bodyB4Bold,
+    this.textStyle = TextStyles.s24w500cGrey2,
   });
 
   final String label;

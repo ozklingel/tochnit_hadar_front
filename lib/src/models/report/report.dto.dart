@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 
 part 'report.dto.f.dart';
 part 'report.dto.g.dart';
@@ -11,7 +10,7 @@ class ReportDto with _$ReportDto {
     @Default('') String id,
     @Default('') String description,
     @Default(ReportEventType.none) ReportEventType reportEventType,
-    @Default([]) List<ApprenticeDto> apprentices,
+    @Default([]) List<String> apprentices,
     @Default([]) List<String> attachments,
     // in milliseconds since epoch
     @Default(0) int dateTime,

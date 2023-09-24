@@ -91,14 +91,14 @@ class _UpcomingTasks extends HookConsumerWidget {
             children: [
               const Text(
                 'משימות לביצוע',
-                style: TextStyles.bodyB41Bold,
+                style: TextStyles.s20w500,
               ),
               const Spacer(),
               TextButton(
                 onPressed: () => const TasksRouteData().go(context),
                 child: const Text(
                   'הצג הכל',
-                  style: TextStyles.subtitle,
+                  style: TextStyles.s14w300cGray2,
                 ),
               ),
             ],
@@ -112,7 +112,7 @@ class _UpcomingTasks extends HookConsumerWidget {
           if (calls.isEmpty)
             const Text(
               'אין שיחות שמחכות לביצוע',
-              style: TextStyles.cardSubtitle,
+              style: TextStyles.s16w300cGray2,
             )
           else
             ListView(
@@ -136,7 +136,7 @@ class _UpcomingTasks extends HookConsumerWidget {
           if (meetings.isEmpty)
             const Text(
               'אין מפגשים שמחכים לביצוע',
-              style: TextStyles.cardSubtitle,
+              style: TextStyles.s16w300cGray2,
             )
           else
             ListView(
@@ -160,7 +160,7 @@ class _UpcomingTasks extends HookConsumerWidget {
           if (parents.isEmpty)
             const Text(
               'אין שיחות להורים שמחכות לביצוע',
-              style: TextStyles.cardSubtitle,
+              style: TextStyles.s16w300cGray2,
             )
           else
             ListView(
@@ -198,7 +198,7 @@ class _ActionsRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyles.smallHeading,
+            style: TextStyles.s18w400cGray1,
           ),
           const Spacer(),
           if (selectedTasks.length == 1) ...[
@@ -257,7 +257,7 @@ class _UpcomingEvents extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 24),
           child: Text(
             'אירועים קרובים',
-            style: TextStyles.bodyB41Bold,
+            style: TextStyles.s20w500,
           ),
         ),
         const SizedBox(height: 16),
@@ -318,12 +318,12 @@ class _Header extends ConsumerWidget {
                       children: [
                         const TextSpan(
                           text: 'בוקר טוב',
-                          style: TextStyles.homeGreeting,
+                          style: TextStyles.s20w300cWhite,
                         ),
                         const TextSpan(text: '\n'),
                         TextSpan(
                           text: user.fullName,
-                          style: TextStyles.homeName,
+                          style: TextStyles.s32w500cWhite,
                         ),
                       ],
                     ),
@@ -369,11 +369,11 @@ class _EventCard extends StatelessWidget {
                   children: [
                     Text(
                       'יאיר כהן',
-                      style: TextStyles.bodyB3Bold,
+                      style: TextStyles.s16w500cGrey2,
                     ),
                     Text(
                       'בעוד 2 ימים בתאריך א’ סיו וןיום הולדת 23',
-                      style: TextStyles.subtitle,
+                      style: TextStyles.s14w300cGray2,
                       maxLines: 2,
                     ),
                   ],
