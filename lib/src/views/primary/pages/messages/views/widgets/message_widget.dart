@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:timeago/timeago.dart';
 
 class MessageWidget extends StatelessWidget {
   const MessageWidget.collapsed({
@@ -38,12 +38,12 @@ class MessageWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 260,
+                  width: 246,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${message.from.firstName} ${message.from.lastName}',
+                        message.from.fullName,
                         style: TextStyles.s18w600cShade09,
                       ),
                       if (isExpanded) const SizedBox(height: 16),
@@ -78,10 +78,7 @@ class MessageWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  format(
-                    message.dateTime.asDateTime,
-                    locale: Localizations.localeOf(context).languageCode,
-                  ),
+                  message.dateTime.asDateTime.asTimeAgo,
                   style: TextStyles.s12w400cGrey5fRoboto,
                 ),
               ],

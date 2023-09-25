@@ -35,6 +35,7 @@ dependencies:
   freezed_annotation: ^2.4.1
   riverpod_annotation: ^2.0.0
   bot_toast: ^4.1.1
+  skeletonizer: ^0.8.0
 
   # util
   collection: ^1.17.2

@@ -59,6 +59,7 @@ abstract class AppColors {
   static const shade01 = Color(0xFFFFFFFF);
 
   static const shades300 = Color(0xFFDBDBDB);
+  static const shades200 = Color(0xFFEDEDED);
 
   static const red02 = Color(0xFFEA4E45);
 

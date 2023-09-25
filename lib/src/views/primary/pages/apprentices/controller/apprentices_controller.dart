@@ -14,6 +14,8 @@ part 'apprentices_controller.g.dart';
 class ApprenticesController extends _$ApprenticesController {
   @override
   FutureOr<List<ApprenticeDto>> build() async {
+    await Future.delayed(const Duration(milliseconds: 400));
+
     return List.generate(
       Consts.mockApprenticeGuids.length,
       (index) => ApprenticeDto(

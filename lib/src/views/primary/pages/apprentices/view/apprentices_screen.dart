@@ -19,6 +19,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/a
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/compound_bottom_sheet.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
 class ApprenticesScreen extends HookConsumerWidget {
@@ -294,31 +295,81 @@ class _ApprenticeList extends ConsumerWidget {
             child: RefreshIndicator.adaptive(
               onRefresh: () =>
                   ref.refresh(apprenticesControllerProvider.future),
-              child: ref.watch(apprenticesControllerProvider).when(
-                    loading: () => const LoadingWidget(),
-                    error: (error, stack) => const SizedBox(),
-                    data: (apprentices) {
-                      final children = apprentices
-                          .map(
-                            (e) => ApprenticeCard(
-                              selectedIds: selectedIds,
-                              apprentice: e,
-                            ),
-                          )
-                          .toList();
-
-                      return ListView.separated(
-                        itemCount: children.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 12),
-                        itemBuilder: (context, index) => children[index],
-                      );
-                    },
+              child: ref
+                  .watch(apprenticesControllerProvider)
+                  .unwrapPrevious()
+                  .when(
+                    error: (error, stack) => CustomScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      slivers: [
+                        SliverFillRemaining(
+                          child: Center(
+                            child: Text(error.toString()),
+                          ),
+                        ),
+                      ],
+                    ),
+                    loading: () => _ListBody(
+                      selectedIds: selectedIds,
+                      isLoading: true,
+                      apprentices: List.generate(
+                        10,
+                        (index) => const ApprenticeDto(
+                          firstName: 'firstName',
+                          lastName: 'lastName',
+                          avatar: 'https://picsum.photos/200',
+                          highSchoolInstitution: 'highSchool',
+                          thPeriod: 'thPeriod',
+                          militaryPositionNew: 'militaryPosition',
+                          thInstitution: 'thInstitution',
+                          militaryUnit: 'militaryUnit',
+                          maritalStatus: 'maritalStatus',
+                        ),
+                      ),
+                    ),
+                    data: (apprentices) => _ListBody(
+                      apprentices: apprentices,
+                      selectedIds: selectedIds,
+                      isLoading: false,
+                    ),
                   ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ListBody extends StatelessWidget {
+  const _ListBody({
+    required this.apprentices,
+    required this.selectedIds,
+    required this.isLoading,
+  });
+
+  final List<ApprenticeDto> apprentices;
+  final ValueNotifier<List<String>> selectedIds;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    final children = apprentices
+        .map(
+          (e) => Skeletonizer(
+            enabled: isLoading,
+            child: ApprenticeCard(
+              selectedIds: selectedIds,
+              apprentice: e,
+            ),
+          ),
+        )
+        .toList();
+
+    return ListView.separated(
+      itemCount: children.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      itemBuilder: (context, index) => children[index],
     );
   }
 }

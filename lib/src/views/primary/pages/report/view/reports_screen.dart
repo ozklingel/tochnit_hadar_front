@@ -15,6 +15,7 @@ import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_fille
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:timeago/timeago.dart';
 
 class ReportsScreen extends HookConsumerWidget {
@@ -186,189 +187,214 @@ class ReportsScreen extends HookConsumerWidget {
       body: RefreshIndicator.adaptive(
         onRefresh: () => ref.refresh(reportsControllerProvider.future),
         child: controller.when(
-          loading: () => const LoadingWidget(),
-          error: (error, s) => CustomScrollView(
+          error: (error, stack) => CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverFillRemaining(
                 child: Center(
-                  child: Text(error.toString()),
+                  child: Text(controller.error.toString()),
                 ),
               ),
             ],
           ),
-          data: (reports) {
-            if (reports.isEmpty) {
-              return CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: [
-                  SliverFillRemaining(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Assets.images.noMessages.svg(),
-                        const Text(
-                          'אין הודעות נכנסות',
-                          textAlign: TextAlign.center,
-                          style: TextStyles.s20w500,
-                        ),
-                        const Text(
-                          'הודעות נכנסות שישלחו, יופיעו כאן',
-                          textAlign: TextAlign.center,
-                          style: TextStyles.s14w400,
-                        ),
-                      ],
-                    ),
+          loading: () => _ReporsListBody(
+            reports: List.generate(
+              10,
+              (index) => const ReportDto(),
+            ),
+            isLoading: true,
+            selectedIds: selectedIds,
+          ),
+          data: (reports) => _ReporsListBody(
+            reports: reports,
+            isLoading: false,
+            selectedIds: selectedIds,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ReporsListBody extends ConsumerWidget {
+  const _ReporsListBody({
+    required this.reports,
+    required this.isLoading,
+    required this.selectedIds,
+  });
+
+  final List<ReportDto> reports;
+  final ValueNotifier<List<String>> selectedIds;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    if (reports.isEmpty && !isLoading) {
+      return CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverFillRemaining(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Assets.images.noMessages.svg(),
+                const Text(
+                  'אין הודעות נכנסות',
+                  textAlign: TextAlign.center,
+                  style: TextStyles.s20w500,
+                ),
+                const Text(
+                  'הודעות נכנסות שישלחו, יופיעו כאן',
+                  textAlign: TextAlign.center,
+                  style: TextStyles.s14w400,
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    final children = reports
+        .map(
+          (e) => Skeletonizer(
+            enabled: isLoading,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
                   ),
                 ],
-              );
-            }
-
-            final children = reports
-                .map(
-                  (e) => DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 24,
-                          offset: const Offset(0, 12),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(12),
-                      child: AnimatedContainer(
-                        duration: Consts.defaultDurationM,
-                        decoration: BoxDecoration(
-                          color: selectedIds.value.contains(e.id)
-                              ? AppColors.blue08
-                              : Colors.white,
-                        ),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(12),
-                          onTap: () =>
-                              ReportDetailsRouteData(id: e.id).push(context),
-                          onLongPress: () {
-                            if (selectedIds.value.contains(e.id)) {
-                              final newList = selectedIds;
-                              newList.value.remove(e.id);
-                              selectedIds.value = [...newList.value];
-                            } else {
-                              selectedIds.value = [
-                                ...selectedIds.value,
-                                e.id,
-                              ];
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(
-                                  children: [
-                                    const CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: AppColors.grey6,
-                                      child: Icon(
-                                        FluentIcons.person_24_filled,
-                                        size: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    SizedBox(
-                                      width: 264,
-                                      child: ref
-                                          .watch(apprenticesControllerProvider)
-                                          .when(
-                                            loading: () =>
-                                                const LoadingWidget(),
-                                            error: (error, stack) =>
-                                                const SizedBox(),
-                                            data: (reportApprentices) {
-                                              final apprentices =
-                                                  reportApprentices
-                                                      .where(
-                                                        (element) => e
-                                                            .apprentices
-                                                            .contains(
-                                                          element.id,
-                                                        ),
-                                                      )
-                                                      .toList();
-
-                                              return Text(
-                                                apprentices
-                                                    .map(
-                                                      (a) =>
-                                                          '${a.firstName} ${a.lastName}',
-                                                    )
-                                                    .join(', '),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyles.s18w500cGray1,
-                                              );
-                                            },
-                                          ),
-                                    ),
-                                  ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+                child: AnimatedContainer(
+                  duration: Consts.defaultDurationM,
+                  decoration: BoxDecoration(
+                    color: selectedIds.value.contains(e.id)
+                        ? AppColors.blue08
+                        : Colors.white,
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => ReportDetailsRouteData(id: e.id).push(context),
+                    onLongPress: () {
+                      if (selectedIds.value.contains(e.id)) {
+                        final newList = selectedIds;
+                        newList.value.remove(e.id);
+                        selectedIds.value = [...newList.value];
+                      } else {
+                        selectedIds.value = [
+                          ...selectedIds.value,
+                          e.id,
+                        ];
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              const CircleAvatar(
+                                radius: 12,
+                                backgroundColor: AppColors.grey6,
+                                child: Icon(
+                                  FluentIcons.person_24_filled,
+                                  size: 16,
+                                  color: Colors.white,
                                 ),
-                                const SizedBox(height: 16),
-                                Text.rich(
-                                  TextSpan(
-                                    style: TextStyles.s14w400,
-                                    children: [
-                                      TextSpan(
-                                        text: DateFormat('dd.MM.yy')
-                                            .format(
-                                              DateTime
-                                                  .fromMillisecondsSinceEpoch(
-                                                e.dateTime,
+                              ),
+                              const SizedBox(width: 8),
+                              SizedBox(
+                                width: 264,
+                                child: ref
+                                    .watch(
+                                      apprenticesControllerProvider,
+                                    )
+                                    .when(
+                                      loading: () => const LoadingWidget(),
+                                      error: (error, stack) => const SizedBox(),
+                                      data: (reportApprentices) {
+                                        final apprentices = reportApprentices
+                                            .where(
+                                              (element) =>
+                                                  e.apprentices.contains(
+                                                element.id,
                                               ),
                                             )
-                                            .toString(),
-                                      ),
-                                      const TextSpan(text: ', '),
-                                      TextSpan(
-                                        text: format(
-                                          e.dateTime.asDateTime,
-                                          locale: Localizations.localeOf(
-                                            context,
-                                          ).languageCode,
+                                            .toList();
+
+                                        return Text(
+                                          apprentices
+                                              .map(
+                                                (a) =>
+                                                    '${a.firstName} ${a.lastName}',
+                                              )
+                                              .join(', '),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyles.s18w500cGray1,
+                                        );
+                                      },
+                                    ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Text.rich(
+                            TextSpan(
+                              style: TextStyles.s14w400,
+                              children: [
+                                TextSpan(
+                                  text: DateFormat('dd.MM.yy')
+                                      .format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                          e.dateTime,
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                      )
+                                      .toString(),
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  e.reportEventType.name,
-                                  style: TextStyles.s16w400cGrey2,
+                                const TextSpan(text: ', '),
+                                TextSpan(
+                                  text: format(
+                                    e.dateTime.asDateTime,
+                                    locale: Localizations.localeOf(
+                                      context,
+                                    ).languageCode,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
+                          const SizedBox(height: 8),
+                          Text(
+                            e.reportEventType.name,
+                            style: TextStyles.s16w400cGrey2,
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                )
-                .toList();
+                ),
+              ),
+            ),
+          ),
+        )
+        .toList();
 
-            return ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: children.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 8),
-              itemBuilder: (context, index) => children[index],
-            );
-          },
-        ),
-      ),
+    return ListView.separated(
+      padding: const EdgeInsets.all(16),
+      itemCount: children.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
+      itemBuilder: (context, index) => children[index],
     );
   }
 }

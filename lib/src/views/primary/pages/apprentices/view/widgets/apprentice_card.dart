@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -99,32 +97,15 @@ class ApprenticeCard extends StatelessWidget {
                       SizedBox(
                         width: 240,
                         child: Text(
-                          Random().nextBool()
-                              ? 'בני דוד עלי'
-                                  ' • '
-                                  'מחזור ג'
-                                  ' • '
-                                  'סדיר'
-                                  ' • '
-                                  'גבעתי'
-                                  ' • '
-                                  'צאלים'
-                                  ' • '
-                                  'רווק'
-                              : 'סדיר'
-                                  ' • '
-                                  'גבעתי'
-                                  ' • '
-                                  'צאלים'
-                                  ' • '
-                                  'חטמר שומרון'
-                                  ' • '
-                                  'רווק'
-                                  ' • '
-                                  'בני דוד עלי'
-                                  ' • '
-                                  'מחזור ג'
-                                  ' • ',
+                          [
+                            apprentice.highSchoolInstitution,
+                            apprentice.thPeriod,
+                            apprentice.militaryPositionNew,
+                            apprentice.thInstitution,
+                            apprentice.militaryCompound.name,
+                            apprentice.militaryUnit,
+                            apprentice.maritalStatus,
+                          ].join(' • '),
                           style: TextStyles.s12w500.copyWith(
                             color: AppColors.blue03,
                           ),

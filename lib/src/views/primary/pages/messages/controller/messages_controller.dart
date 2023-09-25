@@ -17,41 +17,34 @@ part 'messages_controller.g.dart';
 class MessagesController extends _$MessagesController {
   @override
   FutureOr<List<MessageDto>> build() async {
-    // await Future.delayed(const Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 200));
 
     final apprentices =
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
-    final result1 = Random().nextBool();
-    final result2 = Random().nextBool();
-
-    return result1
-        ? List.generate(
-            31,
-            (index) {
-              return MessageDto(
-                id: faker.guid.guid(),
-                from: apprentices.isEmpty
-                    ? const ApprenticeDto()
-                    : apprentices[Random().nextInt(apprentices.length)],
-                title: faker.lorem.sentence(),
-                content: faker.lorem.sentence(),
-                dateTime: faker.date
-                    .dateTime(
-                      minYear: 1971,
-                      maxYear: DateTime.now().year,
-                    )
-                    .millisecondsSinceEpoch,
-                attachments: List.generate(
-                  11,
-                  (index) => faker.image.image(height: 100, width: 100),
-                ),
-              );
-            },
-          )
-        : result2
-            ? []
-            : throw Exception('Error fetching messages');
+    return List.generate(
+      31,
+      (index) {
+        return MessageDto(
+          id: faker.guid.guid(),
+          from: apprentices.isEmpty
+              ? const ApprenticeDto()
+              : apprentices[Random().nextInt(apprentices.length)],
+          title: faker.lorem.sentence(),
+          content: faker.lorem.sentence(),
+          dateTime: faker.date
+              .dateTime(
+                minYear: 1971,
+                maxYear: DateTime.now().year,
+              )
+              .millisecondsSinceEpoch,
+          attachments: List.generate(
+            11,
+            (index) => faker.image.image(height: 100, width: 100),
+          ),
+        );
+      },
+    );
   }
 
   Future<bool> deleteMessage(String messageId) async {
