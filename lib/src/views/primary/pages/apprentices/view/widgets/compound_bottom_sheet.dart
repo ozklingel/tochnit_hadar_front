@@ -148,7 +148,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
                             IconButton(
                               onPressed: () => Toaster.unimplemented(),
                               icon: const Icon(
-                                FluentIcons.clipboard_checkmark_24_regular,
+                                FluentIcons.clipboard_task_24_regular,
                               ),
                             ),
                           ],

@@ -39,6 +39,20 @@ class TaskCard extends StatelessWidget {
             backgroundImage: CachedNetworkImageProvider(
               task.apprentice.avatar,
             ),
+            child: selectedItems.value.contains(task)
+                ? const Align(
+                    alignment: Alignment.bottomRight,
+                    child: CircleAvatar(
+                      radius: 8,
+                      backgroundColor: AppColors.green1,
+                      child: Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 12,
+                      ),
+                    ),
+                  )
+                : null,
           ),
           title: Text(
             task.apprentice.fullName,

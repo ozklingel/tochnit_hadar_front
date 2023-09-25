@@ -14,6 +14,8 @@ abstract class AppColors {
   static const blue07 = Color(0xFFECF2F5);
   static const blue08 = Color(0xFFF4F8FB);
 
+  static const green1 = Color(0xFF33C010);
+
   static const success900 = Color(0xFF1B570D);
   static const success800 = Color(0xFF298213);
   static const success700 = Color(0xFF37AD19);
@@ -61,6 +63,7 @@ abstract class AppColors {
   static const shades300 = Color(0xFFDBDBDB);
   static const shades200 = Color(0xFFEDEDED);
 
+  static const red01 = Color(0xFFCD190E);
   static const red02 = Color(0xFFEA4E45);
 
   static const loadingComplete = Color(0xFF0057FF);

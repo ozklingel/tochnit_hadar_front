@@ -6,6 +6,7 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
@@ -106,6 +107,9 @@ class ApprenticeDetailsScreen extends HookConsumerWidget {
                         ),
                         SliverToBoxAdapter(
                           child: e,
+                        ),
+                        const SliverPadding(
+                          padding: EdgeInsets.only(bottom: 20),
                         ),
                       ],
                     );
@@ -475,7 +479,8 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                         event: e,
                                       ),
                                     ),
-                                    icon: FluentIcons.edit_24_regular,
+                                    icon:
+                                        const Icon(FluentIcons.edit_24_regular),
                                   ),
                                   const SizedBox(width: 4),
                                   _RowIconButton(
@@ -496,7 +501,9 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                         );
                                       }
                                     },
-                                    icon: FluentIcons.delete_24_regular,
+                                    icon: const Icon(
+                                      FluentIcons.delete_24_regular,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -877,22 +884,24 @@ class _PersonalInfoTabView extends StatelessWidget {
                     const Spacer(),
                     _RowIconButton(
                       onPressed: () => Toaster.unimplemented(),
-                      icon: FluentIcons.chat_24_regular,
+                      icon: const Icon(FluentIcons.chat_24_regular),
                     ),
                     const SizedBox(width: 4),
                     _RowIconButton(
-                      icon: FluentIcons.chat_24_regular,
+                      icon: Assets.icons.whatsapp.svg(
+                        height: 20,
+                      ),
                       onPressed: () => Toaster.unimplemented(),
                     ),
                     const SizedBox(width: 4),
                     _RowIconButton(
                       onPressed: () => Toaster.unimplemented(),
-                      icon: FluentIcons.call_24_regular,
+                      icon: const Icon(FluentIcons.call_24_regular),
                     ),
                     const SizedBox(width: 4),
                     _RowIconButton(
                       onPressed: () => Toaster.unimplemented(),
-                      icon: FluentIcons.mail_24_regular,
+                      icon: const Icon(FluentIcons.mail_24_regular),
                     ),
                   ],
                 ),
@@ -964,7 +973,7 @@ class _RowIconButton extends StatelessWidget {
   });
 
   final VoidCallback onPressed;
-  final IconData icon;
+  final Widget icon;
 
   @override
   Widget build(BuildContext context) {
@@ -975,10 +984,7 @@ class _RowIconButton extends StatelessWidget {
         onTap: onPressed,
         child: Padding(
           padding: const EdgeInsets.all(4),
-          child: Icon(
-            icon,
-            color: AppColors.gray2,
-          ),
+          child: icon,
         ),
       ),
     );
@@ -1113,7 +1119,7 @@ class _Header extends StatelessWidget {
                 children: [
                   _ActionButton(
                     text: 'שיחה',
-                    icon: FluentIcons.call_24_regular,
+                    icon: const Icon(FluentIcons.call_24_regular),
                     onPressed: () async {
                       if (apprentice.phone.isEmpty) {
                         showDialog(
@@ -1134,17 +1140,19 @@ class _Header extends StatelessWidget {
                   ),
                   _ActionButton(
                     text: 'וואטסאפ',
-                    icon: FluentIcons.chat_24_regular,
+                    icon: Assets.icons.whatsapp.svg(
+                      height: 20,
+                    ),
                     onPressed: () => Toaster.unimplemented(),
                   ),
                   _ActionButton(
                     text: 'SMS',
-                    icon: FluentIcons.clipboard_checkmark_24_regular,
+                    icon: const Icon(FluentIcons.chat_24_regular),
                     onPressed: () => Toaster.unimplemented(),
                   ),
                   _ActionButton(
                     text: 'דיווח',
-                    icon: FluentIcons.clipboard_checkmark_24_regular,
+                    icon: const Icon(FluentIcons.clipboard_task_24_regular),
                     onPressed: () => Toaster.unimplemented(),
                   ),
                 ],
@@ -1220,7 +1228,7 @@ class _ActionButton extends StatelessWidget {
     required this.onPressed,
   });
 
-  final IconData icon;
+  final Widget icon;
   final String text;
   final VoidCallback onPressed;
 
@@ -1238,7 +1246,7 @@ class _ActionButton extends StatelessWidget {
             ),
           ),
           onPressed: onPressed,
-          icon: Icon(icon),
+          icon: icon,
         ),
         const SizedBox(height: 4),
         Text(

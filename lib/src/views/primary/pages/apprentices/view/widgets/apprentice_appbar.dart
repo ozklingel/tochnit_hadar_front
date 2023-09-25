@@ -93,7 +93,7 @@ class ApprenticeAppBar extends StatelessWidget {
               else
                 IconButton(
                   onPressed: () => Toaster.unimplemented(),
-                  icon: const Icon(FluentIcons.clipboard_checkmark_24_regular),
+                  icon: const Icon(FluentIcons.clipboard_task_24_regular),
                 ),
               const SizedBox(width: 16),
             ],

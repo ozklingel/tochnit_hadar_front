@@ -25,46 +25,75 @@ class BottomNavigationWidget extends ConsumerWidget {
           ),
         ],
       ),
-      child: BottomNavigationBar(
-        backgroundColor: AppColors.scafooldBottomNavBackgroundColor,
-        currentIndex: navShell.currentIndex,
-        onTap: (value) => navShell.goBranch(value),
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppColors.blue03,
-        selectedLabelStyle: TextStyles.s12w500.copyWith(
-          color: AppColors.blue03,
+      child: SizedBox(
+        height: kBottomNavigationBarHeight,
+        child: Stack(
+          children: [
+            BottomNavigationBar(
+              backgroundColor: AppColors.scafooldBottomNavBackgroundColor,
+              currentIndex: navShell.currentIndex,
+              onTap: (value) => navShell.goBranch(value),
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: AppColors.blue03,
+              selectedLabelStyle: TextStyles.s12w500.copyWith(
+                color: AppColors.blue03,
+              ),
+              unselectedItemColor: AppColors.grey3,
+              unselectedLabelStyle: TextStyles.bodyB1.copyWith(
+                color: AppColors.grey3,
+              ),
+              items: const [
+                BottomNavigationBarItem(
+                  activeIcon: Icon(FluentIcons.clipboard_task_24_regular),
+                  icon: Icon(FluentIcons.clipboard_task_24_regular),
+                  label: 'משימות',
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Icon(FluentIcons.checkmark_circle_24_regular),
+                  icon: Icon(FluentIcons.checkmark_circle_24_regular),
+                  label: 'דיווחים',
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Icon(FluentIcons.home_24_regular),
+                  icon: Icon(FluentIcons.home_24_regular),
+                  label: 'בית',
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Icon(FluentIcons.mail_24_regular),
+                  icon: Icon(FluentIcons.mail_24_regular),
+                  label: 'הודעות',
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Icon(FluentIcons.person_24_regular),
+                  icon: Icon(FluentIcons.person_24_regular),
+                  label: 'חניכים',
+                ),
+              ],
+            ),
+            const Align(
+              alignment: Alignment(0.9, -0.8),
+              child: CircleAvatar(
+                backgroundColor: AppColors.red01,
+                radius: 10,
+                child: Text(
+                  '3',
+                  style: TextStyles.s11w500,
+                ),
+              ),
+            ),
+            const Align(
+              alignment: Alignment(-0.36, -0.8),
+              child: CircleAvatar(
+                backgroundColor: AppColors.red01,
+                radius: 10,
+                child: Text(
+                  '3',
+                  style: TextStyles.s11w500,
+                ),
+              ),
+            ),
+          ],
         ),
-        unselectedItemColor: AppColors.grey3,
-        unselectedLabelStyle: TextStyles.bodyB1.copyWith(
-          color: AppColors.grey3,
-        ),
-        items: const [
-          BottomNavigationBarItem(
-            activeIcon: Icon(FluentIcons.tasks_app_24_regular),
-            icon: Icon(FluentIcons.tasks_app_24_regular),
-            label: 'משימות',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(FluentIcons.checkmark_circle_24_regular),
-            icon: Icon(FluentIcons.checkmark_circle_24_regular),
-            label: 'דיווחים',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(FluentIcons.home_24_regular),
-            icon: Icon(FluentIcons.home_24_regular),
-            label: 'בית',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(FluentIcons.mail_24_regular),
-            icon: Icon(FluentIcons.mail_24_regular),
-            label: 'הודעות',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(FluentIcons.person_24_regular),
-            icon: Icon(FluentIcons.person_24_regular),
-            label: 'חניכים',
-          ),
-        ],
       ),
     );
   }

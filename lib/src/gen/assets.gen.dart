@@ -11,6 +11,16 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/whatsapp.svg
+  SvgGenImage get whatsapp => const SvgGenImage('assets/icons/whatsapp.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [whatsapp];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -43,6 +53,7 @@ class $AssetsImagesGen {
 class Assets {
   Assets._();
 
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 

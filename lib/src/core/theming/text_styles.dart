@@ -185,4 +185,13 @@ abstract class TextStyles {
       FontVariation('wght', 300),
     ],
   );
+
+  static const s11w500 = TextStyle(
+    fontFamily: 'Roboto',
+    fontSize: 11,
+    color: Colors.white,
+    fontVariations: [
+      FontVariation('wght', 500),
+    ],
+  );
 }

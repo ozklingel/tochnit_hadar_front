@@ -216,11 +216,13 @@ class _ActionsRow extends StatelessWidget {
             ),
             IconButton(
               onPressed: () => Toaster.unimplemented(),
-              icon: const Icon(FluentIcons.chat_24_regular),
+              icon: Assets.icons.whatsapp.svg(
+                height: 20,
+              ),
             ),
             IconButton(
               onPressed: () => Toaster.unimplemented(),
-              icon: const Icon(FluentIcons.clipboard_checkmark_24_regular),
+              icon: const Icon(FluentIcons.clipboard_task_24_regular),
             ),
             PopupMenuButton(
               offset: const Offset(0, 32),
@@ -239,7 +241,7 @@ class _ActionsRow extends StatelessWidget {
           ] else if (selectedTasks.length > 1)
             IconButton(
               onPressed: () => Toaster.unimplemented(),
-              icon: const Icon(FluentIcons.clipboard_checkmark_24_regular),
+              icon: const Icon(FluentIcons.clipboard_task_24_regular),
             ),
         ],
       ),
