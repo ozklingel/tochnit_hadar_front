@@ -1,4 +1,3 @@
-import 'package:faker/faker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
@@ -49,10 +48,6 @@ class CompoundController extends _$CompoundController {
       (index) => CompoundDto(
         id: Consts.mockCompoundGuids[index],
         name: 'קומפאונד $index',
-        apprentices: List.generate(
-          faker.randomGenerator.integer(23),
-          (index) => faker.guid.guid(),
-        ),
         address: AddressDto(
           lat: _compoundCoordinates[index].latitude,
           lng: _compoundCoordinates[index].longitude,

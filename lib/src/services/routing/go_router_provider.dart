@@ -5,12 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/views/primary/bottome_bar/ui/dashboard_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentice_details.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentices_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/homePage/home_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/messages/message_details_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/messages/messages_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/homePage/views/gift_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/homePage/views/home_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/views/messages_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/report/view/report_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/report/view/reports_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/tasks/tasks_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/views/tasks_screen.dart';
 import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -188,7 +189,14 @@ GoRouter goRouter(GoRouterRef ref) {
     ),
     TypedStatefulShellBranch<HomeBranchData>(
       routes: [
-        TypedGoRoute<HomeRouteData>(path: '/home'),
+        TypedGoRoute<HomeRouteData>(
+          path: '/home',
+          routes: [
+            TypedGoRoute<GiftRouteData>(
+              path: 'gift/:id',
+            ),
+          ],
+        ),
       ],
     ),
     TypedStatefulShellBranch<MessagesBranchData>(
@@ -416,5 +424,22 @@ class OnboardingRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const OnboardingScreen();
+  }
+}
+
+class GiftRouteData extends GoRouteData {
+  const GiftRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return GiftScreen(
+      eventId: id,
+    );
   }
 }

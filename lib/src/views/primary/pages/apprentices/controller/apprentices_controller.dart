@@ -2,6 +2,8 @@ import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'apprentices_controller.g.dart';
@@ -56,8 +58,25 @@ class ApprenticesController extends _$ApprenticesController {
         thPeriod: faker.lorem.word()[0],
         thRavMelamedYearA: '${faker.person.name()} ${faker.phoneNumber.de()}',
         thRavMelamedYearB: '${faker.person.name()} ${faker.phoneNumber.us()}',
-        militaryCompound:
-            Consts.mockCompoundGuids[index % Consts.mockCompoundGuids.length],
+        militaryCompound: List.generate(
+          Consts.mockCompoundGuids.length,
+          (index) => CompoundDto(
+            id: Consts.mockCompoundGuids[index],
+            name: faker.lorem.word(),
+            address: AddressDto(
+              city: faker.address.city(),
+              apartment:
+                  faker.randomGenerator.integer(99999, min: 1).toString(),
+              street: faker.address.streetName(),
+              houseNumber:
+                  faker.randomGenerator.integer(999, min: 1).toString(),
+              postalCode: faker.address.zipCode(),
+              floor: faker.randomGenerator.integer(99, min: 1).toString(),
+              entrance: faker.lorem.word()[0],
+              region: faker.address.state(),
+            ),
+          ),
+        )[faker.randomGenerator.integer(Consts.mockCompoundGuids.length)],
         militaryDateOfDischarge:
             faker.date.dateTime(minYear: 1971).millisecondsSinceEpoch,
         militaryDateOfEnlistment:
@@ -70,12 +89,12 @@ class ApprenticesController extends _$ApprenticesController {
           (index) => faker.guid.guid(),
         ),
         events: List.generate(
-          7,
+          Consts.mockEventsGuids.length,
           (index) => EventDto(
-            id: faker.guid.guid(),
+            id: Consts.mockEventsGuids[index],
             title: faker.lorem.word(),
             description: faker.lorem.sentence(),
-            dateTime: faker.date.dateTime(minYear: 1971).millisecondsSinceEpoch,
+            dateTime: faker.date.dateTime().millisecondsSinceEpoch,
           ),
         ),
         contacts: List.generate(

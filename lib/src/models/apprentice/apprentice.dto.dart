@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
+import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/event/event.dto.dart';
 
 part 'apprentice.dto.f.dart';
 part 'apprentice.dto.g.dart';
@@ -29,14 +31,15 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') String thRavMelamedYearA,
     @Default('') String thRavMelamedYearB,
     @Default('') String thMentor,
-    @Default('') String militaryCompound,
     @Default('') String militaryUnit,
     @Default('') String militaryPositionOld,
     @Default('') String militaryPositionNew,
+    @Default(0) int militaryUpdatedDateTime,
     @Default(0) int militaryDateOfEnlistment,
     @Default(0) int militaryDateOfDischarge,
     @Default(0) int dateOfBirth,
     @Default(AddressDto()) AddressDto address,
+    @Default(CompoundDto()) CompoundDto militaryCompound,
     @Default([]) List<ContactDto> contacts,
     @Default([]) List<EventDto> events,
     @Default([]) List<String> reports,
@@ -69,19 +72,4 @@ class ContactDto with _$ContactDto {
 
 extension ContactDtoX on ContactDto {
   String get fullName => '$firstName $lastName';
-}
-
-@JsonSerializable()
-@Freezed(fromJson: false)
-class EventDto with _$EventDto {
-  const factory EventDto({
-    @Default('') String id,
-    @Default('') String title,
-    @Default('') String description,
-    @Default(0) int dateTime,
-  }) = _EventDto;
-
-  // ignore: unused_element
-  factory EventDto.fromJson(Map<String, dynamic> json) =>
-      _$EventDtoFromJson(json);
 }

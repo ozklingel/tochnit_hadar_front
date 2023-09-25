@@ -8,9 +8,12 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -125,9 +128,15 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final compound =
+        ref.watch(compoundControllerProvider).valueOrNull?.singleWhere(
+                  (element) => element.id == apprentice.militaryCompound.id,
+                  orElse: () => const CompoundDto(),
+                ) ??
+            const CompoundDto();
     final isEditMode = useState(false);
     final baseController = useTextEditingController(
-      text: apprentice.militaryCompound,
+      text: compound.name,
       keys: [apprentice],
     );
     final unitController = useTextEditingController(
@@ -221,28 +230,28 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                             child: LargeFilledRoundedButton(
                               label: 'שמירה',
                               onPressed: () async {
-                                final result = await ref
-                                    .read(
-                                      apprenticesControllerProvider.notifier,
-                                    )
-                                    .editApprentice(
-                                      apprentice: apprentice.copyWith(
-                                        militaryCompound: baseController.text,
-                                        militaryUnit: unitController.text,
-                                        militaryPositionNew:
-                                            positionNewController.text,
-                                        militaryPositionOld:
-                                            positionOldController.text,
-                                      ),
-                                    );
+                                // final result = await ref
+                                //     .read(
+                                //       apprenticesControllerProvider.notifier,
+                                //     )
+                                //     .editApprentice(
+                                //       apprentice: apprentice.copyWith(
+                                //         militaryCompound: baseController.text,
+                                //         militaryUnit: unitController.text,
+                                //         militaryPositionNew:
+                                //             positionNewController.text,
+                                //         militaryPositionOld:
+                                //             positionOldController.text,
+                                //       ),
+                                //     );
 
-                                if (result) {
-                                  isEditMode.value = false;
-                                } else {
-                                  Toaster.show(
-                                    'שגיאה בעת שמירת השינויים',
-                                  );
-                                }
+                                // if (result) {
+                                //   isEditMode.value = false;
+                                // } else {
+                                //   Toaster.show(
+                                //     'שגיאה בעת שמירת השינויים',
+                                //   );
+                                // }
                               },
                               textStyle: TextStyles.s14w500,
                             ),
@@ -276,7 +285,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                     children: [
                       DetailsRowItem(
                         label: 'בסיס',
-                        data: apprentice.militaryCompound,
+                        data: compound.name,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
@@ -379,6 +388,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             label: const Text('משלם'),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               DetailsRowItem(
                 label: 'מקום לימודים',
@@ -706,26 +716,26 @@ class _EventBottomSheet extends HookConsumerWidget {
                                 return;
                               }
                             } else {
-                              final edited = apprentice.events.firstWhere(
-                                (element) => element.id == event.id,
-                              );
-                              final result = await notifier.editEvent(
-                                apprenticeId: apprentice.id,
-                                event: edited.copyWith(
-                                  title: titleController.text,
-                                  description: descriptionController.text,
-                                  dateTime: selectedDatetime
-                                          .value?.millisecondsSinceEpoch ??
-                                      0,
-                                ),
-                              );
+                              // final edited = apprentice.events.firstWhere(
+                              //   (element) => element == event.id,
+                              // );
+                              // final result = await notifier.editEvent(
+                              //   apprenticeId: apprentice.id,
+                              //   event: edited.copyWith(
+                              //     title: titleController.text,
+                              //     description: descriptionController.text,
+                              //     dateTime: selectedDatetime
+                              //             .value?.millisecondsSinceEpoch ??
+                              //         0,
+                              //   ),
+                              // );
 
-                              if (result) {
-                                navContext.maybePop();
-                              } else {
-                                Toaster.show('שגיאה בעת שמירת האירוע');
-                                return;
-                              }
+                              // if (result) {
+                              //   navContext.maybePop();
+                              // } else {
+                              //   Toaster.show('שגיאה בעת שמירת האירוע');
+                              //   return;
+                              // }
                             }
                           },
                         ),
@@ -853,10 +863,13 @@ class _PersonalInfoTabView extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text(
-                      apprentice.contacts[index].phone,
-                      style: TextStyles.s14w400.copyWith(
-                        color: AppColors.gray2,
+                    SizedBox(
+                      width: 140,
+                      child: Text(
+                        apprentice.contacts[index].phone,
+                        style: TextStyles.s14w400.copyWith(
+                          color: AppColors.gray2,
+                        ),
                       ),
                     ),
                     const Spacer(),

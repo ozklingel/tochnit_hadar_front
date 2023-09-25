@@ -282,7 +282,7 @@ class ReportsScreen extends HookConsumerWidget {
                                     ),
                                     const SizedBox(width: 8),
                                     SizedBox(
-                                      width: 280,
+                                      width: 264,
                                       child: ref
                                           .watch(apprenticesControllerProvider)
                                           .when(
