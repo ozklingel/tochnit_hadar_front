@@ -11,7 +11,6 @@ class CompoundDto with _$CompoundDto {
     @Default('') String id,
     @Default('') String name,
     @Default(AddressDto()) AddressDto address,
-    @Default([]) List<String> apprentices,
   }) = _CompoundDto;
 
   factory CompoundDto.fromJson(Map<String, dynamic> json) =>

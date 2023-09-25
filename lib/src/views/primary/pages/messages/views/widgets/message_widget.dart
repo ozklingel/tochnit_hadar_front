@@ -38,7 +38,7 @@ class MessageWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 280,
+                  width: 260,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

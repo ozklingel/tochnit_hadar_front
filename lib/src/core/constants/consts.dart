@@ -143,6 +143,24 @@ abstract class Consts {
     'b1580a5e-8d5c-42a5-bf15-19bc42fa70ac',
   ];
 
+  static const mockEventsGuids = [
+    'a670ef66-eb63-4238-a2c3-d5bab95c7d1d',
+    'cf7e034c-a82a-461e-8a85-279a06714a20',
+    '2e83f37c-3b85-4cf0-8cc3-fbce1074bc79',
+    '5a8e5aaf-7bc5-4167-aa28-e786c47703a8',
+    '83209b35-9bac-4c72-86aa-e5ee4a28f5e9',
+    '5dce518c-1f8d-4de8-a0b3-b6649960f8af',
+    '64477800-2f30-4fb8-bad2-412e5d5835c0',
+    '5e57c505-4eff-4d22-b900-596ce41bd8bf',
+    'd4cb4d18-7cc9-4c93-8cb1-4b68809eb55f',
+    '491dbedd-bece-471d-951e-40627fa39df8',
+    'f046cfad-ba73-4258-ae74-f3d9815ff31e',
+    '3a9adb55-5efa-4795-adc1-b55824f7dc63',
+    'c9ac0d3f-2f04-4ac1-845a-c749c12d6efa',
+    'e6af991b-8348-4967-ad19-1732bd3f6ebc',
+    '20a9884a-84e6-4051-b24b-3ba87e067e07',
+  ];
+
   static const termsOfService = '''
 תנאי שימוש באפליקציה "תוכנית הדר״
 1. כללי 

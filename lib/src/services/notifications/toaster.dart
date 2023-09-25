@@ -29,5 +29,12 @@ abstract class Toaster {
         ),
       );
 
-  static void show(String message) => BotToast.showText(text: message);
+  static void show(
+    String message, {
+    Alignment align = const Alignment(0, 0.8),
+  }) =>
+      BotToast.showText(
+        text: message,
+        align: align,
+      );
 }

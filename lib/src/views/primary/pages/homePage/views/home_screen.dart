@@ -3,20 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final apprentices =
+        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -34,16 +40,18 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _Header(),
-            SizedBox(height: 44),
-            _UpcomingEvents(),
-            SizedBox(height: 24),
-            _UpcomingTasks(),
-            SizedBox(height: 14),
+            const _Header(),
+            const SizedBox(height: 44),
+            _UpcomingEvents(
+              apprentice: apprentices.firstOrNull ?? const ApprenticeDto(),
+            ),
+            const SizedBox(height: 24),
+            const _UpcomingTasks(),
+            const SizedBox(height: 14),
           ],
         ),
       ),
@@ -240,14 +248,24 @@ class _ActionsRow extends StatelessWidget {
 }
 
 class _UpcomingEvents extends StatelessWidget {
-  const _UpcomingEvents();
+  const _UpcomingEvents({
+    required this.apprentice,
+  });
+
+  final ApprenticeDto apprentice;
 
   @override
   Widget build(BuildContext context) {
-    const children = [
-      _EventCard(),
-      _EventCard(),
-      _EventCard(),
+    final children = [
+      _EventCard(
+        event: apprentice.events.firstOrNull ?? const EventDto(),
+      ),
+      _EventCard(
+        event: apprentice.events.firstOrNull ?? const EventDto(),
+      ),
+      _EventCard(
+        event: apprentice.events.firstOrNull ?? const EventDto(),
+      ),
     ];
 
     return Column(
@@ -303,7 +321,7 @@ class _Header extends ConsumerWidget {
               ),
               child: Assets.images.homePageHeader.svg(
                 height: 140,
-                width: 460,
+                width: 320,
                 fit: BoxFit.fitHeight,
               ),
             ),
@@ -338,15 +356,19 @@ class _Header extends ConsumerWidget {
   }
 }
 
-class _EventCard extends StatelessWidget {
-  const _EventCard();
+class _EventCard extends ConsumerWidget {
+  const _EventCard({
+    required this.event,
+  });
+
+  final EventDto event;
 
   @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
+  Widget build(BuildContext context, ref) {
+    return SizedBox(
       width: 232,
       child: DecoratedBox(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(
             Radius.circular(16),
           ),
@@ -357,34 +379,40 @@ class _EventCard extends StatelessWidget {
             ],
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                width: 160,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'יאיר כהן',
-                      style: TextStyles.s16w500cGrey2,
-                    ),
-                    Text(
-                      'בעוד 2 ימים בתאריך א’ סיו וןיום הולדת 23',
-                      style: TextStyles.s14w300cGray2,
-                      maxLines: 2,
-                    ),
-                  ],
+        child: InkWell(
+          onTap: () => GiftRouteData(id: event.id).go(context),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  width: 160,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        event.title,
+                        style: TextStyles.s16w500cGrey2,
+                      ),
+                      Text(
+                        event.description,
+                        style: TextStyles.s14w300cGray2,
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Spacer(),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Icon(FluentIcons.gift_24_regular),
-              ),
-            ],
+                const Spacer(),
+                const Align(
+                  alignment: Alignment.topCenter,
+                  child: Icon(FluentIcons.gift_24_regular),
+                ),
+              ],
+            ),
           ),
         ),
       ),

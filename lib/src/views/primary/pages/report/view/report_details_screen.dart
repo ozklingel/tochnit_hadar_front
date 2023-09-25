@@ -8,7 +8,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
-import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
@@ -17,6 +16,7 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/widgets/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -536,62 +536,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                           onPressed: () {
                             showDialog(
                               context: context,
-                              builder: (context) => Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: SizedBox(
-                                  height: 372,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: IconButton(
-                                            onPressed: () =>
-                                                Navigator.of(context)
-                                                    .maybePop(),
-                                            icon: const Icon(Icons.close),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Assets.images.success.svg(),
-                                        const SizedBox(height: 24),
-                                        const Text(
-                                          'הדיווח הושלם בהצלחה!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyles.s20w500,
-                                        ),
-                                        const SizedBox(height: 24),
-                                        const Text(
-                                          'יישר כח!',
-                                          style: TextStyles.s16w400cGrey2,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        const SizedBox(height: 24),
-                                        TextButton(
-                                          onPressed: () =>
-                                              const HomeRouteData().go(context),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              'חזרה לעמוד הבית',
-                                              style:
-                                                  TextStyles.s14w500.copyWith(
-                                                color: AppColors.blue02,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                              builder: (context) => const SuccessDialog(
+                                msg: 'הדיווח הושלם בהצלחה!',
                               ),
                             );
 

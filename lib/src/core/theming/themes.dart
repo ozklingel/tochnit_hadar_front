@@ -24,6 +24,12 @@ ThemeData get appThemeLight {
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.blue03,
+        textStyle: TextStyles.s14w400,
+      ),
+    ),
     tabBarTheme: TabBarTheme(
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorColor: AppColors.blue02,

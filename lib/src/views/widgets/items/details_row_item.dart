@@ -7,17 +7,21 @@ class DetailsRowItem extends StatelessWidget {
     super.key,
     required this.label,
     required this.data,
+    this.labelWidth = 80,
+    this.dataWidth = 190,
   });
 
   final String label;
   final String data;
+  final double labelWidth;
+  final double dataWidth;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         SizedBox(
-          width: 100,
+          width: labelWidth,
           child: Text(
             label,
             style: TextStyles.s14w400.copyWith(
@@ -25,11 +29,13 @@ class DetailsRowItem extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(width: 12),
         SizedBox(
-          width: 212,
+          width: dataWidth,
           child: Text(
             data,
             style: TextStyles.s14w400,
+            overflow: TextOverflow.ellipsis,
             maxLines: 4,
           ),
         ),

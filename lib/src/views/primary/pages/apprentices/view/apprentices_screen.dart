@@ -98,6 +98,8 @@ class _MapWidget extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final compoundController =
         ref.watch(compoundControllerProvider).valueOrNull ?? [];
+    final apprentices =
+        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
     final mapController = useRef(Completer<GoogleMapController>());
     final markers = useState<Set<Marker>>({});
 
@@ -157,7 +159,13 @@ class _MapWidget extends HookConsumerWidget {
                             TextSpan(text: e.name),
                             const TextSpan(text: '\n'),
                             TextSpan(
-                              text: e.apprentices.length.toString(),
+                              text: apprentices
+                                  .where(
+                                    (element) =>
+                                        element.militaryCompound.id == e.id,
+                                  )
+                                  .length
+                                  .toString(),
                               style: const TextStyle(color: AppColors.blue04),
                             ),
                           ],
@@ -428,23 +436,24 @@ class _SearchResults extends ConsumerWidget {
                 )
                 .toList();
 
-            final compounds = apprenticesList
+            final apprenticeCompounds = apprenticesList
                 .where(
-                  (element) => element.militaryCompound.toLowerCase().contains(
-                        searchString.toLowerCase().trim(),
-                      ),
+                  (element) =>
+                      element.militaryCompound.name.toLowerCase().contains(
+                            searchString.toLowerCase().trim(),
+                          ),
                 )
                 .take(1)
                 .map(
                   (e) => _CompoundOrCityCard(
-                    title: e.militaryCompound,
+                    title: e.militaryCompound.name,
                     address: e.address.fullAddress,
                     onTap: () {
                       final compound = ref
                           .read(compoundControllerProvider)
                           .valueOrNull
                           ?.firstWhere(
-                            (element) => element.id == e.militaryCompound,
+                            (element) => element.id == e.militaryCompound.id,
                           );
                       mapCameraPosition.value = CameraPosition(
                         zoom: Consts.defaultGeolocationZoom,
@@ -511,9 +520,9 @@ class _SearchResults extends ConsumerWidget {
                 ListView.separated(
                   shrinkWrap: true,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: compounds.length,
+                  itemCount: apprenticeCompounds.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) => compounds[index],
+                  itemBuilder: (context, index) => apprenticeCompounds[index],
                 ),
                 const SizedBox(height: 40),
                 Text(

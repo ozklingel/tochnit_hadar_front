@@ -9,9 +9,9 @@ part 'message.dto.g.dart';
 class MessageDto with _$MessageDto {
   const factory MessageDto({
     @Default('') String id,
-    @Default(ApprenticeDto()) ApprenticeDto from,
     @Default('') String title,
     @Default('') String content,
+    @Default(ApprenticeDto()) ApprenticeDto from,
     @Default([]) List<String> attachments,
     // in milliseconds since epoch
     @Default(0) int dateTime,
