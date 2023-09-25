@@ -230,28 +230,32 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                             child: LargeFilledRoundedButton(
                               label: 'שמירה',
                               onPressed: () async {
-                                // final result = await ref
-                                //     .read(
-                                //       apprenticesControllerProvider.notifier,
-                                //     )
-                                //     .editApprentice(
-                                //       apprentice: apprentice.copyWith(
-                                //         militaryCompound: baseController.text,
-                                //         militaryUnit: unitController.text,
-                                //         militaryPositionNew:
-                                //             positionNewController.text,
-                                //         militaryPositionOld:
-                                //             positionOldController.text,
-                                //       ),
-                                //     );
+                                final result = await ref
+                                    .read(
+                                      apprenticesControllerProvider.notifier,
+                                    )
+                                    .editApprentice(
+                                      apprentice: apprentice.copyWith(
+                                        militaryCompound: apprentice
+                                            .militaryCompound
+                                            .copyWith(
+                                          name: baseController.text,
+                                        ),
+                                        militaryUnit: unitController.text,
+                                        militaryPositionNew:
+                                            positionNewController.text,
+                                        militaryPositionOld:
+                                            positionOldController.text,
+                                      ),
+                                    );
 
-                                // if (result) {
-                                //   isEditMode.value = false;
-                                // } else {
-                                //   Toaster.show(
-                                //     'שגיאה בעת שמירת השינויים',
-                                //   );
-                                // }
+                                if (result) {
+                                  isEditMode.value = false;
+                                } else {
+                                  Toaster.show(
+                                    'שגיאה בעת שמירת השינויים',
+                                  );
+                                }
                               },
                               textStyle: TextStyles.s14w500,
                             ),
@@ -486,9 +490,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                             eventId: e.id,
                                           );
 
-                                      if (result) {
-                                        // all good
-                                      } else {
+                                      if (!result) {
                                         Toaster.error(
                                           'שגיאה בעת מחיקת האירוע',
                                         );
@@ -716,26 +718,26 @@ class _EventBottomSheet extends HookConsumerWidget {
                                 return;
                               }
                             } else {
-                              // final edited = apprentice.events.firstWhere(
-                              //   (element) => element == event.id,
-                              // );
-                              // final result = await notifier.editEvent(
-                              //   apprenticeId: apprentice.id,
-                              //   event: edited.copyWith(
-                              //     title: titleController.text,
-                              //     description: descriptionController.text,
-                              //     dateTime: selectedDatetime
-                              //             .value?.millisecondsSinceEpoch ??
-                              //         0,
-                              //   ),
-                              // );
+                              final edited = apprentice.events.firstWhere(
+                                (element) => element.id == event.id,
+                              );
+                              final result = await notifier.editEvent(
+                                apprenticeId: apprentice.id,
+                                event: edited.copyWith(
+                                  title: titleController.text,
+                                  description: descriptionController.text,
+                                  dateTime: selectedDatetime
+                                          .value?.millisecondsSinceEpoch ??
+                                      0,
+                                ),
+                              );
 
-                              // if (result) {
-                              //   navContext.maybePop();
-                              // } else {
-                              //   Toaster.show('שגיאה בעת שמירת האירוע');
-                              //   return;
-                              // }
+                              if (result) {
+                                navContext.maybePop();
+                              } else {
+                                Toaster.show('שגיאה בעת שמירת האירוע');
+                                return;
+                              }
                             }
                           },
                         ),
