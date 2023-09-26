@@ -14,8 +14,7 @@
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data android:name="flutterEmbedding" android:value="2" />
         <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme" />
-        <!-- TODO(noga-dev): add API key -->
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value=""/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCT4yMf8WTbtyoJBBi-pR8k7o-JJOkLu2I"/>
     </application>
 
     <!-- Provide required visibility configuration for API level 30 and above -->
