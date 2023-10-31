@@ -17,6 +17,8 @@ import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.d
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../views/primary/pages/chatBox/supportScreen.dart';
+import '../../views/primary/pages/userProfilePage/editProfile.dart';
+import '../../views/primary/pages/userProfilePage/userProfileScreen.dart';
 
 part 'go_router_provider.g.dart';
 
@@ -440,6 +442,34 @@ class supportRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return SupportScreen();
+  }
+}
+
+@TypedGoRoute<userProfileRouteData>(
+  path: '/userProfile',
+)
+class userProfileRouteData extends GoRouteData {
+  const userProfileRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return userProfileScreen();
+  }
+}
+
+@TypedGoRoute<editUserProfileRouteData>(
+  path: '/editUserProfile',
+)
+class editUserProfileRouteData extends GoRouteData {
+  const editUserProfileRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return profileEditPage();
   }
 }
 

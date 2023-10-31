@@ -78,7 +78,7 @@ class HomeScreen extends ConsumerWidget {
                       "ערוך פרופיל",
                     ),
                     onPressed: () {
-                      print("presed");
+                      const userProfileRouteData().go(context);
                     },
                   ),
                 ],

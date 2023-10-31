@@ -45,9 +45,12 @@ class $AssetsImagesGen {
   /// File path: assets/images/success.svg
   SvgGenImage get success => const SvgGenImage('assets/images/success.svg');
 
+  /// File path: assets/images/vi.png
+  AssetGenImage get vi => const AssetGenImage('assets/images/vi.png');
+
   /// List of all assets
   List<dynamic> get values =>
-      [homePageHeader, logo, logomark, noMessages, noTasks, success];
+      [homePageHeader, logo, logomark, noMessages, noTasks, success, vi];
 }
 
 class Assets {

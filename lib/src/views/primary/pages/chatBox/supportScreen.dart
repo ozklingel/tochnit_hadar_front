@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/views/primary/pages/chatBox/successDialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../services/networking/sendSupportmessage.dart';
+import '../../../../services/networking/HttpService.dart';
 import '../../../../services/routing/go_router_provider.dart';
 import 'dropDownWidget.dart';
 import 'errorDialog.dart';
