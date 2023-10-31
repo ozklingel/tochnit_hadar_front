@@ -153,9 +153,14 @@ class SupportScreen extends ConsumerWidget {
                           context);
                     }
                     print(result);
+                    print(result);
+
                     if (result == "success") {
+                      print("in");
                       showFancyCustomDialog(context);
                     } else {
+                      print("in");
+
                       showAlertDialog(context);
                     }
                   },

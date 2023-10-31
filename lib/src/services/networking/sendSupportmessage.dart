@@ -18,6 +18,6 @@ class HttpService {
     final response = await http.post(Uri.parse(_ChatBoxUrl),
         headers: headers, body: json.encode(request));
     Map<String, dynamic> responsePayload = json.decode(response.body);
-    print(responsePayload);
+    return responsePayload['result'];
   }
 }
