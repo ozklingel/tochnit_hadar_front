@@ -24,11 +24,8 @@ class HomeScreen extends ConsumerWidget {
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
     return Scaffold(
+      drawer: drawer(context),
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Toaster.unimplemented(),
-          icon: const Icon(Icons.menu),
-        ),
         centerTitle: true,
         title: Assets.images.logo.image(
           height: 48,
@@ -54,6 +51,46 @@ class HomeScreen extends ConsumerWidget {
             const SizedBox(height: 14),
           ],
         ),
+      ),
+    );
+  }
+
+  drawer(context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          SizedBox(
+            height: 400,
+            child: DrawerHeader(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        NetworkImage('https://picsum.photos/250?image=9'),
+                  ),
+                  Text('John Doe'),
+                  Text('John@Doe'),
+                  TextButton(
+                    child: Text(
+                      "ערוך פרופיל",
+                    ),
+                    onPressed: () {
+                      print("presed");
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text('פניות שירות'),
+            onTap: () => const supportRouteData()
+                .go(context), //context.go(Routes.SUPPORT),
+          ),
+        ],
       ),
     );
   }

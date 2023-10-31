@@ -16,6 +16,8 @@ import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart'
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../views/primary/pages/chatBox/supportScreen.dart';
+
 part 'go_router_provider.g.dart';
 
 final _rootNavKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -424,6 +426,20 @@ class OnboardingRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const OnboardingScreen();
+  }
+}
+
+@TypedGoRoute<supportRouteData>(
+  path: '/support',
+)
+class supportRouteData extends GoRouteData {
+  const supportRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return SupportScreen();
   }
 }
 
