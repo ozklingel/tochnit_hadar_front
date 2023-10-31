@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/views/primary/pages/chatBox/successDialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../services/networking/sendSupportmessage.dart';
 import '../../../../services/routing/go_router_provider.dart';
 import 'dropDownWidget.dart';
 import 'errorDialog.dart';
 
 class SupportScreen extends ConsumerWidget {
   SupportScreen({super.key});
-  static late String subject = "";
   static late String contant = "";
   final TextEditingController _myController = TextEditingController();
   final sendButtonColor = 0xFF24517A;
@@ -25,8 +25,6 @@ class SupportScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    String subject;
-    String contant;
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
     return Scaffold(
@@ -83,7 +81,7 @@ class SupportScreen extends ConsumerWidget {
                   ),
                   DropdownButtonExample(),
                   SizedBox(
-                    height: 40,
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -99,11 +97,17 @@ class SupportScreen extends ConsumerWidget {
                     ],
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      border: Border.all(
+                          color: Colors.black,
+                          style: BorderStyle.solid,
+                          width: 0.80),
+                    ),
                     alignment: Alignment.center,
                     child: TextFormField(
                       textAlign: TextAlign.start,
                       textAlignVertical: TextAlignVertical.top,
-                      maxLength: 250,
                       controller: _myController,
                       minLines: 7,
                       keyboardType: TextInputType.multiline,
@@ -119,46 +123,52 @@ class SupportScreen extends ConsumerWidget {
                       },
                     ),
                   ),
-                  Container(
-                      height: 50,
-                      alignment: Alignment.bottomCenter,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: StadiumBorder(),
-                          primary: (_myController.text.isEmpty)
-                              ? Color.fromRGBO(236, 242, 245, 1)
-                              : Color(sendButtonColor),
-                          minimumSize: const Size.fromHeight(50), // NEW
-                        ),
-                        onPressed: () async {
-                          SupportScreen.contant = _myController.text;
-                          print(SupportScreen.contant);
-                          String result = "";
-                          if (SupportScreen.contant != "" &&
-                              SupportScreen.subject != null) {
-                            result =
-                                "success"; //await HttpService.ChatBoxUrl(SupportScreen.contant,SupportScreen.subject,context);
-                          }
-                          print(result);
-                          if (result == "success") {
-                            showFancyCustomDialog(context);
-                          } else {
-                            showAlertDialog(context);
-                          }
-                        },
-                        child: Text(
-                          "שליחת פנייה",
-                          style: TextStyle(
-                              color: _myController.text.isEmpty
-                                  ? Colors.grey
-                                  : Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                      ))
                 ],
               ),
-            )
+            ),
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                height: 50,
+                width: 20,
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: StadiumBorder(),
+                    primary: (_myController.text.isEmpty)
+                        ? Color.fromRGBO(236, 242, 245, 1)
+                        : Color(sendButtonColor),
+                    minimumSize: const Size.fromHeight(50), // NEW
+                  ),
+                  onPressed: () async {
+                    SupportScreen.contant = _myController.text;
+                    print(SupportScreen.contant);
+                    print(DropdownButtonExample.subject);
+
+                    String result = "";
+                    if (SupportScreen.contant != "" &&
+                        DropdownButtonExample.subject != null) {
+                      result = await HttpService.ChatBoxUrl(
+                          SupportScreen.contant,
+                          DropdownButtonExample.subject,
+                          context);
+                    }
+                    print(result);
+                    if (result == "success") {
+                      showFancyCustomDialog(context);
+                    } else {
+                      showAlertDialog(context);
+                    }
+                  },
+                  child: Text(
+                    "שליחת פנייה",
+                    style: TextStyle(
+                        color: _myController.text.isEmpty
+                            ? Colors.grey
+                            : Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                  ),
+                ))
           ],
         )));
   }

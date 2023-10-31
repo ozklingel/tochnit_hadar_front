@@ -1,8 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
-import 'SupportScreen.dart';
-
 const List<String> list = <String>[
   "תמיכה טכנית",
   "משתמשים",
@@ -11,6 +9,8 @@ const List<String> list = <String>[
 ];
 
 class DropdownButtonExample extends StatefulWidget {
+  static String? subject;
+
   const DropdownButtonExample({super.key});
 
   @override
@@ -35,6 +35,7 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
                     alignment: Alignment.centerRight,
                     child: Text(
                       list[i],
+                      style: TextStyle(fontSize: 15),
                     )),
                 value: list[i],
               ),
@@ -55,11 +56,14 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 10,
+                          height: 2,
                         ),
-                        Text(list[i]),
+                        Text(
+                          list[i],
+                          style: TextStyle(fontSize: 15),
+                        ),
                         SizedBox(
-                          height: 10,
+                          height: 2,
                         ),
                       ],
                     )),
@@ -81,9 +85,7 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
                   : Color.fromRGBO(236, 242, 245, 1),
               borderRadius: BorderRadius.circular(50.0),
               border: Border.all(
-                  color: Color.fromRGBO(236, 242, 245, 1),
-                  style: BorderStyle.solid,
-                  width: 0.80),
+                  color: Colors.black, style: BorderStyle.solid, width: 0.80),
             ),
             child: DropdownButton2<String>(
               iconStyleData: const IconStyleData(
@@ -101,7 +103,7 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
               hint: Text(
                 " נושא"!,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 15,
                   color: Theme.of(context).hintColor,
                 ),
               ),
@@ -118,9 +120,10 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
               ),
               onChanged: (String? value) {
                 setState(() {
-                  SupportScreen.subject = value!;
-                  print(SupportScreen.subject);
+                  DropdownButtonExample.subject = value!;
+                  print(DropdownButtonExample.subject);
                   selectedValue = value;
+                  print(DropdownButtonExample.subject);
                 });
               },
             )));
