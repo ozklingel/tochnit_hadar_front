@@ -2,11 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../models/user/user.dto.dart';
 import '../../../../services/networking/HttpService.dart';
 
 class profileEditPage extends StatefulWidget {
@@ -28,23 +26,21 @@ class _profileEditPageState extends State<profileEditPage>
   bool isLoading = true;
   late TabController tabController;
   int scrolength = 2000;
-  UserDto? myUser;
-  Future<UserDto> _getUserDetail() async {
+  late Map<String, dynamic> myUser;
+  Future<Map<String, dynamic>> _getUserDetail() async {
     print("access");
     var data = await HttpService.getUserDetail("1");
-    print(data);
 
-    Map<String, dynamic> userMap = jsonDecode(data as String);
-    var user = UserDto.fromJson(userMap);
-
-    print('Howdy, ${user.firstName}!');
-    print('We sent the verification link to ${user.email}.');
-    myUser = user;
-    return user;
+    Map<String, dynamic> userMap = jsonDecode(data.body);
+    Map<String, dynamic> userMap2 = userMap["attributes"];
+    myUser = userMap2;
+    print(myUser);
+    return userMap2;
   }
 
-  Future<List<ApprenticeDto>?> _getUserAprentice() async {
-    var result = myUser?.apprentices;
+  Future<List<String>?> _getUserAprentice() async {
+    List<String>? result = myUser["apprentices"].split(',');
+    print(result);
     return result;
   }
 
@@ -70,7 +66,7 @@ class _profileEditPageState extends State<profileEditPage>
         width: 200.0,
         height: scrolength.toDouble() * 1000,
         child: Scaffold(
-          body: FutureBuilder<UserDto>(
+          body: FutureBuilder<Map<String, dynamic>>(
             future: _getUserDetail(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -197,7 +193,7 @@ class _profileEditPageState extends State<profileEditPage>
                             height: 5,
                           ),
                           Text(
-                            myUser!.firstName + " " + myUser!.lastName,
+                            myUser!["firstName"] + " " + myUser!["lastName"],
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -205,7 +201,7 @@ class _profileEditPageState extends State<profileEditPage>
                             ),
                           ),
                           Text(
-                            myUser!.phone,
+                            myUser!["phone"],
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 15,
@@ -313,8 +309,8 @@ class _profileEditPageState extends State<profileEditPage>
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
                                     controller: TextEditingController(
-                                        text:
-                                            myUser!.firstName), // <-- SEE HERE
+                                        text: myUser![
+                                            "firstName"]), // <-- SEE HERE
                                     decoration: InputDecoration(
                                       isDense:
                                           true, // this will remove the default content padding
@@ -346,7 +342,8 @@ class _profileEditPageState extends State<profileEditPage>
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
                                     controller: TextEditingController(
-                                        text: myUser!.lastName), // <-- SEE HERE
+                                        text: myUser![
+                                            "lastName"]), // <-- SEE HERE
                                     decoration: InputDecoration(
                                       isDense:
                                           true, // this will remove the default content padding
@@ -378,7 +375,7 @@ class _profileEditPageState extends State<profileEditPage>
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
                                     controller: TextEditingController(
-                                        text: myUser!.email), // <-- SEE HERE
+                                        text: myUser!["email"]), // <-- SEE HERE
                                     decoration: InputDecoration(
                                       isDense:
                                           true, // this will remove the default content padding
@@ -410,8 +407,9 @@ class _profileEditPageState extends State<profileEditPage>
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
                                     controller: TextEditingController(
-                                        text: myUser!.dateOfBirthInMsSinceEpoch
-                                            as String), // <-- SEE HERE
+                                        text:
+                                            myUser!["dateOfBirthInMsSinceEpoch"]
+                                                as String), // <-- SEE HERE
                                     decoration: InputDecoration(
                                       isDense:
                                           true, // this will remove the default content padding
@@ -443,7 +441,7 @@ class _profileEditPageState extends State<profileEditPage>
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
                                     controller: TextEditingController(
-                                        text: myUser!.city), // <-- SEE HERE
+                                        text: myUser!["city"]), // <-- SEE HERE
                                     decoration: InputDecoration(
                                       isDense:
                                           true, // this will remove the default content padding
@@ -475,7 +473,8 @@ class _profileEditPageState extends State<profileEditPage>
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
                                     controller: TextEditingController(
-                                        text: myUser!.region), // <-- SEE HERE
+                                        text:
+                                            myUser!["region"]), // <-- SEE HERE
                                     decoration: InputDecoration(
                                       isDense:
                                           true, // this will remove the default content padding

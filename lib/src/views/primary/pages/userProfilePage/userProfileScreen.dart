@@ -34,7 +34,6 @@ class _userProfileScreenState extends State<userProfileScreen>
 
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
-    userMap2;
     myUser = userMap2;
     print(myUser);
     return userMap2;
@@ -42,6 +41,7 @@ class _userProfileScreenState extends State<userProfileScreen>
 
   Future<List<String>?> _getUserAprentice() async {
     List<String>? result = myUser["apprentices"].split(',');
+    print(result);
     return result;
   }
 
@@ -244,9 +244,22 @@ class _userProfileScreenState extends State<userProfileScreen>
                                     margin: const EdgeInsets.all(15.0),
                                     padding: const EdgeInsets.all(3.0),
                                     decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border:
-                                            Border.all(color: Colors.white)),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.1),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
                                     child: Column(children: [
                                       Row(
                                         mainAxisAlignment:
@@ -306,7 +319,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                           children: [
                                             Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     'שם',
@@ -383,7 +396,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                             ),
                                             Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Align(
                                                     alignment:
@@ -473,78 +486,189 @@ class _userProfileScreenState extends State<userProfileScreen>
                               Column(
                                 children: [
                                   Container(
-                                    width: 400,
+                                    width: double.infinity,
                                     margin: const EdgeInsets.all(15.0),
                                     padding: const EdgeInsets.all(3.0),
                                     decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border:
-                                            Border.all(color: Colors.white)),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.1),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
                                     child: Column(children: [
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 1.0),
-                                          child: Text(
-                                            'כללי',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              //empty for spacing
+                                              Text(
+                                                '  כללי',
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 19,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                ' ',
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 19,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                ' ',
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 19,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'סיווג משתמש',
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        'שיוך מוסדי',
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        ' אשכול',
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ]),
+                                            SizedBox(
+                                              width: 10,
                                             ),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 1.0),
-                                          child: Text(
-                                            'סיווג משתמש    :' +
-                                                myUser!["role"],
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 1.0),
-                                          child: Text(
-                                            'שיוך מוסדי         :' +
-                                                myUser!["institution"],
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 1.0),
-                                          child: Text(
-                                            'אשכול:                ' +
-                                                myUser!["cluster"],
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ),
+                                            Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        myUser!["role"],
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        myUser!["institution"],
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        myUser!["cluster"],
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ]),
+                                          ]),
                                     ]),
                                   ),
-
-                                  ///scond container
                                   Container(
                                     width: 400,
                                     margin: const EdgeInsets.all(15.0),
                                     padding: const EdgeInsets.all(3.0),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.1),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
                                     ),
                                     child: FutureBuilder(
                                       future: _getUserAprentice(),
                                       builder: (BuildContext context,
                                           AsyncSnapshot snapshot) {
                                         scrolength = snapshot.data.length;
+                                        print(scrolength);
                                         if (snapshot.data == null) {
                                           return Container(
                                             child: Center(
@@ -577,11 +701,11 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       (BuildContext context,
                                                           int index) {
                                                     return ListTile(
-                                                      trailing: CircleAvatar(
+                                                      leading: CircleAvatar(
                                                         backgroundColor:
                                                             Colors.blue,
-                                                        backgroundImage:
-                                                            profileimg,
+                                                        backgroundImage: AssetImage(
+                                                            'assets/images/person.png'),
                                                       ),
                                                       title: Text(
                                                           snapshot.data[index],
@@ -605,6 +729,8 @@ class _userProfileScreenState extends State<userProfileScreen>
                             ],
                           ),
                         ),
+
+                        ///scond container
                       ],
                     );
                   } else {
