@@ -6,11 +6,28 @@ class HttpService {
   static final _client = http.Client();
   static String _getUserDetailUrl =
       'http://10.0.2.2:5000/userProfile_form/getProfileAtributes';
+
   static var _setUserImageUrl =
       Uri.parse('http://10.0.2.2:5000/userProfile_form/uploadPhoto');
 
   static Future<http.Response> getUserDetail(userid) async {
     return http.get(Uri.parse(_getUserDetailUrl + "?userId=" + userid));
+  }
+
+  static setUserDetail(typeOfSet, entityId, atrrToBeSet) async {
+    final _setUserDetailUrl =
+        'http://10.0.2.2:5000/setEntityDetails_form/setByType';
+    Map<String, dynamic> request = {
+      "typeOfSet": typeOfSet,
+      "entityId": entityId,
+      "atrrToBeSet": "{\"email\":\"zzz\"}",
+    };
+
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.put(Uri.parse(_setUserDetailUrl),
+        headers: headers, body: json.encode(request));
+    Map<String, dynamic> responsePayload = json.decode(response.body);
+    return responsePayload['result'];
   }
 
   static Future<String> uploadPhotos(List<String> paths) async {

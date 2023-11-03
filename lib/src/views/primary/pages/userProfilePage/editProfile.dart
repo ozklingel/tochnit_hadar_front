@@ -6,6 +6,8 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../services/networking/HttpService.dart';
+import '../chatBox/errorDialog.dart';
+import '../chatBox/successDialog.dart';
 
 class profileEditPage extends StatefulWidget {
   const profileEditPage({super.key});
@@ -21,7 +23,12 @@ class _profileEditPageState extends State<profileEditPage>
   File? galleryFile;
   final picker = ImagePicker();
   final emailController = TextEditingController();
-  final phoneController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final regionController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final birthDayController = TextEditingController();
+  final cityController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
   bool isLoading = true;
   late TabController tabController;
@@ -38,16 +45,8 @@ class _profileEditPageState extends State<profileEditPage>
     return userMap2;
   }
 
-  Future<List<String>?> _getUserAprentice() async {
-    List<String>? result = myUser["apprentices"].split(',');
-    print(result);
-    return result;
-  }
-
   @override
   void dispose() {
-    emailController.dispose();
-    phoneController.dispose();
     super.dispose();
   }
 
@@ -308,10 +307,10 @@ class _profileEditPageState extends State<profileEditPage>
                               Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
-                                    controller: TextEditingController(
-                                        text: myUser![
-                                            "firstName"]), // <-- SEE HERE
+                                    controller:
+                                        firstNameController, // <-- SEE HERE
                                     decoration: InputDecoration(
+                                      hintText: myUser!["firstName"],
                                       isDense:
                                           true, // this will remove the default content padding
 
@@ -341,10 +340,10 @@ class _profileEditPageState extends State<profileEditPage>
                               Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
-                                    controller: TextEditingController(
-                                        text: myUser![
-                                            "lastName"]), // <-- SEE HERE
+                                    controller:
+                                        lastNameController, // <-- SEE HERE
                                     decoration: InputDecoration(
+                                      hintText: myUser!["lastName"],
                                       isDense:
                                           true, // this will remove the default content padding
 
@@ -374,9 +373,10 @@ class _profileEditPageState extends State<profileEditPage>
                               Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
-                                    controller: TextEditingController(
-                                        text: myUser!["email"]), // <-- SEE HERE
+                                    controller: emailController,
+                                    // <-- SEE HERE
                                     decoration: InputDecoration(
+                                      hintText: myUser!["email"],
                                       isDense:
                                           true, // this will remove the default content padding
 
@@ -406,11 +406,11 @@ class _profileEditPageState extends State<profileEditPage>
                               Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
-                                    controller: TextEditingController(
-                                        text:
-                                            myUser!["dateOfBirthInMsSinceEpoch"]
-                                                as String), // <-- SEE HERE
+                                    controller:
+                                        birthDayController, // <-- SEE HERE
                                     decoration: InputDecoration(
+                                      hintText:
+                                          myUser!["dateOfBirthInMsSinceEpoch"],
                                       isDense:
                                           true, // this will remove the default content padding
 
@@ -440,9 +440,9 @@ class _profileEditPageState extends State<profileEditPage>
                               Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
-                                    controller: TextEditingController(
-                                        text: myUser!["city"]), // <-- SEE HERE
+                                    controller: cityController, // <-- SEE HERE
                                     decoration: InputDecoration(
+                                      hintText: myUser!["city"],
                                       isDense:
                                           true, // this will remove the default content padding
 
@@ -472,10 +472,10 @@ class _profileEditPageState extends State<profileEditPage>
                               Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: TextField(
-                                    controller: TextEditingController(
-                                        text:
-                                            myUser!["region"]), // <-- SEE HERE
+                                    controller:
+                                        regionController, // <-- SEE HERE
                                     decoration: InputDecoration(
+                                      hintText: myUser!["region"],
                                       isDense:
                                           true, // this will remove the default content padding
 
@@ -515,36 +515,6 @@ class _profileEditPageState extends State<profileEditPage>
                         ),
                         Row(
                           children: [
-                            Container(
-                                height: 40,
-                                width: 180,
-                                alignment: Alignment.bottomCenter,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.blue[900],
-                                    shape: StadiumBorder(),
-                                    // primary: (_myController.text.isEmpty)
-                                    //     ? Colors.grey
-                                    //     : Color(sendButtonColor),
-                                    minimumSize:
-                                        const Size.fromHeight(50), // NEW
-                                  ),
-                                  onPressed: () async {
-                                    if ("result" == "success") {
-                                      //showFancyCustomDialog(context);
-                                    } else {
-                                      // showAlertDialog(context);
-                                    }
-                                  },
-                                  child: const Text(
-                                    "שמירה",
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                ))
-                          ],
-                        ),
-                        Row(
-                          children: [
                             //empty for spacing
                             Container(
                                 height: 40,
@@ -576,6 +546,55 @@ class _profileEditPageState extends State<profileEditPage>
                                         fontSize: 12, color: Colors.black),
                                   ),
                                 )),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                                height: 40,
+                                width: 180,
+                                alignment: Alignment.bottomCenter,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue[
+                                        900], //change text color of button
+                                    foregroundColor: Colors
+                                        .white, //change background color of button
+                                    shape: StadiumBorder(),
+                                    // primary: (_myController.text.isEmpty)
+                                    //     ? Colors.grey
+                                    //     : Color(sendButtonColor),
+                                    minimumSize:
+                                        const Size.fromHeight(50), // NEW
+                                  ),
+                                  onPressed: () async {
+                                    print(emailController.text);
+                                    if (emailController.text != "" ||
+                                        birthDayController.text != "" ||
+                                        lastNameController.text != "" ||
+                                        firstNameController.text != "" ||
+                                        cityController.text != "" ||
+                                        regionController.text != "") {
+                                      var result =
+                                          await HttpService.setUserDetail(
+                                              "userProfile", "1", " ");
+                                      if (result == "success") {
+                                        print("in");
+                                        showFancyCustomDialog(context);
+                                      } else {
+                                        print("in");
+
+                                        showAlertDialog(context);
+                                      }
+                                    } else {
+                                      showAlertDialog(context);
+                                    }
+                                  },
+                                  child: const Text(
+                                    "שמירה",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ))
                           ],
                         ),
                         Row(
