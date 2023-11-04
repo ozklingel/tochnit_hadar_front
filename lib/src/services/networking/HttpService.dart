@@ -17,10 +17,22 @@ class HttpService {
   static setUserDetail(typeOfSet, entityId, atrrToBeSet) async {
     final _setUserDetailUrl =
         'http://10.0.2.2:5000/setEntityDetails_form/setByType';
+    print(atrrToBeSet);
+    var atrrToBeSetString = "{";
+    for (var age in atrrToBeSet) {
+      var agesplited = age.split("-");
+      if (agesplited[0] != null && agesplited[0] != "")
+        atrrToBeSetString +=
+            "\"" + agesplited[1] + "\":" + "\"" + agesplited[0] + "\",";
+    }
+    atrrToBeSetString =
+        atrrToBeSetString.substring(0, atrrToBeSetString.length - 1);
+    atrrToBeSetString += "}";
+    print(atrrToBeSetString);
     Map<String, dynamic> request = {
       "typeOfSet": typeOfSet,
       "entityId": entityId,
-      "atrrToBeSet": "{\"email\":\"zzz\"}",
+      "atrrToBeSet": atrrToBeSetString,
     };
 
     final headers = {'Content-Type': 'application/json'};

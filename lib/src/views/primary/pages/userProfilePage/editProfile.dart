@@ -575,15 +575,28 @@ class _profileEditPageState extends State<profileEditPage>
                                         firstNameController.text != "" ||
                                         cityController.text != "" ||
                                         regionController.text != "") {
+                                      List<String> listOfcontrolerText = [
+                                        regionController.text + "-" + "region",
+                                        cityController.text + "-" + "city",
+                                        firstNameController.text +
+                                            "-" +
+                                            "firstName",
+                                        lastNameController.text +
+                                            "-" +
+                                            "lastName",
+                                        birthDayController.text +
+                                            "-" +
+                                            "dateOfBirthInMsSinceEpoch",
+                                        emailController.text + "-" + "email",
+                                      ];
                                       var result =
                                           await HttpService.setUserDetail(
-                                              "userProfile", "1", " ");
+                                              "userProfile",
+                                              "1",
+                                              listOfcontrolerText);
                                       if (result == "success") {
-                                        print("in");
                                         showFancyCustomDialog(context);
                                       } else {
-                                        print("in");
-
                                         showAlertDialog(context);
                                       }
                                     } else {
