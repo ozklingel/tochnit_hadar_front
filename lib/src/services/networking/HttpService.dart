@@ -3,20 +3,19 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class HttpService {
-  static final _client = http.Client();
   static String _getUserDetailUrl =
       'http://10.0.2.2:5000/userProfile_form/getProfileAtributes';
-
   static var _setUserImageUrl =
       Uri.parse('http://10.0.2.2:5000/userProfile_form/uploadPhoto');
+  static final _setUserDetailUrl =
+      'http://10.0.2.2:5000/setEntityDetails_form/setByType';
+  static final _ChatBoxUrl = 'http://10.0.2.2:5000/messegaes_form/add';
 
   static Future<http.Response> getUserDetail(userid) async {
     return http.get(Uri.parse(_getUserDetailUrl + "?userId=" + userid));
   }
 
   static setUserDetail(typeOfSet, entityId, atrrToBeSet) async {
-    final _setUserDetailUrl =
-        'http://10.0.2.2:5000/setEntityDetails_form/setByType';
     print(atrrToBeSet);
     var atrrToBeSetString = "{";
     for (var age in atrrToBeSet) {
@@ -61,8 +60,6 @@ class HttpService {
   }
 
   static ChatBoxUrl(subject, contant, context) async {
-    final _ChatBoxUrl = 'http://10.0.2.2:5000/messegaes_form/add';
-
     Map<String, dynamic> request = {
       "content": contant,
       "subject": subject,

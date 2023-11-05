@@ -45,6 +45,12 @@ class _profileEditPageState extends State<profileEditPage>
     return userMap2;
   }
 
+  Future<List<String>?> _getUserAprentice() async {
+    List<String>? result = myUser["apprentices"].split(',');
+    print(result);
+    return result;
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -231,404 +237,518 @@ class _profileEditPageState extends State<profileEditPage>
                       child: TabBarView(
                         controller: tabController,
                         children: [
-                          SingleChildScrollView(
-                              child: Container(
-                            width: 400,
-                            margin: const EdgeInsets.all(15.0),
-                            padding: const EdgeInsets.all(3.0),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color: Colors.white)),
-                            child: Column(children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        child: CircleAvatar(
-                                          radius: 10,
-                                          backgroundColor: Colors.grey.shade200,
+                          Scaffold(
+                            body: SingleChildScrollView(
+                                child: Container(
+                              width: 400,
+                              margin: const EdgeInsets.all(15.0),
+                              padding: const EdgeInsets.all(3.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.white)),
+                              child: Column(children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        GestureDetector(
                                           child: CircleAvatar(
-                                            radius: 70,
-                                            backgroundImage: AssetImage(
-                                                'assets/images/pencile.png'),
+                                            radius: 10,
+                                            backgroundColor:
+                                                Colors.grey.shade200,
+                                            child: CircleAvatar(
+                                              radius: 70,
+                                              backgroundImage: AssetImage(
+                                                  'assets/images/pencile.png'),
+                                            ),
                                           ),
+                                          onTap: () =>
+                                              const userProfileRouteData()
+                                                  .go(context),
                                         ),
-                                        onTap: () =>
-                                            const userProfileRouteData()
-                                                .go(context),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          ' ',
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontStyle: FontStyle.normal,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 19,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        //empty for spacing
+                                        Text(
+                                          ' פרטים אישיים',
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontStyle: FontStyle.normal,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 19,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ), //to fill
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
+                                    child: Text("שם פרטי",
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(fontSize: 14)),
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        ' ',
-                                        style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 19,
-                                            color: Colors.black),
+                                ),
+                                Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: TextField(
+                                      controller:
+                                          firstNameController, // <-- SEE HERE
+                                      decoration: InputDecoration(
+                                        hintText: myUser!["firstName"],
+                                        isDense:
+                                            true, // this will remove the default content padding
+
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 1,
+                                              color:
+                                                  Colors.black), //<-- SEE HERE
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      //empty for spacing
-                                      Text(
-                                        ' פרטים אישיים',
-                                        style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 19,
-                                            color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 30,
-                              ), //to fill
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                  child: Text("שם פרטי",
+                                    )),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
+                                    child: Text(
+                                      "שם משפחה",
                                       textAlign: TextAlign.right,
-                                      style: TextStyle(fontSize: 14)),
-                                ),
-                              ),
-                              Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: TextField(
-                                    controller:
-                                        firstNameController, // <-- SEE HERE
-                                    decoration: InputDecoration(
-                                      hintText: myUser!["firstName"],
-                                      isDense:
-                                          true, // this will remove the default content padding
-
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            width: 1,
-                                            color: Colors.black), //<-- SEE HERE
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
-                                      ),
                                     ),
-                                  )),
-                              SizedBox(
-                                height: 30,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                  child: Text(
-                                    "שם משפחה",
-                                    textAlign: TextAlign.right,
                                   ),
                                 ),
-                              ),
-                              Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: TextField(
-                                    controller:
-                                        lastNameController, // <-- SEE HERE
-                                    decoration: InputDecoration(
-                                      hintText: myUser!["lastName"],
-                                      isDense:
-                                          true, // this will remove the default content padding
+                                Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: TextField(
+                                      controller:
+                                          lastNameController, // <-- SEE HERE
+                                      decoration: InputDecoration(
+                                        hintText: myUser!["lastName"],
+                                        isDense:
+                                            true, // this will remove the default content padding
 
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            width: 1,
-                                            color: Colors.black), //<-- SEE HERE
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 1,
+                                              color:
+                                                  Colors.black), //<-- SEE HERE
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
                                       ),
+                                    )),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
+                                    child: Text(
+                                      "מייל",
+                                      textAlign: TextAlign.right,
                                     ),
-                                  )),
-                              SizedBox(
-                                height: 30,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                  child: Text(
-                                    "מייל",
-                                    textAlign: TextAlign.right,
                                   ),
                                 ),
-                              ),
-                              Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: TextField(
-                                    controller: emailController,
-                                    // <-- SEE HERE
-                                    decoration: InputDecoration(
-                                      hintText: myUser!["email"],
-                                      isDense:
-                                          true, // this will remove the default content padding
+                                Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: TextField(
+                                      controller: emailController,
+                                      // <-- SEE HERE
+                                      decoration: InputDecoration(
+                                        hintText: myUser!["email"],
+                                        isDense:
+                                            true, // this will remove the default content padding
 
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            width: 1,
-                                            color: Colors.black), //<-- SEE HERE
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 1,
+                                              color:
+                                                  Colors.black), //<-- SEE HERE
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
                                       ),
+                                    )),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
+                                    child: Text(
+                                      "תאריך יום הולדת",
+                                      textAlign: TextAlign.right,
                                     ),
-                                  )),
-                              SizedBox(
-                                height: 30,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                  child: Text(
-                                    "תאריך יום הולדת",
-                                    textAlign: TextAlign.right,
                                   ),
                                 ),
-                              ),
-                              Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: TextField(
-                                    controller:
-                                        birthDayController, // <-- SEE HERE
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          myUser!["dateOfBirthInMsSinceEpoch"],
-                                      isDense:
-                                          true, // this will remove the default content padding
+                                Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: TextField(
+                                      controller:
+                                          birthDayController, // <-- SEE HERE
+                                      decoration: InputDecoration(
+                                        hintText: myUser![
+                                            "dateOfBirthInMsSinceEpoch"],
+                                        isDense:
+                                            true, // this will remove the default content padding
 
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            width: 1,
-                                            color: Colors.black), //<-- SEE HERE
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 1,
+                                              color:
+                                                  Colors.black), //<-- SEE HERE
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
                                       ),
+                                    )),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
+                                    child: Text(
+                                      "עיר",
+                                      textAlign: TextAlign.right,
                                     ),
-                                  )),
-                              SizedBox(
-                                height: 30,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                  child: Text(
-                                    "עיר",
-                                    textAlign: TextAlign.right,
                                   ),
                                 ),
-                              ),
-                              Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: TextField(
-                                    controller: cityController, // <-- SEE HERE
-                                    decoration: InputDecoration(
-                                      hintText: myUser!["city"],
-                                      isDense:
-                                          true, // this will remove the default content padding
+                                Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: TextField(
+                                      controller:
+                                          cityController, // <-- SEE HERE
+                                      decoration: InputDecoration(
+                                        hintText: myUser!["city"],
+                                        isDense:
+                                            true, // this will remove the default content padding
 
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            width: 1,
-                                            color: Colors.black), //<-- SEE HERE
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 1,
+                                              color:
+                                                  Colors.black), //<-- SEE HERE
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
                                       ),
+                                    )),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
+                                    child: Text(
+                                      "אזור",
+                                      textAlign: TextAlign.right,
                                     ),
-                                  )),
-                              SizedBox(
-                                height: 30,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                  child: Text(
-                                    "אזור",
-                                    textAlign: TextAlign.right,
                                   ),
                                 ),
-                              ),
-                              Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: TextField(
-                                    controller:
-                                        regionController, // <-- SEE HERE
-                                    decoration: InputDecoration(
-                                      hintText: myUser!["region"],
-                                      isDense:
-                                          true, // this will remove the default content padding
+                                Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: TextField(
+                                      controller:
+                                          regionController, // <-- SEE HERE
+                                      decoration: InputDecoration(
+                                        hintText: myUser!["region"],
+                                        isDense:
+                                            true, // this will remove the default content padding
 
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            width: 1,
-                                            color: Colors.black), //<-- SEE HERE
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 1,
+                                              color:
+                                                  Colors.black), //<-- SEE HERE
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
                                       ),
+                                    )),
+                                SizedBox(
+                                  height: 50,
+                                ),
+                              ]),
+                            )),
+                            floatingActionButton: YourButtonWidget(),
+                            floatingActionButtonLocation:
+                                FloatingActionButtonLocation.endFloat,
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.all(15.0),
+                                padding: const EdgeInsets.all(3.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
                                     ),
-                                  )),
-                              SizedBox(
-                                height: 50,
+                                  ],
+                                ),
+                                child: Column(children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          //empty for spacing
+                                          Text(
+                                            '  כללי',
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontStyle: FontStyle.normal,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 19,
+                                                color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            ' ',
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontStyle: FontStyle.normal,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 19,
+                                                color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            ' ',
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontStyle: FontStyle.normal,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 19,
+                                                color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'סיווג משתמש',
+                                                textAlign: TextAlign.right,
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 1.0),
+                                                  child: Text(
+                                                    'שיוך מוסדי',
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 1.0),
+                                                  child: Text(
+                                                    ' אשכול',
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ),
+                                              ),
+                                            ]),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 1.0),
+                                                  child: Text(
+                                                    myUser!["role"],
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 1.0),
+                                                  child: Text(
+                                                    myUser!["institution"],
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 1.0),
+                                                  child: Text(
+                                                    myUser!["cluster"],
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ),
+                                              ),
+                                            ]),
+                                      ]),
+                                ]),
                               ),
-                            ]),
-                          )),
+                              Container(
+                                width: 400,
+                                margin: const EdgeInsets.all(15.0),
+                                padding: const EdgeInsets.all(3.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: FutureBuilder(
+                                  future: _getUserAprentice(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot snapshot) {
+                                    scrolength = snapshot.data.length;
+                                    print(scrolength);
+                                    if (snapshot.data == null) {
+                                      return Container(
+                                        child: Center(
+                                            //child: emptyScreen(),
+                                            ),
+                                      );
+                                    } else {
+                                      return Column(
+                                        children: <Widget>[
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 1.0),
+                                              child: Text(
+                                                'רשימת חניכים',
+                                                textAlign: TextAlign.right,
+                                              ),
+                                            ),
+                                          ),
+                                          ListView.builder(
+                                              scrollDirection: Axis.vertical,
+                                              shrinkWrap: true,
+                                              physics: ClampingScrollPhysics(),
+                                              itemCount: scrolength,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return ListTile(
+                                                  leading: CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.blue,
+                                                    backgroundImage: AssetImage(
+                                                        'assets/images/person.png'),
+                                                  ),
+                                                  title: Text(
+                                                      snapshot.data[index],
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  onTap: () {},
+                                                );
+                                              }),
+                                        ],
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            //empty for spacing
-                            Text(
-                              ' ',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 19,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            //empty for spacing
-                            Container(
-                                height: 40,
-                                width: 140,
-                                alignment: Alignment.bottomCenter,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    side: BorderSide(
-                                        color: Colors.black, width: 2),
-
-                                    primary: Colors.white,
-                                    shape: StadiumBorder(),
-                                    // primary: (_myController.text.isEmpty)
-                                    //     ? Colors.grey
-                                    //     : Color(sendButtonColor),
-                                    minimumSize:
-                                        const Size.fromHeight(50), // NEW
-                                  ),
-                                  onPressed: () async {
-                                    if ("result" == "success") {
-                                      //showFancyCustomDialog(context);
-                                    } else {
-                                      // showAlertDialog(context);
-                                    }
-                                  },
-                                  child: const Text(
-                                    "שליחת פנייה",
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.black),
-                                  ),
-                                )),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                                height: 40,
-                                width: 180,
-                                alignment: Alignment.bottomCenter,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue[
-                                        900], //change text color of button
-                                    foregroundColor: Colors
-                                        .white, //change background color of button
-                                    shape: StadiumBorder(),
-                                    // primary: (_myController.text.isEmpty)
-                                    //     ? Colors.grey
-                                    //     : Color(sendButtonColor),
-                                    minimumSize:
-                                        const Size.fromHeight(50), // NEW
-                                  ),
-                                  onPressed: () async {
-                                    print(emailController.text);
-                                    if (emailController.text != "" ||
-                                        birthDayController.text != "" ||
-                                        lastNameController.text != "" ||
-                                        firstNameController.text != "" ||
-                                        cityController.text != "" ||
-                                        regionController.text != "") {
-                                      List<String> listOfcontrolerText = [
-                                        regionController.text + "-" + "region",
-                                        cityController.text + "-" + "city",
-                                        firstNameController.text +
-                                            "-" +
-                                            "firstName",
-                                        lastNameController.text +
-                                            "-" +
-                                            "lastName",
-                                        birthDayController.text +
-                                            "-" +
-                                            "dateOfBirthInMsSinceEpoch",
-                                        emailController.text + "-" + "email",
-                                      ];
-                                      var result =
-                                          await HttpService.setUserDetail(
-                                              "userProfile",
-                                              "1",
-                                              listOfcontrolerText);
-                                      if (result == "success") {
-                                        showFancyCustomDialog(context);
-                                      } else {
-                                        showAlertDialog(context);
-                                      }
-                                    } else {
-                                      showAlertDialog(context);
-                                    }
-                                  },
-                                  child: const Text(
-                                    "שמירה",
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                ))
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            //empty for spacing
-                            Text(
-                              ' ',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 19,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    )
                   ],
                 );
               } else {
@@ -696,6 +816,128 @@ class _profileEditPageState extends State<profileEditPage>
               const SnackBar(content: Text('Nothing is selected')));
         }
       },
+    );
+  }
+
+  YourButtonWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            //empty for spacing
+            Text(
+              ' ',
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 19,
+                  color: Colors.black),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            //empty for spacing
+            Container(
+                height: 40,
+                width: 140,
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide(color: Colors.black, width: 2),
+
+                    primary: Colors.white,
+                    shape: StadiumBorder(),
+                    // primary: (_myController.text.isEmpty)
+                    //     ? Colors.grey
+                    //     : Color(sendButtonColor),
+                    minimumSize: const Size.fromHeight(50), // NEW
+                  ),
+                  onPressed: () async {
+                    if ("result" == "success") {
+                      //showFancyCustomDialog(context);
+                    } else {
+                      // showAlertDialog(context);
+                    }
+                  },
+                  child: const Text(
+                    "שליחת פנייה",
+                    style: TextStyle(fontSize: 12, color: Colors.black),
+                  ),
+                )),
+          ],
+        ),
+        Row(
+          children: [
+            Container(
+                height: 40,
+                width: 180,
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Colors.blue[900], //change text color of button
+                    foregroundColor:
+                        Colors.white, //change background color of button
+                    shape: StadiumBorder(),
+                    // primary: (_myController.text.isEmpty)
+                    //     ? Colors.grey
+                    //     : Color(sendButtonColor),
+                    minimumSize: const Size.fromHeight(50), // NEW
+                  ),
+                  onPressed: () async {
+                    print(emailController.text);
+                    if (emailController.text != "" ||
+                        birthDayController.text != "" ||
+                        lastNameController.text != "" ||
+                        firstNameController.text != "" ||
+                        cityController.text != "" ||
+                        regionController.text != "") {
+                      List<String> listOfcontrolerText = [
+                        regionController.text + "-" + "region",
+                        cityController.text + "-" + "city",
+                        firstNameController.text + "-" + "firstName",
+                        lastNameController.text + "-" + "lastName",
+                        birthDayController.text +
+                            "-" +
+                            "dateOfBirthInMsSinceEpoch",
+                        emailController.text + "-" + "email",
+                      ];
+                      var result = await HttpService.setUserDetail(
+                          "userProfile", "1", listOfcontrolerText);
+                      if (result == "success") {
+                        showFancyCustomDialog(context);
+                      } else {
+                        showAlertDialog(context);
+                      }
+                    } else {
+                      showAlertDialog(context);
+                    }
+                  },
+                  child: const Text(
+                    "שמירה",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ))
+          ],
+        ),
+        Row(
+          children: [
+            //empty for spacing
+            Text(
+              ' ',
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 19,
+                  color: Colors.black),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
