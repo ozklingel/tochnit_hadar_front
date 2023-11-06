@@ -32,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => Toaster.unimplemented(),
+            onPressed: () => const notificationRouteData().go(context),
             icon: const Icon(Icons.notifications_none),
           ),
         ],
