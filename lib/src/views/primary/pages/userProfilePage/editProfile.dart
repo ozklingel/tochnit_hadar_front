@@ -66,11 +66,22 @@ class _profileEditPageState extends State<profileEditPage>
   @override
   Widget build(BuildContext context) {
     //display image selected from gallery
+    Size size = MediaQuery.of(context).size;
 
     return SizedBox(
         width: 200.0,
-        height: scrolength.toDouble() * 1000,
+        height: scrolength.toDouble() * 200,
         child: Scaffold(
+          appBar: AppBar(
+            leading: GestureDetector(
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              onTap: () => const HomeRouteData().go(context),
+            ),
+            title: const Text('פרופיל אישי'),
+          ),
           body: FutureBuilder<Map<String, dynamic>>(
             future: _getUserDetail(),
             builder: (context, snapshot) {
@@ -81,65 +92,9 @@ class _profileEditPageState extends State<profileEditPage>
               } else if (snapshot.hasData) {
                 return Column(
                   children: [
-                    SafeArea(
-                      child: Container(
-                        height: 45.0,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    //empty for spacing
-                                    Text(
-                                      ' ',
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontStyle: FontStyle.normal,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 19,
-                                          color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: 40,
-                                    ),
-                                    Text(
-                                      ' פרופיל אישי',
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontStyle: FontStyle.normal,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 19,
-                                          color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      child: Icon(
-                                        Icons.arrow_forward,
-                                        color: Colors.black,
-                                      ),
-                                      onTap: () =>
-                                          const HomeRouteData().go(context),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                     Container(
-                      height: 180,
-                      width: 400,
+                      height: size.height / 3.4,
+                      width: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.lightBlue[50],
                       ),
@@ -148,8 +103,8 @@ class _profileEditPageState extends State<profileEditPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(
-                            height: 110,
-                            width: 90,
+                            height: size.height / 6,
+                            width: size.width / 3,
                             child: Stack(
                               children: [
                                 CircleAvatar(
@@ -198,7 +153,9 @@ class _profileEditPageState extends State<profileEditPage>
                             height: 5,
                           ),
                           Text(
-                            myUser!["firstName"] + " " + myUser!["lastName"],
+                            myUser!["firstName"].replaceAll(' ', '') +
+                                " " +
+                                myUser!["lastName"].replaceAll(' ', ''),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -237,7 +194,8 @@ class _profileEditPageState extends State<profileEditPage>
                       child: TabBarView(
                         controller: tabController,
                         children: [
-                          Column(
+                          SingleChildScrollView(
+                              child: Column(
                             children: [
                               Container(
                                 width: double.infinity,
@@ -470,7 +428,7 @@ class _profileEditPageState extends State<profileEditPage>
                                 ),
                               ),
                             ],
-                          ),
+                          )),
                           Scaffold(
                             body: SingleChildScrollView(
                                 child: Container(
@@ -758,7 +716,7 @@ class _profileEditPageState extends State<profileEditPage>
                             )),
                             floatingActionButton: YourButtonWidget(),
                             floatingActionButtonLocation:
-                                FloatingActionButtonLocation.endFloat,
+                                FloatingActionButtonLocation.centerFloat,
                           ),
                         ],
                       ),
@@ -834,6 +792,8 @@ class _profileEditPageState extends State<profileEditPage>
   }
 
   YourButtonWidget() {
+    Size size = MediaQuery.of(context).size;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -855,7 +815,7 @@ class _profileEditPageState extends State<profileEditPage>
           children: [
             //empty for spacing
             Container(
-                height: 40,
+                height: size.height / 15,
                 width: 140,
                 alignment: Alignment.bottomCenter,
                 child: ElevatedButton(
@@ -886,7 +846,7 @@ class _profileEditPageState extends State<profileEditPage>
         Row(
           children: [
             Container(
-                height: 40,
+                height: size.height / 15,
                 width: 180,
                 alignment: Alignment.bottomCenter,
                 child: ElevatedButton(

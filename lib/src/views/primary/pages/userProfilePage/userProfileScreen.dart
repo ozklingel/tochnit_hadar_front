@@ -62,11 +62,12 @@ class _userProfileScreenState extends State<userProfileScreen>
   @override
   Widget build(BuildContext context) {
     //display image selected from gallery
+    Size size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
         child: SizedBox(
             width: double.infinity,
-            height: scrolength.toDouble() * 1000,
+            height: scrolength.toDouble() * 200,
             child: Scaffold(
               body: FutureBuilder<Map<String, dynamic>>(
                 future: _getUserDetail(),
@@ -80,7 +81,6 @@ class _userProfileScreenState extends State<userProfileScreen>
                       children: [
                         SafeArea(
                           child: Container(
-                            height: 45.0,
                             child: Column(
                               children: [
                                 Row(
@@ -136,7 +136,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                           ),
                         ),
                         Container(
-                          height: 180,
+                          height: size.height / 3.4,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.lightBlue[50],
@@ -146,8 +146,8 @@ class _userProfileScreenState extends State<userProfileScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               SizedBox(
-                                height: 110,
-                                width: 90,
+                                height: size.height / 6,
+                                width: size.width / 3,
                                 child: Stack(
                                   children: [
                                     CircleAvatar(
