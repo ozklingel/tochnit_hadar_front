@@ -56,7 +56,7 @@ class _userProfileScreenState extends State<userProfileScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this, initialIndex: 1);
   }
 
   @override
@@ -65,7 +65,7 @@ class _userProfileScreenState extends State<userProfileScreen>
 
     return SingleChildScrollView(
         child: SizedBox(
-            width: 200.0,
+            width: double.infinity,
             height: scrolength.toDouble() * 1000,
             child: Scaffold(
               body: FutureBuilder<Map<String, dynamic>>(
@@ -137,7 +137,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                         ),
                         Container(
                           height: 180,
-                          width: 400,
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.lightBlue[50],
                           ),
@@ -224,10 +224,10 @@ class _userProfileScreenState extends State<userProfileScreen>
                             controller: tabController,
                             tabs: [
                               Tab(
-                                text: 'פרטים אישיים',
+                                text: 'תוכנית הדר',
                               ),
                               Tab(
-                                text: 'תוכנית הדר',
+                                text: 'פרטים אישיים',
                               ),
                             ],
                             labelColor: Colors.black,
@@ -237,252 +237,6 @@ class _userProfileScreenState extends State<userProfileScreen>
                           child: TabBarView(
                             controller: tabController,
                             children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    width: 400,
-                                    margin: const EdgeInsets.all(15.0),
-                                    padding: const EdgeInsets.all(3.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.1),
-                                          spreadRadius: 5,
-                                          blurRadius: 7,
-                                          offset: Offset(0,
-                                              3), // changes position of shadow
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              //empty for spacing
-                                              Text(
-                                                ' פרטים אישיים',
-                                                style: TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 19,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                ' ',
-                                                style: TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 19,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              GestureDetector(
-                                                child: CircleAvatar(
-                                                  radius: 10,
-                                                  backgroundColor:
-                                                      Colors.grey.shade200,
-                                                  child: CircleAvatar(
-                                                    radius: 70,
-                                                    backgroundImage: AssetImage(
-                                                        'assets/images/pencile.png'),
-                                                  ),
-                                                ),
-                                                onTap: () =>
-                                                    const editUserProfileRouteData()
-                                                        .go(context),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'שם',
-                                                    textAlign: TextAlign.right,
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        'שם משפחה',
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        ' מייל',
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        'תאריך יום הולדת',
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        'עיר',
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        'אזור',
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ]),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        myUser!["firstName"],
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        myUser!["lastName"],
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        myUser!["email"],
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        myUser!["dateOfBirthInMsSinceEpoch"]
-                                                            as String,
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        myUser!["city"],
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.0),
-                                                      child: Text(
-                                                        myUser!["region"],
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ]),
-                                          ]),
-                                    ]),
-                                  ),
-                                ],
-                              ),
                               Column(
                                 children: [
                                   Container(
@@ -723,6 +477,252 @@ class _userProfileScreenState extends State<userProfileScreen>
                                         }
                                       },
                                     ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    margin: const EdgeInsets.all(15.0),
+                                    padding: const EdgeInsets.all(3.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.1),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              //empty for spacing
+                                              Text(
+                                                ' פרטים אישיים',
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 19,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                ' ',
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 19,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              GestureDetector(
+                                                child: CircleAvatar(
+                                                  radius: 10,
+                                                  backgroundColor:
+                                                      Colors.grey.shade200,
+                                                  child: CircleAvatar(
+                                                    radius: 70,
+                                                    backgroundImage: AssetImage(
+                                                        'assets/images/pencile.png'),
+                                                  ),
+                                                ),
+                                                onTap: () =>
+                                                    const editUserProfileRouteData()
+                                                        .go(context),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'שם',
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        'שם משפחה',
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        ' מייל',
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        'תאריך יום הולדת',
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        'עיר',
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        'אזור',
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ]),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        myUser!["firstName"],
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        myUser!["lastName"],
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        myUser!["email"],
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        myUser!["dateOfBirthInMsSinceEpoch"]
+                                                            as String,
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        myUser!["city"],
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        myUser!["region"],
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ]),
+                                          ]),
+                                    ]),
                                   ),
                                 ],
                               ),

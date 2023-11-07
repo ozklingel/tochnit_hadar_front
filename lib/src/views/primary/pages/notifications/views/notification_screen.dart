@@ -1,23 +1,45 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/notifications/views/widgets/notification_widget.dart';
-import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../../models/notification/notification.dto.dart';
-import '../../../../../services/notifications/toaster.dart';
+import '../../../../../models/notification/noti.dart';
+import '../../../../../services/networking/HttpService.dart';
 import '../../../../../services/routing/go_router_provider.dart';
-import '../controller/notifications_controller.dart';
+import 'emptyScreen.dart';
 
-class NotificationsScreen extends ConsumerWidget {
-  const NotificationsScreen({super.key});
+class NotificationScreen extends StatefulWidget {
+  const NotificationScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ref) {
-    final controller = ref.watch(notificationsControllerProvider);
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
 
+class _NotificationScreenState extends State<NotificationScreen> {
+  List<Noti> notis = [];
+
+  Future<List<Noti>> _getNoti() async {
+    print("access API");
+    var jsonData = await HttpService.getUserNoti("1", context);
+    notis.clear();
+    for (var u in jsonDecode(jsonData.body)) {
+      print(u);
+      Noti noti = Noti(
+          u["id"].toString(),
+          u["apprenticeId"].toString(),
+          u["event"].toString(),
+          u["date"].toString(),
+          u["timeFromNow"].toString(),
+          u["allreadyread"].toString());
+      notis.add(noti);
+    }
+    print(notis);
+    return notis;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
@@ -32,81 +54,66 @@ class NotificationsScreen extends ConsumerWidget {
             color: Colors.black,
             icon: const Icon(Icons.settings),
             tooltip: 'Setting Icon',
-            onPressed: () => Toaster.unimplemented(),
-          ),
-          const SizedBox(width: 16),
+            onPressed: () => const NotificationSettingRouteData().go(context),
+          )
         ],
         title: const Text('התראות'),
       ),
-      body: RefreshIndicator.adaptive(
-        onRefresh: () => ref.refresh(notificationsControllerProvider.future),
-        child: controller.unwrapPrevious().when(
-              error: (error, s) => CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: [
-                  SliverFillRemaining(
-                    child: Center(
-                      child: Text(error.toString()),
-                    ),
-                  ),
-                ],
-              ),
-              loading: () => _ResultsBody(
-                isLoading: true,
-                messages: List.generate(
-                  10,
-                  (index) => const NotiDto(
-                    title: 'titletitletitletitle',
-                    content: 'contentcontentcontent',
-                    dateTime: 0,
-                    attachments: ['attachment'],
-                    from: ApprenticeDto(
-                      firstName: 'firstNamefirstName',
-                      lastName: 'lastNamelastName',
-                    ),
-                  ),
+      body: SingleChildScrollView(
+          child: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.all(1.0),
+        padding: const EdgeInsets.all(3.0),
+        child: FutureBuilder(
+          future: _getNoti(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.data == null) {
+              return Container(
+                child: Center(
+                  child: emptyScreen(),
                 ),
-              ),
-              data: (messages) => _ResultsBody(
-                isLoading: false,
-                messages: messages,
-              ),
-            ),
-      ),
-    );
-  }
-}
+              );
+            } else {
+              print(snapshot.data.length);
+              return ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(), //<--here
 
-class _ResultsBody extends StatelessWidget {
-  const _ResultsBody({
-    required this.messages,
-    required this.isLoading,
-  });
-
-  final List<NotiDto> messages;
-  final bool isLoading;
-
-  @override
-  Widget build(BuildContext context) {
-    if (messages.isEmpty) {
-      return EmptyState(
-        image: Assets.images.noMessages.svg(),
-        topText: 'אין הודעות נכנסות',
-        bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
-      );
-    }
-
-    return ListView(
-      children: messages
-          .map(
-            (e) => Skeletonizer(
-              enabled: isLoading,
-              child: notificationWidget.collapsed(
-                notification: e,
-              ),
-            ),
-          )
-          .toList(),
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      tileColor: (snapshot.data[index].allreadyread
+                                  .replaceAll(' ', '') ==
+                              "false")
+                          ? Colors.blue[50] //fromRGBO(244, 248, 251, 1)
+                          : Colors.white,
+                      trailing: Text(" לפני " +
+                          snapshot.data[index].timeFromNow +
+                          " ימים "),
+                      title: Text(snapshot.data[index].event,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text(
+                          snapshot.data[index].date +
+                              "\n" +
+                              snapshot.data[index].apprenticeId,
+                          textAlign: TextAlign.right),
+                      onTap: () {
+                        if (snapshot.data[index].allreadyread
+                                .replaceAll(' ', '') ==
+                            "false") {
+                          HttpService.sendAllreadyread(snapshot.data[index].id);
+                          setState(
+                              () => snapshot.data[index].allreadyread = "true");
+                          // print(snapshot.data[index].id + " was read");
+                        }
+                      },
+                    );
+                  });
+            }
+          },
+        ),
+      )),
     );
   }
 }

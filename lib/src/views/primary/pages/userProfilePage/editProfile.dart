@@ -60,7 +60,7 @@ class _profileEditPageState extends State<profileEditPage>
   void initState() {
     // TODO: implement initState
     super.initState();
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this, initialIndex: 1);
   }
 
   @override

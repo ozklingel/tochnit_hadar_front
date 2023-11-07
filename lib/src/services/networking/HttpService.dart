@@ -10,6 +10,27 @@ class HttpService {
   static final _setUserDetailUrl =
       'http://10.0.2.2:5000/setEntityDetails_form/setByType';
   static final _ChatBoxUrl = 'http://10.0.2.2:5000/messegaes_form/add';
+  static String _getNoriUrl = 'http://10.0.2.2:5000/notification_form/getAll';
+  static var _sendAllreadyreadUrl =
+      Uri.parse('http://10.0.2.2:5000/notification_form/setWasRead');
+
+  static getUserNoti(userid, context) async {
+    return http.get(Uri.parse(_getNoriUrl + "?userId=" + userid));
+  }
+
+  static sendAllreadyread(notiId) async {
+    var request = http.MultipartRequest(
+      'POST',
+      _sendAllreadyreadUrl,
+    );
+    Map<String, String> headers = {"Content-type": "multipart/form-data"};
+
+    request.fields['noti_id'] = notiId;
+
+    request.headers.addAll(headers);
+    var res = await request.send();
+    return res;
+  }
 
   static Future<http.Response> getUserDetail(userid) async {
     return http.get(Uri.parse(_getUserDetailUrl + "?userId=" + userid));

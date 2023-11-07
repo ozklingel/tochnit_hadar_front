@@ -17,6 +17,7 @@ import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.d
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../views/primary/pages/chatBox/supportScreen.dart';
+import '../../views/primary/pages/notifications/views/SettingPage.dart';
 import '../../views/primary/pages/notifications/views/notification_screen.dart';
 import '../../views/primary/pages/userProfilePage/editProfile.dart';
 import '../../views/primary/pages/userProfilePage/userProfileScreen.dart';
@@ -484,7 +485,21 @@ class notificationRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return NotificationsScreen();
+    return NotificationScreen();
+  }
+}
+
+@TypedGoRoute<NotificationSettingRouteData>(
+  path: '/NotificationSettings',
+)
+class NotificationSettingRouteData extends GoRouteData {
+  const NotificationSettingRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return SettingPage();
   }
 }
 
