@@ -22,15 +22,14 @@ class _userProfileScreenState extends State<userProfileScreen>
   final picker = ImagePicker();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   bool isLoading = true;
   late TabController tabController;
   int scrolength = 2000;
-
   late Map<String, dynamic> myUser;
+
   Future<Map<String, dynamic>> _getUserDetail() async {
     print("access");
-    var data = await HttpService.getUserDetail("1");
+    var data = await HttpService.getUserDetail("549247616");
 
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
@@ -423,13 +422,12 @@ class _userProfileScreenState extends State<userProfileScreen>
                                           AsyncSnapshot snapshot) {
                                         scrolength = snapshot.data.length;
                                         print(scrolength);
-                                        if (snapshot.data == null) {
-                                          return Container(
-                                            child: Center(
-                                                //child: emptyScreen(),
-                                                ),
+                                        if (snapshot.hasError) {
+                                          return const Center(
+                                            child:
+                                                Text('An error has occurred!'),
                                           );
-                                        } else {
+                                        } else if (snapshot.hasData) {
                                           return Column(
                                             children: <Widget>[
                                               Align(
@@ -473,6 +471,10 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                     );
                                                   }),
                                             ],
+                                          );
+                                        } else {
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
                                           );
                                         }
                                       },

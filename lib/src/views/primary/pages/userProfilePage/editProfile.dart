@@ -28,15 +28,14 @@ class _profileEditPageState extends State<profileEditPage>
   final lastNameController = TextEditingController();
   final birthDayController = TextEditingController();
   final cityController = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
   bool isLoading = true;
   late TabController tabController;
   int scrolength = 2000;
   late Map<String, dynamic> myUser;
+
   Future<Map<String, dynamic>> _getUserDetail() async {
     print("access");
-    var data = await HttpService.getUserDetail("1");
+    var data = await HttpService.getUserDetail("549247616");
 
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
@@ -376,13 +375,11 @@ class _profileEditPageState extends State<profileEditPage>
                                       AsyncSnapshot snapshot) {
                                     scrolength = snapshot.data.length;
                                     print(scrolength);
-                                    if (snapshot.data == null) {
-                                      return Container(
-                                        child: Center(
-                                            //child: emptyScreen(),
-                                            ),
+                                    if (snapshot.hasError) {
+                                      return const Center(
+                                        child: Text('An error has occurred!'),
                                       );
-                                    } else {
+                                    } else if (snapshot.hasData) {
                                       return Column(
                                         children: <Widget>[
                                           Align(
@@ -422,6 +419,10 @@ class _profileEditPageState extends State<profileEditPage>
                                                 );
                                               }),
                                         ],
+                                      );
+                                    } else {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
                                       );
                                     }
                                   },
@@ -870,17 +871,15 @@ class _profileEditPageState extends State<profileEditPage>
                         cityController.text != "" ||
                         regionController.text != "") {
                       List<String> listOfcontrolerText = [
-                        regionController.text + "-" + "region",
-                        cityController.text + "-" + "city",
-                        firstNameController.text + "-" + "firstName",
-                        lastNameController.text + "-" + "lastName",
-                        birthDayController.text +
-                            "-" +
-                            "dateOfBirthInMsSinceEpoch",
+                        regionController.text + "-" + "cluster_id",
+                        cityController.text + "-" + "city_id",
+                        firstNameController.text + "-" + "name",
+                        lastNameController.text + "-" + "last_name",
+                        birthDayController.text + "-" + "birthday",
                         emailController.text + "-" + "email",
                       ];
                       var result = await HttpService.setUserDetail(
-                          "userProfile", "1", listOfcontrolerText);
+                          "userProfile", "549247616", listOfcontrolerText);
                       if (result == "success") {
                         showFancyCustomDialog(context);
                       } else {

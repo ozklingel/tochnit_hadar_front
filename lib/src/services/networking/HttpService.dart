@@ -13,9 +13,18 @@ class HttpService {
   static String _getNoriUrl = 'http://10.0.2.2:5000/notification_form/getAll';
   static var _sendAllreadyreadUrl =
       Uri.parse('http://10.0.2.2:5000/notification_form/setWasRead');
+  static String token = "11"; //await Candidate().getToken();
 
   static getUserNoti(userid, context) async {
-    return http.get(Uri.parse(_getNoriUrl + "?userId=" + userid));
+    final response =
+        await http.get(Uri.parse(_getNoriUrl + "?userId=" + userid), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    print('Token : ${token}');
+    print(response);
+    return response;
   }
 
   static sendAllreadyread(notiId) async {
@@ -33,11 +42,22 @@ class HttpService {
   }
 
   static Future<http.Response> getUserDetail(userid) async {
-    return http.get(Uri.parse(_getUserDetailUrl + "?userId=" + userid));
+    final response = await http
+        .get(Uri.parse(_getUserDetailUrl + "?userId=" + userid), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    print('Token : ${token}');
+    print(response);
+    return response;
   }
 
   static setUserDetail(typeOfSet, entityId, atrrToBeSet) async {
     print(atrrToBeSet);
+    print(entityId);
+    print(typeOfSet);
+
     var atrrToBeSetString = "{";
     for (var age in atrrToBeSet) {
       var agesplited = age.split("-");
@@ -55,7 +75,10 @@ class HttpService {
       "atrrToBeSet": atrrToBeSetString,
     };
 
-    final headers = {'Content-Type': 'application/json'};
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http.put(Uri.parse(_setUserDetailUrl),
         headers: headers, body: json.encode(request));
     Map<String, dynamic> responsePayload = json.decode(response.body);
