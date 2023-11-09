@@ -20,20 +20,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   Future<List<Noti>> _getNoti() async {
     print("access API");
-    var jsonData = await HttpService.getUserNoti("1", context);
+    var jsonData = await HttpService.getUserNoti("549247616", context);
     notis.clear();
+    print(jsonData.body);
+
     for (var u in jsonDecode(jsonData.body)) {
-      print(u);
       Noti noti = Noti(
-          u["id"].toString(),
-          u["apprenticeId"].toString(),
-          u["event"].toString(),
-          u["date"].toString(),
-          u["timeFromNow"].toString(),
-          u["allreadyread"].toString());
+        u["id"].toString(),
+        u["apprenticeId"].toString(),
+        u["event"].toString(),
+        u["date"].toString(),
+        u["timeFromNow"].toString(),
+        u["allreadyread"].toString(),
+        u["numOfLinesDisplay"].toString(),
+      );
       notis.add(noti);
     }
-    print(notis);
     return notis;
   }
 
@@ -73,7 +75,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
               );
             } else {
-              print(snapshot.data.length);
               return ListView.builder(
                   physics: const NeverScrollableScrollPhysics(), //<--here
 
@@ -86,17 +87,27 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               "false")
                           ? Colors.blue[50] //fromRGBO(244, 248, 251, 1)
                           : Colors.white,
-                      trailing: Text(" לפני " +
-                          snapshot.data[index].timeFromNow +
-                          " ימים "),
+                      trailing: (snapshot.data[index].numOfLinesDisplay == "3")
+                          ? Text(" לפני " +
+                              snapshot.data[index].timeFromNow +
+                              " ימים ")
+                          : Text(snapshot.data[index].date),
                       title: Text(snapshot.data[index].event,
                           textAlign: TextAlign.right,
                           style: TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text(
-                          snapshot.data[index].date +
-                              "\n" +
-                              snapshot.data[index].apprenticeId,
-                          textAlign: TextAlign.right),
+                      subtitle: (snapshot.data[index].numOfLinesDisplay == "3")
+                          ? Text(
+                              "בתאריך " +
+                                  snapshot.data[index].date +
+                                  "\n" +
+                                  snapshot.data[index].apprenticeId,
+                              textAlign: TextAlign.right)
+                          : Text("עברו " +
+                              snapshot.data[index].timeFromNow +
+                              "  יום מה" +
+                              snapshot.data[index].event +
+                              " של " +
+                              snapshot.data[index].apprenticeId),
                       onTap: () {
                         if (snapshot.data[index].allreadyread
                                 .replaceAll(' ', '') ==

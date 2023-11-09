@@ -22,8 +22,7 @@ class HttpService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
-    print('Token : ${token}');
-    print(response);
+
     return response;
   }
 
@@ -49,7 +48,6 @@ class HttpService {
       'Authorization': 'Bearer $token',
     });
     print('Token : ${token}');
-    print(response);
     return response;
   }
 

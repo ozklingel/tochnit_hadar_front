@@ -68,6 +68,16 @@ class _userProfileScreenState extends State<userProfileScreen>
             width: double.infinity,
             height: scrolength.toDouble() * 200,
             child: Scaffold(
+              appBar: AppBar(
+                leading: GestureDetector(
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
+                  ),
+                  onTap: () => const HomeRouteData().go(context),
+                ),
+                title: const Text('פרופיל אישי'),
+              ),
               body: FutureBuilder<Map<String, dynamic>>(
                 future: _getUserDetail(),
                 builder: (context, snapshot) {
@@ -78,62 +88,6 @@ class _userProfileScreenState extends State<userProfileScreen>
                   } else if (snapshot.hasData) {
                     return Column(
                       children: [
-                        SafeArea(
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        //empty for spacing
-                                        Text(
-                                          ' ',
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontStyle: FontStyle.normal,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 19,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          height: 40,
-                                        ),
-                                        Text(
-                                          ' פרופיל אישי',
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontStyle: FontStyle.normal,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 19,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        GestureDetector(
-                                          child: Icon(
-                                            Icons.arrow_forward,
-                                            color: Colors.black,
-                                          ),
-                                          onTap: () =>
-                                              const HomeRouteData().go(context),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                         Container(
                           height: size.height / 3.4,
                           width: double.infinity,

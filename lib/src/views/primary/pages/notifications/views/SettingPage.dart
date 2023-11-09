@@ -16,126 +16,109 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            body: Column(children: [
-      SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        ' ניהול התראות',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 19,
-                            color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        child: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.black,
-                        ),
-                        onTap: () => const notificationRouteData().go(context),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      Column(
-        children: <Widget>[
-          Container(
-            height: 60,
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.only(left: 1.0),
-              child: Text(
-                'הגדרת זמני קבלת התראות על אירועים',
-                style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 19,
-                    color: Colors.black),
-              ),
+    return Scaffold(
+        appBar: AppBar(
+          leading: GestureDetector(
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
             ),
+            onTap: () => const HomeRouteData().go(context),
           ),
-          Container(
-              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-              alignment: Alignment.topLeft,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SwitchListTile(
-                    //switch at left side of label
-                    value: t1,
-                    controlAffinity: ListTileControlAffinity.leading,
-                    onChanged: (bool value) {
-                      setState(() {
-                        t1 = value; //update value when sitch changed
-                      });
-                    },
-                    title: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "בתחילת השבוע של האירוע",
-                      ),
-                    ),
+          actions: [
+            IconButton(
+              color: Colors.black,
+              icon: const Icon(Icons.settings),
+              tooltip: 'Setting Icon',
+              onPressed: () => const NotificationSettingRouteData().go(context),
+            )
+          ],
+          title: const Text('התראות'),
+        ),
+        body: Column(children: [
+          Column(
+            children: <Widget>[
+              Container(
+                height: 60,
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: Text(
+                    'הגדרת זמני קבלת התראות על אירועים',
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                        color: Colors.black),
                   ),
-                  SwitchListTile(
-                    //switch at left side of label
-                    value: t2,
-                    controlAffinity: ListTileControlAffinity.leading,
-                    onChanged: (bool value) {
-                      setState(() {
-                        t2 = value; //update value when sitch changed
-                      });
-                    },
-                    title: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "יום לפני האירוע",
+                ),
+              ),
+              Container(
+                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                  alignment: Alignment.topLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SwitchListTile(
+                        //switch at left side of label
+                        activeColor: Colors.blue[700],
+
+                        value: t1,
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        onChanged: (bool value) {
+                          setState(() {
+                            t1 = value;
+                            print(t1); //update value when sitch changed
+                          });
+                        },
+                        title: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "בתחילת השבוע של האירוע",
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  SwitchListTile(
-                    //switch at left side of label
-                    value: t3,
-                    controlAffinity: ListTileControlAffinity.leading,
-                    onChanged: (bool value) {
-                      setState(() {
-                        t3 = value; //update value when sitch changed
-                      });
-                    },
-                    title: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "ביום האירוע",
+                      SwitchListTile(
+                        activeColor: Colors.blue[700],
+
+                        //switch at left side of label
+                        value: t2,
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        onChanged: (bool value) {
+                          setState(() {
+                            t2 = value; //update value when sitch changed
+                          });
+                        },
+                        title: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "יום לפני האירוע",
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ))
-        ],
-      )
-    ])));
+                      SwitchListTile(
+                        activeColor: Colors.blue[700],
+
+                        //switch at left side of label
+                        value: t3,
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        onChanged: (bool value) {
+                          setState(() {
+                            t3 = value; //update value when sitch changed
+                          });
+                        },
+                        title: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "ביום האירוע",
+                          ),
+                        ),
+                      ),
+                    ],
+                  ))
+            ],
+          )
+        ]));
   }
 }
