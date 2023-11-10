@@ -23,6 +23,7 @@ class ApprenticesController extends _$ApprenticesController {
         avatar: faker.image.image(
           height: 75,
           width: 75,
+          random: true,
         ),
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),

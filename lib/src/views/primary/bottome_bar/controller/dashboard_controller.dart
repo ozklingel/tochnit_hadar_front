@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dashboard_controller.g.dart';
 
-@Riverpod(dependencies: [goRouter])
+@Riverpod(dependencies: [])
 class DashboardController extends _$DashboardController {
   @override
   int build(String? currentRoute) {

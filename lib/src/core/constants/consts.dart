@@ -6,6 +6,12 @@ abstract class Consts {
   static const appTitle = 'תכנית הדר';
   static const defaultLocale = Locale('he', 'IL');
 
+  static const baseUrl =
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/';
+
+  // storage
+  static const accessTokenKey = 'accessTokenKey';
+
   static const defaultDurationM = Duration(milliseconds: 300);
 
   // geolocation

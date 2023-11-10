@@ -2,15 +2,12 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reports_controller.g.dart';
 
 @Riverpod(
-  dependencies: [
-    ApprenticesController,
-  ],
+  dependencies: [],
 )
 class ReportsController extends _$ReportsController {
   @override
