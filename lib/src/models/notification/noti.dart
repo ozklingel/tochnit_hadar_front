@@ -4,11 +4,13 @@ class Noti {
   final String event;
   final String date;
   final String timeFromNow;
+  final String details;
+
   String allreadyread;
   final String numOfLinesDisplay;
 
   Noti(this.id, this.apprenticeId, this.event, this.date, this.timeFromNow,
-      this.allreadyread, this.numOfLinesDisplay);
+      this.details, this.allreadyread, this.numOfLinesDisplay);
   setAllreadyread(String wasRead) {
     this.allreadyread = wasRead;
   }

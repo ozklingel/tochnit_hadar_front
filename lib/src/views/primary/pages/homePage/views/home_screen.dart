@@ -56,20 +56,22 @@ class HomeScreen extends ConsumerWidget {
   }
 
   drawer(context) {
+    Size size = MediaQuery.of(context).size;
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           SizedBox(
-            height: 400,
+            height: size.height * 2 / 5,
             child: DrawerHeader(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CircleAvatar(
-                    radius: 50,
+                    radius: 30,
                     backgroundImage:
-                        NetworkImage('https://picsum.photos/250?image=9'),
+                        AssetImage('assets/images/person.png') as ImageProvider,
                   ),
                   Text('John Doe'),
                   Text('John@Doe'),
@@ -85,11 +87,83 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
           ),
-          ListTile(
-            title: Text('פניות שירות'),
-            onTap: () => const supportRouteData()
-                .go(context), //context.go(Routes.SUPPORT),
-          ),
+          Container(
+              height: size.height * 3 / 5,
+              color: Colors.blue[50], //Color.fromRGBO(246, 249, 254, 1),
+              child: ListView(children: [
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage:
+                        AssetImage('assets/images/madad.png') as ImageProvider,
+                  ),
+                  title: Text('מדדי תוכנית'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage:
+                        AssetImage('assets/images/mapa.png') as ImageProvider,
+                  ),
+                  title: Text('מפת מיקומים'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage: AssetImage('assets/images/envalop.png')
+                        as ImageProvider,
+                  ),
+                  title: Text('הודעות מערכת'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage:
+                        AssetImage('assets/images/call.png') as ImageProvider,
+                  ),
+                  title: Text('פניות שירות'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage: AssetImage('assets/images/setting.png')
+                        as ImageProvider,
+                  ),
+                  title: Text('הגדרות והתראות'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage: AssetImage('assets/images/person2.png')
+                        as ImageProvider,
+                  ),
+                  title: Text('התנתקות'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+              ])),
         ],
       ),
     );

@@ -778,9 +778,8 @@ class _profileEditPageState extends State<profileEditPage>
       () {
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
-          print(galleryFile);
-          var list = [galleryFile?.path];
-          HttpService.uploadPhotos(list.cast<String>());
+
+          HttpService.uploadPhoto(galleryFile!, "549247616");
           setState(() {
             profileimg = FileImage(galleryFile!);
           });

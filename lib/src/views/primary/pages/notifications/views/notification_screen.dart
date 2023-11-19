@@ -31,6 +31,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         u["event"].toString(),
         u["date"].toString(),
         u["timeFromNow"].toString(),
+        u["details"].toString(),
         u["allreadyread"].toString(),
         u["numOfLinesDisplay"].toString(),
       );
@@ -92,9 +93,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               snapshot.data[index].timeFromNow +
                               " ימים ")
                           : Text(snapshot.data[index].date),
-                      title: Text(snapshot.data[index].event,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      title: (snapshot.data[index].numOfLinesDisplay == "3")
+                          ? Text(snapshot.data[index].event,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontWeight: FontWeight.bold))
+                          : Text("הגיע הזמן ל" + snapshot.data[index].event,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: (snapshot.data[index].numOfLinesDisplay == "3")
                           ? Text(
                               "בתאריך " +

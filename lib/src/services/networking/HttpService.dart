@@ -1,19 +1,43 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
 class HttpService {
   static String _getUserDetailUrl =
-      'http://10.0.2.2:5000/userProfile_form/getProfileAtributes';
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/userProfile_form/getProfileAtributes';
   static var _setUserImageUrl =
       Uri.parse('http://10.0.2.2:5000/userProfile_form/uploadPhoto');
   static final _setUserDetailUrl =
-      'http://10.0.2.2:5000/setEntityDetails_form/setByType';
-  static final _ChatBoxUrl = 'http://10.0.2.2:5000/messegaes_form/add';
-  static String _getNoriUrl = 'http://10.0.2.2:5000/notification_form/getAll';
-  static var _sendAllreadyreadUrl =
-      Uri.parse('http://10.0.2.2:5000/notification_form/setWasRead');
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/setEntityDetails_form/setByType';
+  static final _ChatBoxUrl =
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/messegaes_form/add';
+  static String _getNoriUrl =
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/notification_form/getAll';
+  static var _sendAllreadyreadUrl = Uri.parse(
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/notification_form/setWasRead');
   static String token = "11"; //await Candidate().getToken();
+  static uploadPhoto(File selectedImage, userid) async {
+    var request = http.MultipartRequest(
+      'POST',
+      _setUserImageUrl,
+    );
+    request.fields['userid'] = userid;
+
+    Map<String, String> headers = {"Content-type": "multipart/form-data"};
+    request.files.add(
+      http.MultipartFile(
+        'image',
+        selectedImage.readAsBytes().asStream(),
+        selectedImage.lengthSync(),
+        filename: selectedImage.path.split('/').last,
+      ),
+    );
+    request.headers.addAll(headers);
+    print("request image: " + request.toString());
+    var res = await request.send();
+    http.Response response = await http.Response.fromStream(res);
+  }
 
   static getUserNoti(userid, context) async {
     final response =
@@ -83,29 +107,17 @@ class HttpService {
     return responsePayload['result'];
   }
 
-  static Future<String> uploadPhotos(List<String> paths) async {
-    Uri uri = _setUserImageUrl;
-    http.MultipartRequest request = http.MultipartRequest('POST', uri);
-    for (String path in paths) {
-      print(path);
-      request.files.add(await http.MultipartFile.fromPath('file', path));
-    }
-    print(request.toString());
-    http.StreamedResponse response = await request.send();
-    var responseBytes = await response.stream.toBytes();
-    var responseString = utf8.decode(responseBytes);
-    print('\n\n');
-    print('RESPONSE WITH HTTP');
-    print(responseString);
-    print('\n\n');
-    return responseString;
-  }
+  /**
+   * accepts two parameters,the endpoint and the file
+   * returns Response from server
+   */
 
   static ChatBoxUrl(subject, contant, context) async {
     Map<String, dynamic> request = {
       "content": contant,
       "subject": subject,
-      "created_by_id": "1",
+      "created_by_id": "549247616",
+      "created_for_id": "549247616",
     };
 
     final headers = {'Content-Type': 'application/json'};
