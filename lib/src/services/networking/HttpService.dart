@@ -21,7 +21,7 @@ class HttpService {
   static String token = "11"; //await Candidate().getToken();
 
   static setSetting(
-      userId, notifyDayBefore, String notifyMorning, notifyStartWeek) async {
+      userId, notifyDayBefore, notifyMorning, notifyStartWeek) async {
     var request = http.MultipartRequest(
       'POST',
       _setSettingUrl,

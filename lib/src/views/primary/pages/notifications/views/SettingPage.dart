@@ -25,7 +25,7 @@ class _SettingPageState extends State<SettingPage> {
                 color: Colors.black,
               ),
               onTap: () => {
-                HttpService.setSetting("1",t1,t2,t3)
+                    HttpService.setSetting("1", t1, t2, t3),
                     const HomeRouteData().go(context),
                   }),
           title: const Text('ניהול התראות'),
