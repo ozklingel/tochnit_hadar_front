@@ -60,25 +60,73 @@ class HomeScreen extends ConsumerWidget {
 
     return Drawer(
       child: ListView(
-        padding: EdgeInsets.zero,
         children: <Widget>[
           SizedBox(
-            height: size.height * 2 / 5,
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  //empty for spacing
+                  Text(
+                    '  ',
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 19,
+                        color: Colors.black),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    ' ',
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 19,
+                        color: Colors.black),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  GestureDetector(
+                    child: CircleAvatar(
+                      radius: 10,
+                      backgroundColor: Colors.grey.shade200,
+                      child: CircleAvatar(
+                        radius: 70,
+                        backgroundImage: AssetImage('assets/images/exit.png'),
+                      ),
+                    ),
+                    onTap: () => const editUserProfileRouteData().go(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: size.height * 2 / 6.5,
             child: DrawerHeader(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage:
-                        AssetImage('assets/images/person.png') as ImageProvider,
+                    backgroundImage: AssetImage('assets/images/person2.png')
+                        as ImageProvider,
                   ),
-                  Text('John Doe'),
-                  Text('John@Doe'),
+                  Text('John Doe',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('John@Doe', style: TextStyle(fontSize: 11)),
                   TextButton(
-                    child: Text(
-                      "ערוך פרופיל",
-                    ),
+                    child: Text("עריכת פרופיל",
+                        style: TextStyle(color: Colors.blue[900])),
                     onPressed: () {
                       const userProfileRouteData().go(context);
                     },
