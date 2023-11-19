@@ -19,21 +19,15 @@ class _SettingPageState extends State<SettingPage> {
     return Scaffold(
         appBar: AppBar(
           leading: GestureDetector(
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onTap: () => const HomeRouteData().go(context),
-          ),
-          actions: [
-            IconButton(
-              color: Colors.black,
-              icon: const Icon(Icons.settings),
-              tooltip: 'Setting Icon',
-              onPressed: () => const NotificationSettingRouteData().go(context),
-            )
-          ],
-          title: const Text('התראות'),
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              onTap: () => {
+                setSetting("1",t1,t2,t3)
+                    const HomeRouteData().go(context),
+                  }),
+          title: const Text('ניהול התראות'),
         ),
         body: Column(children: [
           Column(

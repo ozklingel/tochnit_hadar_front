@@ -16,7 +16,28 @@ class HttpService {
       'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/notification_form/getAll';
   static var _sendAllreadyreadUrl = Uri.parse(
       'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/notification_form/setWasRead');
+  static var _setSettingUrl = Uri.parse(
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/notification_form/setSetting');
   static String token = "11"; //await Candidate().getToken();
+
+  static setSetting(
+      userId, notifyDayBefore, String notifyMorning, notifyStartWeek) async {
+    var request = http.MultipartRequest(
+      'POST',
+      _setSettingUrl,
+    );
+    Map<String, String> headers = {"Content-type": "multipart/form-data"};
+
+    request.fields['userId'] = userId;
+    request.fields['notifyMorning'] = notifyMorning;
+    request.fields['notifyDayBefore'] = notifyDayBefore;
+    request.fields['notifyStartWeek'] = notifyStartWeek;
+
+    request.headers.addAll(headers);
+    var res = await request.send();
+    return res;
+  }
+
   static uploadPhoto(File selectedImage, userid) async {
     var request = http.MultipartRequest(
       'POST',
