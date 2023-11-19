@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../services/networking/HttpService.dart';
 import '../../../../../services/routing/go_router_provider.dart';
 
 class SettingPage extends StatefulWidget {
@@ -24,7 +25,7 @@ class _SettingPageState extends State<SettingPage> {
                 color: Colors.black,
               ),
               onTap: () => {
-                setSetting("1",t1,t2,t3)
+                HttpService.setSetting("1",t1,t2,t3)
                     const HomeRouteData().go(context),
                   }),
           title: const Text('ניהול התראות'),
