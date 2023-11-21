@@ -76,7 +76,7 @@ class HomeScreen extends ConsumerWidget {
                     backgroundImage: AssetImage('assets/images/exit.png'),
                   ),
                 ),
-                onTap: () => const editUserProfileRouteData().go(context),
+                onTap: () => const HomeRouteData().go(context),
               ),
             ],
           ),
@@ -87,7 +87,8 @@ class HomeScreen extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/images/person2.png')
+                    backgroundImage: NetworkImage(
+                            "https://th01-s3.s3.eu-north-1.amazonaws.com/c2fb87a53199453ca9f2ac14fb672cfc.jpg")
                         as ImageProvider,
                   ),
                   Text('John Doe',

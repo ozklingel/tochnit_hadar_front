@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class HttpService {
@@ -17,6 +19,40 @@ class HttpService {
   static var _setSettingUrl =
       Uri.parse('http://10.0.2.2:5000/notification_form/setSetting');
   static String token = "11"; //await Candidate().getToken();
+  static var httpClient = new HttpClient();
+
+  static Future<Future<ui.Image>> downloadFile(
+      String url, String filename) async {
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    print(bytes);
+    return bytesToImage(bytes);
+  }
+
+  static Future<ui.Image> bytesToImage(Uint8List imgBytes) async {
+    ui.Codec codec = await ui.instantiateImageCodec(imgBytes);
+    ui.FrameInfo frame;
+    try {
+      frame = await codec.getNextFrame();
+    } finally {
+      codec.dispose();
+    }
+    return frame.image;
+  }
+
+  static getUserNoti(userid, context) async {
+    print(userid);
+
+    final response =
+        await http.get(Uri.parse(_getNoriUrl + "?userId=" + userid), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    return response;
+  }
 
   static setSetting(userId, bool notifyDayBefore, bool notifyMorning,
       bool notifyStartWeek) async {
@@ -58,18 +94,6 @@ class HttpService {
     print("request image: " + request.toString());
     var res = await request.send();
     http.Response response = await http.Response.fromStream(res);
-  }
-
-  static getUserNoti(userid, context) async {
-    print(userid);
-    final response =
-        await http.get(Uri.parse(_getNoriUrl + "?userId=" + userid), headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
-
-    return response;
   }
 
   static sendAllreadyread(notiId) async {
