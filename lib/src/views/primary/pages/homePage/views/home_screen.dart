@@ -65,49 +65,18 @@ class HomeScreen extends ConsumerWidget {
             height: 20,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Row(
-                children: [
-                  //empty for spacing
-                  Text(
-                    '  ',
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 19,
-                        color: Colors.black),
+              GestureDetector(
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.grey.shade200,
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundImage: AssetImage('assets/images/exit.png'),
                   ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    ' ',
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 19,
-                        color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  GestureDetector(
-                    child: CircleAvatar(
-                      radius: 10,
-                      backgroundColor: Colors.grey.shade200,
-                      child: CircleAvatar(
-                        radius: 70,
-                        backgroundImage: AssetImage('assets/images/exit.png'),
-                      ),
-                    ),
-                    onTap: () => const editUserProfileRouteData().go(context),
-                  ),
-                ],
+                ),
+                onTap: () => const editUserProfileRouteData().go(context),
               ),
             ],
           ),

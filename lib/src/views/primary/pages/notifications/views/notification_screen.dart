@@ -22,7 +22,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     print("access API");
     var jsonData = await HttpService.getUserNoti("549247616", context);
     notis.clear();
-    print(jsonData.body);
 
     for (var u in jsonDecode(jsonData.body)) {
       Noti noti = Noti(

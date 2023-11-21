@@ -38,8 +38,7 @@ class SupportScreen extends ConsumerWidget {
               onTap: () => const HomeRouteData().go(context),
             ),
             title: Text("פתיחת פניה")),
-        body: SingleChildScrollView(
-            child: Column(
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
@@ -126,6 +125,14 @@ class SupportScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            Flexible(
+              child: Container(
+                color: Colors.white,
+                child: const Center(
+                  child: Text(''),
+                ),
+              ),
+            ),
             Container(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 height: 50,
@@ -175,6 +182,6 @@ class SupportScreen extends ConsumerWidget {
                   ),
                 ))
           ],
-        )));
+        ));
   }
 }
