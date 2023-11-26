@@ -135,10 +135,9 @@ class SupportScreen extends ConsumerWidget {
               ),
             ),
             Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.only(left: 24, right: 24, bottom: 10),
                 height: 50,
                 width: 20,
-                alignment: Alignment.bottomCenter,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: StadiumBorder(),
@@ -181,7 +180,7 @@ class SupportScreen extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 18),
                   ),
-                ))
+                )),
           ],
         ));
   }
