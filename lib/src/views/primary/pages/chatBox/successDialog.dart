@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../services/routing/go_router_provider.dart';
+
 void showFancyCustomDialog(BuildContext context) {
   Dialog fancyDialog = Dialog(
     shape: RoundedRectangleBorder(
@@ -22,7 +24,6 @@ void showFancyCustomDialog(BuildContext context) {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -37,27 +38,12 @@ void showFancyCustomDialog(BuildContext context) {
             alignment: Alignment.bottomLeft,
             child: InkWell(
               onTap: () {
-                Navigator.pop(context);
+                const HomeRouteData().go(context);
               },
               child: Container(
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blue.shade800),
-                  onPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop('dialog');
-                  },
-                  icon: Icon(
-                    // <-- Icon
-                    Icons.hourglass_empty,
-                    color: Colors.white,
-                  ),
-                  label: Text(
-                    'חזרה לדף הבית    ',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ), // <-- Text
-                ),
-              ),
+                  child: const Image(
+                image: AssetImage('assets/images/backhome.png'),
+              )),
             ),
           ),
           Column(
@@ -66,19 +52,16 @@ void showFancyCustomDialog(BuildContext context) {
                 width: double.infinity,
                 height: 30,
               ),
-              CircleAvatar(
-                radius: 80,
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-                backgroundImage: AssetImage('assets/images/vi.png'),
+              const Image(
+                image: AssetImage('assets/images/vi.png'),
               ),
               SizedBox(
                 width: double.infinity,
                 height: 5,
               ),
               Text(
-                '!פניתך נשלחה בהצלחה',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                'פניתך נשלחה בהצלחה!',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 width: double.infinity,
@@ -89,10 +72,6 @@ void showFancyCustomDialog(BuildContext context) {
                 style: TextStyle(
                   fontSize: 15,
                 ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 10,
               ),
               Text(
                 'תודה',

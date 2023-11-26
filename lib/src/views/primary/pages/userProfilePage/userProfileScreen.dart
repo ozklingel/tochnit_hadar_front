@@ -29,7 +29,7 @@ class _userProfileScreenState extends State<userProfileScreen>
 
   Future<Map<String, dynamic>> _getUserDetail() async {
     print("access");
-    var data = await HttpService.getUserDetail("549247616");
+    var data = await HttpService.getUserDetail("+972549247616");
 
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
@@ -76,7 +76,13 @@ class _userProfileScreenState extends State<userProfileScreen>
                   ),
                   onTap: () => const HomeRouteData().go(context),
                 ),
-                title: const Text('פרופיל אישי'),
+                title: const Text(
+                  'פרופיל אישי',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w100,
+                    color: Colors.black,
+                  ),
+                ),
               ),
               body: FutureBuilder<Map<String, dynamic>>(
                 future: _getUserDetail(),
@@ -90,9 +96,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                       children: [
                         Container(
                           height: size.height / 3.4,
-                          width: double.infinity,
+                          width: size.width * 9 / 10,
                           decoration: BoxDecoration(
-                            color: Colors.lightBlue[50],
+                            color: Color.fromRGBO(244, 248, 251, 1),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -439,7 +445,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                               Column(
                                 children: [
                                   Container(
-                                    width: double.infinity,
+                                    width: size.width * 9 / 10,
                                     margin: const EdgeInsets.all(15.0),
                                     padding: const EdgeInsets.all(3.0),
                                     decoration: BoxDecoration(
@@ -460,6 +466,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                       ],
                                     ),
                                     child: Column(children: [
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -512,6 +521,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                           ),
                                         ],
                                       ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -520,9 +532,21 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    'שם',
-                                                    textAlign: TextAlign.right,
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1.0),
+                                                      child: Text(
+                                                        'שם ',
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
                                                   ),
                                                   Align(
                                                     alignment:
@@ -537,6 +561,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
                                                   Align(
                                                     alignment:
                                                         Alignment.centerRight,
@@ -549,6 +576,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                             TextAlign.right,
                                                       ),
                                                     ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
                                                   ),
                                                   Align(
                                                     alignment:
@@ -563,6 +593,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
                                                   Align(
                                                     alignment:
                                                         Alignment.centerRight,
@@ -575,6 +608,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                             TextAlign.right,
                                                       ),
                                                     ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
                                                   ),
                                                   Align(
                                                     alignment:
@@ -610,6 +646,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
                                                   Align(
                                                     alignment:
                                                         Alignment.centerRight,
@@ -623,6 +662,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
                                                   Align(
                                                     alignment:
                                                         Alignment.centerRight,
@@ -635,6 +677,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                             TextAlign.right,
                                                       ),
                                                     ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
                                                   ),
                                                   Align(
                                                     alignment:
@@ -650,6 +695,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
                                                   Align(
                                                     alignment:
                                                         Alignment.centerRight,
@@ -662,6 +710,9 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                             TextAlign.right,
                                                       ),
                                                     ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
                                                   ),
                                                   Align(
                                                     alignment:
@@ -741,7 +792,7 @@ class _userProfileScreenState extends State<userProfileScreen>
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
 
-          HttpService.uploadPhoto(galleryFile!, "549247616");
+          HttpService.uploadPhoto(galleryFile!, "+972549247616");
           setState(() {
             profileimg = FileImage(galleryFile!);
           });

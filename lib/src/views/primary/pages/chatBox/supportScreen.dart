@@ -80,7 +80,7 @@ class SupportScreen extends ConsumerWidget {
                   ),
                   DropdownButtonExample(),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -96,6 +96,7 @@ class SupportScreen extends ConsumerWidget {
                     ],
                   ),
                   Container(
+                    padding: const EdgeInsets.all(3.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
                       border: Border.all(

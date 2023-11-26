@@ -35,7 +35,7 @@ class _profileEditPageState extends State<profileEditPage>
 
   Future<Map<String, dynamic>> _getUserDetail() async {
     print("access");
-    var data = await HttpService.getUserDetail("549247616");
+    var data = await HttpService.getUserDetail("+972549247616");
 
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
@@ -79,7 +79,13 @@ class _profileEditPageState extends State<profileEditPage>
               ),
               onTap: () => const HomeRouteData().go(context),
             ),
-            title: const Text('פרופיל אישי'),
+            title: const Text(
+              'פרופיל אישי',
+              style: TextStyle(
+                fontWeight: FontWeight.w100,
+                color: Colors.black,
+              ),
+            ),
           ),
           body: FutureBuilder<Map<String, dynamic>>(
             future: _getUserDetail(),
@@ -93,9 +99,9 @@ class _profileEditPageState extends State<profileEditPage>
                   children: [
                     Container(
                       height: size.height / 3.4,
-                      width: double.infinity,
+                      width: size.width * 9 / 10,
                       decoration: BoxDecoration(
-                        color: Colors.lightBlue[50],
+                        color: Color.fromRGBO(244, 248, 251, 1),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -196,8 +202,11 @@ class _profileEditPageState extends State<profileEditPage>
                           SingleChildScrollView(
                               child: Column(
                             children: [
+                              SizedBox(
+                                height: 10,
+                              ),
                               Container(
-                                width: double.infinity,
+                                width: size.width * 9 / 10,
                                 margin: const EdgeInsets.all(15.0),
                                 padding: const EdgeInsets.all(3.0),
                                 decoration: BoxDecoration(
@@ -218,6 +227,9 @@ class _profileEditPageState extends State<profileEditPage>
                                   ],
                                 ),
                                 child: Column(children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -433,9 +445,9 @@ class _profileEditPageState extends State<profileEditPage>
                           Scaffold(
                             body: SingleChildScrollView(
                                 child: Container(
-                              width: 400,
+                              width: size.width * 9 / 10,
                               margin: const EdgeInsets.all(15.0),
-                              padding: const EdgeInsets.all(3.0),
+                              padding: const EdgeInsets.all(10.0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
@@ -454,71 +466,25 @@ class _profileEditPageState extends State<profileEditPage>
                                 ],
                               ),
                               child: Column(children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        //empty for spacing
-                                        Text(
-                                          ' פרטים אישיים',
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontStyle: FontStyle.normal,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 19,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          ' ',
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontStyle: FontStyle.normal,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 19,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        GestureDetector(
-                                          child: CircleAvatar(
-                                            radius: 10,
-                                            backgroundColor:
-                                                Colors.grey.shade200,
-                                            child: CircleAvatar(
-                                              radius: 70,
-                                              backgroundImage: AssetImage(
-                                                  'assets/images/pencile.png'),
-                                            ),
-                                          ),
-                                          onTap: () =>
-                                              const userProfileRouteData()
-                                                  .go(context),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
                                 SizedBox(
                                   height: 30,
                                 ), //to fill
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                    child: Text("שם פרטי",
-                                        textAlign: TextAlign.right,
-                                        style: TextStyle(fontSize: 14)),
-                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(3.0),
+                                    ),
+                                    Text(
+                                      "שם",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                    ),
+                                    const Text('*',
+                                        style: TextStyle(color: Colors.red)),
+                                  ],
                                 ),
+
                                 Directionality(
                                     textDirection: TextDirection.rtl,
                                     child: TextField(
@@ -542,16 +508,20 @@ class _profileEditPageState extends State<profileEditPage>
                                 SizedBox(
                                   height: 30,
                                 ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                    child: Text(
-                                      "שם משפחה",
-                                      textAlign: TextAlign.right,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(3.0),
                                     ),
-                                  ),
+                                    Text(
+                                      " שם משפחה",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                    ),
+                                    const Text('*',
+                                        style: TextStyle(color: Colors.red)),
+                                  ],
                                 ),
                                 Directionality(
                                     textDirection: TextDirection.rtl,
@@ -576,16 +546,20 @@ class _profileEditPageState extends State<profileEditPage>
                                 SizedBox(
                                   height: 30,
                                 ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                    child: Text(
-                                      "מייל",
-                                      textAlign: TextAlign.right,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(3.0),
                                     ),
-                                  ),
+                                    Text(
+                                      " מיל",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                    ),
+                                    const Text('*',
+                                        style: TextStyle(color: Colors.red)),
+                                  ],
                                 ),
                                 Directionality(
                                     textDirection: TextDirection.rtl,
@@ -610,16 +584,20 @@ class _profileEditPageState extends State<profileEditPage>
                                 SizedBox(
                                   height: 30,
                                 ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                    child: Text(
-                                      "תאריך יום הולדת",
-                                      textAlign: TextAlign.right,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(3.0),
                                     ),
-                                  ),
+                                    Text(
+                                      " תאריך יום הולדת",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                    ),
+                                    const Text('*',
+                                        style: TextStyle(color: Colors.red)),
+                                  ],
                                 ),
                                 Directionality(
                                     textDirection: TextDirection.rtl,
@@ -645,16 +623,20 @@ class _profileEditPageState extends State<profileEditPage>
                                 SizedBox(
                                   height: 30,
                                 ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                    child: Text(
-                                      "עיר",
-                                      textAlign: TextAlign.right,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(3.0),
                                     ),
-                                  ),
+                                    Text(
+                                      " עיר",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                    ),
+                                    const Text('*',
+                                        style: TextStyle(color: Colors.red)),
+                                  ],
                                 ),
                                 Directionality(
                                     textDirection: TextDirection.rtl,
@@ -679,16 +661,20 @@ class _profileEditPageState extends State<profileEditPage>
                                 SizedBox(
                                   height: 30,
                                 ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 1.0, bottom: 4.0),
-                                    child: Text(
-                                      "אזור",
-                                      textAlign: TextAlign.right,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(3.0),
                                     ),
-                                  ),
+                                    Text(
+                                      " אזור",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                    ),
+                                    const Text('*',
+                                        style: TextStyle(color: Colors.red)),
+                                  ],
                                 ),
                                 Directionality(
                                     textDirection: TextDirection.rtl,
@@ -794,122 +780,126 @@ class _profileEditPageState extends State<profileEditPage>
   YourButtonWidget() {
     Size size = MediaQuery.of(context).size;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
+    return Container(
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            //empty for spacing
-            Text(
-              ' ',
-              style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 19,
-                  color: Colors.black),
+            Row(
+              children: [
+                //empty for spacing
+                Text(
+                  ' ',
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 19,
+                      color: Colors.black),
+                ),
+              ],
             ),
-          ],
-        ),
-        Row(
-          children: [
-            //empty for spacing
-            Container(
-                height: size.height / 15,
-                width: 140,
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    side: BorderSide(color: Colors.black, width: 2),
+            Row(
+              children: [
+                //empty for spacing
+                Container(
+                    height: size.height / 15,
+                    width: 140,
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        side: BorderSide(color: Colors.black, width: 2),
 
-                    primary: Colors.white,
-                    shape: StadiumBorder(),
-                    // primary: (_myController.text.isEmpty)
-                    //     ? Colors.grey
-                    //     : Color(sendButtonColor),
-                    minimumSize: const Size.fromHeight(50), // NEW
-                  ),
-                  onPressed: () async {
-                    if ("result" == "success") {
-                      //showFancyCustomDialog(context);
-                    } else {
-                      // showAlertDialog(context);
-                    }
-                  },
-                  child: const Text(
-                    "שליחת פנייה",
-                    style: TextStyle(fontSize: 12, color: Colors.black),
-                  ),
-                )),
-          ],
-        ),
-        Row(
-          children: [
-            Container(
-                height: size.height / 15,
-                width: 180,
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.blue[900], //change text color of button
-                    foregroundColor:
-                        Colors.white, //change background color of button
-                    shape: StadiumBorder(),
-                    // primary: (_myController.text.isEmpty)
-                    //     ? Colors.grey
-                    //     : Color(sendButtonColor),
-                    minimumSize: const Size.fromHeight(50), // NEW
-                  ),
-                  onPressed: () async {
-                    print(emailController.text);
-                    if (emailController.text != "" ||
-                        birthDayController.text != "" ||
-                        lastNameController.text != "" ||
-                        firstNameController.text != "" ||
-                        cityController.text != "" ||
-                        regionController.text != "") {
-                      List<String> listOfcontrolerText = [
-                        regionController.text + "-" + "cluster_id",
-                        cityController.text + "-" + "city_id",
-                        firstNameController.text + "-" + "name",
-                        lastNameController.text + "-" + "last_name",
-                        birthDayController.text + "-" + "birthday",
-                        emailController.text + "-" + "email",
-                      ];
-                      var result = await HttpService.setUserDetail(
-                          "userProfile", "549247616", listOfcontrolerText);
-                      if (result == "success") {
-                        showFancyCustomDialog(context);
-                      } else {
-                        showAlertDialog(context);
-                      }
-                    } else {
-                      showAlertDialog(context);
-                    }
-                  },
-                  child: const Text(
-                    "שמירה",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ))
-          ],
-        ),
-        Row(
-          children: [
-            //empty for spacing
-            Text(
-              ' ',
-              style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 19,
-                  color: Colors.black),
+                        primary: Colors.white,
+                        shape: StadiumBorder(),
+                        // primary: (_myController.text.isEmpty)
+                        //     ? Colors.grey
+                        //     : Color(sendButtonColor),
+                        minimumSize: const Size.fromHeight(50), // NEW
+                      ),
+                      onPressed: () async {
+                        if ("result" == "success") {
+                          //showFancyCustomDialog(context);
+                        } else {
+                          // showAlertDialog(context);
+                        }
+                      },
+                      child: const Text(
+                        "שליחת פנייה",
+                        style: TextStyle(fontSize: 12, color: Colors.black),
+                      ),
+                    )),
+              ],
+            ),
+            Row(
+              children: [
+                Container(
+                    height: size.height / 15,
+                    width: 180,
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Colors.blue[900], //change text color of button
+                        foregroundColor:
+                            Colors.white, //change background color of button
+                        shape: StadiumBorder(),
+                        // primary: (_myController.text.isEmpty)
+                        //     ? Colors.grey
+                        //     : Color(sendButtonColor),
+                        minimumSize: const Size.fromHeight(50), // NEW
+                      ),
+                      onPressed: () async {
+                        print(emailController.text);
+                        if (emailController.text != "" ||
+                            birthDayController.text != "" ||
+                            lastNameController.text != "" ||
+                            firstNameController.text != "" ||
+                            cityController.text != "" ||
+                            regionController.text != "") {
+                          List<String> listOfcontrolerText = [
+                            regionController.text + "-" + "cluster_id",
+                            cityController.text + "-" + "city_id",
+                            firstNameController.text + "-" + "name",
+                            lastNameController.text + "-" + "last_name",
+                            birthDayController.text + "-" + "birthday",
+                            emailController.text + "-" + "email",
+                          ];
+                          var result = await HttpService.setUserDetail(
+                              "userProfile",
+                              "+972549247616",
+                              listOfcontrolerText);
+                          if (result == "success") {
+                            showFancyCustomDialog(context);
+                          } else {
+                            showAlertDialog(context);
+                          }
+                        } else {
+                          showAlertDialog(context);
+                        }
+                      },
+                      child: const Text(
+                        "שמירה",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ))
+              ],
+            ),
+            Row(
+              children: [
+                //empty for spacing
+                Text(
+                  ' ',
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 19,
+                      color: Colors.black),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
-    );
+        ));
   }
 }

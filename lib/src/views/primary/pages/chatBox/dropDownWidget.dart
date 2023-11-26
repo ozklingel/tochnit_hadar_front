@@ -83,7 +83,7 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
               color: selectedValue == null
                   ? Colors.white
                   : Color.fromRGBO(236, 242, 245, 1),
-              borderRadius: BorderRadius.circular(50.0),
+              borderRadius: BorderRadius.circular(20.0),
               border: Border.all(
                   color: Colors.black, style: BorderStyle.solid, width: 0.80),
             ),
