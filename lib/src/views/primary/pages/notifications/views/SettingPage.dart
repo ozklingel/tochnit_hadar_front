@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../services/networking/HttpService.dart';
@@ -30,90 +31,125 @@ class _SettingPageState extends State<SettingPage> {
                   }),
           title: const Text('ניהול התראות'),
         ),
-        body: Column(children: [
-          Column(
-            children: <Widget>[
-              Container(
-                height: 60,
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                  child: Text(
-                    'הגדרת זמני קבלת התראות על אירועים',
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                        color: Colors.black),
-                  ),
+        body: Column(
+          children: <Widget>[
+            Container(
+              height: 60,
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                child: Text(
+                  'הגדרת זמני קבלת התראות על אירועים',
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                      color: Colors.black),
                 ),
               ),
-              Container(
-                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                  alignment: Alignment.topLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SwitchListTile(
-                        //switch at left side of label
-                        activeColor: Colors.blue[700],
-
-                        value: t1,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        onChanged: (bool value) {
-                          setState(() {
-                            t1 = value;
-                            print(t1); //update value when sitch changed
-                          });
-                        },
-                        title: Align(
+            ),
+            Container(
+                padding: EdgeInsets.only(top: 20, left: 24, right: 24),
+                alignment: Alignment.topLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            "בתחילת השבוע של האירוע",
+                            "בתחילת השבוע של האירוע ",
                           ),
                         ),
-                      ),
-                      SwitchListTile(
-                        activeColor: Colors.blue[700],
-
-                        //switch at left side of label
-                        value: t2,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        onChanged: (bool value) {
-                          setState(() {
-                            t2 = value; //update value when sitch changed
-                          });
-                        },
-                        title: Align(
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: t3
+                                ? Colors.blue.shade700
+                                : CupertinoColors.inactiveGray,
+                          ),
+                          child: CupertinoSwitch(
+                            value: t1,
+                            activeColor: CupertinoColors.white,
+                            trackColor: CupertinoColors.white,
+                            thumbColor: t3
+                                ? Colors.blue.shade700
+                                : CupertinoColors.inactiveGray,
+                            onChanged: (v) => setState(() {
+                              t3 = v;
+                            }),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Align(
                           alignment: Alignment.centerRight,
                           child: Text(
                             "יום לפני האירוע",
                           ),
                         ),
-                      ),
-                      SwitchListTile(
-                        activeColor: Colors.blue[700],
-
-                        //switch at left side of label
-                        value: t3,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        onChanged: (bool value) {
-                          setState(() {
-                            t3 = value; //update value when sitch changed
-                          });
-                        },
-                        title: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "ביום האירוע",
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: t2
+                                ? Colors.blue.shade700
+                                : CupertinoColors.inactiveGray,
+                          ),
+                          child: CupertinoSwitch(
+                            value: t3,
+                            activeColor: CupertinoColors.white,
+                            trackColor: CupertinoColors.white,
+                            thumbColor: t3
+                                ? Colors.blue.shade700
+                                : CupertinoColors.inactiveGray,
+                            onChanged: (v) => setState(() {
+                              t3 = v;
+                            }),
                           ),
                         ),
-                      ),
-                    ],
-                  ))
-            ],
-          )
-        ]));
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            " ביום האירוע",
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: t3
+                                ? Colors.blue.shade700
+                                : CupertinoColors.inactiveGray,
+                          ),
+                          child: CupertinoSwitch(
+                            value: t3,
+                            activeColor: CupertinoColors.white,
+                            trackColor: CupertinoColors.white,
+                            thumbColor: t3
+                                ? Colors.blue.shade700
+                                : CupertinoColors.inactiveGray,
+                            onChanged: (v) => setState(() {
+                              t3 = v;
+                            }),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ))
+          ],
+        ));
   }
 }

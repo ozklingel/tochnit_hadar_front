@@ -42,8 +42,8 @@ class SupportScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
+              padding: EdgeInsets.only(top: 20, left: 24, right: 24),
               color: Colors.white,
-              padding: const EdgeInsets.all(32),
               /*1*/
               child: Column(
                 children: [
@@ -96,9 +96,9 @@ class SupportScreen extends ConsumerWidget {
                     ],
                   ),
                   Container(
-                    padding: const EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(0.0),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: BorderRadius.circular(40.0),
                       border: Border.all(
                           color: Colors.black,
                           style: BorderStyle.solid,

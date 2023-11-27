@@ -201,7 +201,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                   Container(
                                     width: double.infinity,
                                     margin: const EdgeInsets.all(15.0),
-                                    padding: const EdgeInsets.all(3.0),
+                                    padding: const EdgeInsets.all(24.0),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.only(
@@ -222,50 +222,21 @@ class _userProfileScreenState extends State<userProfileScreen>
                                     child: Column(children: [
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.start,
                                         children: [
-                                          Row(
-                                            children: [
-                                              //empty for spacing
-                                              Text(
-                                                '  כללי',
-                                                style: TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 19,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                ' ',
-                                                style: TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 19,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                ' ',
-                                                style: TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 19,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
+                                          //empty for spacing
+                                          Text(
+                                            'כללי',
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontStyle: FontStyle.normal,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 20,
+                                                color: Colors.black),
                                           ),
                                         ],
                                       ),
+                                      SizedBox(height: 10),
                                       Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -278,6 +249,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                     'סיווג משתמש',
                                                     textAlign: TextAlign.right,
                                                   ),
+                                                  SizedBox(height: 10),
                                                   Align(
                                                     alignment:
                                                         Alignment.centerRight,
@@ -291,6 +263,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(height: 10),
                                                   Align(
                                                     alignment:
                                                         Alignment.centerRight,
@@ -298,7 +271,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       padding: EdgeInsets.only(
                                                           left: 1.0),
                                                       child: Text(
-                                                        ' אשכול',
+                                                        'אשכול',
                                                         textAlign:
                                                             TextAlign.right,
                                                       ),
@@ -325,6 +298,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(height: 10),
                                                   Align(
                                                     alignment:
                                                         Alignment.centerRight,
@@ -338,6 +312,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(height: 10),
                                                   Align(
                                                     alignment:
                                                         Alignment.centerRight,
@@ -395,7 +370,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                     Alignment.centerRight,
                                                 child: Padding(
                                                   padding: EdgeInsets.only(
-                                                      left: 1.0),
+                                                      right: 24.0),
                                                   child: Text(
                                                     'רשימת חניכים',
                                                     textAlign: TextAlign.right,
@@ -539,7 +514,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       padding: EdgeInsets.only(
                                                           left: 1.0),
                                                       child: Text(
-                                                        'שם ',
+                                                        'שםש',
                                                         textAlign:
                                                             TextAlign.right,
                                                       ),
