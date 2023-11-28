@@ -11,6 +11,7 @@ abstract class Consts {
 
   // storage
   static const accessTokenKey = 'accessTokenKey';
+  static const userPhoneKey = 'userPhoneKey';
 
   static const defaultDurationM = Duration(milliseconds: 300);
 

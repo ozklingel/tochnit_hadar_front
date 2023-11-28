@@ -1,7 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
@@ -50,10 +49,7 @@ class MessagesScreen extends ConsumerWidget {
                     content: 'contentcontentcontent',
                     dateTime: 0,
                     attachments: ['attachment'],
-                    from: ApprenticeDto(
-                      firstName: 'firstNamefirstName',
-                      lastName: 'lastNamelastName',
-                    ),
+                    from: '549247615',
                   ),
                 ),
               ),

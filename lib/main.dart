@@ -15,8 +15,6 @@ import 'package:timeago/timeago.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Paint.enableDithering = true;
-
   setLocaleMessages(
     Consts.defaultLocale.languageCode,
     HeMessages(),

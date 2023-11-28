@@ -6,9 +6,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_controller.g.dart';
 
+typedef ShouldOnboard = bool;
+
 @Riverpod(
   dependencies: [
     dio,
+    storage,
   ],
 )
 class OnboardingController extends _$OnboardingController {
@@ -52,17 +55,29 @@ class OnboardingController extends _$OnboardingController {
       );
 
       if (result.statusCode == 200) {
-        final accessToken = result.data['result'];
+        final accessToken = result.data['result'] as String;
+        final firsOnboarding = result.data['firsOnboarding'] as bool;
+
+        ref
+            .read(
+              storageProvider,
+            )
+            .requireValue
+            .setString(
+              Consts.userPhoneKey,
+              phone,
+            );
 
         ref.read(storageProvider).requireValue.setString(
               Consts.accessTokenKey,
               accessToken,
             );
 
-        return true;
+        return firsOnboarding;
       }
     } catch (e) {
       Logger().d('otp', error: e);
+      rethrow;
     }
 
     return true;

@@ -6,8 +6,10 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MessageWidget extends StatelessWidget {
+class MessageWidget extends ConsumerWidget {
   const MessageWidget.collapsed({
     super.key,
     required this.message,
@@ -22,7 +24,14 @@ class MessageWidget extends StatelessWidget {
   final bool isExpanded;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final fromApprentice =
+        ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
+                  (element) => element.phone == message.from,
+                  orElse: () => const ApprenticeDto(),
+                ) ??
+            const ApprenticeDto();
+
     return ColoredBox(
       color: isExpanded ? Colors.white : AppColors.blue08,
       child: Material(
@@ -43,7 +52,7 @@ class MessageWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        message.from.fullName,
+                        fromApprentice.fullName,
                         style: TextStyles.s18w600cShade09,
                       ),
                       if (isExpanded) const SizedBox(height: 16),

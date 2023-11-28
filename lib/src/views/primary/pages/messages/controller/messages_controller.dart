@@ -28,8 +28,8 @@ class MessagesController extends _$MessagesController {
         return MessageDto(
           id: faker.guid.guid(),
           from: apprentices.isEmpty
-              ? const ApprenticeDto()
-              : apprentices[Random().nextInt(apprentices.length)],
+              ? const ApprenticeDto().phone
+              : apprentices[Random().nextInt(apprentices.length)].phone,
           title: faker.lorem.sentence(),
           content: faker.lorem.sentence(),
           dateTime: faker.date

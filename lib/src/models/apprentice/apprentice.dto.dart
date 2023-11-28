@@ -17,7 +17,7 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') String phone,
     @Default('') String email,
     @Default('https://www.gravatar.com/avatar') String avatar,
-    @Default('') String maritalStatus,
+    @Default('') @JsonKey(name: 'marriage_status') String maritalStatus,
     @Default('') String highSchoolInstitution,
     @Default('') String highSchoolRavMelamed,
     @Default('') String workStatus,

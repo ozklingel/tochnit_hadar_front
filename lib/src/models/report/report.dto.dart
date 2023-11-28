@@ -12,6 +12,7 @@ class ReportDto with _$ReportDto {
     @Default(ReportEventType.none) ReportEventType reportEventType,
     @Default([]) List<String> apprentices,
     @Default([]) List<String> attachments,
+    @Default('') @JsonKey(name: 'allreadyread') String allreadyRead,
     // in milliseconds since epoch
     @Default(0) int dateTime,
   }) = _ReportDto;

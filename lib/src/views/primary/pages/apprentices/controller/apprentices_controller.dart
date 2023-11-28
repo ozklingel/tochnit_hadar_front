@@ -4,16 +4,20 @@ import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
+import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'apprentices_controller.g.dart';
 
 @Riverpod(
-  dependencies: [],
+  dependencies: [dio],
 )
 class ApprenticesController extends _$ApprenticesController {
   @override
   FutureOr<List<ApprenticeDto>> build() async {
+    final request =
+        ref.watch(dioProvider).get('userProfile_form/myApprentices');
+
     await Future.delayed(const Duration(milliseconds: 400));
 
     return List.generate(

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,29 +25,29 @@ class DashboardController extends _$DashboardController {
     return 2;
   }
 
-  void setPosition({
-    required BuildContext context,
-    required int value,
-  }) {
-    switch (value) {
-      case 0:
-        const ReportsRouteData().go(context);
-        break;
-      case 1:
-        const ApprenticesRouteData().go(context);
-        break;
-      case 2:
-        const HomeRouteData().go(context);
-        break;
-      case 3:
-        const TasksRouteData().go(context);
-        break;
-      case 4:
-        const MessagesRouteData().go(context);
-        break;
-      default:
-        const HomeRouteData().go(context);
-        break;
-    }
-  }
+  // void setPosition({
+  //   required BuildContext context,
+  //   required int value,
+  // }) {
+  //   switch (value) {
+  //     case 0:
+  //       const ReportsRouteData().go(context);
+  //       break;
+  //     case 1:
+  //       const ApprenticesRouteData().go(context);
+  //       break;
+  //     case 2:
+  //       const HomeRouteData().go(context);
+  //       break;
+  //     case 3:
+  //       const TasksRouteData().go(context);
+  //       break;
+  //     case 4:
+  //       const MessagesRouteData().go(context);
+  //       break;
+  //     default:
+  //       const HomeRouteData().go(context);
+  //       break;
+  //   }
+  // }
 }

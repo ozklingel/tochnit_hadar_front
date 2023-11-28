@@ -17,6 +17,16 @@ Dio dio(DioRef ref) {
           .getString(Consts.accessTokenKey) ??
       '';
 
+  final userPhone = ref
+          .watch(
+            storageProvider,
+          )
+          .requireValue
+          .getString(
+            Consts.userPhoneKey,
+          ) ??
+      '';
+
   return Dio(
     BaseOptions(
       baseUrl: Consts.baseUrl,
@@ -24,6 +34,9 @@ Dio dio(DioRef ref) {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         if (authToken.isNotEmpty) 'Authorization': 'Bearer $authToken',
+      },
+      queryParameters: {
+        'userId': userPhone,
       },
     ),
   );
