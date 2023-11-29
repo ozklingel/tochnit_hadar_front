@@ -7,14 +7,14 @@ import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'apprentices_controller.g.dart';
+part 'users_controller.g.dart';
 
 @Riverpod(
   dependencies: [
     dio,
   ],
 )
-class ApprenticesController extends _$ApprenticesController {
+class UsersController extends _$UsersController {
   @override
   FutureOr<List<ApprenticeDto>> build() async {
     // final request =

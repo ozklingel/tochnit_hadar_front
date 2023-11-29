@@ -10,7 +10,7 @@ class DashboardController extends _$DashboardController {
     if (currentRoute == const ReportsRouteData().location) {
       return 0;
     }
-    if (currentRoute == const ApprenticesRouteData().location) {
+    if (currentRoute == const ApprenticesOrUsersRouteData().location) {
       return 1;
     }
     if (currentRoute == const HomeRouteData().location) {

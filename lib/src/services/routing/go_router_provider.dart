@@ -2,9 +2,10 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hadar_program/src/views/primary/bottome_bar/ui/dashboard_screen.dart';
+import 'package:hadar_program/src/views/primary/bottom_bar/ui/dashboard_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentice_details.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentices_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentices_or_users_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user/new_user_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/homePage/views/gift_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/homePage/views/home_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
@@ -94,11 +95,14 @@ GoRouter goRouter(GoRouterRef ref) {
     ),
     TypedStatefulShellBranch<ApprenticesBranchData>(
       routes: [
-        TypedGoRoute<ApprenticesRouteData>(
-          path: '/apprentices',
+        TypedGoRoute<ApprenticesOrUsersRouteData>(
+          path: '/apprentices-or-users',
           routes: [
             TypedGoRoute<ApprenticeDetailsRouteData>(
               path: 'details/:id',
+            ),
+            TypedGoRoute<NewUserRouteData>(
+              path: 'new-user',
             ),
           ],
         ),
@@ -272,12 +276,12 @@ class ReportDetailsRouteData extends GoRouteData {
   }
 }
 
-class ApprenticesRouteData extends GoRouteData {
-  const ApprenticesRouteData();
+class ApprenticesOrUsersRouteData extends GoRouteData {
+  const ApprenticesOrUsersRouteData();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const ApprenticesScreen();
+    return const ApprenticesOrUsersScreen();
   }
 }
 
@@ -293,6 +297,15 @@ class ApprenticeDetailsRouteData extends GoRouteData {
     return ApprenticeDetailsScreen(
       apprenticeId: id,
     );
+  }
+}
+
+class NewUserRouteData extends GoRouteData {
+  const NewUserRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NewUserScreen();
   }
 }
 

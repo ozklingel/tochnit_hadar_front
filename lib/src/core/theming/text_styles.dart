@@ -41,6 +41,15 @@ abstract class TextStyles {
     color: AppColors.grey2,
   );
 
+  static const s22w500cGrey2 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 22,
+    fontVariations: [
+      FontVariation('wght', 500),
+    ],
+    color: AppColors.grey2,
+  );
+
   static const s20w400 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 20,
@@ -102,6 +111,15 @@ abstract class TextStyles {
     ],
   );
 
+  static const s16w400cGrey5 = TextStyle(
+    fontFamily: _kFontFamily,
+    color: AppColors.grey5,
+    fontSize: 16,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const s16w500cGrey2 = TextStyle(
     fontFamily: _kFontFamily,
     color: AppColors.grey2,
@@ -126,6 +144,15 @@ abstract class TextStyles {
     fontVariations: [
       FontVariation('wght', 400),
     ],
+  );
+
+  static const s14w400cblue2 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 14,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+    color: AppColors.blue02,
   );
 
   static const s14w500 = TextStyle(
@@ -160,6 +187,15 @@ abstract class TextStyles {
     fontVariations: [
       FontVariation('wght', 500),
     ],
+  );
+
+  static const s12w500cGray5 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 12,
+    fontVariations: [
+      FontVariation('wght', 500),
+    ],
+    color: AppColors.gray5,
   );
 
   static const bodyB1 = TextStyle(

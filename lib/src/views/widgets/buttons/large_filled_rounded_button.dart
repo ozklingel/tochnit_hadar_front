@@ -12,6 +12,15 @@ class LargeFilledRoundedButton extends StatelessWidget {
     this.textStyle = TextStyles.s24w500cGrey2,
   });
 
+  const LargeFilledRoundedButton.cancel({
+    super.key,
+    required this.label,
+    this.onPressed,
+    this.backgroundColor = Colors.white,
+    this.foregroundColor = AppColors.blue02,
+    this.textStyle = TextStyles.s24w500cGrey2,
+  });
+
   final String label;
   final VoidCallback? onPressed;
   final Color backgroundColor;
