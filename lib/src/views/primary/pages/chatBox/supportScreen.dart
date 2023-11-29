@@ -73,7 +73,7 @@ class SupportScreen extends ConsumerWidget {
                       ),
                       Text(
                         "נושא",
-                        style: TextStyle(color: Colors.black, fontSize: 14),
+                        style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       const Text('*', style: TextStyle(color: Colors.red)),
                     ],
@@ -94,6 +94,9 @@ class SupportScreen extends ConsumerWidget {
                       ),
                       const Text('*', style: TextStyle(color: Colors.red)),
                     ],
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Container(
                     padding: const EdgeInsets.all(0.0),
@@ -135,9 +138,9 @@ class SupportScreen extends ConsumerWidget {
               ),
             ),
             Container(
-                padding: const EdgeInsets.only(left: 24, right: 24, bottom: 10),
-                height: 50,
-                width: 20,
+                padding: const EdgeInsets.only(left: 24, right: 24, bottom: 20),
+                height: 60,
+                width: 348,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: StadiumBorder(),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +19,19 @@ class _SettingPageState extends State<SettingPage> {
   bool t3 = false;
 
   @override
+  void didChangeDependencies() async {
+    var jsonData = await HttpService.getUserNotiSetting("+972549247616");
+    var u = jsonDecode(jsonData.body);
+    print(u["notifyDayBefore"]);
+
+    super.setState(() {
+      t1 = u["notifyStartWeek"];
+      t2 = u["notifyDayBefore"];
+      t3 = u["notifyMorning"];
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -26,7 +41,7 @@ class _SettingPageState extends State<SettingPage> {
                 color: Colors.black,
               ),
               onTap: () => {
-                    HttpService.setSetting("549247616", t1, t2, t3),
+                    HttpService.setSetting("+972549247616", t1, t2, t3),
                     const notificationRouteData().go(context),
                   }),
           title: const Text('ניהול התראות'),
@@ -75,11 +90,11 @@ class _SettingPageState extends State<SettingPage> {
                             value: t1,
                             activeColor: CupertinoColors.white,
                             trackColor: CupertinoColors.white,
-                            thumbColor: t3
+                            thumbColor: t1
                                 ? Colors.blue.shade700
                                 : CupertinoColors.inactiveGray,
                             onChanged: (v) => setState(() {
-                              t3 = v;
+                              t1 = v;
                             }),
                           ),
                         ),
@@ -103,14 +118,14 @@ class _SettingPageState extends State<SettingPage> {
                                 : CupertinoColors.inactiveGray,
                           ),
                           child: CupertinoSwitch(
-                            value: t3,
+                            value: t2,
                             activeColor: CupertinoColors.white,
                             trackColor: CupertinoColors.white,
-                            thumbColor: t3
+                            thumbColor: t2
                                 ? Colors.blue.shade700
                                 : CupertinoColors.inactiveGray,
                             onChanged: (v) => setState(() {
-                              t3 = v;
+                              t2 = v;
                             }),
                           ),
                         ),

@@ -16,8 +16,8 @@ class userProfileScreen extends StatefulWidget {
 
 class _userProfileScreenState extends State<userProfileScreen>
     with SingleTickerProviderStateMixin {
-  ImageProvider<Object>? profileimg =
-      NetworkImage('https://picsum.photos/250?image=9');
+  ImageProvider<Object>? profileimg = NetworkImage(
+      "https://th01-s3.s3.eu-north-1.amazonaws.com/c2fb87a53199453ca9f2ac14fb672cfc.jpg");
   File? galleryFile;
   final picker = ImagePicker();
   final emailController = TextEditingController();
@@ -119,7 +119,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                     ),
                                     Positioned(
                                       bottom: 1,
-                                      left: 1,
+                                      left: 7,
                                       child: InkWell(
                                         child: Container(
                                           child: Padding(
@@ -127,7 +127,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                             child: CircleAvatar(
                                               radius: 10,
                                               backgroundImage: AssetImage(
-                                                  'assets/images/pencile.png'), // No matter how big it is, it won't overflow
+                                                  'assets/images/pencil2.png'), // No matter how big it is, it won't overflow
                                             ),
                                           ),
                                           decoration: BoxDecoration(
@@ -422,7 +422,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                   Container(
                                     width: size.width * 9 / 10,
                                     margin: const EdgeInsets.all(15.0),
-                                    padding: const EdgeInsets.all(3.0),
+                                    padding: const EdgeInsets.all(24.0),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.only(
@@ -497,7 +497,7 @@ class _userProfileScreenState extends State<userProfileScreen>
                                         ],
                                       ),
                                       SizedBox(
-                                        height: 10,
+                                        height: 20,
                                       ),
                                       Row(
                                           mainAxisAlignment:
@@ -514,9 +514,11 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                       padding: EdgeInsets.only(
                                                           left: 1.0),
                                                       child: Text(
-                                                        'שםש',
+                                                        'שם',
                                                         textAlign:
                                                             TextAlign.right,
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
                                                       ),
                                                     ),
                                                   ),
@@ -533,6 +535,8 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                         'שם משפחה',
                                                         textAlign:
                                                             TextAlign.right,
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
                                                       ),
                                                     ),
                                                   ),
@@ -549,6 +553,8 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                         ' מייל',
                                                         textAlign:
                                                             TextAlign.right,
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
                                                       ),
                                                     ),
                                                   ),
@@ -565,6 +571,8 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                         'תאריך יום הולדת',
                                                         textAlign:
                                                             TextAlign.right,
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
                                                       ),
                                                     ),
                                                   ),
@@ -581,6 +589,8 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                         'עיר',
                                                         textAlign:
                                                             TextAlign.right,
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
                                                       ),
                                                     ),
                                                   ),
@@ -597,6 +607,8 @@ class _userProfileScreenState extends State<userProfileScreen>
                                                         'אזור',
                                                         textAlign:
                                                             TextAlign.right,
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
                                                       ),
                                                     ),
                                                   ),

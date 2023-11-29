@@ -110,7 +110,10 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
               items: menuItems,
               selectedItemBuilder: (context) => list
                   .map(
-                    (text) => Text(text),
+                    (text) => Text(
+                      text,
+                      style: TextStyle(fontSize: 15),
+                    ),
                   )
                   .toList(),
               value: selectedValue,

@@ -18,8 +18,8 @@ class profileEditPage extends StatefulWidget {
 
 class _profileEditPageState extends State<profileEditPage>
     with SingleTickerProviderStateMixin {
-  ImageProvider<Object>? profileimg =
-      NetworkImage('https://picsum.photos/250?image=9');
+  ImageProvider<Object>? profileimg = NetworkImage(
+      "https://th01-s3.s3.eu-north-1.amazonaws.com/c2fb87a53199453ca9f2ac14fb672cfc.jpg");
   File? galleryFile;
   final picker = ImagePicker();
   final emailController = TextEditingController();
