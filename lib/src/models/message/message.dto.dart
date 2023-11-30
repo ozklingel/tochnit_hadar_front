@@ -11,6 +11,7 @@ class MessageDto with _$MessageDto {
     @Default('') String title,
     @Default('') String content,
     @Default('') String from,
+    @Default('') String icon,
     @Default('') @JsonKey(name: 'allreadyread') String allreadyRead,
     @Default([]) List<String> attachments,
     // in milliseconds since epoch

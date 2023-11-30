@@ -10,6 +10,7 @@ import 'package:hadar_program/src/views/primary/pages/homePage/views/gift_screen
 import 'package:hadar_program/src/views/primary/pages/homePage/views/home_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/messages_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/new_message_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/report/view/report_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/report/view/reports_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/views/tasks_screen.dart';
@@ -88,7 +89,8 @@ GoRouter goRouter(GoRouterRef ref) {
         TypedGoRoute<MessagesRouteData>(
           path: '/messages',
           routes: [
-            TypedGoRoute<MessageDetailsRouteData>(path: ':id'),
+            TypedGoRoute<MessageDetailsRouteData>(path: 'id/:id'),
+            TypedGoRoute<NewMessageRouteData>(path: 'new'),
           ],
         ),
       ],
@@ -201,6 +203,15 @@ class MessageDetailsRouteData extends GoRouteData {
     return MessageDetailsScreen(
       messageId: id,
     );
+  }
+}
+
+class NewMessageRouteData extends GoRouteData {
+  const NewMessageRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NewMessageScreen();
   }
 }
 

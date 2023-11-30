@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:logger/logger.dart';
 
 enum _DataFillType {
   manual,
@@ -28,6 +33,7 @@ class NewUserScreen extends HookWidget {
     final title = useState('הוספת משתמש');
     final selectedUserType = useState(_UserType.hanih);
     final selectedDataFillType = useState(_DataFillType.manual);
+    final selectedFiles = useState<List<File>>([]);
 
     final pages = [
       _SelectUserTypePage(
@@ -39,6 +45,7 @@ class NewUserScreen extends HookWidget {
       _FormOrImportPage(
         selectedDataType: selectedDataFillType.value,
         selectedUserType: selectedUserType.value,
+        files: selectedFiles,
       ),
     ];
 
@@ -70,12 +77,13 @@ class NewUserScreen extends HookWidget {
               height: 80,
               child: Row(
                 children: [
-                  if (pageController.hasClients &&
-                      pageController.page == pages.length - 1)
+                  if ((pageController.hasClients &&
+                          pageController.page == pages.length - 1) ||
+                      selectedFiles.value.isNotEmpty)
                     Expanded(
                       child: LargeFilledRoundedButton(
                         label: 'שמירה',
-                        onPressed: () {},
+                        onPressed: () => Toaster.unimplemented(),
                       ),
                     )
                   else ...[
@@ -120,10 +128,12 @@ class _FormOrImportPage extends StatelessWidget {
     super.key,
     required this.selectedUserType,
     required this.selectedDataType,
+    required this.files,
   });
 
   final _UserType selectedUserType;
   final _DataFillType selectedDataType;
+  final ValueNotifier<List<File>> files;
 
   @override
   Widget build(BuildContext context) {
@@ -171,27 +181,66 @@ class _FormOrImportPage extends StatelessWidget {
               style: TextStyles.s16w400cGrey5,
             ),
             const SizedBox(height: 24),
-            DottedBorder(
-              borderType: BorderType.RRect,
-              radius: const Radius.circular(12),
-              color: AppColors.gray5,
-              child: const SizedBox(
-                height: 200,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(FluentIcons.arrow_upload_24_regular),
-                      SizedBox(height: 12),
-                      Text(
-                        'הוסף קובץ',
-                        style: TextStyles.s14w500,
-                      ),
-                    ],
+            InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () async {
+                final result =
+                    await FilePicker.platform.pickFiles(allowMultiple: true);
+
+                if (result == null) {
+                  return;
+                }
+
+                // TODO(noga-dev): upload files to backend storage then save the urls in the report
+                try {
+                  files.value = [
+                    ...result.paths.map((path) => File(path!)).toList(),
+                  ];
+                } catch (e) {
+                  Logger().e('file upload error', error: e);
+                }
+              },
+              child: DottedBorder(
+                borderType: BorderType.RRect,
+                radius: const Radius.circular(12),
+                color: AppColors.gray5,
+                child: const SizedBox(
+                  height: 200,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(FluentIcons.arrow_upload_24_regular),
+                        SizedBox(height: 12),
+                        Text(
+                          'הוסף קובץ',
+                          style: TextStyles.s14w500,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
+            if (files.value.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Card(
+                color: AppColors.blue08,
+                elevation: 0,
+                child: ListTile(
+                  leading: const Icon(FluentIcons.document_pdf_24_regular),
+                  title: Text(
+                    files.value.isEmpty
+                        ? '[Empty]'
+                        : files.value.first.uri.toString().split('/').last,
+                  ),
+                  subtitle: const LinearProgressIndicator(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
+                  trailing: const Icon(Icons.close),
+                ),
+              ),
+            ],
           ],
         );
     }

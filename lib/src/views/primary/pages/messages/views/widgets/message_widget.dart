@@ -13,15 +13,21 @@ class MessageWidget extends ConsumerWidget {
   const MessageWidget.collapsed({
     super.key,
     required this.message,
+    this.hasIcon = false,
+    this.backgroundColor,
   }) : isExpanded = false;
 
   const MessageWidget.expanded({
     super.key,
     required this.message,
+    this.hasIcon = false,
+    this.backgroundColor,
   }) : isExpanded = true;
 
   final MessageDto message;
   final bool isExpanded;
+  final bool hasIcon;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -33,7 +39,7 @@ class MessageWidget extends ConsumerWidget {
             const ApprenticeDto();
 
     return ColoredBox(
-      color: isExpanded ? Colors.white : AppColors.blue08,
+      color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue08),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -46,8 +52,10 @@ class MessageWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (hasIcon && message.icon.isNotEmpty)
+                  const Icon(FluentIcons.mail_24_regular),
                 SizedBox(
-                  width: 246,
+                  width: 232,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -86,9 +94,21 @@ class MessageWidget extends ConsumerWidget {
                     ],
                   ),
                 ),
-                Text(
-                  message.dateTime.asDateTime.asTimeAgo,
-                  style: TextStyles.s12w400cGrey5fRoboto,
+                Column(
+                  children: [
+                    Text(
+                      message.dateTime.asDateTime.asTimeAgo,
+                      style: TextStyles.s12w400cGrey5fRoboto,
+                    ),
+                    if (message.dateTime.asDateTime.difference(DateTime.now()) >
+                        Duration.zero) ...[
+                      const SizedBox(height: 12),
+                      const Icon(
+                        FluentIcons.clock_24_regular,
+                        color: AppColors.gray6,
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),

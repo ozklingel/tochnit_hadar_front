@@ -7,12 +7,14 @@ class InputFieldLabel extends StatelessWidget {
     super.key,
     this.label = '',
     this.isRequired = false,
+    this.labelStyle,
     required this.child,
   });
 
   final bool isRequired;
   final String label;
   final Widget child;
+  final TextStyle? labelStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +33,10 @@ class InputFieldLabel extends StatelessWidget {
                 ),
               ],
             ],
-            style: TextStyles.s12w500.copyWith(
-              color: AppColors.gray5,
-            ),
+            style: labelStyle ??
+                TextStyles.s12w500.copyWith(
+                  color: AppColors.gray5,
+                ),
           ),
         ),
         const SizedBox(height: 6),

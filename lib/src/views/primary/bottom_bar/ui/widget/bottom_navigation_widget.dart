@@ -83,23 +83,27 @@ class BottomNavigationWidget extends ConsumerWidget {
             ),
             const Align(
               alignment: Alignment(0.9, -0.8),
-              child: CircleAvatar(
-                backgroundColor: AppColors.red01,
-                radius: 10,
-                child: Text(
-                  '3',
-                  style: TextStyles.s11w500,
+              child: IgnorePointer(
+                child: CircleAvatar(
+                  backgroundColor: AppColors.red01,
+                  radius: 10,
+                  child: Text(
+                    '3',
+                    style: TextStyles.s11w500,
+                  ),
                 ),
               ),
             ),
             const Align(
               alignment: Alignment(-0.36, -0.8),
-              child: CircleAvatar(
-                backgroundColor: AppColors.red01,
-                radius: 10,
-                child: Text(
-                  '3',
-                  style: TextStyles.s11w500,
+              child: IgnorePointer(
+                child: CircleAvatar(
+                  backgroundColor: AppColors.red01,
+                  radius: 10,
+                  child: Text(
+                    '3',
+                    style: TextStyles.s11w500,
+                  ),
                 ),
               ),
             ),
