@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../models/notification/noti.dart';
 import '../../../../../services/networking/HttpService.dart';
@@ -22,15 +23,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
     print("access API");
     var jsonData = await HttpService.getUserNoti("+972549247616", context);
     notis.clear();
-    print(jsonData);
+    print(jsonData.body);
     for (var u in jsonDecode(jsonData.body)) {
       Noti noti = Noti(
         u["id"].toString(),
         u["apprenticeId"].toString(),
         u["event"].toString(),
         u["date"].toString(),
-        u["timeFromNow"].toString(),
-        u["details"].toString(),
+        u["daysfromnow"].toString(),
+        u["title"].toString(),
         u["allreadyread"].toString(),
         u["numOfLinesDisplay"].toString(),
       );
@@ -68,7 +69,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         child: FutureBuilder(
           future: _getNoti(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.data == null) {
+            print(snapshot.data.length);
+            if (snapshot.data == null || snapshot.data.length == 0) {
               return Container(
                 child: Center(
                   child: emptyScreen(),
@@ -81,6 +83,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   shrinkWrap: true,
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
+                    String now =
+                        DateFormat("dd.MM.yyyy").format(DateTime.now());
                     return ListTile(
                       tileColor: (snapshot.data[index].allreadyread
                                   .replaceAll(' ', '') ==
@@ -91,7 +95,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           ? Text(" לפני " +
                               snapshot.data[index].timeFromNow +
                               " ימים ")
-                          : Text(snapshot.data[index].date),
+                          : Text(now),
                       title: (snapshot.data[index].numOfLinesDisplay == "3")
                           ? Text(snapshot.data[index].event,
                               textAlign: TextAlign.right,
@@ -104,6 +108,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               "בתאריך " +
                                   snapshot.data[index].date +
                                   "\n" +
+                                  snapshot.data[index].details +
+                                  " ל" +
                                   snapshot.data[index].apprenticeId,
                               textAlign: TextAlign.right)
                           : Text("עברו " +

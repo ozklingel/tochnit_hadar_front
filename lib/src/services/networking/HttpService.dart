@@ -7,19 +7,21 @@ import 'package:http/http.dart' as http;
 
 class HttpService {
   static String _getUserDetailUrl =
-      'http://10.0.2.2:5000/userProfile_form/getProfileAtributes';
-  static var _setUserImageUrl =
-      Uri.parse('http://10.0.2.2:5000/userProfile_form/uploadPhoto');
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/userProfile_form/getProfileAtributes';
+  static var _setUserImageUrl = Uri.parse(
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/userProfile_form/uploadPhoto');
   static final _setUserDetailUrl =
-      'http://10.0.2.2:5000/setEntityDetails_form/setByType';
-  static final _ChatBoxUrl = 'http://10.0.2.2:5000/messegaes_form/add';
-  static String _getNoriUrl = 'http://10.0.2.2:5000/notification_form/getAll';
-  static var _sendAllreadyreadUrl =
-      Uri.parse('http://10.0.2.2:5000/notification_form/setWasRead');
-  static var _setSettingUrl =
-      Uri.parse('http://10.0.2.2:5000/notification_form/setSetting');
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/setEntityDetails_form/setByType';
+  static final _ChatBoxUrl =
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/messegaes_form/add';
+  static String _getNoriUrl =
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/notification_form/getAll';
+  static var _sendAllreadyreadUrl = Uri.parse(
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/notification_form/setWasRead');
+  static var _setSettingUrl = Uri.parse(
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/notification_form/setSetting');
   static String _getNoriSettingUrl =
-      'http://10.0.2.2:5000/notification_form/getAllSetting';
+      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/notification_form/getAllSetting';
   static String token = "11"; //await Candidate().getToken();
   static var httpClient = new HttpClient();
 
@@ -68,8 +70,8 @@ class HttpService {
     return response;
   }
 
-  static setSetting(userId, bool notifyDayBefore, bool notifyMorning,
-      bool notifyStartWeek) async {
+  static setSetting(userId, bool notifyStartWeek, bool notifyDayBefore,
+      bool notifyMorning) async {
     var request = http.MultipartRequest(
       'POST',
       _setSettingUrl,
@@ -78,9 +80,9 @@ class HttpService {
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
 
     request.fields['userId'] = userId;
-    request.fields['notifyMorning'] = notifyMorning.toString();
-    request.fields['notifyDayBefore'] = notifyDayBefore.toString();
-    request.fields['notifyStartWeek'] = notifyStartWeek.toString();
+    request.fields['notifyMorning'] = (!notifyMorning).toString();
+    request.fields['notifyDayBefore'] = (!notifyDayBefore).toString();
+    request.fields['notifyStartWeek'] = (!notifyStartWeek).toString();
     print(notifyStartWeek);
     request.headers.addAll(headers);
 
@@ -93,7 +95,7 @@ class HttpService {
       'POST',
       _setUserImageUrl,
     );
-    request.fields['userid'] = userid;
+    request.fields['userId'] = userid;
 
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
     request.files.add(
@@ -116,7 +118,7 @@ class HttpService {
       _sendAllreadyreadUrl,
     );
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
-
+    print(notiId);
     request.fields['noti_id'] = notiId;
 
     request.headers.addAll(headers);

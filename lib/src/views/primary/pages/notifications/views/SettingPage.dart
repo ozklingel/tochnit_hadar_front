@@ -22,7 +22,6 @@ class _SettingPageState extends State<SettingPage> {
   void didChangeDependencies() async {
     var jsonData = await HttpService.getUserNotiSetting("+972549247616");
     var u = jsonDecode(jsonData.body);
-    print(u["notifyDayBefore"]);
 
     super.setState(() {
       t1 = u["notifyStartWeek"];
@@ -82,7 +81,7 @@ class _SettingPageState extends State<SettingPage> {
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
-                            color: t3
+                            color: !t3
                                 ? Colors.blue.shade700
                                 : CupertinoColors.inactiveGray,
                           ),
@@ -90,10 +89,11 @@ class _SettingPageState extends State<SettingPage> {
                             value: t1,
                             activeColor: CupertinoColors.white,
                             trackColor: CupertinoColors.white,
-                            thumbColor: t1
+                            thumbColor: !t1
                                 ? Colors.blue.shade700
                                 : CupertinoColors.inactiveGray,
                             onChanged: (v) => setState(() {
+                              print(t1);
                               t1 = v;
                             }),
                           ),
@@ -113,7 +113,7 @@ class _SettingPageState extends State<SettingPage> {
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
-                            color: t2
+                            color: !t2
                                 ? Colors.blue.shade700
                                 : CupertinoColors.inactiveGray,
                           ),
@@ -121,7 +121,7 @@ class _SettingPageState extends State<SettingPage> {
                             value: t2,
                             activeColor: CupertinoColors.white,
                             trackColor: CupertinoColors.white,
-                            thumbColor: t2
+                            thumbColor: !t2
                                 ? Colors.blue.shade700
                                 : CupertinoColors.inactiveGray,
                             onChanged: (v) => setState(() {
@@ -144,7 +144,7 @@ class _SettingPageState extends State<SettingPage> {
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
-                            color: t3
+                            color: !t3
                                 ? Colors.blue.shade700
                                 : CupertinoColors.inactiveGray,
                           ),
@@ -152,7 +152,7 @@ class _SettingPageState extends State<SettingPage> {
                             value: t3,
                             activeColor: CupertinoColors.white,
                             trackColor: CupertinoColors.white,
-                            thumbColor: t3
+                            thumbColor: !t3
                                 ? Colors.blue.shade700
                                 : CupertinoColors.inactiveGray,
                             onChanged: (v) => setState(() {

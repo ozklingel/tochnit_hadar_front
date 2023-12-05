@@ -34,7 +34,7 @@ class _userProfileScreenState extends State<userProfileScreen>
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
     myUser = userMap2;
-    print(myUser);
+    print("apprentices:" + myUser["apprentices"]);
     return userMap2;
   }
 
