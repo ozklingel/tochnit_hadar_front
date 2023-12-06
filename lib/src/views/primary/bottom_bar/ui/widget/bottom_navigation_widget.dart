@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class BottomNavigationWidget extends ConsumerWidget {
@@ -15,6 +17,8 @@ class BottomNavigationWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+
     return DecoratedBox(
       decoration: BoxDecoration(
         boxShadow: [
@@ -42,53 +46,64 @@ class BottomNavigationWidget extends ConsumerWidget {
               unselectedLabelStyle: TextStyles.bodyB1.copyWith(
                 color: AppColors.grey3,
               ),
-              items: const [
-                BottomNavigationBarItem(
+              items: [
+                const BottomNavigationBarItem(
                   activeIcon: Icon(FluentIcons.clipboard_task_24_regular),
                   icon: Icon(FluentIcons.clipboard_task_24_regular),
                   label: 'משימות',
                 ),
-                BottomNavigationBarItem(
+                const BottomNavigationBarItem(
                   activeIcon: Icon(FluentIcons.checkmark_circle_24_regular),
                   icon: Icon(FluentIcons.checkmark_circle_24_regular),
                   label: 'דיווחים',
                 ),
-                BottomNavigationBarItem(
+                const BottomNavigationBarItem(
                   activeIcon: Icon(FluentIcons.home_24_regular),
                   icon: Icon(FluentIcons.home_24_regular),
                   label: 'בית',
                 ),
-                BottomNavigationBarItem(
+                const BottomNavigationBarItem(
                   activeIcon: Icon(FluentIcons.mail_24_regular),
                   icon: Icon(FluentIcons.mail_24_regular),
                   label: 'הודעות',
                 ),
-                BottomNavigationBarItem(
-                  activeIcon: Icon(FluentIcons.person_24_regular),
-                  icon: Icon(FluentIcons.person_24_regular),
-                  label: 'חניכים',
-                ),
+                if (user.role == Role.melave)
+                  const BottomNavigationBarItem(
+                    activeIcon: Icon(FluentIcons.person_24_regular),
+                    icon: Icon(FluentIcons.person_24_regular),
+                    label: 'חניכים',
+                  )
+                else if (user.role == Role.ahraiTohnit)
+                  const BottomNavigationBarItem(
+                    activeIcon: Icon(FluentIcons.people_24_regular),
+                    icon: Icon(FluentIcons.people_24_regular),
+                    label: 'משתמשים',
+                  ),
               ],
             ),
             const Align(
               alignment: Alignment(0.9, -0.8),
-              child: CircleAvatar(
-                backgroundColor: AppColors.red01,
-                radius: 10,
-                child: Text(
-                  '3',
-                  style: TextStyles.s11w500,
+              child: IgnorePointer(
+                child: CircleAvatar(
+                  backgroundColor: AppColors.red01,
+                  radius: 10,
+                  child: Text(
+                    '3',
+                    style: TextStyles.s11w500,
+                  ),
                 ),
               ),
             ),
             const Align(
               alignment: Alignment(-0.36, -0.8),
-              child: CircleAvatar(
-                backgroundColor: AppColors.red01,
-                radius: 10,
-                child: Text(
-                  '3',
-                  style: TextStyles.s11w500,
+              child: IgnorePointer(
+                child: CircleAvatar(
+                  backgroundColor: AppColors.red01,
+                  radius: 10,
+                  child: Text(
+                    '3',
+                    style: TextStyles.s11w500,
+                  ),
                 ),
               ),
             ),

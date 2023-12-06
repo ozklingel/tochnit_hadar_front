@@ -1,0 +1,541 @@
+import 'dart:math';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/controller/new_message_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/widgets/find_groups_page.dart';
+import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
+import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+class NewMessageScreen extends HookWidget {
+  const NewMessageScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final filters = Random().nextBool() ? 'something' : '';
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('שליחת הודעה'),
+        actions: [
+          PopupMenuButton(
+            icon: const Icon(
+              FluentIcons.more_vertical_24_regular,
+            ),
+            offset: const Offset(0, 40),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: const Text('שמירה בטיוטות'),
+                onTap: () => Toaster.unimplemented(),
+              ),
+              PopupMenuItem(
+                child: const Text('תזמון שליחה'),
+                onTap: () => Toaster.unimplemented(),
+              ),
+              PopupMenuItem(
+                child: const Text('מחיקה'),
+                onTap: () => Toaster.unimplemented(),
+              ),
+            ],
+          ),
+          IconButton(
+            icon: const Icon(FluentIcons.attach_24_filled),
+            onPressed: () => Toaster.unimplemented(),
+          ),
+          const SizedBox(width: 12),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              InputFieldLabel(
+                label: 'הוספת נמענים',
+                isRequired: true,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      ActionChip(
+                        label: const Text('הוספת נמענים ידנית'),
+                        labelStyle: TextStyles.s14w400cBlue2,
+                        side: const BorderSide(color: AppColors.blue06),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (val) {
+                              return const _FindUsersPage();
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      ActionChip(
+                        label: const Text('הוספת קבוצת נמענים'),
+                        labelStyle: TextStyles.s14w400cBlue2,
+                        side: const BorderSide(color: AppColors.blue06),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (val) {
+                              return const FindGroupsPage();
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (filters.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                ChoiceChip(
+                  selected: true,
+                  onSelected: (val) {},
+                  showCheckmark: false,
+                  label: const Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'אבי מלאכי, שליו עידן, נתנאל מכלוף, חניכים, שנה ב +21',
+                          style: TextStyles.s14w400cBlue2,
+                        ),
+                      ),
+                      Icon(
+                        Icons.close,
+                        color: AppColors.blue02,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                  selectedColor: AppColors.blue06,
+                ),
+              ],
+              const SizedBox(height: 24),
+              InputFieldLabel(
+                label: 'סוג ההודעה',
+                isRequired: true,
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton2<String>(
+                    hint: const Text(
+                      'בחר את סוג ההודעה',
+                      style: TextStyles.s16w400cGrey5,
+                    ),
+                    onMenuStateChange: (isOpen) {},
+                    dropdownSearchData: const DropdownSearchData(
+                      searchInnerWidgetHeight: 50,
+                      searchInnerWidget: TextField(
+                        decoration: InputDecoration(
+                          focusedBorder: UnderlineInputBorder(),
+                          enabledBorder: InputBorder.none,
+                          prefixIcon: Icon(Icons.search),
+                          hintText: 'חיפוש',
+                          hintStyle: TextStyles.s14w400,
+                        ),
+                      ),
+                    ),
+                    style: TextStyles.s16w400cGrey5,
+                    buttonStyleData: ButtonStyleData(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(36),
+                        border: Border.all(
+                          color: AppColors.shades300,
+                        ),
+                      ),
+                      elevation: 0,
+                      padding: const EdgeInsets.only(right: 8),
+                    ),
+                    onChanged: (value) {
+                      // selectedUserType.value = value ?? selectedUserType.value;
+                    },
+                    dropdownStyleData: const DropdownStyleData(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                    ),
+                    iconStyleData: const IconStyleData(
+                      icon: Padding(
+                        padding: EdgeInsets.only(left: 16),
+                        child: RotatedBox(
+                          quarterTurns: 1,
+                          child: Icon(
+                            Icons.chevron_left,
+                            color: AppColors.grey6,
+                          ),
+                        ),
+                      ),
+                      openMenuIcon: Padding(
+                        padding: EdgeInsets.only(left: 16),
+                        child: RotatedBox(
+                          quarterTurns: 3,
+                          child: Icon(
+                            Icons.chevron_left,
+                            color: AppColors.grey6,
+                          ),
+                        ),
+                      ),
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'SMS',
+                        child: Text('SMS'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'whatsapp',
+                        child: Text('וואטסאפ'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'system',
+                        child: Text('הודעת מערכת'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              const InputFieldLabel(
+                label: 'כותרת',
+                isRequired: true,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'הזן כותרת',
+                    hintStyle: TextStyles.s16w400cGrey5,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              InputFieldLabel(
+                label: 'תוכן ההודעה',
+                child: TextFormField(
+                  minLines: 8,
+                  maxLines: 8,
+                  decoration: const InputDecoration(
+                    hintText: 'הזן תוכן',
+                    hintStyle: TextStyles.s16w400cGrey5,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  Switch(
+                    value: false,
+                    onChanged: (val) => Toaster.unimplemented(),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text('הוסף את שם הנמען בהודעה'),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: LargeFilledRoundedButton(
+                      label: 'שליחה',
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const _DateTimeDialog();
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: LargeFilledRoundedButton.cancel(
+                      label: 'ביטול',
+                      onPressed: () => Toaster.unimplemented(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DateTimeDialog extends HookWidget {
+  const _DateTimeDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedDateTime = useState<DateTime?>(null);
+    final selectedTimeOfDay = useState<TimeOfDay?>(null);
+
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: SizedBox(
+        height: 280,
+        width: 160,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'בחירת תאריך ושעה',
+                style: TextStyles.s20w400,
+              ),
+              const SizedBox(height: 24),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(
+                    color: AppColors.shades300,
+                  ),
+                ),
+                onPressed: () async {
+                  final result = await showDatePicker(
+                    context: context,
+                    initialDate: selectedDateTime.value ?? DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(
+                      const Duration(days: 365 * 10),
+                    ),
+                  );
+
+                  if (result != null) {
+                    selectedDateTime.value = result;
+                  }
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      selectedDateTime.value?.asDayMonthYearShort ??
+                          'בחירת תאריך',
+                      style: TextStyles.s16w400cGrey5,
+                    ),
+                    const Spacer(),
+                    const Icon(
+                      FluentIcons.calendar_24_regular,
+                      color: Colors.black,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(
+                    color: AppColors.shades300,
+                  ),
+                ),
+                onPressed: () async {
+                  final result = await showTimePicker(
+                    context: context,
+                    initialTime: selectedTimeOfDay.value ?? TimeOfDay.now(),
+                  );
+
+                  if (result != null) {
+                    selectedTimeOfDay.value = result;
+                  }
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      selectedTimeOfDay.value?.format(context) ?? 'בחירת שעה',
+                      style: TextStyles.s16w400cGrey5,
+                    ),
+                    const Spacer(),
+                    const Icon(
+                      FluentIcons.chevron_down_24_regular,
+                      color: Colors.black,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              AcceptCancelButtons(
+                onPressedCancel: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FindUsersPage extends HookConsumerWidget {
+  const _FindUsersPage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final searchController = useTextEditingController();
+    final newMsgController = ref.watch(
+      newMessageControllerProvider(
+        searchTerm: searchController.text,
+      ),
+    );
+    final searchedUsers = useState<List<ApprenticeDto>>([]);
+    final selectedUsers = useState<List<ApprenticeDto>>([]);
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: SearchBar(
+            controller: searchController,
+            onChanged: (val) async {
+              // TODO add debouncer
+              searchedUsers.value = [
+                ...await ref
+                    .read(messagesControllerProvider.notifier)
+                    .searchApprentices(val),
+              ];
+            },
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor:
+                MaterialStateColor.resolveWith((states) => AppColors.blue07),
+            hintText: 'הזן את שם המשתמש',
+            hintStyle: MaterialStateProperty.all(TextStyles.s16w400cGrey5),
+            leading: const Icon(FluentIcons.arrow_left_24_filled),
+            padding: MaterialStateProperty.all(
+              const EdgeInsets.symmetric(horizontal: 16),
+            ),
+            trailing: const [
+              Icon(FluentIcons.search_24_filled),
+            ],
+          ),
+          bottom: selectedUsers.value.isEmpty
+              ? null
+              : PreferredSize(
+                  preferredSize: Size(
+                    MediaQuery.of(context).size.width,
+                    52,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: selectedUsers.value
+                              .map(
+                                (e) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
+                                  child: ActionChip(
+                                    backgroundColor: AppColors.blue06,
+                                    onPressed: () {
+                                      final newList = selectedUsers.value;
+                                      newList.remove(e);
+                                      selectedUsers.value = [...newList];
+                                    },
+                                    label: Row(
+                                      children: [
+                                        Text(
+                                          e.fullName,
+                                          style: TextStyles.s14w400cBlue2,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        const Icon(
+                                          Icons.close,
+                                          color: AppColors.blue02,
+                                          size: 18,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+        ),
+        body: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(0.05),
+                Colors.transparent,
+              ],
+              stops: const [
+                0,
+                0.04,
+              ],
+            ),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: newMsgController.when(
+                  loading: () => const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
+                  error: (error, stack) =>
+                      Center(child: Text(error.toString())),
+                  data: (list) => ListView(
+                    children: list
+                        .map(
+                          (e) => ListTile(
+                            title: Text(e.fullName),
+                            onTap: () {
+                              if (selectedUsers.value.contains(e)) {
+                                return;
+                              }
+
+                              selectedUsers.value = [
+                                e,
+                                ...selectedUsers.value,
+                              ];
+                            },
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ),
+              if (selectedUsers.value.isNotEmpty)
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: SizedBox(
+                          height: 36,
+                          child: LargeFilledRoundedButton(
+                            label: 'הוסף',
+                            fontSize: 12,
+                            onPressed: () {},
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

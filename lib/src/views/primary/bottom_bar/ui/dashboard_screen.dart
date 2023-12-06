@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/views/primary/bottome_bar/ui/widget/bottom_navigation_widget.dart';
+import 'package:hadar_program/src/views/primary/bottom_bar/ui/widget/bottom_navigation_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DashboardScreen extends HookConsumerWidget {

@@ -7,20 +7,21 @@ extension ReportFromMillisecondsSinceEpochX on int {
   DateTime get asDateTime => DateTime.fromMillisecondsSinceEpoch(this);
 }
 
-extension ReportDateTimeX on DateTime {
-  String get asDayMonthYearShort => DateFormat('dd.MM.yy').format(this);
-  String get asDayMonth => DateFormat('dd.MM').format(this);
+extension ReportDateTimeX on DateTime? {
+  String get asDayMonthYearShort => DateFormat('dd.MM.yy').format(this!);
+  String get asDayMonth => DateFormat('dd.MM').format(this!);
   String get asTimeAgo {
     return format(
-      this,
+      this!,
       locale: Consts.defaultLocale.languageCode,
+      allowFromNow: true,
     );
   }
 
   String get he {
     final hdf = HebrewDateFormatter();
     hdf.hebrewFormat = true;
-    final jewishDateTime = JewishDate.fromDateTime(this);
+    final jewishDateTime = JewishDate.fromDateTime(this!);
     return hdf.format(jewishDateTime);
   }
 }

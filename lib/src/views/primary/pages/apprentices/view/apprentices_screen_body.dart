@@ -22,8 +22,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
-class ApprenticesScreen extends HookConsumerWidget {
-  const ApprenticesScreen({super.key});
+class ApprenticesScreenBody extends HookConsumerWidget {
+  const ApprenticesScreenBody({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
@@ -411,24 +411,19 @@ class _CompoundOrCityCard extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+            child: const Padding(
+              padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
+                  Text(
                     'בה”ד 1',
                     style: TextStyles.s16w500cGrey2,
                   ),
-                  const Text(
+                  Text(
                     'כתובת: הנגב 8, בה”ד 1',
                     style: TextStyles.s14w300cGray2,
                   ),
-                  if (count != null)
-                    const Text(
-                      '2 חניכים',
-                      style: TextStyles.s13w400cBlue05,
-                    ),
                 ],
               ),
             ),

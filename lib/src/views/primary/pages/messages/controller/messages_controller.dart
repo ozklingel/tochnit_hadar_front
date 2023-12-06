@@ -28,18 +28,27 @@ class MessagesController extends _$MessagesController {
         return MessageDto(
           id: faker.guid.guid(),
           from: apprentices.isEmpty
-              ? const ApprenticeDto()
-              : apprentices[Random().nextInt(apprentices.length)],
+              ? const ApprenticeDto().phone
+              : apprentices[Random().nextInt(apprentices.length)].phone,
           title: faker.lorem.sentence(),
           content: faker.lorem.sentence(),
-          dateTime: faker.date
-              .dateTime(
-                minYear: 1971,
-                maxYear: DateTime.now().year,
-              )
-              .millisecondsSinceEpoch,
+          icon: faker.food.dish(),
+          allreadyRead: faker.randomGenerator.boolean().toString(),
+          dateTime: faker.randomGenerator.boolean()
+              ? faker.date
+                  .dateTime(
+                    minYear: 1971,
+                    maxYear: DateTime.now().year,
+                  )
+                  .millisecondsSinceEpoch
+              : faker.date
+                  .dateTime(
+                    minYear: DateTime.now().year,
+                    maxYear: DateTime.now().year + 1,
+                  )
+                  .millisecondsSinceEpoch,
           attachments: List.generate(
-            11,
+            Random().nextInt(2),
             (index) => faker.image.image(height: 100, width: 100),
           ),
         );
@@ -61,5 +70,20 @@ class MessagesController extends _$MessagesController {
     }
 
     return result;
+  }
+
+  Future<List<ApprenticeDto>> searchApprentices(String keyword) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    return ref
+            .read(apprenticesControllerProvider)
+            .valueOrNull
+            ?.where(
+              (element) => element.fullName
+                  .toLowerCase()
+                  .contains(keyword.toLowerCase()),
+            )
+            .toList() ??
+        [];
   }
 }

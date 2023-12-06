@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +16,8 @@ class MessageDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+
     final message = ref.watch(
       messagesControllerProvider.select(
         (val) {
@@ -36,19 +40,35 @@ class MessageDetailsScreen extends ConsumerWidget {
             child: const Icon(Icons.more_vert),
             itemBuilder: (context) {
               return [
-                PopupMenuItem(
-                  value: 'delete',
-                  child: const Text('מחק הודעה'),
-                  onTap: () async {
-                    final result = await ref
-                        .read(messagesControllerProvider.notifier)
-                        .deleteMessage(messageId);
+                if (user.role == Role.melave)
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: const Text('מחק הודעה'),
+                    onTap: () async {
+                      final result = await ref
+                          .read(messagesControllerProvider.notifier)
+                          .deleteMessage(messageId);
 
-                    if (result) {
-                      navContext.pop();
-                    }
-                  },
-                ),
+                      if (result) {
+                        navContext.pop();
+                      }
+                    },
+                  )
+                else ...[
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: const Text('מחיקה'),
+                    onTap: () async {
+                      final result = await ref
+                          .read(messagesControllerProvider.notifier)
+                          .deleteMessage(messageId);
+
+                      if (result) {
+                        navContext.pop();
+                      }
+                    },
+                  ),
+                ],
               ];
             },
           ),

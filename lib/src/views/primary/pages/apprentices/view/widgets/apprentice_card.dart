@@ -14,12 +14,14 @@ class ApprenticeCard extends StatelessWidget {
     required this.apprentice,
     this.isLongTapEnabled = true,
     this.onTap,
+    this.onlineStatus,
   });
 
   final ValueNotifier<List<String>> selectedIds;
   final ApprenticeDto apprentice;
   final bool isLongTapEnabled;
   final VoidCallback? onTap;
+  final Color? onlineStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -69,23 +71,39 @@ class ApprenticeCard extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  if (apprentice.avatar.isEmpty)
-                    const CircleAvatar(
-                      radius: 20,
-                      backgroundColor: AppColors.grey6,
-                      child: Icon(
-                        FluentIcons.person_24_filled,
-                        size: 16,
-                        color: Colors.white,
-                      ),
-                    )
-                  else
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundImage: CachedNetworkImageProvider(
-                        apprentice.avatar,
-                      ),
-                    ),
+                  Stack(
+                    children: [
+                      apprentice.avatar.isEmpty
+                          ? const CircleAvatar(
+                              radius: 20,
+                              backgroundColor: AppColors.grey6,
+                              child: Icon(
+                                FluentIcons.person_24_filled,
+                                size: 16,
+                                color: Colors.white,
+                              ),
+                            )
+                          : CircleAvatar(
+                              radius: 20,
+                              backgroundImage: CachedNetworkImageProvider(
+                                apprentice.avatar,
+                              ),
+                            ),
+                      if (onlineStatus != null)
+                        Positioned(
+                          bottom: 1,
+                          right: 1,
+                          child: CircleAvatar(
+                            radius: 6,
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
+                              radius: 4,
+                              backgroundColor: onlineStatus,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

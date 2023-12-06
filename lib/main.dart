@@ -7,14 +7,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/themes.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timeago/timeago.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  Paint.enableDithering = true;
 
   setLocaleMessages(
     Consts.defaultLocale.languageCode,
@@ -35,26 +34,28 @@ class HadarProgram extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final router = ref.watch(goRouterProvider);
 
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
-      title: Consts.appTitle,
-      theme: appThemeLight,
-      scrollBehavior: _scrollBehavior,
-      localizationsDelegates: const [
-        GlobalWidgetsLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      locale: Consts.defaultLocale,
-      supportedLocales: const [
-        Consts.defaultLocale,
-      ],
-      builder: (context, child) => BotToastInit()(
-        context,
-        CallbackShortcuts(
-          bindings: _shortcuts(ref),
-          child: child!,
+    return _EagerInitialization(
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
+        title: Consts.appTitle,
+        theme: appThemeLight,
+        scrollBehavior: _scrollBehavior,
+        localizationsDelegates: const [
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        locale: Consts.defaultLocale,
+        supportedLocales: const [
+          Consts.defaultLocale,
+        ],
+        builder: (context, child) => BotToastInit()(
+          context,
+          CallbackShortcuts(
+            bindings: _shortcuts(ref),
+            child: child!,
+          ),
         ),
       ),
     );
@@ -85,3 +86,21 @@ final _scrollBehavior = const MaterialScrollBehavior().copyWith(
     PointerDeviceKind.unknown,
   },
 );
+
+class _EagerInitialization extends ConsumerWidget {
+  const _EagerInitialization({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final result = ref.watch(storageProvider);
+
+    if (result.isLoading) {
+      return const CircularProgressIndicator();
+    } else if (result.hasError) {
+      return const Text('😔');
+    }
+
+    return child;
+  }
+}

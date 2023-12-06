@@ -10,6 +10,17 @@ class LargeFilledRoundedButton extends StatelessWidget {
     this.backgroundColor = AppColors.blue02,
     this.foregroundColor = Colors.white,
     this.textStyle = TextStyles.s24w500cGrey2,
+    this.fontSize,
+  });
+
+  const LargeFilledRoundedButton.cancel({
+    super.key,
+    required this.label,
+    this.onPressed,
+    this.backgroundColor = Colors.white,
+    this.foregroundColor = AppColors.blue02,
+    this.textStyle = TextStyles.s24w500cGrey2,
+    this.fontSize,
   });
 
   final String label;
@@ -17,6 +28,7 @@ class LargeFilledRoundedButton extends StatelessWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final TextStyle textStyle;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +50,7 @@ class LargeFilledRoundedButton extends StatelessWidget {
         label,
         style: textStyle.copyWith(
           color: foregroundColor,
+          fontSize: 16,
         ),
       ),
     );
