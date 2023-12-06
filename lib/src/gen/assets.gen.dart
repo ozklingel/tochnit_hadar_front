@@ -42,12 +42,30 @@ class $AssetsImagesGen {
   /// File path: assets/images/no-tasks.svg
   SvgGenImage get noTasks => const SvgGenImage('assets/images/no-tasks.svg');
 
+  /// File path: assets/images/noData.png
+  AssetGenImage get noData => const AssetGenImage('assets/images/noData.png');
+
+  /// File path: assets/images/pencile.png
+  AssetGenImage get pencile => const AssetGenImage('assets/images/pencile.png');
+
   /// File path: assets/images/success.svg
   SvgGenImage get success => const SvgGenImage('assets/images/success.svg');
 
+  /// File path: assets/images/vi.png
+  AssetGenImage get vi => const AssetGenImage('assets/images/vi.png');
+
   /// List of all assets
-  List<dynamic> get values =>
-      [homePageHeader, logo, logomark, noMessages, noTasks, success];
+  List<dynamic> get values => [
+        homePageHeader,
+        logo,
+        logomark,
+        noMessages,
+        noTasks,
+        noData,
+        pencile,
+        success,
+        vi
+      ];
 }
 
 class Assets {

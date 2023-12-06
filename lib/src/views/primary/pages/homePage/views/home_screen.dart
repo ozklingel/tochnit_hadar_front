@@ -24,18 +24,15 @@ class HomeScreen extends ConsumerWidget {
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
     return Scaffold(
+      drawer: drawer(context),
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Toaster.unimplemented(),
-          icon: const Icon(Icons.menu),
-        ),
         centerTitle: true,
         title: Assets.images.logo.image(
           height: 48,
         ),
         actions: [
           IconButton(
-            onPressed: () => Toaster.unimplemented(),
+            onPressed: () => const notificationRouteData().go(context),
             icon: const Icon(Icons.notifications_none),
           ),
         ],
@@ -54,6 +51,140 @@ class HomeScreen extends ConsumerWidget {
             const SizedBox(height: 14),
           ],
         ),
+      ),
+    );
+  }
+
+  drawer(context) {
+    Size size = MediaQuery.of(context).size;
+    ImageProvider profileimage = NetworkImage(
+        "https://th01-s3.s3.eu-north-1.amazonaws.com/c2fb87a53199453ca9f2ac14fb672cfc.jpg");
+    print(profileimage);
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.grey.shade200,
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundImage: AssetImage('assets/images/exit.png'),
+                  ),
+                ),
+                onTap: () => const HomeRouteData().go(context),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: size.height * 2 / 6.5,
+            child: DrawerHeader(
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: profileimage != null
+                        ? profileimage
+                        : AssetImage('assets/images/person.png'),
+                  ),
+                  Text('John Doe',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('John@Doe', style: TextStyle(fontSize: 11)),
+                  TextButton(
+                    child: Text("עריכת פרופיל",
+                        style: TextStyle(color: Colors.blue[900])),
+                    onPressed: () {
+                      const userProfileRouteData().go(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+              height: size.height * 3 / 5,
+              color: Colors.blue[50], //Color.fromRGBO(246, 249, 254, 1),
+              child: ListView(children: [
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage:
+                        AssetImage('assets/images/madad.png') as ImageProvider,
+                  ),
+                  title: Text('מדדי תוכנית'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage:
+                        AssetImage('assets/images/mapa.png') as ImageProvider,
+                  ),
+                  title: Text('מפת מיקומים'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage: AssetImage('assets/images/envalop.png')
+                        as ImageProvider,
+                  ),
+                  title: Text('הודעות מערכת'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage:
+                        AssetImage('assets/images/call.png') as ImageProvider,
+                  ),
+                  title: Text('פניות שירות'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage: AssetImage('assets/images/setting.png')
+                        as ImageProvider,
+                  ),
+                  title: Text('הגדרות והתראות'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+                ListTile(
+                  dense: true,
+
+                  leading: CircleAvatar(
+                    radius: 10,
+                    backgroundImage: AssetImage('assets/images/person2.png')
+                        as ImageProvider,
+                  ),
+                  title: Text('התנתקות'),
+                  onTap: () => const supportRouteData()
+                      .go(context), //context.go(Routes.SUPPORT),
+                ),
+              ])),
+        ],
       ),
     );
   }

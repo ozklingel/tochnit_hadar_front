@@ -28,6 +28,9 @@ dependencies:
   # location
   google_maps_flutter: ^2.5.0
   location: ^5.0.3
+  widget_to_marker: ^1.0.4
+  image_picker: ^1.0.2
+
 
   # state
   hooks_riverpod: ^2.4.0
@@ -83,7 +86,7 @@ dev_dependencies:
   flutter_gen_runner: ^5.3.1
   json_serializable: ^6.7.1
   go_router_builder: ^2.3.2
-
+  path_provider: any
 dependency_overrides:
   flutter_gen_core:
     git:
