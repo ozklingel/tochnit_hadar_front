@@ -24,6 +24,23 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/backhome.png
+  AssetGenImage get backhome =>
+      const AssetGenImage('assets/images/backhome.png');
+
+  /// File path: assets/images/call.png
+  AssetGenImage get call => const AssetGenImage('assets/images/call.png');
+
+  /// File path: assets/images/disconnect.png
+  AssetGenImage get disconnect =>
+      const AssetGenImage('assets/images/disconnect.png');
+
+  /// File path: assets/images/envalop.png
+  AssetGenImage get envalop => const AssetGenImage('assets/images/envalop.png');
+
+  /// File path: assets/images/exit.png
+  AssetGenImage get exit => const AssetGenImage('assets/images/exit.png');
+
   /// File path: assets/images/home-page-header.svg
   SvgGenImage get homePageHeader =>
       const SvgGenImage('assets/images/home-page-header.svg');
@@ -35,6 +52,12 @@ class $AssetsImagesGen {
   AssetGenImage get logomark =>
       const AssetGenImage('assets/images/logomark.png');
 
+  /// File path: assets/images/madad.png
+  AssetGenImage get madad => const AssetGenImage('assets/images/madad.png');
+
+  /// File path: assets/images/mapa.png
+  AssetGenImage get mapa => const AssetGenImage('assets/images/mapa.png');
+
   /// File path: assets/images/no-messages.svg
   SvgGenImage get noMessages =>
       const SvgGenImage('assets/images/no-messages.svg');
@@ -45,8 +68,20 @@ class $AssetsImagesGen {
   /// File path: assets/images/noData.png
   AssetGenImage get noData => const AssetGenImage('assets/images/noData.png');
 
+  /// File path: assets/images/pencil2.png
+  AssetGenImage get pencil2 => const AssetGenImage('assets/images/pencil2.png');
+
   /// File path: assets/images/pencile.png
   AssetGenImage get pencile => const AssetGenImage('assets/images/pencile.png');
+
+  /// File path: assets/images/person.png
+  AssetGenImage get person => const AssetGenImage('assets/images/person.png');
+
+  /// File path: assets/images/person2.png
+  AssetGenImage get person2 => const AssetGenImage('assets/images/person2.png');
+
+  /// File path: assets/images/setting.png
+  AssetGenImage get setting => const AssetGenImage('assets/images/setting.png');
 
   /// File path: assets/images/success.svg
   SvgGenImage get success => const SvgGenImage('assets/images/success.svg');
@@ -56,13 +91,24 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
+        backhome,
+        call,
+        disconnect,
+        envalop,
+        exit,
         homePageHeader,
         logo,
         logomark,
+        madad,
+        mapa,
         noMessages,
         noTasks,
         noData,
+        pencil2,
         pencile,
+        person,
+        person2,
+        setting,
         success,
         vi
       ];

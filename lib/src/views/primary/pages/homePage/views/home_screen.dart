@@ -58,7 +58,7 @@ class HomeScreen extends ConsumerWidget {
   drawer(context) {
     Size size = MediaQuery.of(context).size;
     ImageProvider profileimage = NetworkImage(
-        "https://th01-s3.s3.eu-north-1.amazonaws.com/c2fb87a53199453ca9f2ac14fb672cfc.jpg");
+        "https://th01-s3.s3.eu-north-1.amazonaws.com/638a1e29dc924e25ba6096f5c93583ca.jpg");
     print(profileimage);
     return Drawer(
       child: ListView(
