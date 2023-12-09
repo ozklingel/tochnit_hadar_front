@@ -18,11 +18,11 @@ import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart'
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../views/primary/pages/chatBox/supportScreen.dart';
-import '../../views/primary/pages/notifications/views/SettingPage.dart';
+import '../../views/primary/pages/chatBox/support_screen.dart';
 import '../../views/primary/pages/notifications/views/notification_screen.dart';
-import '../../views/primary/pages/userProfilePage/editProfile.dart';
-import '../../views/primary/pages/userProfilePage/userProfileScreen.dart';
+import '../../views/primary/pages/notifications/views/setting_page.dart';
+import '../../views/primary/pages/userProfilePage/edit_profile.dart';
+import '../../views/primary/pages/userProfilePage/user_profile_screen.dart';
 
 part 'go_router_provider.g.dart';
 
@@ -340,59 +340,59 @@ class OnboardingRouteData extends GoRouteData {
   }
 }
 
-@TypedGoRoute<supportRouteData>(
+@TypedGoRoute<SupportRouteData>(
   path: '/support',
 )
-class supportRouteData extends GoRouteData {
-  const supportRouteData();
+class SupportRouteData extends GoRouteData {
+  const SupportRouteData();
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return SupportScreen();
+    return const SupportScreen();
   }
 }
 
-@TypedGoRoute<userProfileRouteData>(
+@TypedGoRoute<UserProfileRouteData>(
   path: '/userProfile',
 )
-class userProfileRouteData extends GoRouteData {
-  const userProfileRouteData();
+class UserProfileRouteData extends GoRouteData {
+  const UserProfileRouteData();
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return userProfileScreen();
+    return const UserProfileScreen();
   }
 }
 
-@TypedGoRoute<editUserProfileRouteData>(
+@TypedGoRoute<EditUserProfileRouteData>(
   path: '/editUserProfile',
 )
-class editUserProfileRouteData extends GoRouteData {
-  const editUserProfileRouteData();
+class EditUserProfileRouteData extends GoRouteData {
+  const EditUserProfileRouteData();
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return profileEditPage();
+    return const ProfileEditPage();
   }
 }
 
-@TypedGoRoute<notificationRouteData>(
+@TypedGoRoute<NotificationRouteData>(
   path: '/notifications',
 )
-class notificationRouteData extends GoRouteData {
-  const notificationRouteData();
+class NotificationRouteData extends GoRouteData {
+  const NotificationRouteData();
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return NotificationScreen();
+    return const NotificationScreen();
   }
 }
 
@@ -406,7 +406,7 @@ class NotificationSettingRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return SettingPage();
+    return const SettingPage();
   }
 }
 

@@ -32,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => const notificationRouteData().go(context),
+            onPressed: () => const NotificationRouteData().go(context),
             icon: const Icon(Icons.notifications_none),
           ),
         ],
@@ -57,13 +57,16 @@ class HomeScreen extends ConsumerWidget {
 
   drawer(context) {
     Size size = MediaQuery.of(context).size;
-    ImageProvider profileimage = NetworkImage(
-        "https://th01-s3.s3.eu-north-1.amazonaws.com/638a1e29dc924e25ba6096f5c93583ca.jpg");
-    print(profileimage);
+    ImageProvider profileimage = const NetworkImage(
+      "https://th01-s3.s3.eu-north-1.amazonaws.com/638a1e29dc924e25ba6096f5c93583ca.jpg",
+    );
+
+    // print(profileimage);
+
     return Drawer(
       child: ListView(
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(
@@ -73,7 +76,7 @@ class HomeScreen extends ConsumerWidget {
                 child: CircleAvatar(
                   radius: 10,
                   backgroundColor: Colors.grey.shade200,
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     radius: 70,
                     backgroundImage: AssetImage('assets/images/exit.png'),
                   ),
@@ -89,18 +92,20 @@ class HomeScreen extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: profileimage != null
-                        ? profileimage
-                        : AssetImage('assets/images/person.png'),
+                    backgroundImage: profileimage,
                   ),
-                  Text('John Doe',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('John@Doe', style: TextStyle(fontSize: 11)),
+                  const Text(
+                    'John Doe',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const Text('John@Doe', style: TextStyle(fontSize: 11)),
                   TextButton(
-                    child: Text("עריכת פרופיל",
-                        style: TextStyle(color: Colors.blue[900])),
+                    child: Text(
+                      "עריכת פרופיל",
+                      style: TextStyle(color: Colors.blue[900]),
+                    ),
                     onPressed: () {
-                      const userProfileRouteData().go(context);
+                      const UserProfileRouteData().go(context);
                     },
                   ),
                 ],
@@ -108,82 +113,79 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
           Container(
-              height: size.height * 3 / 5,
-              color: Colors.blue[50], //Color.fromRGBO(246, 249, 254, 1),
-              child: ListView(children: [
+            height: size.height * 3 / 5,
+            color: Colors.blue[50], //Color.fromRGBO(246, 249, 254, 1),
+            child: ListView(
+              children: [
                 ListTile(
                   dense: true,
 
-                  leading: CircleAvatar(
+                  leading: const CircleAvatar(
                     radius: 10,
-                    backgroundImage:
-                        AssetImage('assets/images/madad.png') as ImageProvider,
+                    backgroundImage: AssetImage('assets/images/madad.png'),
                   ),
-                  title: Text('מדדי תוכנית'),
-                  onTap: () => const supportRouteData()
+                  title: const Text('מדדי תוכנית'),
+                  onTap: () => const SupportRouteData()
                       .go(context), //context.go(Routes.SUPPORT),
                 ),
                 ListTile(
                   dense: true,
 
-                  leading: CircleAvatar(
+                  leading: const CircleAvatar(
                     radius: 10,
-                    backgroundImage:
-                        AssetImage('assets/images/mapa.png') as ImageProvider,
+                    backgroundImage: AssetImage('assets/images/mapa.png'),
                   ),
-                  title: Text('מפת מיקומים'),
-                  onTap: () => const supportRouteData()
+                  title: const Text('מפת מיקומים'),
+                  onTap: () => const SupportRouteData()
                       .go(context), //context.go(Routes.SUPPORT),
                 ),
                 ListTile(
                   dense: true,
 
-                  leading: CircleAvatar(
+                  leading: const CircleAvatar(
                     radius: 10,
-                    backgroundImage: AssetImage('assets/images/envalop.png')
-                        as ImageProvider,
+                    backgroundImage: AssetImage('assets/images/envalop.png'),
                   ),
-                  title: Text('הודעות מערכת'),
-                  onTap: () => const supportRouteData()
+                  title: const Text('הודעות מערכת'),
+                  onTap: () => const SupportRouteData()
                       .go(context), //context.go(Routes.SUPPORT),
                 ),
                 ListTile(
                   dense: true,
 
-                  leading: CircleAvatar(
+                  leading: const CircleAvatar(
                     radius: 10,
-                    backgroundImage:
-                        AssetImage('assets/images/call.png') as ImageProvider,
+                    backgroundImage: AssetImage('assets/images/call.png'),
                   ),
-                  title: Text('פניות שירות'),
-                  onTap: () => const supportRouteData()
+                  title: const Text('פניות שירות'),
+                  onTap: () => const SupportRouteData()
                       .go(context), //context.go(Routes.SUPPORT),
                 ),
                 ListTile(
                   dense: true,
 
-                  leading: CircleAvatar(
+                  leading: const CircleAvatar(
                     radius: 10,
-                    backgroundImage: AssetImage('assets/images/setting.png')
-                        as ImageProvider,
+                    backgroundImage: AssetImage('assets/images/setting.png'),
                   ),
-                  title: Text('הגדרות והתראות'),
-                  onTap: () => const supportRouteData()
+                  title: const Text('הגדרות והתראות'),
+                  onTap: () => const SupportRouteData()
                       .go(context), //context.go(Routes.SUPPORT),
                 ),
                 ListTile(
                   dense: true,
 
-                  leading: CircleAvatar(
+                  leading: const CircleAvatar(
                     radius: 10,
-                    backgroundImage: AssetImage('assets/images/person2.png')
-                        as ImageProvider,
+                    backgroundImage: AssetImage('assets/images/person2.png'),
                   ),
-                  title: Text('התנתקות'),
-                  onTap: () => const supportRouteData()
+                  title: const Text('התנתקות'),
+                  onTap: () => const SupportRouteData()
                       .go(context), //context.go(Routes.SUPPORT),
                 ),
-              ])),
+              ],
+            ),
+          ),
         ],
       ),
     );

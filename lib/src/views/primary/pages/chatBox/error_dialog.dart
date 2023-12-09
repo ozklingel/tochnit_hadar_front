@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 showAlertDialog(BuildContext context) {
   // set up the button
   Widget okButton = TextButton(
-    child: Text("OK"),
+    child: const Text("OK"),
     onPressed: () {
       Navigator.of(context, rootNavigator: true).pop();
     },
@@ -11,8 +11,8 @@ showAlertDialog(BuildContext context) {
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
-    title: Text("error"),
-    content: Text("error while sending."),
+    title: const Text("error"),
+    content: const Text("error while sending."),
     actions: [
       okButton,
     ],

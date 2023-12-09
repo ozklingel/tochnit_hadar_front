@@ -26,7 +26,7 @@ void showFancyCustomDialog(BuildContext context) {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.close,
                   color: Colors.black,
                 ),
@@ -40,19 +40,20 @@ void showFancyCustomDialog(BuildContext context) {
               onTap: () {
                 const HomeRouteData().go(context);
               },
-              child: Container(
-                  child: const Image(
-                image: AssetImage('assets/images/backhome.png'),
-              )),
+              child: const SizedBox(
+                child: Image(
+                  image: AssetImage('assets/images/backhome.png'),
+                ),
+              ),
             ),
           ),
-          Column(
-            children: const [
+          const Column(
+            children: [
               SizedBox(
                 width: double.infinity,
                 height: 30,
               ),
-              const Image(
+              Image(
                 image: AssetImage('assets/images/vi.png'),
               ),
               SizedBox(
@@ -80,7 +81,7 @@ void showFancyCustomDialog(BuildContext context) {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     ),

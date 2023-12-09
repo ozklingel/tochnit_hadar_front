@@ -9,9 +9,17 @@ class Noti {
   String allreadyread;
   final String numOfLinesDisplay;
 
-  Noti(this.id, this.apprenticeId, this.event, this.date, this.timeFromNow,
-      this.details, this.allreadyread, this.numOfLinesDisplay);
+  Noti(
+    this.id,
+    this.apprenticeId,
+    this.event,
+    this.date,
+    this.timeFromNow,
+    this.details,
+    this.allreadyread,
+    this.numOfLinesDisplay,
+  );
   setAllreadyread(String wasRead) {
-    this.allreadyread = wasRead;
+    allreadyread = wasRead;
   }
 }

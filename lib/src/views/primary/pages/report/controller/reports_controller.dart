@@ -15,6 +15,10 @@ part 'reports_controller.g.dart';
 class ReportsController extends _$ReportsController {
   @override
   FutureOr<List<ReportDto>> build() async {
+    // ignore: unused_local_variable
+    final request =
+        ref.watch(dioProvider).get('userProfile_form/myApprentices');
+
     await Future.delayed(const Duration(milliseconds: 200));
 
     final reports = List.generate(
