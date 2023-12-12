@@ -70,11 +70,11 @@ class OnboardingPhonePage extends HookWidget {
                       ),
                       TextSpan(
                         text: ' ',
-                        style: TextStyle(color: AppColors.red02),
+                        style: TextStyle(color: AppColors.red2),
                       ),
                       TextSpan(
                         text: '*',
-                        style: TextStyle(color: AppColors.red02),
+                        style: TextStyle(color: AppColors.red2),
                       ),
                     ],
                   ),

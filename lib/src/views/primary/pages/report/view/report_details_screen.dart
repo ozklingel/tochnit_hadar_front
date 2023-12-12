@@ -169,7 +169,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         TextSpan(text: ' '),
                         TextSpan(
                           text: '*',
-                          style: TextStyle(color: AppColors.red02),
+                          style: TextStyle(color: AppColors.red2),
                         ),
                       ],
                     ),
@@ -350,7 +350,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         TextSpan(text: ' '),
                         TextSpan(
                           text: '*',
-                          style: TextStyle(color: AppColors.red02),
+                          style: TextStyle(color: AppColors.red2),
                         ),
                       ],
                     ),
@@ -402,7 +402,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         TextSpan(text: ' '),
                         TextSpan(
                           text: '*',
-                          style: TextStyle(color: AppColors.red02),
+                          style: TextStyle(color: AppColors.red2),
                         ),
                       ],
                     ),

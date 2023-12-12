@@ -85,7 +85,7 @@ class BottomNavigationWidget extends ConsumerWidget {
               alignment: Alignment(0.9, -0.8),
               child: IgnorePointer(
                 child: CircleAvatar(
-                  backgroundColor: AppColors.red01,
+                  backgroundColor: AppColors.red1,
                   radius: 10,
                   child: Text(
                     '3',
@@ -98,7 +98,7 @@ class BottomNavigationWidget extends ConsumerWidget {
               alignment: Alignment(-0.36, -0.8),
               child: IgnorePointer(
                 child: CircleAvatar(
-                  backgroundColor: AppColors.red01,
+                  backgroundColor: AppColors.red1,
                   radius: 10,
                   child: Text(
                     '3',

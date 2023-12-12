@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -11,6 +12,9 @@ import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
+import 'package:hadar_program/src/models/report/report.dto.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
@@ -33,6 +37,8 @@ class ApprenticeDetailsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+
     final apprentice = ref.watch(
           apprenticesControllerProvider.select(
             (value) => value.value?.singleWhere(
@@ -51,6 +57,25 @@ class ApprenticeDetailsScreen extends HookConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('כרטיס חניך'),
+        actions: [
+          if (user.role == Role.ahraiTohnit)
+            PopupMenuButton(
+              offset: const Offset(0, 32),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const _DeleteApprenticeDialog();
+                    },
+                  ),
+                  child: const Text('מחיקה מהמערכת'),
+                ),
+              ],
+              icon: const Icon(FluentIcons.more_vertical_24_regular),
+            ),
+          const SizedBox(width: 6),
+        ],
       ),
       // https://api.flutter.dev/flutter/widgets/NestedScrollView-class.html
       body: NestedScrollView(
@@ -117,6 +142,65 @@ class ApprenticeDetailsScreen extends HookConsumerWidget {
                 ),
               )
               .toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class _DeleteApprenticeDialog extends StatelessWidget {
+  const _DeleteApprenticeDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(6)),
+      ),
+      child: SizedBox(
+        height: 420,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CloseButton(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text('מחיקת חניך', style: TextStyles.s24w400),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'פעולה זו תסיר את החניך מהמערכת.'
+                      '\n\n'
+                      'האם אתה בטוח שברצונך למחוק את החניך?',
+                      style: TextStyles.s16w400cGrey3,
+                    ),
+                    const SizedBox(height: 48),
+                    LargeFilledRoundedButton(
+                      label: 'לא, השאר',
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(height: 16),
+                    LargeFilledRoundedButton.cancel(
+                      label: 'מחק',
+                      onPressed: () => Toaster.unimplemented(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -340,6 +424,12 @@ class _TohnitHadarTabView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+    final reports = ref.watch(reportsControllerProvider).valueOrNull?.where(
+              (element) => element.apprentices.contains(apprentice.id),
+            ) ??
+        [];
+
     return Column(
       children: [
         _Card(
@@ -410,12 +500,28 @@ class _TohnitHadarTabView extends ConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'ר”מ שנה א',
-                data: apprentice.thRavMelamedYearA,
+                data: '',
+                contact: apprentice.thRavMelamedYearA,
+                onTapPhone: () async {
+                  final phoneCallAction =
+                      Uri.parse('tel:${apprentice.thRavMelamedYearA.phone}');
+                  if (await canLaunchUrl(phoneCallAction)) {
+                    await launchUrl(phoneCallAction);
+                  }
+                },
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'ר”מ שנה ב',
-                data: apprentice.thRavMelamedYearB,
+                data: '',
+                contact: apprentice.thRavMelamedYearB,
+                onTapPhone: () async {
+                  final phoneCallAction =
+                      Uri.parse('tel:${apprentice.thRavMelamedYearB.phone}');
+                  if (await canLaunchUrl(phoneCallAction)) {
+                    await launchUrl(phoneCallAction);
+                  }
+                },
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
@@ -425,6 +531,83 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ],
           ),
         ),
+        if (user.role == Role.ahraiTohnit) ...[
+          _Card(
+            title: 'מצב”ר',
+            trailing: Row(
+              children: [
+                CircleAvatar(
+                  radius: 4,
+                  backgroundColor: apprentice.matsber == 'אדוק'
+                      ? AppColors.green1
+                      : apprentice.matsber == 'מחובר'
+                          ? AppColors.green1
+                          : apprentice.matsber == 'מחובר חלקית'
+                              ? AppColors.yellow1
+                              : apprentice.matsber == 'בשלבי ניתוק'
+                                  ? AppColors.yellow1
+                                  : apprentice.matsber == 'מנותק'
+                                      ? AppColors.red1
+                                      : AppColors.grey1,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  apprentice.matsber,
+                  style: TextStyles.s12w400cGrey2,
+                ),
+              ],
+            ),
+            child: const SizedBox.shrink(),
+          ),
+          _Card(
+            title: 'דיווחים אחרונים',
+            trailing: TextButton(
+              onPressed: () =>
+                  ReportsRouteData(apprenticeId: apprentice.id).push(context),
+              child: const Text(
+                'הצג הכל',
+                style: TextStyles.s12w300cBlue2,
+              ),
+            ),
+            child: Column(
+              children: reports
+                  .sortedBy<num>((element) => element.dateTime)
+                  .reversed
+                  .take(3)
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        children: [
+                          if (e.reportEventType == ReportEventType.phoneCall)
+                            const Icon(FluentIcons.people_24_regular)
+                          else if (e.reportEventType ==
+                              ReportEventType.phoneCall)
+                            const Icon(FluentIcons.phone_24_regular)
+                          else if (e.reportEventType ==
+                              ReportEventType.fiveMessages)
+                            const Icon(FluentIcons.textbox_24_regular)
+                          else
+                            const Icon(FluentIcons.question_24_regular),
+                          const SizedBox(width: 6),
+                          Text(
+                            e.dateTime.asDateTime.he,
+                            style: TextStyles.s14w400cGrey5,
+                          ),
+                          const Text('.'),
+                          const SizedBox(width: 6),
+                          Text(
+                            e.dateTime.asDateTime.asTimeAgo,
+                            style: TextStyles.s14w400cGrey5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
         _Card(
           title: 'אירועים',
           trailing: IconButton(
@@ -617,7 +800,7 @@ class _EventBottomSheet extends HookConsumerWidget {
                                     TextSpan(text: ' '),
                                     TextSpan(
                                       text: '*',
-                                      style: TextStyle(color: AppColors.red02),
+                                      style: TextStyle(color: AppColors.red2),
                                     ),
                                   ],
                                 ),
@@ -785,7 +968,7 @@ class _AnnouncementItem extends StatelessWidget {
   }
 }
 
-class _PersonalInfoTabView extends StatelessWidget {
+class _PersonalInfoTabView extends ConsumerWidget {
   const _PersonalInfoTabView({
     required this.apprentice,
   });
@@ -793,7 +976,9 @@ class _PersonalInfoTabView extends StatelessWidget {
   final ApprenticeDto apprentice;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+
     return Column(
       children: [
         _Card(
@@ -844,6 +1029,15 @@ class _PersonalInfoTabView extends StatelessWidget {
         ),
         _Card(
           title: 'משפחה',
+          trailing: user.role == Role.ahraiTohnit
+              ? IconButton(
+                  icon: const Icon(
+                    FluentIcons.add_circle_24_regular,
+                    color: AppColors.blue02,
+                  ),
+                  onPressed: () => Toaster.unimplemented(),
+                )
+              : null,
           child: ListView.separated(
             controller: ScrollController(),
             shrinkWrap: true,
@@ -882,27 +1076,38 @@ class _PersonalInfoTabView extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    _RowIconButton(
-                      onPressed: () => Toaster.unimplemented(),
-                      icon: const Icon(FluentIcons.chat_24_regular),
-                    ),
-                    const SizedBox(width: 4),
-                    _RowIconButton(
-                      icon: Assets.icons.whatsapp.svg(
-                        height: 20,
+                    if (user.role == Role.ahraiTohnit) ...[
+                      _RowIconButton(
+                        onPressed: () => Toaster.unimplemented(),
+                        icon: const Icon(FluentIcons.edit_24_regular),
                       ),
-                      onPressed: () => Toaster.unimplemented(),
-                    ),
-                    const SizedBox(width: 4),
-                    _RowIconButton(
-                      onPressed: () => Toaster.unimplemented(),
-                      icon: const Icon(FluentIcons.call_24_regular),
-                    ),
-                    const SizedBox(width: 4),
-                    _RowIconButton(
-                      onPressed: () => Toaster.unimplemented(),
-                      icon: const Icon(FluentIcons.mail_24_regular),
-                    ),
+                      _RowIconButton(
+                        onPressed: () => Toaster.unimplemented(),
+                        icon: const Icon(FluentIcons.delete_24_regular),
+                      ),
+                    ] else ...[
+                      _RowIconButton(
+                        onPressed: () => Toaster.unimplemented(),
+                        icon: const Icon(FluentIcons.chat_24_regular),
+                      ),
+                      const SizedBox(width: 4),
+                      _RowIconButton(
+                        icon: Assets.icons.whatsapp.svg(
+                          height: 20,
+                        ),
+                        onPressed: () => Toaster.unimplemented(),
+                      ),
+                      const SizedBox(width: 4),
+                      _RowIconButton(
+                        onPressed: () => Toaster.unimplemented(),
+                        icon: const Icon(FluentIcons.call_24_regular),
+                      ),
+                      const SizedBox(width: 4),
+                      _RowIconButton(
+                        onPressed: () => Toaster.unimplemented(),
+                        icon: const Icon(FluentIcons.mail_24_regular),
+                      ),
+                    ],
                   ],
                 ),
               ],

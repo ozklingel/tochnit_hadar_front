@@ -66,8 +66,16 @@ class UsersController extends _$UsersController {
         thInstitution: faker.lorem.word(),
         thMentor: faker.person.name(),
         thPeriod: faker.lorem.word()[0],
-        thRavMelamedYearA: '${faker.person.name()} ${faker.phoneNumber.de()}',
-        thRavMelamedYearB: '${faker.person.name()} ${faker.phoneNumber.us()}',
+        thRavMelamedYearA: ContactDto(
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          phone: faker.phoneNumber.us(),
+        ),
+        thRavMelamedYearB: ContactDto(
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          phone: faker.phoneNumber.de(),
+        ),
         militaryCompound: List.generate(
           Consts.mockCompoundGuids.length,
           (index) => CompoundDto(

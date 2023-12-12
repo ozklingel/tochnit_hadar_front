@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:faker/faker.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -27,7 +28,11 @@ class ReportsController extends _$ReportsController {
         return ReportDto(
           id: faker.guid.guid(),
           description: faker.lorem.sentence(),
-          apprentices: List.generate(13, (index) => faker.guid.guid()),
+          apprentices: List.generate(
+            13,
+            (index) => Consts.mockApprenticeGuids[
+                Random().nextInt(Consts.mockApprenticeGuids.length)],
+          ),
           reportEventType: ReportEventType.values[Random().nextInt(6)],
           attachments: List.generate(
             11,
