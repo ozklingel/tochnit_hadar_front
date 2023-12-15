@@ -24,7 +24,7 @@ class HomeScreen extends ConsumerWidget {
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
     return Scaffold(
-      drawer: drawer(context),
+      drawer: const _Drawer(),
       appBar: AppBar(
         centerTitle: true,
         title: Assets.images.logo.image(
@@ -54,14 +54,19 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  drawer(context) {
-    Size size = MediaQuery.of(context).size;
-    ImageProvider profileimage = const NetworkImage(
+class _Drawer extends StatelessWidget {
+  const _Drawer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    const profileimage = NetworkImage(
       "https://th01-s3.s3.eu-north-1.amazonaws.com/638a1e29dc924e25ba6096f5c93583ca.jpg",
     );
-
-    // print(profileimage);
 
     return Drawer(
       child: ListView(
@@ -90,7 +95,7 @@ class HomeScreen extends ConsumerWidget {
             child: DrawerHeader(
               child: Column(
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 30,
                     backgroundImage: profileimage,
                   ),
@@ -105,7 +110,7 @@ class HomeScreen extends ConsumerWidget {
                       style: TextStyle(color: Colors.blue[900]),
                     ),
                     onPressed: () {
-                      const UserProfileRouteData().go(context);
+                      const UserProfileRouteData().push(context);
                     },
                   ),
                 ],

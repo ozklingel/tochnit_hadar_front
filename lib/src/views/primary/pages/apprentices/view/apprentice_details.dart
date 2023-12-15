@@ -160,7 +160,7 @@ class _DeleteApprenticeDialog extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(6)),
       ),
       child: SizedBox(
-        height: 420,
+        height: 432,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

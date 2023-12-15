@@ -2,21 +2,21 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../services/networking/http_service.dart';
 import '../chatBox/error_dialog.dart';
 import '../chatBox/success_dialog.dart';
 
-class ProfileEditPage extends StatefulWidget {
+class ProfileEditPage extends StatefulHookConsumerWidget {
   const ProfileEditPage({super.key});
 
   @override
-  State<ProfileEditPage> createState() => _ProfileEditPageState();
+  ConsumerState<ProfileEditPage> createState() => _ProfileEditPageState();
 }
 
-class _ProfileEditPageState extends State<ProfileEditPage>
+class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
     with SingleTickerProviderStateMixin {
   ImageProvider<Object>? profileimg = const NetworkImage(
     "https://th01-s3.s3.eu-north-1.amazonaws.com/c2fb87a53199453ca9f2ac14fb672cfc.jpg",
@@ -68,12 +68,12 @@ class _ProfileEditPageState extends State<ProfileEditPage>
       height: scrolength.toDouble() * 200,
       child: Scaffold(
         appBar: AppBar(
-          leading: GestureDetector(
-            child: const Icon(
+          leading: IconButton(
+            icon: const Icon(
               Icons.arrow_back,
               color: Colors.black,
             ),
-            onTap: () => const HomeRouteData().go(context),
+            onPressed: () => Navigator.of(context).pop(),
           ),
           title: const Text(
             'פרופיל אישי',

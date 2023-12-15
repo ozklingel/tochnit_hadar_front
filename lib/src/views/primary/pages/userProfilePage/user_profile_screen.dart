@@ -1,20 +1,27 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../services/networking/http_service.dart';
 import '../../../../services/routing/go_router_provider.dart';
 
-class UserProfileScreen extends StatefulWidget {
+class UserProfileScreen extends StatefulHookConsumerWidget {
   const UserProfileScreen({super.key});
 
   @override
-  State<UserProfileScreen> createState() => _UserProfileScreenState();
+  ConsumerState<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
-class _UserProfileScreenState extends State<UserProfileScreen>
+class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
     with SingleTickerProviderStateMixin {
   ImageProvider<Object>? profileimg = const NetworkImage(
     "https://th01-s3.s3.eu-north-1.amazonaws.com/c2fb87a53199453ca9f2ac14fb672cfc.jpg",
@@ -23,10 +30,9 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   final picker = ImagePicker();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
+  final scrollControllers = <SubordinateScrollController?>[null, null];
   bool isLoading = true;
-  late TabController tabController;
-  int scrolength = 2000;
-  late Map<String, dynamic> myUser;
+  Map<String, dynamic> myUser = {};
 
   Future<Map<String, dynamic>> _getUserDetail() async {
     // print("access");
@@ -39,716 +45,303 @@ class _UserProfileScreenState extends State<UserProfileScreen>
     return userMap2;
   }
 
-  Future<List<String>?> _getUserAprentice() async {
-    List<String>? result = myUser["apprentices"].split(',');
-    // print(result);
-    return result;
-  }
-
   @override
   void dispose() {
     emailController.dispose();
     phoneController.dispose();
+    for (final scrollController in scrollControllers) {
+      scrollController?.dispose();
+    }
     super.dispose();
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    tabController = TabController(length: 2, vsync: this, initialIndex: 1);
   }
 
   @override
   Widget build(BuildContext context) {
-    //display image selected from gallery
-    Size size = MediaQuery.of(context).size;
+    final user = ref.watch(userServiceProvider);
 
-    return SingleChildScrollView(
-      child: SizedBox(
-        width: double.infinity,
-        height: scrolength.toDouble() * 200,
-        child: Scaffold(
-          appBar: AppBar(
-            leading: GestureDetector(
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
-              onTap: () => const HomeRouteData().go(context),
-            ),
-            title: const Text(
-              'פרופיל אישי',
-              style: TextStyle(
-                fontWeight: FontWeight.w100,
-                color: Colors.black,
-              ),
-            ),
+    final userDetails = useFuture(
+      useMemoized(
+        () => _getUserDetail(),
+        [],
+      ),
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
           ),
-          body: FutureBuilder<Map<String, dynamic>>(
-            future: _getUserDetail(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return const Center(
-                  child: Text('An error has occurred!'),
-                );
-              } else if (snapshot.hasData) {
-                return Column(
-                  children: [
-                    Container(
-                      height: size.height / 3.4,
-                      width: size.width * 9 / 10,
-                      decoration: const BoxDecoration(
-                        color: Color.fromRGBO(244, 248, 251, 1),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            height: size.height / 6,
-                            width: size.width / 3,
-                            child: Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 75,
-                                  backgroundColor: Colors.grey.shade200,
-                                  child: CircleAvatar(
-                                    radius: 70,
-                                    backgroundImage: profileimg,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text(
+          'פרופיל אישי',
+          style: TextStyle(
+            fontWeight: FontWeight.w100,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: DefaultTabController(
+        length: 2,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverOverlapAbsorber(
+                // This widget takes the overlapping behavior of the SliverAppBar,
+                // and redirects it to the SliverOverlapInjector below. If it is
+                // missing, then it is possible for the nested "inner" scroll view
+                // below to end up under the SliverAppBar even when the inner
+                // scroll view thinks it has not been scrolled.
+                // This is not necessary if the "headerSliverBuilder" only builds
+                // widgets that do not overlap the next sliver.
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
+                ),
+                sliver: SliverAppBar(
+                  pinned: true,
+                  expandedHeight: 260,
+                  automaticallyImplyLeading: false,
+                  // The "forceElevated" property causes the SliverAppBar to show
+                  // a shadow. The "innerBoxIsScrolled" parameter is true when the
+                  // inner scroll view is scrolled beyond its "zero" point, i.e.
+                  // when it appears to be scrolled below the SliverAppBar.
+                  // Without this, there are cases where the shadow would appear
+                  // or not appear inappropriately, because the SliverAppBar is
+                  // not actually aware of the precise position of the inner
+                  // scroll views.
+                  forceElevated: innerBoxIsScrolled,
+                  bottom: PreferredSize(
+                    preferredSize: const Size.fromHeight(260),
+                    child: Column(
+                      children: [
+                        Builder(
+                          builder: (context) {
+                            if (userDetails.hasData) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromRGBO(244, 248, 251, 1),
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
-                                ),
-                                Positioned(
-                                  bottom: 1,
-                                  left: 7,
-                                  child: InkWell(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 3,
-                                          color: Colors.white,
-                                        ),
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(
-                                            50,
-                                          ),
-                                        ),
-                                        color: Colors.white,
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(2.0),
-                                        child: CircleAvatar(
-                                          radius: 10,
-                                          backgroundImage: AssetImage(
-                                            'assets/images/pencil2.png',
-                                          ), // No matter how big it is, it won't overflow
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      _showPicker(context: context);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            myUser["firstName"].replaceAll(' ', '') +
-                                " " +
-                                myUser["lastName"].replaceAll(' ', ''),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                          ),
-                          Text(
-                            myUser["phone"].replaceAll(' ', ''),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Material(
-                      color: Colors.white,
-                      child: TabBar(
-                        controller: tabController,
-                        tabs: const [
-                          Tab(
-                            text: 'תוכנית הדר',
-                          ),
-                          Tab(
-                            text: 'פרטים אישיים',
-                          ),
-                        ],
-                        labelColor: Colors.black,
-                      ),
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: tabController,
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                margin: const EdgeInsets.all(15.0),
-                                padding: const EdgeInsets.all(24.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.1),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: const Offset(
-                                        0,
-                                        3,
-                                      ), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  children: [
-                                    const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        //empty for spacing
-                                        Text(
-                                          'כללי',
-                                          style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 20,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        const Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 200,
+                                        child: Stack(
+                                          alignment: Alignment.center,
                                           children: [
-                                            Text(
-                                              'סיווג משתמש',
-                                              textAlign: TextAlign.right,
-                                            ),
-                                            SizedBox(height: 10),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  'שיוך מוסדי',
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  'אשכול',
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  myUser["role"],
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  myUser["institution"],
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  myUser["cluster"],
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: 400,
-                                margin: const EdgeInsets.all(15.0),
-                                padding: const EdgeInsets.all(3.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.1),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: const Offset(
-                                        0,
-                                        3,
-                                      ), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: FutureBuilder(
-                                  future: _getUserAprentice(),
-                                  builder: (
-                                    BuildContext context,
-                                    AsyncSnapshot snapshot,
-                                  ) {
-                                    scrolength = snapshot.data.length;
-                                    // print(scrolength);
-                                    if (snapshot.hasError) {
-                                      return const Center(
-                                        child: Text('An error has occurred!'),
-                                      );
-                                    } else if (snapshot.hasData) {
-                                      return Column(
-                                        children: <Widget>[
-                                          const Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Padding(
-                                              padding: EdgeInsets.only(
-                                                right: 24.0,
-                                              ),
-                                              child: Text(
-                                                'רשימת חניכים',
-                                                textAlign: TextAlign.right,
-                                              ),
-                                            ),
-                                          ),
-                                          ListView.builder(
-                                            scrollDirection: Axis.vertical,
-                                            shrinkWrap: true,
-                                            physics:
-                                                const ClampingScrollPhysics(),
-                                            itemCount: scrolength,
-                                            itemBuilder: (
-                                              BuildContext context,
-                                              int index,
-                                            ) {
-                                              return ListTile(
-                                                leading: const CircleAvatar(
-                                                  backgroundColor: Colors.blue,
-                                                  backgroundImage: AssetImage(
-                                                    'assets/images/person.png',
-                                                  ),
-                                                ),
-                                                title: Text(
-                                                  snapshot.data[index],
-                                                  textAlign: TextAlign.right,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                onTap: () {},
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    } else {
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Container(
-                                width: size.width * 9 / 10,
-                                margin: const EdgeInsets.all(15.0),
-                                padding: const EdgeInsets.all(24.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.1),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: const Offset(
-                                        0,
-                                        3,
-                                      ), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  children: [
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Row(
-                                          children: [
-                                            //empty for spacing
-                                            Text(
-                                              ' פרטים אישיים',
-                                              style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontStyle: FontStyle.normal,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 19,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const Row(
-                                          children: [
-                                            Text(
-                                              ' ',
-                                              style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontStyle: FontStyle.normal,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 19,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            GestureDetector(
+                                            CircleAvatar(
+                                              radius: 75,
+                                              backgroundColor:
+                                                  Colors.grey.shade200,
                                               child: CircleAvatar(
-                                                radius: 10,
-                                                backgroundColor:
-                                                    Colors.grey.shade200,
-                                                child: const CircleAvatar(
-                                                  radius: 70,
-                                                  backgroundImage: AssetImage(
-                                                    'assets/images/pencile.png',
-                                                  ),
-                                                ),
-                                              ),
-                                              onTap: () =>
-                                                  const EditUserProfileRouteData()
-                                                      .go(context),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        const Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  'שם',
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
+                                                radius: 70,
+                                                backgroundImage: profileimg,
                                               ),
                                             ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
                                             Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  'שם משפחה',
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
+                                              alignment:
+                                                  const Alignment(-0.34, 0.56),
+                                              child: DecoratedBox(
+                                                decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(50),
                                                   ),
+                                                  color: AppColors.blue08,
                                                 ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  ' מייל',
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  'תאריך יום הולדת',
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  'עיר',
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  'אזור',
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(24),
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        _showPicker(
+                                                          context: context,
+                                                        );
+                                                      },
+                                                      child: const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(6),
+                                                        child: Icon(
+                                                          FluentIcons
+                                                              .edit_24_regular,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(
-                                          width: 10,
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Center(
+                                        child: Text(
+                                          (myUser["firstName"] ?? 'NOFIRSTNAME')
+                                                  .replaceAll(' ', '') +
+                                              " " +
+                                              (myUser["lastName"] ??
+                                                      'NOLASTNAME')
+                                                  .replaceAll(' ', ''),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                          ),
                                         ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  myUser["firstName"],
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  myUser["lastName"],
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  myUser["email"],
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  myUser["dateOfBirthInMsSinceEpoch"]
-                                                      as String,
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  myUser["city"],
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 1.0,
-                                                ),
-                                                child: Text(
-                                                  myUser["region"],
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          (myUser["phone"] ?? 'NOPHONE')
+                                              .replaceAll(' ', ''),
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
                                 ),
-                              ),
+                              );
+                            }
+
+                            if (userDetails.hasError) {
+                              return const Center(
+                                child: Text('An error has occurred!'),
+                              );
+                            }
+
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        ),
+                        if (user.role == Role.melave)
+                          const TabBar(
+                            tabs: [
+                              Tab(text: 'תוכנית הדר'),
+                              Tab(text: 'פרטים אישיים'),
                             ],
                           ),
-                        ],
-                      ),
+                      ],
                     ),
+                  ),
+                ),
+              ),
+            ];
+          },
+          body: user.role == Role.melave
+              ? TabBarView(
+                  children: [
+                    Builder(
+                      builder: (context) {
+                        final parentController =
+                            PrimaryScrollController.of(context);
+                        if (scrollControllers[0]?.parent != parentController) {
+                          scrollControllers[0]?.dispose();
+                          scrollControllers[0] =
+                              SubordinateScrollController(parentController);
+                        }
 
-                    ///scond container
+                        return CustomScrollView(
+                          key: const PageStorageKey<String>('tabs-first'),
+                          controller: scrollControllers[0],
+                          slivers: [
+                            SliverOverlapInjector(
+                              // This is the flip side of the SliverOverlapAbsorber
+                              // above.
+                              handle: NestedScrollView
+                                  .sliverOverlapAbsorberHandleFor(
+                                context,
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: _GeneralTab(myUser: myUser),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final parentController =
+                            PrimaryScrollController.of(context);
+                        if (scrollControllers[1]?.parent != parentController) {
+                          scrollControllers[1]?.dispose();
+                          scrollControllers[1] =
+                              SubordinateScrollController(parentController);
+                        }
+
+                        return CustomScrollView(
+                          key: const PageStorageKey<String>('tab-second'),
+                          controller: scrollControllers[1],
+                          slivers: [
+                            SliverOverlapInjector(
+                              // This is the flip side of the SliverOverlapAbsorber
+                              // above.
+                              handle: NestedScrollView
+                                  .sliverOverlapAbsorberHandleFor(
+                                context,
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: _PersonalDetailsTab(myUser: myUser),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
+                )
+              : Builder(
+                  builder: (context) {
+                    final parentController =
+                        PrimaryScrollController.of(context);
+                    if (scrollControllers[1]?.parent != parentController) {
+                      scrollControllers[1]?.dispose();
+                      scrollControllers[1] =
+                          SubordinateScrollController(parentController);
+                    }
+
+                    return CustomScrollView(
+                      key: const PageStorageKey<String>('tab-ahraitohnit'),
+                      controller: scrollControllers[1],
+                      slivers: [
+                        SliverOverlapInjector(
+                          // This is the flip side of the SliverOverlapAbsorber
+                          // above.
+                          handle:
+                              NestedScrollView.sliverOverlapAbsorberHandleFor(
+                            context,
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: _GeneralTab(myUser: myUser),
+                        ),
+                        SliverToBoxAdapter(
+                          child: _PersonalDetailsTab(myUser: myUser),
+                        ),
+                      ],
+                    );
+                  },
+                ),
         ),
       ),
     );
@@ -808,5 +401,570 @@ class _UserProfileScreenState extends State<UserProfileScreen>
         }
       },
     );
+  }
+}
+
+class _PersonalDetailsTab extends StatelessWidget {
+  const _PersonalDetailsTab({
+    super.key,
+    required this.myUser,
+  });
+
+  final Map<String, dynamic> myUser;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(24.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(
+                  0,
+                  3,
+                ),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Row(
+                    children: [
+                      //empty for spacing
+                      Text(
+                        ' פרטים אישיים',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 19,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Row(
+                    children: [
+                      Text(
+                        ' ',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 19,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      FluentIcons.edit_24_regular,
+                      color: AppColors.blue02,
+                    ),
+                    onPressed: () =>
+                        const EditUserProfileRouteData().push(context),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            'שם',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            'שם משפחה',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            ' מייל',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            'טלפון',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            'תאריך יום הולדת',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            'עיר',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            'אזור',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            myUser["firstName"] ?? 'NOFIRSTNAME',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            myUser["lastName"] ?? 'NOLASTNAME',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            myUser["email"] ?? 'NOEMAIL',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            myUser["phone"] ?? 'NOPHONE',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            (myUser["dateOfBirthInMsSinceEpoch"] ??
+                                'NODATEOFBIRTH'),
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            myUser["city"] ?? 'NOCITY',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 1.0,
+                          ),
+                          child: Text(
+                            myUser["region"] ?? 'NOREGION',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _GeneralTab extends ConsumerWidget {
+  const _GeneralTab({
+    super.key,
+    required this.myUser,
+  });
+
+  final Map<String, dynamic> myUser;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(15),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'כללי',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'סיווג משתמש',
+                            textAlign: TextAlign.right,
+                          ),
+                          if (user.role == Role.melave) ...[
+                            const SizedBox(height: 10),
+                            const Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  left: 1.0,
+                                ),
+                                child: Text(
+                                  'שיוך מוסדי',
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  left: 1.0,
+                                ),
+                                child: Text(
+                                  'אשכול',
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 1.0,
+                              ),
+                              child: Text(
+                                myUser["role"] ?? 'EMPTY ROLE',
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ),
+                          if (user.role == Role.melave) ...[
+                            const SizedBox(height: 10),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 1.0,
+                                ),
+                                child: Text(
+                                  (myUser["institution"] ?? 'NOINSTITUTION'),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 1.0,
+                                ),
+                                child: Text(
+                                  myUser["cluster"] ?? 'NOCLUSTER',
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        if (user.role == Role.melave)
+          Builder(
+            builder: (context) {
+              // print(scrolength);
+              return Column(
+                children: <Widget>[
+                  const Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        right: 24.0,
+                      ),
+                      child: Text(
+                        'רשימת חניכים',
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ),
+                  ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount:
+                        (((myUser["apprentices"] as String?) ?? '').split(','))
+                            .length,
+                    itemBuilder: (
+                      BuildContext context,
+                      int index,
+                    ) {
+                      return ListTile(
+                        leading: const CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          backgroundImage: AssetImage(
+                            'assets/images/person.png',
+                          ),
+                        ),
+                        title: Text(
+                          (myUser["apprentices"] ?? '').split(',')[index],
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onTap: () => Toaster.unimplemented(),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              );
+            },
+          ),
+      ],
+    );
+  }
+}
+
+// https://github.com/flutter/flutter/issues/118713
+// https://dartpad.dev/?id=8218ccd847e33d5dd29417b19866a63f
+/// A scroll controller subordinate to a parent controller, which
+/// [createScrollPosition]s via the parent and attaches/detaches its positions
+/// from the parent. This is useful for creating nested scroll controllers
+/// for widgets with scrollbars that can actuate a parent scroll controller.
+class SubordinateScrollController extends ScrollController {
+  SubordinateScrollController(
+    this.parent, {
+    String subordinateDebugLabel = 'subordinate',
+  }) : super(
+          debugLabel: parent.debugLabel == null
+              ? null
+              : '${parent.debugLabel}/$subordinateDebugLabel',
+          initialScrollOffset: parent.initialScrollOffset,
+          keepScrollOffset: parent.keepScrollOffset,
+        );
+  final ScrollController parent;
+  // Although some use cases might seem to be simplified if parent were made
+  // settable, we can't really do this because scroll positions are owned by
+  // Scrollables rather than the scroll controller, so the scroll view is
+  // responsible for transferring positions from one controller to another. If
+  // we were to try to do the transfer here, we would end up trying to dispose
+  // of positions that Scrollables may still be holding on to.
+
+  @override
+  ScrollPosition createScrollPosition(
+    ScrollPhysics physics,
+    ScrollContext context,
+    ScrollPosition? oldPosition,
+  ) =>
+      parent.createScrollPosition(physics, context, oldPosition);
+
+  @override
+  void attach(ScrollPosition position) {
+    super.attach(position);
+    parent.attach(position);
+  }
+
+  @override
+  void detach(ScrollPosition position) {
+    parent.detach(position);
+    super.detach(position);
+  }
+
+  @override
+  void dispose() {
+    for (final position in positions) {
+      parent.detach(position);
+    }
+
+    super.dispose();
   }
 }
