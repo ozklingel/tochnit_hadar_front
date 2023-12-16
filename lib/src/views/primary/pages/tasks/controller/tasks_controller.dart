@@ -1,4 +1,5 @@
 import 'package:faker/faker.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
@@ -18,12 +19,16 @@ class TasksController extends _$TasksController {
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
     return List.generate(
-      23,
+      Consts.mockTasksGuids.length,
       (index) {
         apprentices.shuffle();
 
         return TaskDto(
-          id: faker.guid.guid(),
+          id: Consts.mockTasksGuids[index],
+          title: faker.company.name(),
+          details: faker.lorem.sentence(),
+          frequency: faker.lorem.sentence(),
+          isComplete: faker.randomGenerator.boolean(),
           reportEventType: TaskType
               .values[faker.randomGenerator.integer(TaskType.values.length)],
           apprentice: apprentices.firstOrNull ?? const ApprenticeDto(),

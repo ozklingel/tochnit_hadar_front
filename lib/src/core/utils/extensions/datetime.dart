@@ -8,7 +8,8 @@ extension ReportFromMillisecondsSinceEpochX on int {
 }
 
 extension ReportDateTimeX on DateTime? {
-  String get asDayMonthYearShort => DateFormat('dd.MM.yy').format(this!);
+  String get asDayMonthYearShortDot => DateFormat('dd.MM.yy').format(this!);
+  String get asDayMonthYearShortSlash => DateFormat('dd/MM/yy').format(this!);
   String get asDayMonth => DateFormat('dd.MM').format(this!);
   String get asTimeAgo {
     return format(

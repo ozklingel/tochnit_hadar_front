@@ -3,17 +3,174 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class TasksScreen extends HookConsumerWidget {
+class TasksScreen extends ConsumerWidget {
   const TasksScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+
+    if (user.role == Role.melave) {
+      return const _MelaveTasksBody();
+    }
+
+    if (user.role == Role.ahraiTohnit) {
+      return const _AhraiTohnitTasksBody();
+    }
+
+    return const Center(
+      child: Text('BAD ROLE'),
+    );
+  }
+}
+
+class _AhraiTohnitTasksBody extends HookConsumerWidget {
+  const _AhraiTohnitTasksBody({super.key});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
+    final tabController = useTabController(initialLength: 2);
+    useListenable(tabController);
+    final incompleteTasks = tasks.where((element) => !element.isComplete);
+    final completeTasks = tasks.where((element) => element.isComplete);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('משימות לביצוע'),
+        actions: [
+          IconButton(
+            onPressed: () => Toaster.unimplemented(),
+            icon: const Icon(FluentIcons.search_24_regular),
+          ),
+          const SizedBox(width: 6),
+        ],
+        bottom: TabBar(
+          controller: tabController,
+          tabs: const [
+            Tab(text: 'לביצוע'),
+            Tab(text: 'הושלמו'),
+          ],
+        ),
+      ),
+      floatingActionButton: tabController.index == 0
+          ? FloatingActionButton(
+              onPressed: () => const NewTaskRouteData().push(context),
+              shape: const CircleBorder(),
+              backgroundColor: AppColors.blue02,
+              child: const Icon(
+                FluentIcons.add_24_regular,
+                color: Colors.white,
+              ),
+            )
+          : null,
+      body: TabBarView(
+        controller: tabController,
+        children: [
+          ListView(
+            children: incompleteTasks
+                .map(
+                  (e) => CheckboxListTile(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: false,
+                    onChanged: (value) =>
+                        TaskDetailsRouteData(id: e.id).push(context),
+                    title: Text(
+                      e.title,
+                      style: TextStyles.s18w500cGray1,
+                    ),
+                    subtitle: Text(
+                      e.details,
+                      style: TextStyles.s16w400cGrey2,
+                    ),
+                    secondary: const DefaultTextStyle(
+                      style: TextStyles.s12w400cGrey5fRoboto,
+                      child: Column(
+                        children: [
+                          Text('20/09/23'),
+                          Text('18:30'),
+                          Icon(
+                            FluentIcons.arrow_rotate_clockwise_24_regular,
+                            size: 16,
+                            color: AppColors.gray5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          if (completeTasks.isEmpty)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Assets.vectors.noCompleteTasks.svg(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                ),
+                const Text('אין משימות שהושלמו'),
+              ],
+            )
+          else
+            ListView(
+              children: completeTasks
+                  .map(
+                    (e) => Opacity(
+                      opacity: .6,
+                      child: CheckboxListTile(
+                        controlAffinity: ListTileControlAffinity.leading,
+                        value: true,
+                        onChanged: (value) => TaskDetailsRouteData(
+                          id: Consts.mockTasksGuids.first,
+                        ).push(context),
+                        title: const Text(
+                          'סבב מוסד',
+                          style: TextStyles.s18w500cGray1,
+                        ),
+                        subtitle: const Text(
+                          'בני דוד מכינת עלי',
+                          style: TextStyles.s16w400cGrey2,
+                        ),
+                        secondary: const DefaultTextStyle(
+                          style: TextStyles.s12w400cGrey5fRoboto,
+                          child: Column(
+                            children: [
+                              Text('20/09/23'),
+                              Text('18:30'),
+                              Icon(
+                                FluentIcons.arrow_rotate_clockwise_24_regular,
+                                size: 16,
+                                color: AppColors.gray5,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MelaveTasksBody extends HookConsumerWidget {
+  const _MelaveTasksBody({super.key});
 
   @override
   Widget build(BuildContext context, ref) {

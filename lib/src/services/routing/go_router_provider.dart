@@ -13,6 +13,8 @@ import 'package:hadar_program/src/views/primary/pages/messages/views/messages_sc
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/new_message_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/report/view/report_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/report/view/reports_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/views/new_or_edit_task_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/views/task_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/views/tasks_screen.dart';
 import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
@@ -57,7 +59,20 @@ GoRouter goRouter(GoRouterRef ref) {
   branches: [
     TypedStatefulShellBranch<TasksBranchData>(
       routes: [
-        TypedGoRoute<TasksRouteData>(path: '/tasks'),
+        TypedGoRoute<TasksRouteData>(
+          path: '/tasks',
+          routes: [
+            TypedGoRoute<NewTaskRouteData>(
+              path: 'new',
+            ),
+            TypedGoRoute<EditTaskRouteData>(
+              path: 'edit/:id',
+            ),
+            TypedGoRoute<TaskDetailsRouteData>(
+              path: 'details/:id',
+            ),
+          ],
+        ),
       ],
     ),
     TypedStatefulShellBranch<ReportsBranchData>(
@@ -185,6 +200,41 @@ class TasksRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const TasksScreen();
+  }
+}
+
+class NewTaskRouteData extends GoRouteData {
+  const NewTaskRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NewOrEditTaskScreen(id: '');
+  }
+}
+
+class EditTaskRouteData extends GoRouteData {
+  const EditTaskRouteData({
+    this.id = '',
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return NewOrEditTaskScreen(id: id);
+  }
+}
+
+class TaskDetailsRouteData extends GoRouteData {
+  const TaskDetailsRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TaskDetailsScreen(id: id);
   }
 }
 

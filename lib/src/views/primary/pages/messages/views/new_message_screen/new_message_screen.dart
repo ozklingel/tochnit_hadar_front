@@ -6,14 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/new_message_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/widgets/find_groups_page.dart';
-import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -60,7 +59,7 @@ class NewMessageScreen extends HookWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              InputFieldLabel(
+              InputFieldContainer(
                 label: 'הוספת נמענים',
                 isRequired: true,
                 child: SingleChildScrollView(
@@ -121,7 +120,7 @@ class NewMessageScreen extends HookWidget {
                 ),
               ],
               const SizedBox(height: 24),
-              InputFieldLabel(
+              InputFieldContainer(
                 label: 'סוג ההודעה',
                 isRequired: true,
                 child: DropdownButtonHideUnderline(
@@ -202,7 +201,7 @@ class NewMessageScreen extends HookWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const InputFieldLabel(
+              const InputFieldContainer(
                 label: 'כותרת',
                 isRequired: true,
                 child: TextField(
@@ -213,7 +212,7 @@ class NewMessageScreen extends HookWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              InputFieldLabel(
+              InputFieldContainer(
                 label: 'תוכן ההודעה',
                 child: TextFormField(
                   minLines: 8,
@@ -241,12 +240,7 @@ class NewMessageScreen extends HookWidget {
                   Expanded(
                     child: LargeFilledRoundedButton(
                       label: 'שליחה',
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const _DateTimeDialog();
-                        },
-                      ),
+                      onPressed: () => showPickDateAndTimeDialog(context),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -257,113 +251,6 @@ class NewMessageScreen extends HookWidget {
                     ),
                   ),
                 ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DateTimeDialog extends HookWidget {
-  const _DateTimeDialog({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final selectedDateTime = useState<DateTime?>(null);
-    final selectedTimeOfDay = useState<TimeOfDay?>(null);
-
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: SizedBox(
-        height: 280,
-        width: 160,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'בחירת תאריך ושעה',
-                style: TextStyles.s20w400,
-              ),
-              const SizedBox(height: 24),
-              OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    color: AppColors.shades300,
-                  ),
-                ),
-                onPressed: () async {
-                  final result = await showDatePicker(
-                    context: context,
-                    initialDate: selectedDateTime.value ?? DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(
-                      const Duration(days: 365 * 10),
-                    ),
-                  );
-
-                  if (result != null) {
-                    selectedDateTime.value = result;
-                  }
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      selectedDateTime.value?.asDayMonthYearShort ??
-                          'בחירת תאריך',
-                      style: TextStyles.s16w400cGrey5,
-                    ),
-                    const Spacer(),
-                    const Icon(
-                      FluentIcons.calendar_24_regular,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    color: AppColors.shades300,
-                  ),
-                ),
-                onPressed: () async {
-                  final result = await showTimePicker(
-                    context: context,
-                    initialTime: selectedTimeOfDay.value ?? TimeOfDay.now(),
-                  );
-
-                  if (result != null) {
-                    selectedTimeOfDay.value = result;
-                  }
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      selectedTimeOfDay.value?.format(context) ?? 'בחירת שעה',
-                      style: TextStyles.s16w400cGrey5,
-                    ),
-                    const Spacer(),
-                    const Icon(
-                      FluentIcons.chevron_down_24_regular,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              AcceptCancelButtons(
-                onPressedCancel: () => Navigator.of(context).pop(),
               ),
             ],
           ),

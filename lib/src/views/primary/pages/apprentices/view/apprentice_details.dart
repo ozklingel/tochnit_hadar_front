@@ -280,7 +280,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      InputFieldLabel(
+                      InputFieldContainer(
                         label: 'שם הבסיס',
                         isRequired: true,
                         child: TextField(
@@ -288,7 +288,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      InputFieldLabel(
+                      InputFieldContainer(
                         label: 'שיוך יחידתי',
                         isRequired: true,
                         child: TextField(
@@ -296,7 +296,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      InputFieldLabel(
+                      InputFieldContainer(
                         label: 'תפקיד נוכחי',
                         isRequired: true,
                         child: TextField(
@@ -304,7 +304,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      InputFieldLabel(
+                      InputFieldContainer(
                         label: 'תפקיד קודם',
                         isRequired: true,
                         child: TextField(
@@ -398,13 +398,13 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       DetailsRowItem(
                         label: 'תאריך גיוס',
                         data: apprentice.militaryDateOfEnlistment.asDateTime
-                            .asDayMonthYearShort,
+                            .asDayMonthYearShortDot,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: 'תאריך שחרור',
                         data: apprentice.militaryDateOfDischarge.asDateTime
-                            .asDayMonthYearShort,
+                            .asDayMonthYearShortDot,
                       ),
                     ],
                   ),
@@ -646,7 +646,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                 ),
                               ),
                               Text(
-                                e.dateTime.asDateTime.asDayMonthYearShort,
+                                e.dateTime.asDateTime.asDayMonthYearShortDot,
                                 style: TextStyles.s14w400.copyWith(
                                   color: AppColors.gray2,
                                 ),
@@ -779,7 +779,7 @@ class _EventBottomSheet extends HookConsumerWidget {
                                 ),
                               ),
                               const SizedBox(height: 26),
-                              InputFieldLabel(
+                              InputFieldContainer(
                                 label: 'שם האירוע',
                                 child: TextField(
                                   controller: titleController,

@@ -95,7 +95,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'תאריך',
-                data: report.dateTime.asDateTime.asDayMonthYearShort,
+                data: report.dateTime.asDateTime.asDayMonthYearShortDot,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(

@@ -84,7 +84,7 @@ class GiftScreen extends HookConsumerWidget {
                                     const TextSpan(text: ' '),
                                     TextSpan(
                                       text: apprentice.militaryUpdatedDateTime
-                                          .asDateTime.asDayMonthYearShort,
+                                          .asDateTime.asDayMonthYearShortDot,
                                     ),
                                   ],
                                 ),

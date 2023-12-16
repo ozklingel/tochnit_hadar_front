@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 
-class InputFieldLabel extends StatelessWidget {
-  const InputFieldLabel({
+class InputFieldContainer extends StatelessWidget {
+  const InputFieldContainer({
     super.key,
     this.label = '',
     this.isRequired = false,

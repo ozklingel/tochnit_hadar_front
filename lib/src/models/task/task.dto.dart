@@ -16,6 +16,10 @@ enum TaskType {
 class TaskDto with _$TaskDto {
   const factory TaskDto({
     @Default('') String id,
+    @Default('') String title,
+    @Default('') String details,
+    @Default('') String frequency,
+    @Default(false) bool isComplete,
     @Default(TaskType.none) TaskType reportEventType,
     @Default(ApprenticeDto()) ApprenticeDto apprentice,
     // InMsSinceEpoch

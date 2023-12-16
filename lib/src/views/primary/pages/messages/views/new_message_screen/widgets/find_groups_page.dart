@@ -288,7 +288,7 @@ class FindGroupsPage extends HookWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'תפקיד',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: SizedBox(
@@ -303,7 +303,7 @@ class FindGroupsPage extends HookWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'שנה בתוכנית',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: SizedBox(
@@ -318,7 +318,7 @@ class FindGroupsPage extends HookWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'שם מוסד',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: DropdownButtonHideUnderline(
@@ -385,7 +385,7 @@ class FindGroupsPage extends HookWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'מחזור בישיבה / מכינה',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: DropdownButtonHideUnderline(
@@ -452,7 +452,7 @@ class FindGroupsPage extends HookWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'אשכול',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: DropdownButtonHideUnderline(
@@ -519,7 +519,7 @@ class FindGroupsPage extends HookWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'סטטוס',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: SizedBox(
@@ -534,7 +534,7 @@ class FindGroupsPage extends HookWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'בסיס',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: DropdownButtonHideUnderline(
@@ -601,7 +601,7 @@ class FindGroupsPage extends HookWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'חטיבה',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: DropdownButtonHideUnderline(
@@ -668,7 +668,7 @@ class FindGroupsPage extends HookWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'אזור מגורים',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: DropdownButtonHideUnderline(
@@ -735,7 +735,7 @@ class FindGroupsPage extends HookWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InputFieldLabel(
+                InputFieldContainer(
                   label: 'יישוב /עיר מגורים',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: DropdownButtonHideUnderline(
