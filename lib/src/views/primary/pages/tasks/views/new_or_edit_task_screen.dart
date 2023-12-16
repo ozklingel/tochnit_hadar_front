@@ -28,6 +28,13 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
             ) ??
         const TaskDto();
 
+    final taskTextController = useTextEditingController(text: task.title);
+    final detailsTextController = useTextEditingController(text: task.details);
+    final frequencyController = useState(task.frequency);
+    final dateTimeController = useState(task.dateTime.asDateTime);
+    useListenable(taskTextController);
+    useListenable(detailsTextController);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -43,23 +50,25 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const InputFieldContainer(
+              InputFieldContainer(
                 isRequired: true,
                 label: 'המשימה',
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: taskTextController,
+                  decoration: const InputDecoration(
                     hintText: 'המשימה',
                     hintStyle: TextStyles.s16w400cGrey5,
                   ),
                 ),
               ),
               const SizedBox(height: 24),
-              const InputFieldContainer(
+              InputFieldContainer(
                 label: 'פרטים',
                 child: TextField(
+                  controller: detailsTextController,
                   minLines: 8,
                   maxLines: 8,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'פרטים',
                     hintStyle: TextStyles.s16w400cGrey5,
                   ),
@@ -70,8 +79,10 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton.icon(
                   onPressed: () => showPickDateAndTimeDialog(context),
-                  label: const Text(
-                    'הוספת תזמון',
+                  label: Text(
+                    task.dateTime == 0
+                        ? 'הוספת תזמון'
+                        : task.dateTime.asDateTime.asTimeAgo,
                     style: TextStyles.s18w400cBlue02,
                   ),
                   icon: const Icon(
@@ -90,8 +101,8 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                       return const _PickFrequencyDialog();
                     },
                   ),
-                  label: const Text(
-                    'חד פעמי',
+                  label: Text(
+                    task.frequency.isEmpty ? 'חד פעמי' : task.frequency,
                     style: TextStyles.s18w400cBlue02,
                   ),
                   icon: const Icon(
@@ -101,9 +112,17 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                 ),
               ),
               const Spacer(),
-              const SizedBox(
+              SizedBox(
                 height: 46,
-                child: LargeFilledRoundedButton(label: 'שמירה'),
+                child: LargeFilledRoundedButton(
+                  label: 'שמירה',
+                  onPressed: taskTextController.text.isEmpty ||
+                          detailsTextController.text.isEmpty ||
+                          frequencyController.value.isEmpty ||
+                          dateTimeController.value.isBefore(DateTime.now())
+                      ? null
+                      : () => Toaster.unimplemented(),
+                ),
               ),
             ],
           ),

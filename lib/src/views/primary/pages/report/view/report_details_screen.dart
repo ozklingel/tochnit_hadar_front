@@ -70,11 +70,13 @@ class ReportDetailsScreen extends HookConsumerWidget {
               offset: const Offset(0, 32),
               itemBuilder: (context) {
                 return [
-                  const PopupMenuItem(
-                    child: Text('שכפול'),
+                  PopupMenuItem(
+                    child: const Text('שכפול'),
+                    onTap: () => Toaster.unimplemented(),
                   ),
-                  const PopupMenuItem(
-                    child: Text('מחיקה'),
+                  PopupMenuItem(
+                    child: const Text('מחיקה'),
+                    onTap: () => Toaster.unimplemented(),
                   ),
                 ];
               },

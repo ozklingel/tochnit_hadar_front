@@ -4,6 +4,7 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -32,12 +33,12 @@ class TaskDetailsScreen extends ConsumerWidget {
             offset: const Offset(0, 32),
             itemBuilder: (context) => [
               PopupMenuItem(
-                onTap: () => Toaster.unimplemented(),
                 child: const Text('עריכה'),
+                onTap: () => EditTaskRouteData(id: task.id).push(context),
               ),
               PopupMenuItem(
-                onTap: () => Toaster.unimplemented(),
                 child: const Text('מחיקה'),
+                onTap: () => Toaster.unimplemented(),
               ),
             ],
             icon: const Icon(FluentIcons.more_vertical_24_regular),
