@@ -24,5 +24,5 @@ class AddressDto with _$AddressDto {
 }
 
 extension AddressX on AddressDto {
-  String get fullAddress => '$city, $street $houseNumber';
+  String get fullAddress => '$city $street $houseNumber';
 }

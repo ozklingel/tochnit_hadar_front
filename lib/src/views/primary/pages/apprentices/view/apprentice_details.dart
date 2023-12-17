@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
@@ -21,13 +21,15 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/controller/app
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
+import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ApprenticeDetailsScreen extends HookConsumerWidget {
+class ApprenticeDetailsScreen extends StatefulHookConsumerWidget {
   const ApprenticeDetailsScreen({
     super.key,
     required this.apprenticeId,
@@ -36,13 +38,34 @@ class ApprenticeDetailsScreen extends HookConsumerWidget {
   final String apprenticeId;
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<ApprenticeDetailsScreen> createState() =>
+      _ApprenticeDetailsScreenState();
+}
+
+class _ApprenticeDetailsScreenState
+    extends ConsumerState<ApprenticeDetailsScreen> {
+  final scrollControllers = <SubordinateScrollController?>[
+    null,
+    null,
+    null,
+  ];
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (final scrollController in scrollControllers) {
+      scrollController?.dispose();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
 
     final apprentice = ref.watch(
           apprenticesControllerProvider.select(
             (value) => value.value?.singleWhere(
-              (element) => element.id == apprenticeId,
+              (element) => element.id == widget.apprenticeId,
               orElse: () => const ApprenticeDto(),
             ),
           ),
@@ -52,6 +75,12 @@ class ApprenticeDetailsScreen extends HookConsumerWidget {
     final tabController = useTabController(
       initialLength: 3,
     );
+
+    final views = [
+      _TohnitHadarTabView(apprentice: apprentice),
+      _PersonalInfoTabView(apprentice: apprentice),
+      _MilitaryServiceTabView(apprentice: apprentice),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -96,7 +125,64 @@ class ApprenticeDetailsScreen extends HookConsumerWidget {
                   pinned: false,
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.pin,
-                    background: _Header(apprentice: apprentice),
+                    background: DetailsPageHeader(
+                      avatar: apprentice.avatar,
+                      name: '${apprentice.firstName} ${apprentice.lastName}',
+                      phone: apprentice.phone,
+                      onTapEditAvatar: () => Toaster.unimplemented(),
+                      bottom: Column(
+                        children: [
+                          const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _ActionButton(
+                                text: 'שיחה',
+                                icon: const Icon(FluentIcons.call_24_regular),
+                                onPressed: () async {
+                                  if (apprentice.phone.isEmpty) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          const _MissingInformationDialog(),
+                                    );
+
+                                    return;
+                                  }
+
+                                  final url =
+                                      Uri.tryParse('tel:${apprentice.phone}') ??
+                                          Uri.parse('');
+
+                                  if (!await launchUrl(url)) {
+                                    throw Exception('לא ניתן להתקשר למספר זה');
+                                  }
+                                },
+                              ),
+                              _ActionButton(
+                                text: 'וואטסאפ',
+                                icon: Assets.icons.whatsapp.svg(
+                                  height: 20,
+                                ),
+                                onPressed: () => Toaster.unimplemented(),
+                              ),
+                              _ActionButton(
+                                text: 'SMS',
+                                icon: const Icon(FluentIcons.chat_24_regular),
+                                onPressed: () => Toaster.unimplemented(),
+                              ),
+                              _ActionButton(
+                                text: 'דיווח',
+                                icon: const Icon(
+                                  FluentIcons.clipboard_task_24_regular,
+                                ),
+                                onPressed: () => Toaster.unimplemented(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   bottom: TabBar(
                     controller: tabController,
@@ -113,35 +199,39 @@ class ApprenticeDetailsScreen extends HookConsumerWidget {
         },
         body: TabBarView(
           controller: tabController,
-          children: [
-            _TohnitHadarTabView(apprentice: apprentice),
-            _PersonalInfoTabView(apprentice: apprentice),
-            _MilitaryServiceTabView(apprentice: apprentice),
-          ]
-              .map(
-                (e) => Builder(
-                  builder: (context) {
-                    return CustomScrollView(
-                      key: PageStorageKey<String>('${e.key}${e.toString()}'),
-                      slivers: [
-                        SliverOverlapInjector(
-                          handle:
-                              NestedScrollView.sliverOverlapAbsorberHandleFor(
-                            context,
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: e,
-                        ),
-                        const SliverPadding(
-                          padding: EdgeInsets.only(bottom: 20),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              )
-              .toList(),
+          children: List.generate(
+            views.length,
+            (index) => Builder(
+              builder: (context) {
+                final parentController = PrimaryScrollController.of(context);
+                if (scrollControllers[index]?.parent != parentController) {
+                  scrollControllers[index]?.dispose();
+                  scrollControllers[index] =
+                      SubordinateScrollController(parentController);
+                }
+
+                return CustomScrollView(
+                  key: PageStorageKey<String>(
+                    'apprentice-${views[index].key}${views[index].toString()}',
+                  ),
+                  controller: scrollControllers[index],
+                  slivers: [
+                    SliverOverlapInjector(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context,
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: views[index],
+                    ),
+                    const SliverPadding(
+                      padding: EdgeInsets.only(bottom: 20),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -367,7 +457,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
             )
           : Column(
               children: [
-                _Card(
+                DetailsCard(
                   title: 'צבא',
                   trailing: IconButton(
                     onPressed: () => isEditMode.value = true,
@@ -432,7 +522,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
 
     return Column(
       children: [
-        _Card(
+        DetailsCard(
           title: 'דיווחים אחרונים',
           trailing: TextButton(
             onPressed: () =>
@@ -475,7 +565,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             },
           ),
         ),
-        _Card(
+        DetailsCard(
           title: 'תוכנית הדר',
           trailing: TextButton.icon(
             onPressed: null,
@@ -532,7 +622,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
           ),
         ),
         if (user.role == Role.ahraiTohnit) ...[
-          _Card(
+          DetailsCard(
             title: 'מצב”ר',
             trailing: Row(
               children: [
@@ -559,7 +649,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ),
             child: const SizedBox.shrink(),
           ),
-          _Card(
+          DetailsCard(
             title: 'דיווחים אחרונים',
             trailing: TextButton(
               onPressed: () =>
@@ -608,7 +698,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ),
           ),
         ],
-        _Card(
+        DetailsCard(
           title: 'אירועים',
           trailing: IconButton(
             onPressed: () {
@@ -981,7 +1071,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
 
     return Column(
       children: [
-        _Card(
+        DetailsCard(
           title: 'כללי',
           child: Column(
             children: [
@@ -1012,7 +1102,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
             ],
           ),
         ),
-        const _Card(
+        const DetailsCard(
           title: 'תאריכים',
           child: Column(
             children: [
@@ -1027,7 +1117,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
             ],
           ),
         ),
-        _Card(
+        DetailsCard(
           title: 'משפחה',
           trailing: user.role == Role.ahraiTohnit
               ? IconButton(
@@ -1114,7 +1204,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
             ),
           ),
         ),
-        _Card(
+        DetailsCard(
           title: 'לימודי תיכון',
           child: Column(
             children: [
@@ -1130,7 +1220,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
             ],
           ),
         ),
-        _Card(
+        DetailsCard(
           title: 'עיסוק',
           child: Column(
             children: [
@@ -1190,180 +1280,6 @@ class _RowIconButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(4),
           child: icon,
-        ),
-      ),
-    );
-  }
-}
-
-class _Card extends StatelessWidget {
-  const _Card({
-    required this.title,
-    required this.child,
-    this.trailing,
-  });
-
-  final String title;
-  final Widget child;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 24,
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    title,
-                    style: TextStyles.s20w400.copyWith(
-                      color: AppColors.gray2,
-                    ),
-                  ),
-                  const Spacer(),
-                  trailing ?? const SizedBox.shrink(),
-                ],
-              ),
-              const SizedBox(height: 12),
-              child,
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({
-    required this.apprentice,
-  });
-
-  final ApprenticeDto apprentice;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: kTextTabBarHeight + 24),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        child: ColoredBox(
-          color: AppColors.blue08,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox.square(
-                dimension: 120,
-                child: Stack(
-                  children: [
-                    if (apprentice.avatar.isEmpty)
-                      const CircleAvatar(
-                        radius: 120,
-                        backgroundColor: AppColors.grey6,
-                        child: Icon(
-                          FluentIcons.person_24_filled,
-                          size: 16,
-                          color: Colors.white,
-                        ),
-                      )
-                    else
-                      CircleAvatar(
-                        radius: 120,
-                        backgroundImage: CachedNetworkImageProvider(
-                          apprentice.avatar,
-                        ),
-                      ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      child: IconButton(
-                        style: IconButton.styleFrom(
-                          backgroundColor: AppColors.blue08,
-                        ),
-                        onPressed: () => Toaster.unimplemented(),
-                        icon: const Icon(FluentIcons.edit_24_regular),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '${apprentice.firstName} ${apprentice.lastName}',
-                style: TextStyles.s24w600,
-              ),
-              const SizedBox(width: 2),
-              Text(
-                apprentice.phone,
-                style: TextStyles.s16w400cGrey2.copyWith(
-                  color: AppColors.gray5,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _ActionButton(
-                    text: 'שיחה',
-                    icon: const Icon(FluentIcons.call_24_regular),
-                    onPressed: () async {
-                      if (apprentice.phone.isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (_) => const _MissingInformationDialog(),
-                        );
-
-                        return;
-                      }
-
-                      final url = Uri.tryParse('tel:${apprentice.phone}') ??
-                          Uri.parse('');
-
-                      if (!await launchUrl(url)) {
-                        throw Exception('לא ניתן להתקשר למספר זה');
-                      }
-                    },
-                  ),
-                  _ActionButton(
-                    text: 'וואטסאפ',
-                    icon: Assets.icons.whatsapp.svg(
-                      height: 20,
-                    ),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                  _ActionButton(
-                    text: 'SMS',
-                    icon: const Icon(FluentIcons.chat_24_regular),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                  _ActionButton(
-                    text: 'דיווח',
-                    icon: const Icon(FluentIcons.clipboard_task_24_regular),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );

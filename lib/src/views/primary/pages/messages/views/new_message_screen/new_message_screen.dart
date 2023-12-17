@@ -10,7 +10,7 @@ import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/new_message_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/widgets/find_groups_page.dart';
+import 'package:hadar_program/src/views/secondary/filter/filter_results_page.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -86,7 +86,7 @@ class NewMessageScreen extends HookWidget {
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (val) {
-                              return const FindGroupsPage();
+                              return const FilterResultsPage.users();
                             },
                           ),
                         ),

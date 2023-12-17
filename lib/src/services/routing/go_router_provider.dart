@@ -17,7 +17,9 @@ import 'package:hadar_program/src/views/primary/pages/tasks/views/new_or_edit_ta
 import 'package:hadar_program/src/views/primary/pages/tasks/views/task_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/views/tasks_screen.dart';
 import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart';
-import 'package:hadar_program/src/views/secondary/institutions/institutions_screen.dart';
+import 'package:hadar_program/src/views/secondary/institutions/views/institution_details_screen.dart';
+import 'package:hadar_program/src/views/secondary/institutions/views/institutions_screen.dart';
+import 'package:hadar_program/src/views/secondary/institutions/views/new_or_edit_institution_screen.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -101,6 +103,17 @@ GoRouter goRouter(GoRouterRef ref) {
           routes: [
             TypedGoRoute<GiftRouteData>(
               path: 'gift/:id',
+            ),
+            TypedGoRoute<InstitutionsRouteData>(
+              path: 'institutions',
+              routes: [
+                TypedGoRoute<InstitutionDetailsRouteData>(
+                  path: 'details/:id',
+                ),
+                TypedGoRoute<NewInstitutionRouteData>(
+                  path: 'new',
+                ),
+              ],
             ),
           ],
         ),
@@ -478,16 +491,43 @@ class GiftRouteData extends GoRouteData {
   }
 }
 
-@TypedGoRoute<InstitutionsRouteData>(
-  path: '/institutions',
-)
 class InstitutionsRouteData extends GoRouteData {
   const InstitutionsRouteData();
 
-  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _homeNavKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const InstitutionsScreen();
+  }
+}
+
+class InstitutionDetailsRouteData extends GoRouteData {
+  const InstitutionDetailsRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return InstitutionDetailsScreen(
+      id: id,
+    );
+  }
+}
+
+class NewInstitutionRouteData extends GoRouteData {
+  const NewInstitutionRouteData({
+    this.id = '',
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return NewOrEditInstitutionScreen(
+      id: id,
+    );
   }
 }

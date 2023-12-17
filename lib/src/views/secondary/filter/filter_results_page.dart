@@ -8,8 +8,9 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-enum YearInProgram {
+enum _YearInProgram {
   none,
   a,
   b,
@@ -21,16 +22,17 @@ enum YearInProgram {
   h,
 }
 
-enum RoleInProgram {
+enum _RoleInProgram {
   none,
   all,
   rakazMosad,
   rakazim,
   melavim,
   hanihim,
+  roshMosad,
 }
 
-enum StatusInProgram {
+enum _StatusInProgram {
   none,
   married,
   single,
@@ -40,25 +42,37 @@ enum StatusInProgram {
   released,
 }
 
-class FindGroupsPage extends HookWidget {
-  const FindGroupsPage({
+enum _FilterType {
+  users,
+  intitutions,
+}
+
+class FilterResultsPage extends HookConsumerWidget {
+  const FilterResultsPage.users({
     super.key,
-  });
+  }) : filterType = _FilterType.users;
+
+  const FilterResultsPage.institutions({
+    super.key,
+  }) : filterType = _FilterType.intitutions;
+
+  // ignore: library_private_types_in_public_api
+  final _FilterType filterType;
 
   @override
-  Widget build(BuildContext context) {
-    final selectedYear = useState(YearInProgram.none);
-    final selectedRole = useState(RoleInProgram.none);
-    final selectedStatus = useState(StatusInProgram.none);
+  Widget build(BuildContext context, ref) {
+    final selectedYear = useState(_YearInProgram.none);
+    final selectedRole = useState(_RoleInProgram.none);
+    final selectedStatus = useState(_StatusInProgram.none);
 
     final years = [
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedYear.value == YearInProgram.a,
-        onSelected: (val) => selectedYear.value == YearInProgram.a
-            ? selectedYear.value = YearInProgram.none
-            : selectedYear.value = YearInProgram.a,
+        selected: selectedYear.value == _YearInProgram.a,
+        onSelected: (val) => selectedYear.value == _YearInProgram.a
+            ? selectedYear.value = _YearInProgram.none
+            : selectedYear.value = _YearInProgram.a,
         label: const Text('א'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -66,10 +80,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedYear.value == YearInProgram.b,
-        onSelected: (val) => selectedYear.value == YearInProgram.b
-            ? selectedYear.value = YearInProgram.none
-            : selectedYear.value = YearInProgram.b,
+        selected: selectedYear.value == _YearInProgram.b,
+        onSelected: (val) => selectedYear.value == _YearInProgram.b
+            ? selectedYear.value = _YearInProgram.none
+            : selectedYear.value = _YearInProgram.b,
         label: const Text('ב'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -77,10 +91,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedYear.value == YearInProgram.c,
-        onSelected: (val) => selectedYear.value == YearInProgram.c
-            ? selectedYear.value = YearInProgram.none
-            : selectedYear.value = YearInProgram.c,
+        selected: selectedYear.value == _YearInProgram.c,
+        onSelected: (val) => selectedYear.value == _YearInProgram.c
+            ? selectedYear.value = _YearInProgram.none
+            : selectedYear.value = _YearInProgram.c,
         label: const Text('ג'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -88,10 +102,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedYear.value == YearInProgram.d,
-        onSelected: (val) => selectedYear.value == YearInProgram.d
-            ? selectedYear.value = YearInProgram.none
-            : selectedYear.value = YearInProgram.d,
+        selected: selectedYear.value == _YearInProgram.d,
+        onSelected: (val) => selectedYear.value == _YearInProgram.d
+            ? selectedYear.value = _YearInProgram.none
+            : selectedYear.value = _YearInProgram.d,
         label: const Text('ד'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -99,10 +113,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedYear.value == YearInProgram.e,
-        onSelected: (val) => selectedYear.value == YearInProgram.e
-            ? selectedYear.value = YearInProgram.none
-            : selectedYear.value = YearInProgram.e,
+        selected: selectedYear.value == _YearInProgram.e,
+        onSelected: (val) => selectedYear.value == _YearInProgram.e
+            ? selectedYear.value = _YearInProgram.none
+            : selectedYear.value = _YearInProgram.e,
         label: const Text('ה'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -110,10 +124,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedYear.value == YearInProgram.f,
-        onSelected: (val) => selectedYear.value == YearInProgram.f
-            ? selectedYear.value = YearInProgram.none
-            : selectedYear.value = YearInProgram.f,
+        selected: selectedYear.value == _YearInProgram.f,
+        onSelected: (val) => selectedYear.value == _YearInProgram.f
+            ? selectedYear.value = _YearInProgram.none
+            : selectedYear.value = _YearInProgram.f,
         label: const Text('ו'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -121,10 +135,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedYear.value == YearInProgram.g,
-        onSelected: (val) => selectedYear.value == YearInProgram.g
-            ? selectedYear.value = YearInProgram.none
-            : selectedYear.value = YearInProgram.g,
+        selected: selectedYear.value == _YearInProgram.g,
+        onSelected: (val) => selectedYear.value == _YearInProgram.g
+            ? selectedYear.value = _YearInProgram.none
+            : selectedYear.value = _YearInProgram.g,
         label: const Text('ז'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -132,10 +146,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedYear.value == YearInProgram.h,
-        onSelected: (val) => selectedYear.value == YearInProgram.h
-            ? selectedYear.value = YearInProgram.none
-            : selectedYear.value = YearInProgram.h,
+        selected: selectedYear.value == _YearInProgram.h,
+        onSelected: (val) => selectedYear.value == _YearInProgram.h
+            ? selectedYear.value = _YearInProgram.none
+            : selectedYear.value = _YearInProgram.h,
         label: const Text('ח'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -146,10 +160,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedRole.value == RoleInProgram.all,
-        onSelected: (val) => selectedRole.value == RoleInProgram.all
-            ? selectedRole.value = RoleInProgram.none
-            : selectedRole.value = RoleInProgram.all,
+        selected: selectedRole.value == _RoleInProgram.all,
+        onSelected: (val) => selectedRole.value == _RoleInProgram.all
+            ? selectedRole.value = _RoleInProgram.none
+            : selectedRole.value = _RoleInProgram.all,
         label: const Text('כולם'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -157,10 +171,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedRole.value == RoleInProgram.rakazMosad,
-        onSelected: (val) => selectedRole.value == RoleInProgram.rakazMosad
-            ? selectedRole.value = RoleInProgram.none
-            : selectedRole.value = RoleInProgram.rakazMosad,
+        selected: selectedRole.value == _RoleInProgram.rakazMosad,
+        onSelected: (val) => selectedRole.value == _RoleInProgram.rakazMosad
+            ? selectedRole.value = _RoleInProgram.none
+            : selectedRole.value = _RoleInProgram.rakazMosad,
         label: const Text('רכזי מוסד'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -168,10 +182,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedRole.value == RoleInProgram.rakazim,
-        onSelected: (val) => selectedRole.value == RoleInProgram.rakazim
-            ? selectedRole.value = RoleInProgram.none
-            : selectedRole.value = RoleInProgram.rakazim,
+        selected: selectedRole.value == _RoleInProgram.rakazim,
+        onSelected: (val) => selectedRole.value == _RoleInProgram.rakazim
+            ? selectedRole.value = _RoleInProgram.none
+            : selectedRole.value = _RoleInProgram.rakazim,
         label: const Text('רכזים'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -179,10 +193,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedRole.value == RoleInProgram.melavim,
-        onSelected: (val) => selectedRole.value == RoleInProgram.melavim
-            ? selectedRole.value = RoleInProgram.none
-            : selectedRole.value = RoleInProgram.melavim,
+        selected: selectedRole.value == _RoleInProgram.melavim,
+        onSelected: (val) => selectedRole.value == _RoleInProgram.melavim
+            ? selectedRole.value = _RoleInProgram.none
+            : selectedRole.value = _RoleInProgram.melavim,
         label: const Text('מלווים'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -190,11 +204,22 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedRole.value == RoleInProgram.hanihim,
-        onSelected: (val) => selectedRole.value == RoleInProgram.hanihim
-            ? selectedRole.value = RoleInProgram.none
-            : selectedRole.value = RoleInProgram.hanihim,
+        selected: selectedRole.value == _RoleInProgram.hanihim,
+        onSelected: (val) => selectedRole.value == _RoleInProgram.hanihim
+            ? selectedRole.value = _RoleInProgram.none
+            : selectedRole.value = _RoleInProgram.hanihim,
         label: const Text('חניכים'),
+        labelStyle: TextStyles.s14w400cBlue2,
+        side: const BorderSide(color: AppColors.blue06),
+      ),
+      ChoiceChip(
+        showCheckmark: false,
+        selectedColor: AppColors.blue06,
+        selected: selectedRole.value == _RoleInProgram.roshMosad,
+        onSelected: (val) => selectedRole.value == _RoleInProgram.roshMosad
+            ? selectedRole.value = _RoleInProgram.none
+            : selectedRole.value = _RoleInProgram.roshMosad,
+        label: const Text('ראש מוסד'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
       ),
@@ -204,10 +229,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedStatus.value == StatusInProgram.married,
-        onSelected: (val) => selectedStatus.value == StatusInProgram.married
-            ? selectedStatus.value = StatusInProgram.none
-            : selectedStatus.value = StatusInProgram.married,
+        selected: selectedStatus.value == _StatusInProgram.married,
+        onSelected: (val) => selectedStatus.value == _StatusInProgram.married
+            ? selectedStatus.value = _StatusInProgram.none
+            : selectedStatus.value = _StatusInProgram.married,
         label: const Text('נשוי'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -215,10 +240,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedStatus.value == StatusInProgram.single,
-        onSelected: (val) => selectedStatus.value == StatusInProgram.single
-            ? selectedStatus.value = StatusInProgram.none
-            : selectedStatus.value = StatusInProgram.single,
+        selected: selectedStatus.value == _StatusInProgram.single,
+        onSelected: (val) => selectedStatus.value == _StatusInProgram.single
+            ? selectedStatus.value = _StatusInProgram.none
+            : selectedStatus.value = _StatusInProgram.single,
         label: const Text('רווק'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -226,10 +251,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedStatus.value == StatusInProgram.inArmy,
-        onSelected: (val) => selectedStatus.value == StatusInProgram.inArmy
-            ? selectedStatus.value = StatusInProgram.none
-            : selectedStatus.value = StatusInProgram.inArmy,
+        selected: selectedStatus.value == _StatusInProgram.inArmy,
+        onSelected: (val) => selectedStatus.value == _StatusInProgram.inArmy
+            ? selectedStatus.value = _StatusInProgram.none
+            : selectedStatus.value = _StatusInProgram.inArmy,
         label: const Text('בצבא'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -237,10 +262,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedStatus.value == StatusInProgram.sadir,
-        onSelected: (val) => selectedStatus.value == StatusInProgram.sadir
-            ? selectedStatus.value = StatusInProgram.none
-            : selectedStatus.value = StatusInProgram.sadir,
+        selected: selectedStatus.value == _StatusInProgram.sadir,
+        onSelected: (val) => selectedStatus.value == _StatusInProgram.sadir
+            ? selectedStatus.value = _StatusInProgram.none
+            : selectedStatus.value = _StatusInProgram.sadir,
         label: const Text('סדיר'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -248,10 +273,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedStatus.value == StatusInProgram.keva,
-        onSelected: (val) => selectedStatus.value == StatusInProgram.keva
-            ? selectedStatus.value = StatusInProgram.none
-            : selectedStatus.value = StatusInProgram.keva,
+        selected: selectedStatus.value == _StatusInProgram.keva,
+        onSelected: (val) => selectedStatus.value == _StatusInProgram.keva
+            ? selectedStatus.value = _StatusInProgram.none
+            : selectedStatus.value = _StatusInProgram.keva,
         label: const Text('קבע'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -259,10 +284,10 @@ class FindGroupsPage extends HookWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: selectedStatus.value == StatusInProgram.released,
-        onSelected: (val) => selectedStatus.value == StatusInProgram.released
-            ? selectedStatus.value = StatusInProgram.none
-            : selectedStatus.value = StatusInProgram.released,
+        selected: selectedStatus.value == _StatusInProgram.released,
+        onSelected: (val) => selectedStatus.value == _StatusInProgram.released
+            ? selectedStatus.value = _StatusInProgram.none
+            : selectedStatus.value = _StatusInProgram.released,
         label: const Text('משוחרר'),
         labelStyle: TextStyles.s14w400cBlue2,
         side: const BorderSide(color: AppColors.blue06),
@@ -274,7 +299,11 @@ class FindGroupsPage extends HookWidget {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: false,
-          title: const Text('הוספת קבוצת נמענים'),
+          title: Text(
+            filterType == _FilterType.users
+                ? 'הוספת קבוצת נמענים'
+                : 'סנן משתמשים לפי',
+          ),
           actions: [
             IconButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -317,73 +346,75 @@ class FindGroupsPage extends HookWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                InputFieldContainer(
-                  label: 'שם מוסד',
-                  labelStyle: TextStyles.s16w400cGrey2,
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      value: '',
-                      hint: const Text('בחירת מוסד'),
-                      style: TextStyles.s16w400cGrey5,
-                      selectedItemBuilder: (context) {
-                        return [];
-                      },
-                      onMenuStateChange: (isOpen) {},
-                      dropdownSearchData: const DropdownSearchData(
-                        searchInnerWidgetHeight: 50,
-                        searchInnerWidget: TextField(
-                          decoration: InputDecoration(
-                            focusedBorder: UnderlineInputBorder(),
-                            enabledBorder: InputBorder.none,
-                            prefixIcon: Icon(Icons.search),
-                            hintText: 'חיפוש',
-                            hintStyle: TextStyles.s14w400,
-                          ),
-                        ),
-                      ),
-                      buttonStyleData: ButtonStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(36),
-                          border: Border.all(
-                            color: AppColors.shades300,
-                          ),
-                        ),
-                        elevation: 0,
-                        padding: const EdgeInsets.only(right: 8),
-                      ),
-                      onChanged: (value) {},
-                      dropdownStyleData: const DropdownStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
-                        ),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        icon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 1,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
+                if (filterType == _FilterType.users) ...[
+                  const SizedBox(height: 24),
+                  InputFieldContainer(
+                    label: 'שם מוסד',
+                    labelStyle: TextStyles.s16w400cGrey2,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        value: '',
+                        hint: const Text('בחירת מוסד'),
+                        style: TextStyles.s16w400cGrey5,
+                        selectedItemBuilder: (context) {
+                          return [];
+                        },
+                        onMenuStateChange: (isOpen) {},
+                        dropdownSearchData: const DropdownSearchData(
+                          searchInnerWidgetHeight: 50,
+                          searchInnerWidget: TextField(
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(),
+                              enabledBorder: InputBorder.none,
+                              prefixIcon: Icon(Icons.search),
+                              hintText: 'חיפוש',
+                              hintStyle: TextStyles.s14w400,
                             ),
                           ),
                         ),
-                        openMenuIcon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 3,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
+                        buttonStyleData: ButtonStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(36),
+                            border: Border.all(
+                              color: AppColors.shades300,
+                            ),
+                          ),
+                          elevation: 0,
+                          padding: const EdgeInsets.only(right: 8),
+                        ),
+                        onChanged: (value) {},
+                        dropdownStyleData: const DropdownStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: RotatedBox(
+                              quarterTurns: 1,
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: AppColors.grey6,
+                              ),
+                            ),
+                          ),
+                          openMenuIcon: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: RotatedBox(
+                              quarterTurns: 3,
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: AppColors.grey6,
+                              ),
                             ),
                           ),
                         ),
+                        items: const [],
                       ),
-                      items: const [],
                     ),
                   ),
-                ),
+                ],
                 const SizedBox(height: 24),
                 InputFieldContainer(
                   label: 'מחזור בישיבה / מכינה',
@@ -451,73 +482,75 @@ class FindGroupsPage extends HookWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                InputFieldContainer(
-                  label: 'אשכול',
-                  labelStyle: TextStyles.s16w400cGrey2,
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      value: '',
-                      hint: const Text('בחירת אשכול'),
-                      selectedItemBuilder: (context) {
-                        return [];
-                      },
-                      onMenuStateChange: (isOpen) {},
-                      dropdownSearchData: const DropdownSearchData(
-                        searchInnerWidgetHeight: 50,
-                        searchInnerWidget: TextField(
-                          decoration: InputDecoration(
-                            focusedBorder: UnderlineInputBorder(),
-                            enabledBorder: InputBorder.none,
-                            prefixIcon: Icon(Icons.search),
-                            hintText: 'חיפוש',
-                            hintStyle: TextStyles.s14w400,
-                          ),
-                        ),
-                      ),
-                      style: TextStyles.s16w400cGrey5,
-                      buttonStyleData: ButtonStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(36),
-                          border: Border.all(
-                            color: AppColors.shades300,
-                          ),
-                        ),
-                        elevation: 0,
-                        padding: const EdgeInsets.only(right: 8),
-                      ),
-                      onChanged: (value) {},
-                      dropdownStyleData: const DropdownStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
-                        ),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        icon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 1,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
+                if (filterType == _FilterType.users) ...[
+                  const SizedBox(height: 24),
+                  InputFieldContainer(
+                    label: 'אשכול',
+                    labelStyle: TextStyles.s16w400cGrey2,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        value: '',
+                        hint: const Text('בחירת אשכול'),
+                        selectedItemBuilder: (context) {
+                          return [];
+                        },
+                        onMenuStateChange: (isOpen) {},
+                        dropdownSearchData: const DropdownSearchData(
+                          searchInnerWidgetHeight: 50,
+                          searchInnerWidget: TextField(
+                            decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(),
+                              enabledBorder: InputBorder.none,
+                              prefixIcon: Icon(Icons.search),
+                              hintText: 'חיפוש',
+                              hintStyle: TextStyles.s14w400,
                             ),
                           ),
                         ),
-                        openMenuIcon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 3,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
+                        style: TextStyles.s16w400cGrey5,
+                        buttonStyleData: ButtonStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(36),
+                            border: Border.all(
+                              color: AppColors.shades300,
+                            ),
+                          ),
+                          elevation: 0,
+                          padding: const EdgeInsets.only(right: 8),
+                        ),
+                        onChanged: (value) {},
+                        dropdownStyleData: const DropdownStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: RotatedBox(
+                              quarterTurns: 1,
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: AppColors.grey6,
+                              ),
+                            ),
+                          ),
+                          openMenuIcon: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: RotatedBox(
+                              quarterTurns: 3,
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: AppColors.grey6,
+                              ),
                             ),
                           ),
                         ),
+                        items: const [],
                       ),
-                      items: const [],
                     ),
                   ),
-                ),
+                ],
                 const SizedBox(height: 24),
                 InputFieldContainer(
                   label: 'סטטוס',

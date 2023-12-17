@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/apprentice_card.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class UsersScreenBody extends HookConsumerWidget {
@@ -171,9 +172,38 @@ class UsersScreenBody extends HookConsumerWidget {
                     horizontal: 12,
                     vertical: 6,
                   ),
-                  child: ApprenticeCard(
-                    selectedIds: selectedApprenticeIds,
-                    apprentice: usersList[idx],
+                  child: ListTileWithTagsCard(
+                    avatar: usersList[idx].avatar,
+                    name: usersList[idx].fullName,
+                    tags: [
+                      usersList[idx].highSchoolInstitution,
+                      usersList[idx].thPeriod,
+                      usersList[idx].militaryPositionNew,
+                      usersList[idx].thInstitution,
+                      usersList[idx].militaryCompound.name,
+                      usersList[idx].militaryUnit,
+                      usersList[idx].maritalStatus,
+                    ],
+                    isSelected:
+                        selectedApprenticeIds.value.contains(usersList[idx].id),
+                    onLongPress: () {
+                      if (selectedApprenticeIds.value
+                          .contains(usersList[idx].id)) {
+                        final newList = selectedApprenticeIds;
+                        newList.value.remove(usersList[idx].id);
+                        selectedApprenticeIds.value = [
+                          ...newList.value,
+                        ];
+                      } else {
+                        selectedApprenticeIds.value = [
+                          ...selectedApprenticeIds.value,
+                          usersList[idx].id,
+                        ];
+                      }
+                    },
+                    onTap: () =>
+                        ApprenticeDetailsRouteData(id: usersList[idx].id)
+                            .go(context),
                   ),
                 ),
               );

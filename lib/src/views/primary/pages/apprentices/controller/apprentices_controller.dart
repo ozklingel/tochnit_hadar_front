@@ -63,7 +63,8 @@ class ApprenticesController extends _$ApprenticesController {
         workType: faker.lorem.word(),
         highSchoolInstitution: faker.lorem.word(),
         highSchoolRavMelamed: faker.lorem.word(),
-        thInstitution: faker.lorem.word(),
+        thInstitution: Consts.mockInstitutionsGuids[
+            faker.randomGenerator.integer(Consts.mockInstitutionsGuids.length)],
         thMentor: faker.person.name(),
         thPeriod: faker.lorem.word()[0],
         thRavMelamedYearA: ContactDto(

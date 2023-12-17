@@ -33,6 +33,7 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('[N/A]') String militaryPositionOld,
     @Default('[N/A]') String militaryPositionNew,
     @Default('[N/A]') String matsber,
+    @Default('[N/A]') String onlineStatus,
     @Default(0) int militaryUpdatedDateTime,
     @Default(0) int militaryDateOfEnlistment,
     @Default(0) int militaryDateOfDischarge,

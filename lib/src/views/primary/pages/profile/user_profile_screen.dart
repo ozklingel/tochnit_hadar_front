@@ -5,6 +5,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -911,60 +912,5 @@ class _GeneralTab extends ConsumerWidget {
           ),
       ],
     );
-  }
-}
-
-// https://github.com/flutter/flutter/issues/118713
-// https://dartpad.dev/?id=8218ccd847e33d5dd29417b19866a63f
-/// A scroll controller subordinate to a parent controller, which
-/// [createScrollPosition]s via the parent and attaches/detaches its positions
-/// from the parent. This is useful for creating nested scroll controllers
-/// for widgets with scrollbars that can actuate a parent scroll controller.
-class SubordinateScrollController extends ScrollController {
-  SubordinateScrollController(
-    this.parent, {
-    String subordinateDebugLabel = 'subordinate',
-  }) : super(
-          debugLabel: parent.debugLabel == null
-              ? null
-              : '${parent.debugLabel}/$subordinateDebugLabel',
-          initialScrollOffset: parent.initialScrollOffset,
-          keepScrollOffset: parent.keepScrollOffset,
-        );
-  final ScrollController parent;
-  // Although some use cases might seem to be simplified if parent were made
-  // settable, we can't really do this because scroll positions are owned by
-  // Scrollables rather than the scroll controller, so the scroll view is
-  // responsible for transferring positions from one controller to another. If
-  // we were to try to do the transfer here, we would end up trying to dispose
-  // of positions that Scrollables may still be holding on to.
-
-  @override
-  ScrollPosition createScrollPosition(
-    ScrollPhysics physics,
-    ScrollContext context,
-    ScrollPosition? oldPosition,
-  ) =>
-      parent.createScrollPosition(physics, context, oldPosition);
-
-  @override
-  void attach(ScrollPosition position) {
-    super.attach(position);
-    parent.attach(position);
-  }
-
-  @override
-  void detach(ScrollPosition position) {
-    parent.detach(position);
-    super.detach(position);
-  }
-
-  @override
-  void dispose() {
-    for (final position in positions) {
-      parent.detach(position);
-    }
-
-    super.dispose();
   }
 }

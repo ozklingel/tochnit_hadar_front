@@ -150,6 +150,29 @@ abstract class Consts {
     'b1580a5e-8d5c-42a5-bf15-19bc42fa70ac',
   ];
 
+  static const mockInstitutionsGuids = [
+    '893c246f-6660-4b48-b601-333427db1ec4',
+    'fb1f61ab-6249-4f18-82e7-1329ec0e057a',
+    '73d77bdc-0e69-472a-9aa0-de9372bd8d17',
+    'cbf2d591-d26f-4689-8e03-90ab9801cc80',
+    'b694bcf6-63c1-47f8-94ad-1a011863396b',
+    'dc2b89ba-a97d-42b0-ac49-27a0960b4a0f',
+    '69e07ae5-4914-4c97-8359-237d97cf49ad',
+    '4e85ecfa-e77f-49c5-8cbf-1cc584b6b0dd',
+    '1aebc453-3152-47ac-862f-8e4b561c1e42',
+    'b277f2c0-3075-4510-ab29-a839c5719e21',
+    'b5602bbd-f2b5-459b-b191-96b4df75f92c',
+    'c3eeacd4-51e6-4169-a2a2-353cf429286d',
+    'bf8504aa-f571-4f0c-b8a2-817455284237',
+    '76bc736c-f03d-4886-bb0a-d3702d1b4752',
+    '9d5d6272-4c61-446c-92f2-9722491a3452',
+    '05afda99-be15-4acb-83bf-257789274640',
+    '01fe7a19-f966-41cb-9632-16488c9098fa',
+    '316bb102-ada8-4aa2-838c-f1d5d0b6e25c',
+    '2b122dd6-14b0-411c-b282-b50e63a0ab00',
+    '79d6bc04-66b7-41ff-b955-2650ce57a7e3',
+  ];
+
   static const mockEventsGuids = [
     'a670ef66-eb63-4238-a2c3-d5bab95c7d1d',
     'cf7e034c-a82a-461e-8a85-279a06714a20',

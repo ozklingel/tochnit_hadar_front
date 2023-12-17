@@ -11,12 +11,13 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/geolocation/geolocation_service.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/address_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/apprentice_appbar.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/apprentice_card.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/compound_bottom_sheet.dart';
+import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -358,9 +359,34 @@ class _ListBody extends StatelessWidget {
         .map(
           (e) => Skeletonizer(
             enabled: isLoading,
-            child: ApprenticeCard(
-              selectedIds: selectedIds,
-              apprentice: e,
+            child: ListTileWithTagsCard(
+              avatar: e.avatar,
+              name: e.fullName,
+              tags: [
+                e.highSchoolInstitution,
+                e.thPeriod,
+                e.militaryPositionNew,
+                e.thInstitution,
+                e.militaryCompound.name,
+                e.militaryUnit,
+                e.maritalStatus,
+              ],
+              isSelected: selectedIds.value.contains(e.id),
+              onTap: () => ApprenticeDetailsRouteData(id: e.id).go(context),
+              onLongPress: () {
+                if (selectedIds.value.contains(e.id)) {
+                  final newList = selectedIds;
+                  newList.value.remove(e.id);
+                  selectedIds.value = [
+                    ...newList.value,
+                  ];
+                } else {
+                  selectedIds.value = [
+                    ...selectedIds.value,
+                    e.id,
+                  ];
+                }
+              },
             ),
           ),
         )
@@ -461,10 +487,33 @@ class _SearchResults extends ConsumerWidget {
                 )
                 .take(1)
                 .map(
-                  (e) => ApprenticeCard(
-                    selectedIds: selectedIds,
-                    apprentice: e,
-                    isLongTapEnabled: false,
+                  (e) => ListTileWithTagsCard(
+                    avatar: e.avatar,
+                    name: e.fullName,
+                    tags: [
+                      e.highSchoolInstitution,
+                      e.thPeriod,
+                      e.militaryPositionNew,
+                      e.thInstitution,
+                      e.militaryCompound.name,
+                      e.militaryUnit,
+                      e.maritalStatus,
+                    ],
+                    isSelected: selectedIds.value.contains(e.id),
+                    onLongPress: () {
+                      if (selectedIds.value.contains(e.id)) {
+                        final newList = selectedIds;
+                        newList.value.remove(e.id);
+                        selectedIds.value = [
+                          ...newList.value,
+                        ];
+                      } else {
+                        selectedIds.value = [
+                          ...selectedIds.value,
+                          e.id,
+                        ];
+                      }
+                    },
                     onTap: () {
                       mapCameraPosition.value = CameraPosition(
                         zoom: 8,
