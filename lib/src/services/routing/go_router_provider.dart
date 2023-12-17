@@ -6,8 +6,8 @@ import 'package:hadar_program/src/views/primary/bottom_bar/ui/dashboard_screen.d
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentice_details.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentices_or_users_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user/new_user_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/homePage/views/gift_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/homePage/views/home_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/gift_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/home_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/messages_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/new_message_screen.dart';
@@ -17,14 +17,15 @@ import 'package:hadar_program/src/views/primary/pages/tasks/views/new_or_edit_ta
 import 'package:hadar_program/src/views/primary/pages/tasks/views/task_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/views/tasks_screen.dart';
 import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart';
+import 'package:hadar_program/src/views/secondary/institutions/institutions_screen.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../views/primary/pages/chatBox/support_screen.dart';
+import '../../views/primary/pages/chat_box/support_screen.dart';
 import '../../views/primary/pages/notifications/views/notification_screen.dart';
 import '../../views/primary/pages/notifications/views/setting_page.dart';
-import '../../views/primary/pages/userProfilePage/edit_profile.dart';
-import '../../views/primary/pages/userProfilePage/user_profile_screen.dart';
+import '../../views/primary/pages/profile/edit_profile.dart';
+import '../../views/primary/pages/profile/user_profile_screen.dart';
 
 part 'go_router_provider.g.dart';
 
@@ -474,5 +475,19 @@ class GiftRouteData extends GoRouteData {
     return GiftScreen(
       eventId: id,
     );
+  }
+}
+
+@TypedGoRoute<InstitutionsRouteData>(
+  path: '/institutions',
+)
+class InstitutionsRouteData extends GoRouteData {
+  const InstitutionsRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const InstitutionsScreen();
   }
 }

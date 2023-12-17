@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../services/networking/http_service.dart';
-import '../chatBox/error_dialog.dart';
-import '../chatBox/success_dialog.dart';
+import '../chat_box/error_dialog.dart';
+import '../chat_box/success_dialog.dart';
 
 class ProfileEditPage extends StatefulHookConsumerWidget {
   const ProfileEditPage({super.key});

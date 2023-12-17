@@ -9,8 +9,6 @@ import 'package:hadar_program/src/views/secondary/onboarding/pages/success_page.
 class OnboardingScreen extends HookWidget {
   const OnboardingScreen({super.key});
 
-  static const routeName = '/onboarding';
-
   @override
   Widget build(BuildContext context) {
     final pageController = usePageController();

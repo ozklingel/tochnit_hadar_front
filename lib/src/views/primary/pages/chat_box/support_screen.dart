@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/views/primary/pages/chatBox/success_dialog.dart';
+import 'package:hadar_program/src/views/primary/pages/chat_box/success_dialog.dart';
 
 import '../../../../services/networking/http_service.dart';
 import '../../../../services/routing/go_router_provider.dart';

@@ -8,7 +8,6 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/themes.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
-import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timeago/timeago.dart';
 
@@ -66,12 +65,28 @@ class HadarProgram extends ConsumerWidget {
       const SingleActivator(
         LogicalKeyboardKey.keyA,
         alt: true,
-      ): () => ref.read(goRouterProvider).push(OnboardingScreen.routeName),
+      ): () => const OnboardingRouteData().push(
+            ref
+                .read(goRouterProvider)
+                .configuration
+                .navigatorKey
+                .currentContext!,
+          ),
       const SingleActivator(
         LogicalKeyboardKey.escape,
       ): () => ref.read(goRouterProvider).canPop()
           ? ref.read(goRouterProvider).pop()
           : null,
+      const SingleActivator(
+        LogicalKeyboardKey.keyI,
+        alt: true,
+      ): () => const InstitutionsRouteData().push(
+            ref
+                .read(goRouterProvider)
+                .configuration
+                .navigatorKey
+                .currentContext!,
+          ),
     };
   }
 }
