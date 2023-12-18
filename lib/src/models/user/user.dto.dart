@@ -4,7 +4,7 @@ import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 part 'user.dto.f.dart';
 part 'user.dto.g.dart';
 
-enum Role {
+enum UserRole {
   melave,
   ahraiTohnit,
   other,
@@ -20,7 +20,7 @@ class UserDto with _$UserDto {
     @Default('') String lastName,
     @Default('') String phone,
     @Default('') String email,
-    @Default(Role.other) Role role,
+    @Default(UserRole.other) UserRole role,
     @Default('') String institution,
     @Default('') String cluster,
     @Default('') String city,

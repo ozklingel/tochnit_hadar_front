@@ -83,7 +83,7 @@ class SideDrawer extends ConsumerWidget {
                 title: const Text('מפת מיקומים'),
                 onTap: () => const SupportRouteData().go(context),
               ),
-              if (user.role == Role.melave) ...[
+              if (user.role == UserRole.melave) ...[
                 ListTile(
                   dense: true,
                   leading: const CircleAvatar(
@@ -102,7 +102,7 @@ class SideDrawer extends ConsumerWidget {
                   title: const Text('פניות שירות'),
                   onTap: () => const SupportRouteData().go(context),
                 ),
-              ] else if (user.role == Role.ahraiTohnit) ...[
+              ] else if (user.role == UserRole.ahraiTohnit) ...[
                 ListTile(
                   dense: true,
                   leading: const CircleAvatar(

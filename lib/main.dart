@@ -73,6 +73,26 @@ class HadarProgram extends ConsumerWidget {
                 .currentContext!,
           ),
       const SingleActivator(
+        LogicalKeyboardKey.keyT,
+        alt: true,
+      ): () => const NewTaskRouteData().push(
+            ref
+                .read(goRouterProvider)
+                .configuration
+                .navigatorKey
+                .currentContext!,
+          ),
+      const SingleActivator(
+        LogicalKeyboardKey.keyE,
+        alt: true,
+      ): () => const ReportNewRouteData().push(
+            ref
+                .read(goRouterProvider)
+                .configuration
+                .navigatorKey
+                .currentContext!,
+          ),
+      const SingleActivator(
         LogicalKeyboardKey.escape,
       ): () => ref.read(goRouterProvider).canPop()
           ? ref.read(goRouterProvider).pop()

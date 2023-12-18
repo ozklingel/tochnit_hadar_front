@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'institutions_controller.g.dart';
 
-enum SortBy {
+enum SortInstitutionBy {
   fromA2Z,
   scoreLow2High,
   scoreHigh2Low,
@@ -66,25 +66,28 @@ class InstitutionsController extends _$InstitutionsController {
     );
   }
 
-  void sortBy(SortBy sortBy) {
+  void sortBy(SortInstitutionBy sortBy) {
     if (state.valueOrNull == null) {
       return;
     }
 
     switch (sortBy) {
-      case SortBy.fromA2Z:
+      case SortInstitutionBy.fromA2Z:
         final result = state.value!;
         final sorted = result.sortedBy((element) => element.name);
         state = AsyncData(sorted);
-      case SortBy.scoreLow2High:
+        return;
+      case SortInstitutionBy.scoreLow2High:
         final result = state.value!;
         final sorted = result.sortedBy<num>((e) => e.score);
         state = AsyncData(sorted);
-      case SortBy.scoreHigh2Low:
+        return;
+      case SortInstitutionBy.scoreHigh2Low:
         final result = state.value!;
         final sorted = result.sortedBy<num>((element) => element.score);
         final reversed = sorted.reversed.toList();
         state = AsyncData(reversed);
+        return;
     }
   }
 }

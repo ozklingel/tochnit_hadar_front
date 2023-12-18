@@ -234,7 +234,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                             );
                           },
                         ),
-                        if (user.role == Role.melave)
+                        if (user.role == UserRole.melave)
                           const TabBar(
                             tabs: [
                               Tab(text: 'תוכנית הדר'),
@@ -248,7 +248,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
               ),
             ];
           },
-          body: user.role == Role.melave
+          body: user.role == UserRole.melave
               ? TabBarView(
                   children: [
                     Builder(
@@ -775,7 +775,7 @@ class _GeneralTab extends ConsumerWidget {
                             'סיווג משתמש',
                             textAlign: TextAlign.right,
                           ),
-                          if (user.role == Role.melave) ...[
+                          if (user.role == UserRole.melave) ...[
                             const SizedBox(height: 10),
                             const Align(
                               alignment: Alignment.centerRight,
@@ -821,7 +821,7 @@ class _GeneralTab extends ConsumerWidget {
                               ),
                             ),
                           ),
-                          if (user.role == Role.melave) ...[
+                          if (user.role == UserRole.melave) ...[
                             const SizedBox(height: 10),
                             Align(
                               alignment: Alignment.centerRight,
@@ -858,7 +858,7 @@ class _GeneralTab extends ConsumerWidget {
             ),
           ),
         ),
-        if (user.role == Role.melave)
+        if (user.role == UserRole.melave)
           Builder(
             builder: (context) {
               // print(scrolength);

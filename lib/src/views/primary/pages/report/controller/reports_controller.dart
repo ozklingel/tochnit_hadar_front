@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
@@ -7,6 +8,12 @@ import 'package:hadar_program/src/services/networking/dio_service/dio_service.da
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reports_controller.g.dart';
+
+enum SortReportBy {
+  fromA2Z,
+  timeFromCloseToFar,
+  timeFromFarToClose,
+}
 
 @Riverpod(
   dependencies: [
@@ -50,5 +57,27 @@ class ReportsController extends _$ReportsController {
     );
 
     return reports;
+  }
+
+  void sortBy(SortReportBy sortBy) {
+    switch (sortBy) {
+      case SortReportBy.fromA2Z:
+        final result = state.value!;
+        final sorted =
+            result.sortedBy<String>((element) => element.description);
+        state = AsyncData(sorted);
+        return;
+      case SortReportBy.timeFromFarToClose:
+        final result = state.value!;
+        final sorted = result.sortedBy<num>((e) => e.dateTime);
+        state = AsyncData(sorted);
+        return;
+      case SortReportBy.timeFromCloseToFar:
+        final result = state.value!;
+        final sorted = result.sortedBy<num>((element) => element.dateTime);
+        final reversed = sorted.reversed.toList();
+        state = AsyncData(reversed);
+        return;
+    }
   }
 }

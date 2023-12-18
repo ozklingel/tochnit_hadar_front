@@ -7,10 +7,13 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
+import 'package:hadar_program/src/views/secondary/filter/filter_results_page.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -28,6 +31,7 @@ class ReportsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
     final controller = ref.watch<AsyncValue<List<ReportDto>>>(
       reportsControllerProvider.select(
         (value) {
@@ -62,6 +66,207 @@ class ReportsScreen extends HookConsumerWidget {
     );
 
     final selectedIds = useState(<String>[]);
+    final filters = useState(<String>['test1', 'test2']);
+    final sortBy = useState(SortReportBy.fromA2Z);
+
+    if (user.role == UserRole.ahraiTohnit) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('דיווחים'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          shape: const CircleBorder(),
+          backgroundColor: AppColors.blue02,
+          child: const Icon(
+            FluentIcons.add_24_regular,
+            color: Colors.white,
+          ),
+        ),
+        body: RefreshIndicator.adaptive(
+          onRefresh: () => ref.refresh(reportsControllerProvider.future),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: filters.value.isEmpty ? 82 : 132,
+                collapsedHeight: filters.value.isEmpty ? 82 : 132,
+                pinned: true,
+                flexibleSpace: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 42,
+                              child: SearchBar(
+                                elevation: MaterialStateProperty.all(0),
+                                padding: MaterialStateProperty.all(
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                                ),
+                                leading: const Icon(
+                                  FluentIcons.navigation_24_regular,
+                                  size: 18,
+                                ),
+                                trailing: const [
+                                  Icon(
+                                    FluentIcons.search_24_regular,
+                                    size: 18,
+                                  ),
+                                ],
+                                hintText: 'חיפוש',
+                                backgroundColor: MaterialStateColor.resolveWith(
+                                  (states) => AppColors.blue08,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Stack(
+                            children: [
+                              IconButton(
+                                onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const FilterResultsPage.reports(),
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  FluentIcons.filter_add_20_regular,
+                                ),
+                              ),
+                              Positioned(
+                                right: 8,
+                                top: 8,
+                                child: CircleAvatar(
+                                  backgroundColor: AppColors.red1,
+                                  radius: 7,
+                                  child: Text(
+                                    filters.value.length.toString(),
+                                    style: TextStyles.s11w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (filters.value.isNotEmpty)
+                      SizedBox(
+                        height: 48,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: ListView(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            scrollDirection: Axis.horizontal,
+                            children: filters.value
+                                .map(
+                                  (e) => ChoiceChip(
+                                    showCheckmark: false,
+                                    selectedColor: AppColors.blue06,
+                                    color: MaterialStateColor.resolveWith(
+                                      (states) => AppColors.blue06,
+                                    ),
+                                    selected: true,
+                                    onSelected: (val) =>
+                                        Toaster.unimplemented(),
+                                    label: Row(
+                                      children: [
+                                        Text(e),
+                                        const SizedBox(width: 8),
+                                        const Icon(
+                                          Icons.close,
+                                          color: AppColors.blue02,
+                                          size: 16,
+                                        ),
+                                      ],
+                                    ),
+                                    labelStyle: TextStyles.s14w400cBlue2,
+                                    side: const BorderSide(
+                                      color: AppColors.blue06,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                    Row(
+                      children: [
+                        const SizedBox(width: 6),
+                        IconButton(
+                          onPressed: () async {
+                            final result = await showDialog<SortReportBy?>(
+                              context: context,
+                              builder: (context) => _SortByDialog(
+                                initialVal: sortBy.value,
+                              ),
+                            );
+
+                            switch (result) {
+                              case SortReportBy.fromA2Z:
+                                sortBy.value = SortReportBy.fromA2Z;
+                                ref
+                                    .read(reportsControllerProvider.notifier)
+                                    .sortBy(SortReportBy.fromA2Z);
+                                break;
+                              case SortReportBy.timeFromCloseToFar:
+                                sortBy.value = SortReportBy.timeFromCloseToFar;
+                                ref
+                                    .read(reportsControllerProvider.notifier)
+                                    .sortBy(SortReportBy.timeFromCloseToFar);
+                                break;
+                              case SortReportBy.timeFromFarToClose:
+                                sortBy.value = SortReportBy.timeFromFarToClose;
+                                ref
+                                    .read(reportsControllerProvider.notifier)
+                                    .sortBy(SortReportBy.timeFromFarToClose);
+                                break;
+                              case null:
+                                return;
+                            }
+                          },
+                          icon: const Icon(
+                            FluentIcons.arrow_sort_down_lines_24_regular,
+                            color: AppColors.grey2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              controller.when(
+                error: (error, stack) => SliverFillRemaining(
+                  child: Center(
+                    child: Text(controller.error.toString()),
+                  ),
+                ),
+                loading: () => SliverFillRemaining(
+                  child: _ReporsListBody(
+                    reports: List.generate(
+                      10,
+                      (index) => const ReportDto(),
+                    ),
+                    isLoading: true,
+                    selectedIds: selectedIds,
+                  ),
+                ),
+                data: (reports) => SliverFillRemaining(
+                  child: _ReporsListBody(
+                    reports: reports,
+                    isLoading: false,
+                    selectedIds: selectedIds,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -209,6 +414,60 @@ class ReportsScreen extends HookConsumerWidget {
             reports: reports,
             isLoading: false,
             selectedIds: selectedIds,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SortByDialog extends HookWidget {
+  const _SortByDialog({
+    super.key,
+    required this.initialVal,
+  });
+
+  final SortReportBy initialVal;
+
+  @override
+  Widget build(BuildContext context) {
+    final sortVal = useState(initialVal);
+
+    return Dialog(
+      child: SizedBox(
+        height: 240,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Wrap(
+            runSpacing: 8,
+            runAlignment: WrapAlignment.center,
+            children: [
+              const Text(
+                'מיין לפי',
+                style: TextStyles.s16w400cGrey5,
+              ),
+              RadioListTile(
+                value: SortReportBy.fromA2Z,
+                groupValue: sortVal.value,
+                onChanged: (_) =>
+                    Navigator.of(context).pop(SortReportBy.fromA2Z),
+                title: const Text('א-ב'),
+              ),
+              RadioListTile(
+                value: SortReportBy.timeFromCloseToFar,
+                groupValue: sortVal.value,
+                onChanged: (_) =>
+                    Navigator.of(context).pop(SortReportBy.timeFromCloseToFar),
+                title: const Text('זמן: מהקרוב אל הרחוק'),
+              ),
+              RadioListTile(
+                value: SortReportBy.timeFromFarToClose,
+                groupValue: sortVal.value,
+                onChanged: (_) =>
+                    Navigator.of(context).pop(SortReportBy.timeFromFarToClose),
+                title: const Text('זמן: מרחוק אל הקרוב'),
+              ),
+            ],
           ),
         ),
       ),

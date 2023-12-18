@@ -13,7 +13,7 @@ class UserService extends _$UserService {
       firstName: 'אלכסוש',
       lastName: 'ינונוש',
       email: 'alexush@yanonush.com',
-      role: Role.ahraiTohnit,
+      role: UserRole.ahraiTohnit,
       apprentices: [
         ApprenticeDto(
           id: '1-11-21',

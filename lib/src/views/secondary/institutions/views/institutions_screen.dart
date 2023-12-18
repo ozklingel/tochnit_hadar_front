@@ -15,7 +15,7 @@ class InstitutionsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final institutionsController = ref.watch(institutionsControllerProvider);
-    final sortBy = useState(SortBy.fromA2Z);
+    final sortBy = useState(SortInstitutionBy.fromA2Z);
     final isSearchActive = useState(false);
     final searchTextEditingController = useTextEditingController();
     useListenable(searchTextEditingController);
@@ -25,6 +25,7 @@ class InstitutionsScreen extends HookConsumerWidget {
           .toLowerCase()
           .contains(searchTextEditingController.text.toLowerCase()),
     );
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -94,31 +95,31 @@ class InstitutionsScreen extends HookConsumerWidget {
                     style: TextStyles.s14w400cGrey5,
                   ),
                   onPressed: () async {
-                    final result = await showDialog<SortBy?>(
+                    final result = await showDialog<SortInstitutionBy?>(
                       context: context,
-                      builder: (context) => _SortDialog(
+                      builder: (context) => _SortByDialog(
                         initialVal: sortBy.value,
                       ),
                     );
 
                     switch (result) {
-                      case SortBy.fromA2Z:
-                        sortBy.value = SortBy.fromA2Z;
+                      case SortInstitutionBy.fromA2Z:
+                        sortBy.value = SortInstitutionBy.fromA2Z;
                         ref
                             .read(institutionsControllerProvider.notifier)
-                            .sortBy(SortBy.fromA2Z);
+                            .sortBy(SortInstitutionBy.fromA2Z);
                         break;
-                      case SortBy.scoreLow2High:
-                        sortBy.value = SortBy.scoreLow2High;
+                      case SortInstitutionBy.scoreLow2High:
+                        sortBy.value = SortInstitutionBy.scoreLow2High;
                         ref
                             .read(institutionsControllerProvider.notifier)
-                            .sortBy(SortBy.scoreLow2High);
+                            .sortBy(SortInstitutionBy.scoreLow2High);
                         break;
-                      case SortBy.scoreHigh2Low:
-                        sortBy.value = SortBy.scoreHigh2Low;
+                      case SortInstitutionBy.scoreHigh2Low:
+                        sortBy.value = SortInstitutionBy.scoreHigh2Low;
                         ref
                             .read(institutionsControllerProvider.notifier)
-                            .sortBy(SortBy.scoreHigh2Low);
+                            .sortBy(SortInstitutionBy.scoreHigh2Low);
                         break;
                       case null:
                         return;
@@ -159,13 +160,13 @@ class InstitutionsScreen extends HookConsumerWidget {
   }
 }
 
-class _SortDialog extends HookWidget {
-  const _SortDialog({
+class _SortByDialog extends HookWidget {
+  const _SortByDialog({
     super.key,
     required this.initialVal,
   });
 
-  final SortBy initialVal;
+  final SortInstitutionBy initialVal;
 
   @override
   Widget build(BuildContext context) {
@@ -185,23 +186,24 @@ class _SortDialog extends HookWidget {
                 style: TextStyles.s16w400cGrey5,
               ),
               RadioListTile(
-                value: SortBy.fromA2Z,
+                value: SortInstitutionBy.fromA2Z,
                 groupValue: sortVal.value,
-                onChanged: (_) => Navigator.of(context).pop(SortBy.fromA2Z),
+                onChanged: (_) =>
+                    Navigator.of(context).pop(SortInstitutionBy.fromA2Z),
                 title: const Text('א-ב'),
               ),
               RadioListTile(
-                value: SortBy.scoreLow2High,
+                value: SortInstitutionBy.scoreLow2High,
                 groupValue: sortVal.value,
                 onChanged: (_) =>
-                    Navigator.of(context).pop(SortBy.scoreLow2High),
+                    Navigator.of(context).pop(SortInstitutionBy.scoreLow2High),
                 title: const Text('ציון מוסד- נמוך אל הגבוה'),
               ),
               RadioListTile(
-                value: SortBy.scoreHigh2Low,
+                value: SortInstitutionBy.scoreHigh2Low,
                 groupValue: sortVal.value,
                 onChanged: (_) =>
-                    Navigator.of(context).pop(SortBy.scoreHigh2Low),
+                    Navigator.of(context).pop(SortInstitutionBy.scoreHigh2Low),
                 title: const Text('ציון מוסד- גבוה אל הנמוך'),
               ),
             ],

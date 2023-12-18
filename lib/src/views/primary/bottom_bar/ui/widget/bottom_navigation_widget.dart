@@ -67,13 +67,13 @@ class BottomNavigationWidget extends ConsumerWidget {
                   icon: Icon(FluentIcons.mail_24_regular),
                   label: 'הודעות',
                 ),
-                if (user.role == Role.melave)
+                if (user.role == UserRole.melave)
                   const BottomNavigationBarItem(
                     activeIcon: Icon(FluentIcons.person_24_regular),
                     icon: Icon(FluentIcons.person_24_regular),
                     label: 'חניכים',
                   )
-                else if (user.role == Role.ahraiTohnit)
+                else if (user.role == UserRole.ahraiTohnit)
                   const BottomNavigationBarItem(
                     activeIcon: Icon(FluentIcons.people_24_regular),
                     icon: Icon(FluentIcons.people_24_regular),

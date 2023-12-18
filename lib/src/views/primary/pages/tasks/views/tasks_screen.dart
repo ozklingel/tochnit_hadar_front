@@ -23,11 +23,11 @@ class TasksScreen extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
 
-    if (user.role == Role.melave) {
+    if (user.role == UserRole.melave) {
       return const _MelaveTasksBody();
     }
 
-    if (user.role == Role.ahraiTohnit) {
+    if (user.role == UserRole.ahraiTohnit) {
       return const _AhraiTohnitTasksBody();
     }
 

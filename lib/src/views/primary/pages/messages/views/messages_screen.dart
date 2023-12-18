@@ -23,7 +23,7 @@ class MessagesScreen extends ConsumerWidget {
     final msgsController = ref.watch(messagesControllerProvider);
 
     switch (user.role) {
-      case Role.ahraiTohnit:
+      case UserRole.ahraiTohnit:
         return DefaultTabController(
           length: 3,
           initialIndex: 1,
@@ -43,7 +43,7 @@ class MessagesScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            floatingActionButton: user.role == Role.ahraiTohnit
+            floatingActionButton: user.role == UserRole.ahraiTohnit
                 ? FloatingActionButton(
                     onPressed: () => const NewMessageRouteData().push(context),
                     shape: const CircleBorder(),
@@ -110,7 +110,7 @@ class MessagesScreen extends ConsumerWidget {
             ),
           ),
         );
-      case Role.melave:
+      case UserRole.melave:
       default:
         return Scaffold(
           appBar: AppBar(

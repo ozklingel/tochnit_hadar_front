@@ -13,7 +13,7 @@ class ApprenticesOrUsersScreen extends ConsumerWidget {
     final user = ref.watch(userServiceProvider);
 
     switch (user.role) {
-      case Role.melave:
+      case UserRole.melave:
         return const ApprenticesScreenBody();
       default:
         return const UsersScreenBody();

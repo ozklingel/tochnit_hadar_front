@@ -40,7 +40,7 @@ class MessageDetailsScreen extends ConsumerWidget {
             child: const Icon(Icons.more_vert),
             itemBuilder: (context) {
               return [
-                if (user.role == Role.melave)
+                if (user.role == UserRole.melave)
                   PopupMenuItem(
                     value: 'delete',
                     child: const Text('מחק הודעה'),

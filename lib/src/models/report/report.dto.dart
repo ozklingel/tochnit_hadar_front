@@ -23,11 +23,20 @@ class ReportDto with _$ReportDto {
 
 enum ReportEventType {
   none,
-  offlineMeeting,
+  offlineMeeting, // מפגש
   onlineMeeting,
-  phoneCall,
+  recurringMeeting, // מפגש מחזור
+  matsbarGathering, // ישיבת מצב”ר
+  phoneCall, // שיחה
+  baseVisit, // ביקור בבסיס
+  recurringSabath, // שבת מחזור
   fiveMessages,
-  failedAttempt;
+  annualConference, // כנס מלווים שנתי
+  monthlyProfessionalConference, // כנס מלווים מקצועי חודשי
+  doingForAlumni, // עשיה לבוגרים
+  adminsGathering, // ישיבת רכזי תוכנית
+  failedAttempt // נסיון שכשל
+  ;
 
   String get name {
     switch (this) {
@@ -43,8 +52,22 @@ enum ReportEventType {
         return '5 הודעות';
       case ReportEventType.failedAttempt:
         return 'נסיון כושל';
-      default:
-        return '';
+      case ReportEventType.recurringMeeting:
+        return 'מפגש מחזור';
+      case ReportEventType.matsbarGathering:
+        return 'ישיבת מצב”ר';
+      case ReportEventType.baseVisit:
+        return 'ביקור בבסיס';
+      case ReportEventType.recurringSabath:
+        return 'שבת מחזור';
+      case ReportEventType.annualConference:
+        return 'כנס מלווים שנתי';
+      case ReportEventType.monthlyProfessionalConference:
+        return 'כנס מלווים מקצועי חודשי';
+      case ReportEventType.doingForAlumni:
+        return 'עשיה לבוגרים';
+      case ReportEventType.adminsGathering:
+        return 'ישיבת רכזי תוכנית';
     }
   }
 }

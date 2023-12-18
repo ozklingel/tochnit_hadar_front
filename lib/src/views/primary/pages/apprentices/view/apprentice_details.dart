@@ -87,7 +87,7 @@ class _ApprenticeDetailsScreenState
         centerTitle: true,
         title: const Text('כרטיס חניך'),
         actions: [
-          if (user.role == Role.ahraiTohnit)
+          if (user.role == UserRole.ahraiTohnit)
             PopupMenuButton(
               offset: const Offset(0, 32),
               itemBuilder: (context) => [
@@ -621,7 +621,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ],
           ),
         ),
-        if (user.role == Role.ahraiTohnit) ...[
+        if (user.role == UserRole.ahraiTohnit) ...[
           DetailsCard(
             title: 'מצב”ר',
             trailing: Row(
@@ -1119,7 +1119,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
         ),
         DetailsCard(
           title: 'משפחה',
-          trailing: user.role == Role.ahraiTohnit
+          trailing: user.role == UserRole.ahraiTohnit
               ? IconButton(
                   icon: const Icon(
                     FluentIcons.add_circle_24_regular,
@@ -1166,7 +1166,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
                       ),
                     ),
                     const Spacer(),
-                    if (user.role == Role.ahraiTohnit) ...[
+                    if (user.role == UserRole.ahraiTohnit) ...[
                       _RowIconButton(
                         onPressed: () => Toaster.unimplemented(),
                         icon: const Icon(FluentIcons.edit_24_regular),
