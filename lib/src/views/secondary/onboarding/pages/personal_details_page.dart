@@ -1,33 +1,29 @@
-import 'dart:ui';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/secondary/onboarding/controller/onboarding_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/constants/consts.dart';
 
-enum _Region {
-  none,
-  center,
-  jerusalem,
-  north,
-  south,
-  yehuda,
-}
+class OnboardingPersonalDetails extends HookConsumerWidget {
+  const OnboardingPersonalDetails({
+    super.key,
+    required this.onSuccess,
+  });
 
-class OnboardingPersonalDetails extends HookWidget {
-  const OnboardingPersonalDetails({super.key});
+  final VoidCallback onSuccess;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final emailController = useTextEditingController();
-    final selectedDatetime = useState(DateTime.now());
+    final selectedDateOfBirth = useState(DateTime.now());
     final cityController = useTextEditingController();
-    final selectedRegion = useState(_Region.none);
+    final selectedRegion = useState(AddressRegion.none);
     final isTermsOfServiceAccepted = useState(false);
 
     return FocusTraversalGroup(
@@ -56,7 +52,7 @@ class OnboardingPersonalDetails extends HookWidget {
             onTap: () async {
               final newDate = await showDatePicker(
                 context: context,
-                initialDate: selectedDatetime.value,
+                initialDate: selectedDateOfBirth.value,
                 firstDate: DateTime.fromMillisecondsSinceEpoch(0),
                 lastDate: DateTime.now(),
               );
@@ -65,7 +61,7 @@ class OnboardingPersonalDetails extends HookWidget {
                 return;
               }
 
-              selectedDatetime.value = newDate;
+              selectedDateOfBirth.value = newDate;
             },
             borderRadius: BorderRadius.circular(36),
             child: IgnorePointer(
@@ -102,7 +98,7 @@ class OnboardingPersonalDetails extends HookWidget {
           ),
           DropdownButtonHideUnderline(
             child: DropdownButton2(
-              value: selectedRegion.value == _Region.none
+              value: selectedRegion.value == AddressRegion.none
                   ? null
                   : selectedRegion.value,
               hint: const Text('אזור מגורים'),
@@ -118,7 +114,7 @@ class OnboardingPersonalDetails extends HookWidget {
                 padding: const EdgeInsets.only(right: 8),
               ),
               onChanged: (value) =>
-                  selectedRegion.value = value ?? _Region.none,
+                  selectedRegion.value = value ?? AddressRegion.none,
               dropdownStyleData: const DropdownStyleData(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -146,40 +142,41 @@ class OnboardingPersonalDetails extends HookWidget {
                   ),
                 ),
               ),
-              items: const [
+              items: [
                 DropdownMenuItem(
-                  value: _Region.center,
-                  child: Text('אזור המרכז'),
+                  value: AddressRegion.center,
+                  child: Text(AddressRegion.center.name),
                 ),
                 DropdownMenuItem(
-                  value: _Region.jerusalem,
-                  child: Text('ירושלים והסביבה'),
+                  value: AddressRegion.jerusalem,
+                  child: Text(AddressRegion.jerusalem.name),
                 ),
                 DropdownMenuItem(
-                  value: _Region.north,
-                  child: Text('אזור הצפון'),
+                  value: AddressRegion.north,
+                  child: Text(AddressRegion.north.name),
                 ),
                 DropdownMenuItem(
-                  value: _Region.south,
-                  child: Text('אזור הדרום'),
+                  value: AddressRegion.south,
+                  child: Text(AddressRegion.south.name),
                 ),
                 DropdownMenuItem(
-                  value: _Region.yehuda,
-                  child: Text('יהודה ושומרון'),
+                  value: AddressRegion.yehuda,
+                  child: Text(AddressRegion.yehuda.name),
                 ),
               ],
             ),
           ),
           CheckboxListTile.adaptive(
             focusNode: FocusNode(skipTraversal: true),
+            controlAffinity: ListTileControlAffinity.leading,
             value: isTermsOfServiceAccepted.value,
             onChanged: (val) => isTermsOfServiceAccepted.value =
                 !isTermsOfServiceAccepted.value,
             title: Row(
               children: [
-                Text(
+                const Text(
                   'אני מאשר את',
-                  style: Theme.of(context).textTheme.bodyMedium!,
+                  style: TextStyles.s11w400,
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).push(
@@ -204,11 +201,8 @@ class OnboardingPersonalDetails extends HookWidget {
                   ),
                   child: Text(
                     'תנאי השימוש ומדיניות הפרטיות',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    style: TextStyles.s11w500.copyWith(
                       decoration: TextDecoration.underline,
-                      fontVariations: const [
-                        FontVariation('wght', 500),
-                      ],
                     ),
                   ),
                 ),
@@ -218,7 +212,19 @@ class OnboardingPersonalDetails extends HookWidget {
           LargeFilledRoundedButton(
             label: 'המשך',
             onPressed: isTermsOfServiceAccepted.value
-                ? () => Toaster.unimplemented()
+                ? () async {
+                    final result = await ref
+                        .read(onboardingControllerProvider.notifier)
+                        .onboardingInfo(
+                          email: emailController.text,
+                          dateOfBirth: selectedDateOfBirth.value,
+                          city: cityController.text,
+                        );
+
+                    if (result) {
+                      onSuccess();
+                    }
+                  }
                 : null,
           ),
         ],

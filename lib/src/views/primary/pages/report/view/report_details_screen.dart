@@ -12,7 +12,7 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
@@ -168,29 +168,30 @@ class ReportDetailsScreen extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (user.role == UserRole.melave)
+                  if (user.valueOrNull?.role == UserRole.melave)
                     InputFieldContainer(
                       label: 'בחירת חניכים',
                       isRequired: true,
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton2<ApprenticeDto>(
-                          value: user.apprentices
-                                  .singleWhere(
-                                    (element) => selectedApprentices.value
-                                        .contains(element),
-                                    orElse: () => const ApprenticeDto(),
-                                  )
-                                  .id
-                                  .isEmpty
+                          value: (user.valueOrNull?.apprentices
+                                      .singleWhere(
+                                        (element) => selectedApprentices.value
+                                            .contains(element),
+                                        orElse: () => const ApprenticeDto(),
+                                      )
+                                      .id
+                                      .isEmpty ??
+                                  true)
                               ? null
-                              : user.apprentices.singleWhere(
+                              : user.valueOrNull?.apprentices.singleWhere(
                                   (element) => selectedApprentices.value
                                       .contains(element),
                                   orElse: () => const ApprenticeDto(),
                                 ),
                           hint: const Text('בחירת חניכים'),
                           selectedItemBuilder: (context) {
-                            return user.apprentices
+                            return (user.valueOrNull?.apprentices ?? [])
                                 .map(
                                   (e) => Center(
                                     child: SizedBox(
@@ -281,7 +282,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                               ),
                             ),
                           ),
-                          items: user.apprentices.map(
+                          items: user.valueOrNull?.apprentices.map(
                             (e) {
                               return DropdownMenuItem(
                                 value: e,
@@ -344,7 +345,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         ),
                       ),
                     )
-                  else if (user.role == UserRole.ahraiTohnit)
+                  else if (user.valueOrNull?.role == UserRole.ahraiTohnit)
                     InputFieldContainer(
                       label: 'הוספת משתתפים',
                       isRequired: true,

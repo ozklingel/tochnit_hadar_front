@@ -14,7 +14,7 @@ import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
@@ -87,7 +87,7 @@ class _ApprenticeDetailsScreenState
         centerTitle: true,
         title: const Text('כרטיס חניך'),
         actions: [
-          if (user.role == UserRole.ahraiTohnit)
+          if (user.valueOrNull?.role == UserRole.ahraiTohnit)
             PopupMenuButton(
               offset: const Offset(0, 32),
               itemBuilder: (context) => [
@@ -621,7 +621,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ],
           ),
         ),
-        if (user.role == UserRole.ahraiTohnit) ...[
+        if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
           DetailsCard(
             title: 'מצב”ר',
             trailing: Row(
@@ -1119,7 +1119,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
         ),
         DetailsCard(
           title: 'משפחה',
-          trailing: user.role == UserRole.ahraiTohnit
+          trailing: user.valueOrNull?.role == UserRole.ahraiTohnit
               ? IconButton(
                   icon: const Icon(
                     FluentIcons.add_circle_24_regular,
@@ -1166,7 +1166,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
                       ),
                     ),
                     const Spacer(),
-                    if (user.role == UserRole.ahraiTohnit) ...[
+                    if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                       _RowIconButton(
                         onPressed: () => Toaster.unimplemented(),
                         icon: const Icon(FluentIcons.edit_24_regular),

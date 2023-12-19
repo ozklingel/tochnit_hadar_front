@@ -2,6 +2,8 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hadar_program/src/views/primary/bottom_bar/ui/dashboard_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentice_details.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentices_or_users_screen.dart';
@@ -38,7 +40,11 @@ final _homeNavKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 final _reportsNavKey = GlobalKey<NavigatorState>(debugLabel: 'reports');
 final _apprenticesNavKey = GlobalKey<NavigatorState>(debugLabel: 'apprentices');
 
-@Riverpod(dependencies: [])
+@Riverpod(
+  dependencies: [
+    storage,
+  ],
+)
 GoRouter goRouter(GoRouterRef ref) {
   return GoRouter(
     navigatorKey: _rootNavKey,
@@ -53,6 +59,29 @@ GoRouter goRouter(GoRouterRef ref) {
     ),
     routes: $appRoutes,
     redirect: (context, state) {
+      final userPhone = ref
+              .watch(
+                storageProvider,
+              )
+              .requireValue
+              .getString(
+                Consts.userPhoneKey,
+              ) ??
+          '';
+
+      if (userPhone.isEmpty) {
+        return const OnboardingRouteData().location;
+      }
+
+      final firstOnboarding = ref.read(storageProvider).requireValue.getBool(
+                Consts.firstOnboardingKey,
+              ) ??
+          false;
+
+      if (firstOnboarding) {
+        return OnboardingRouteData(isOnboarding: firstOnboarding).location;
+      }
+
       return null;
     },
   );
@@ -394,13 +423,17 @@ class NewUserRouteData extends GoRouteData {
   path: '/onboarding',
 )
 class OnboardingRouteData extends GoRouteData {
-  const OnboardingRouteData();
+  const OnboardingRouteData({
+    this.isOnboarding = false,
+  });
+
+  final bool isOnboarding;
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const OnboardingScreen();
+    return OnboardingScreen(isOnboarding: isOnboarding);
   }
 }
 

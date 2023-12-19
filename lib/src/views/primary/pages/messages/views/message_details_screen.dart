@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -40,7 +40,7 @@ class MessageDetailsScreen extends ConsumerWidget {
             child: const Icon(Icons.more_vert),
             itemBuilder: (context) {
               return [
-                if (user.role == UserRole.melave)
+                if (user.valueOrNull?.role == UserRole.melave)
                   PopupMenuItem(
                     value: 'delete',
                     child: const Text('מחק הודעה'),

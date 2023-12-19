@@ -12,8 +12,10 @@ abstract class Consts {
   // storage
   static const accessTokenKey = 'accessTokenKey';
   static const userPhoneKey = 'userPhoneKey';
+  static const firstOnboardingKey = 'firstOnboarding';
 
   static const defaultDurationM = Duration(milliseconds: 300);
+  static const defaultErrorDuration = Duration(milliseconds: 4000);
 
   // geolocation
   static const defaultCameraPosition = CameraPosition(

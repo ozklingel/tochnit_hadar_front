@@ -7,7 +7,7 @@ import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
@@ -340,7 +340,7 @@ class _Header extends ConsumerWidget {
                         ),
                         const TextSpan(text: '\n'),
                         TextSpan(
-                          text: user.fullName,
+                          text: user.valueOrNull?.fullName,
                           style: TextStyles.s32w500cWhite,
                         ),
                       ],

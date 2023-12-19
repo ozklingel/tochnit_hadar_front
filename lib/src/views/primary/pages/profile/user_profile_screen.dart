@@ -7,7 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -234,7 +234,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                             );
                           },
                         ),
-                        if (user.role == UserRole.melave)
+                        if (user.valueOrNull?.role == UserRole.melave)
                           const TabBar(
                             tabs: [
                               Tab(text: 'תוכנית הדר'),
@@ -248,7 +248,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
               ),
             ];
           },
-          body: user.role == UserRole.melave
+          body: user.valueOrNull?.role == UserRole.melave
               ? TabBarView(
                   children: [
                     Builder(
@@ -775,7 +775,7 @@ class _GeneralTab extends ConsumerWidget {
                             'סיווג משתמש',
                             textAlign: TextAlign.right,
                           ),
-                          if (user.role == UserRole.melave) ...[
+                          if (user.valueOrNull?.role == UserRole.melave) ...[
                             const SizedBox(height: 10),
                             const Align(
                               alignment: Alignment.centerRight,
@@ -821,7 +821,7 @@ class _GeneralTab extends ConsumerWidget {
                               ),
                             ),
                           ),
-                          if (user.role == UserRole.melave) ...[
+                          if (user.valueOrNull?.role == UserRole.melave) ...[
                             const SizedBox(height: 10),
                             Align(
                               alignment: Alignment.centerRight,
@@ -858,7 +858,7 @@ class _GeneralTab extends ConsumerWidget {
             ),
           ),
         ),
-        if (user.role == UserRole.melave)
+        if (user.valueOrNull?.role == UserRole.melave)
           Builder(
             builder: (context) {
               // print(scrolength);

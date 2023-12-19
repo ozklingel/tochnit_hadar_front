@@ -8,7 +8,7 @@ import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
@@ -23,11 +23,11 @@ class TasksScreen extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
 
-    if (user.role == UserRole.melave) {
+    if (user.valueOrNull?.role == UserRole.melave) {
       return const _MelaveTasksBody();
     }
 
-    if (user.role == UserRole.ahraiTohnit) {
+    if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
       return const _AhraiTohnitTasksBody();
     }
 

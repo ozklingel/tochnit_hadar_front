@@ -5,7 +5,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
@@ -22,7 +22,7 @@ class MessagesScreen extends ConsumerWidget {
     final user = ref.watch(userServiceProvider);
     final msgsController = ref.watch(messagesControllerProvider);
 
-    switch (user.role) {
+    switch (user.valueOrNull?.role) {
       case UserRole.ahraiTohnit:
         return DefaultTabController(
           length: 3,
@@ -43,7 +43,7 @@ class MessagesScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            floatingActionButton: user.role == UserRole.ahraiTohnit
+            floatingActionButton: user.valueOrNull?.role == UserRole.ahraiTohnit
                 ? FloatingActionButton(
                     onPressed: () => const NewMessageRouteData().push(context),
                     shape: const CircleBorder(),

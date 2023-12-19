@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class BottomNavigationWidget extends ConsumerWidget {
@@ -67,13 +67,13 @@ class BottomNavigationWidget extends ConsumerWidget {
                   icon: Icon(FluentIcons.mail_24_regular),
                   label: 'הודעות',
                 ),
-                if (user.role == UserRole.melave)
+                if (user.valueOrNull?.role == UserRole.melave)
                   const BottomNavigationBarItem(
                     activeIcon: Icon(FluentIcons.person_24_regular),
                     icon: Icon(FluentIcons.person_24_regular),
                     label: 'חניכים',
                   )
-                else if (user.role == UserRole.ahraiTohnit)
+                else if (user.valueOrNull?.role == UserRole.ahraiTohnit)
                   const BottomNavigationBarItem(
                     activeIcon: Icon(FluentIcons.people_24_regular),
                     icon: Icon(FluentIcons.people_24_regular),
@@ -89,7 +89,7 @@ class BottomNavigationWidget extends ConsumerWidget {
                   radius: 10,
                   child: Text(
                     '3',
-                    style: TextStyles.s11w500,
+                    style: TextStyles.s11w500fRoboto,
                   ),
                 ),
               ),
@@ -102,7 +102,7 @@ class BottomNavigationWidget extends ConsumerWidget {
                   radius: 10,
                   child: Text(
                     '3',
-                    style: TextStyles.s11w500,
+                    style: TextStyles.s11w500fRoboto,
                   ),
                 ),
               ),

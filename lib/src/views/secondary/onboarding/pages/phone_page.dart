@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -7,14 +5,20 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/secondary/onboarding/controller/onboarding_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class OnboardingPhonePage extends HookWidget {
-  const OnboardingPhonePage({super.key});
+class OnboardingPhonePage extends HookConsumerWidget {
+  const OnboardingPhonePage({
+    super.key,
+    required this.onSuccess,
+  });
+
+  final void Function(String phone) onSuccess;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final phoneTextEditingController = useTextEditingController();
     final phoneFocusNode = useFocusNode();
     final formKey = useMemoized(() => GlobalKey<FormState>(), []);
@@ -94,12 +98,6 @@ class OnboardingPhonePage extends HookWidget {
                       return 'מספר הנייד חייב להיות בעל 10 ספרות';
                     }
 
-                    if (Random().nextBool()) {
-                      return 'מתנצלים, אבל לא זיהינו את מספר הנייד הזה. '
-                          '\n'
-                          'ייתכן שהתבלבת באחד התווים, או שנרשמת ממספר אחר.';
-                    }
-
                     return null;
                   },
                   decoration: InputDecoration(
@@ -145,8 +143,16 @@ class OnboardingPhonePage extends HookWidget {
             const Spacer(),
             LargeFilledRoundedButton(
               label: 'המשך',
-              onPressed:
-                  isFormValid.value ? () => Toaster.unimplemented() : null,
+              onPressed: isFormValid.value
+                  ? () async {
+                      final result = await ref
+                          .read(onboardingControllerProvider.notifier)
+                          .getOtp(phone: phoneTextEditingController.text);
+                      if (result) {
+                        onSuccess(phoneTextEditingController.text);
+                      }
+                    }
+                  : null,
             ),
           ],
         ),

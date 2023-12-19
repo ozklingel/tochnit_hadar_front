@@ -1,7 +1,7 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -83,7 +83,7 @@ class SideDrawer extends ConsumerWidget {
                 title: const Text('מפת מיקומים'),
                 onTap: () => const SupportRouteData().go(context),
               ),
-              if (user.role == UserRole.melave) ...[
+              if (user.valueOrNull?.role == UserRole.melave) ...[
                 ListTile(
                   dense: true,
                   leading: const CircleAvatar(
@@ -102,7 +102,7 @@ class SideDrawer extends ConsumerWidget {
                   title: const Text('פניות שירות'),
                   onTap: () => const SupportRouteData().go(context),
                 ),
-              ] else if (user.role == UserRole.ahraiTohnit) ...[
+              ] else if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                 ListTile(
                   dense: true,
                   leading: const CircleAvatar(

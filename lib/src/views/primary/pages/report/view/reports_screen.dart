@@ -8,7 +8,7 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
@@ -69,7 +69,7 @@ class ReportsScreen extends HookConsumerWidget {
     final filters = useState(<String>['test1', 'test2']);
     final sortBy = useState(SortReportBy.fromA2Z);
 
-    if (user.role == UserRole.ahraiTohnit) {
+    if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
       return Scaffold(
         appBar: AppBar(
           title: const Text('דיווחים'),
@@ -144,7 +144,7 @@ class ReportsScreen extends HookConsumerWidget {
                                   radius: 7,
                                   child: Text(
                                     filters.value.length.toString(),
-                                    style: TextStyles.s11w500,
+                                    style: TextStyles.s11w500fRoboto,
                                   ),
                                 ),
                               ),

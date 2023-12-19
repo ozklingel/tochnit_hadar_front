@@ -3,18 +3,26 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/utils/hooks/interval.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/secondary/onboarding/controller/onboarding_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 const _kPinCodeLength = 6;
 const _timerDuration = 60;
 
-class OnboardingPinCodePage extends HookWidget {
-  const OnboardingPinCodePage({super.key});
+class OnboardingPinCodePage extends HookConsumerWidget {
+  const OnboardingPinCodePage({
+    super.key,
+    required this.onSuccess,
+    required this.phone,
+  });
+
+  final void Function(bool isFirstOnboarding) onSuccess;
+  final String phone;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final pinCodeController = useTextEditingController();
     final timer = useState(_timerDuration);
     final isVoiceMFA = useState(false);
@@ -55,7 +63,7 @@ class OnboardingPinCodePage extends HookWidget {
                 ],
                 const TextSpan(text: ' '),
                 TextSpan(
-                  text: '050-1234567',
+                  text: phone,
                   style: Theme.of(context).textTheme.displayMedium!,
                 ),
                 const TextSpan(text: '\n'),
@@ -67,21 +75,24 @@ class OnboardingPinCodePage extends HookWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: PinCodeTextField(
-              appContext: context,
-              controller: pinCodeController,
-              autoDisposeControllers: false,
-              length: _kPinCodeLength,
-              hintCharacter: '*',
-              cursorColor: AppColors.shade09,
-              pinTheme: PinTheme(
-                inactiveColor: AppColors.shade09,
-                selectedColor: AppColors.shade09,
-                activeColor: AppColors.shade09,
-                errorBorderColor: AppColors.error500,
-                selectedBorderWidth: 2,
-                inactiveBorderWidth: 1,
-                activeBorderWidth: 1,
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: PinCodeTextField(
+                appContext: context,
+                controller: pinCodeController,
+                autoDisposeControllers: false,
+                length: _kPinCodeLength,
+                hintCharacter: '*',
+                cursorColor: AppColors.shade09,
+                pinTheme: PinTheme(
+                  inactiveColor: AppColors.shade09,
+                  selectedColor: AppColors.shade09,
+                  activeColor: AppColors.shade09,
+                  errorBorderColor: AppColors.error500,
+                  selectedBorderWidth: 2,
+                  inactiveBorderWidth: 1,
+                  activeBorderWidth: 1,
+                ),
               ),
             ),
           ),
@@ -89,7 +100,13 @@ class OnboardingPinCodePage extends HookWidget {
             height: 24,
             child: timer.value == 0
                 ? TextButton(
-                    onPressed: () => timer.value = _timerDuration,
+                    onPressed: () async {
+                      await ref
+                          .read(onboardingControllerProvider.notifier)
+                          .getOtp(phone: phone);
+                      timer.value = _timerDuration;
+                      pinCodeController.text = '';
+                    },
                     child: Text(
                       'שליחת קוד חדש',
                       style: Theme.of(context).textTheme.displayMedium!,
@@ -141,7 +158,16 @@ class OnboardingPinCodePage extends HookWidget {
             label: 'המשך',
             onPressed: pinCodeController.text.length != _kPinCodeLength
                 ? null
-                : () => Toaster.unimplemented(),
+                : () async {
+                    final result = await ref
+                        .read(onboardingControllerProvider.notifier)
+                        .verifyOtp(
+                          phone: phone,
+                          otp: pinCodeController.text,
+                        );
+
+                    onSuccess(result.$2);
+                  },
           ),
         ],
       ),

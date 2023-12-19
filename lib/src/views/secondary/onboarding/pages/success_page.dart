@@ -18,6 +18,7 @@ class OnboardingSuccessPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const LoadingWidget(),
@@ -25,10 +26,13 @@ class OnboardingSuccessPage extends StatelessWidget {
         Text(
           topText,
           style: Theme.of(context).textTheme.titleMedium!,
+          textAlign: TextAlign.center,
         ),
+        const SizedBox(height: 6),
         Text(
           bottomText,
           style: Theme.of(context).textTheme.bodyMedium!,
+          textAlign: TextAlign.center,
         ),
       ],
     );
