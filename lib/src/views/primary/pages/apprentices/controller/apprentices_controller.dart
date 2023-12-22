@@ -19,7 +19,7 @@ class ApprenticesController extends _$ApprenticesController {
 
     // await Future.delayed(const Duration(milliseconds: 400));
 
-    final result = (request.data as List<Map<String, dynamic>>)
+    final result = (request.data as List<dynamic>)
         .map(
           (e) => ApprenticeDto.fromJson(e),
         )

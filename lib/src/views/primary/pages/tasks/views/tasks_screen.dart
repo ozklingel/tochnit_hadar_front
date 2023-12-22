@@ -195,7 +195,17 @@ class _MelaveTasksBody extends HookConsumerWidget {
         .map<Widget>(
           (e) => TaskCard(
             task: e,
-            selectedItems: selectedCalls,
+            isSelected: selectedCalls.value.contains(e),
+            onTap: () => ApprenticeDetailsRouteData(id: e.apprentice.id),
+            onLongPress: () {
+              if (selectedCalls.value.contains(e)) {
+                final newList = selectedCalls.value;
+                newList.remove(e);
+                selectedCalls.value = [...newList];
+              } else {
+                selectedCalls.value = [...selectedCalls.value, e];
+              }
+            },
           ),
         )
         .toList();
@@ -205,7 +215,20 @@ class _MelaveTasksBody extends HookConsumerWidget {
         .map<Widget>(
           (e) => TaskCard(
             task: e,
-            selectedItems: selectedMeetings,
+            isSelected: selectedMeetings.value.contains(e),
+            onTap: () => ApprenticeDetailsRouteData(id: e.apprentice.id),
+            onLongPress: () {
+              if (selectedMeetings.value.contains(e)) {
+                final newList = selectedMeetings.value;
+                newList.remove(e);
+                selectedMeetings.value = [...newList];
+              } else {
+                selectedMeetings.value = [
+                  ...selectedMeetings.value,
+                  e,
+                ];
+              }
+            },
           ),
         )
         .toList();
@@ -215,7 +238,17 @@ class _MelaveTasksBody extends HookConsumerWidget {
         .map<Widget>(
           (e) => TaskCard(
             task: e,
-            selectedItems: selectedParents,
+            isSelected: selectedParents.value.contains(e),
+            onTap: () => ApprenticeDetailsRouteData(id: e.apprentice.id),
+            onLongPress: () {
+              if (selectedParents.value.contains(e)) {
+                final newList = selectedParents.value;
+                newList.remove(e);
+                selectedParents.value = [...newList];
+              } else {
+                selectedParents.value = [...selectedParents.value, e];
+              }
+            },
           ),
         )
         .toList();

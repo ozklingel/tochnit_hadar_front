@@ -2,7 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/contact/contact.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -63,7 +63,11 @@ class UsersController extends _$UsersController {
         workType: faker.lorem.word(),
         highSchoolInstitution: faker.lorem.word(),
         highSchoolRavMelamed: faker.lorem.word(),
-        thInstitution: faker.lorem.word(),
+        institutionId: faker.lorem.word(),
+        matsber: faker.lorem.word(),
+        militaryUpdatedDateTime: faker.date
+            .dateTime(minYear: 1971, maxYear: 2004)
+            .millisecondsSinceEpoch,
         thMentor: faker.person.name(),
         thPeriod: faker.lorem.word()[0],
         thRavMelamedYearA: ContactDto(
@@ -76,25 +80,8 @@ class UsersController extends _$UsersController {
           lastName: faker.person.lastName(),
           phone: faker.phoneNumber.de(),
         ),
-        militaryCompound: List.generate(
-          Consts.mockCompoundGuids.length,
-          (index) => CompoundDto(
-            id: Consts.mockCompoundGuids[index],
-            name: faker.lorem.word(),
-            address: AddressDto(
-              city: faker.address.city(),
-              apartment:
-                  faker.randomGenerator.integer(99999, min: 1).toString(),
-              street: faker.address.streetName(),
-              houseNumber:
-                  faker.randomGenerator.integer(999, min: 1).toString(),
-              postalCode: faker.address.zipCode(),
-              floor: faker.randomGenerator.integer(99, min: 1).toString(),
-              entrance: faker.lorem.word()[0],
-              region: faker.address.state(),
-            ),
-          ),
-        )[faker.randomGenerator.integer(Consts.mockCompoundGuids.length)],
+        militaryCompoundId: Consts.mockCompoundGuids[
+            faker.randomGenerator.integer(Consts.mockCompoundGuids.length)],
         militaryDateOfDischarge:
             faker.date.dateTime(minYear: 1971).millisecondsSinceEpoch,
         militaryDateOfEnlistment:
@@ -102,7 +89,7 @@ class UsersController extends _$UsersController {
         militaryPositionNew: faker.lorem.word(),
         militaryPositionOld: faker.lorem.word(),
         militaryUnit: faker.lorem.word(),
-        reports: List.generate(
+        reportsIds: List.generate(
           7,
           (index) => faker.guid.guid(),
         ),
@@ -118,7 +105,6 @@ class UsersController extends _$UsersController {
         contacts: List.generate(
           3,
           (index) => ContactDto(
-            id: faker.guid.guid(),
             firstName: faker.person.firstName(),
             lastName: faker.person.lastName(),
             phone: faker.phoneNumber.de(),

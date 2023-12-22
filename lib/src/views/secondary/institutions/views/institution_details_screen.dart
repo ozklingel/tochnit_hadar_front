@@ -6,9 +6,11 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/secondary/filter/filter_results_page.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -156,9 +158,11 @@ class _UsersTab extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final apprentices =
         ref.watch(apprenticesControllerProvider).valueOrNull?.where(
-                  (element) => element.thInstitution == id,
+                  (element) => element.institutionId == id,
                 ) ??
             [];
+    final compounds = ref.watch(compoundControllerProvider).valueOrNull;
+    final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
 
     final children = List.generate(
       7,
@@ -221,24 +225,36 @@ class _UsersTab extends ConsumerWidget {
         SizedBox(
           child: ListView(
             shrinkWrap: true,
-            children: apprentices
-                .map(
-                  (e) => ListTileWithTagsCard(
-                    avatar: e.avatar,
-                    name: e.fullName,
-                    onlineStatus: e.onlineStatus,
-                    tags: [
-                      e.highSchoolInstitution,
-                      e.thPeriod,
-                      e.militaryPositionNew,
-                      e.thInstitution,
-                      e.militaryCompound.name,
-                      e.militaryUnit,
-                      e.maritalStatus,
-                    ],
-                  ),
-                )
-                .toList(),
+            children: apprentices.map(
+              (e) {
+                final compound = compounds?.singleWhere(
+                      (element) => element.id == e.militaryCompoundId,
+                      orElse: () => const CompoundDto(),
+                    ) ??
+                    const CompoundDto();
+
+                final institution = institutions?.singleWhere(
+                      (element) => element.id == e.institutionId,
+                      orElse: () => const InstitutionDto(),
+                    ) ??
+                    const InstitutionDto();
+
+                return ListTileWithTagsCard(
+                  avatar: e.avatar,
+                  name: e.fullName,
+                  onlineStatus: e.onlineStatus,
+                  tags: [
+                    e.highSchoolInstitution,
+                    e.thPeriod,
+                    e.militaryPositionNew,
+                    institution.name,
+                    compound.name,
+                    e.militaryUnit,
+                    e.maritalStatus,
+                  ],
+                );
+              },
+            ).toList(),
           ),
         ),
       ],

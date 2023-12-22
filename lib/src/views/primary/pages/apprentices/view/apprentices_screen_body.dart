@@ -10,6 +10,8 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/geolocation/geolocation_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/address_controller.dart';
@@ -17,6 +19,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/controller/app
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/apprentice_appbar.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/compound_bottom_sheet.dart';
+import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -164,7 +167,7 @@ class _MapWidget extends HookConsumerWidget {
                               text: apprentices
                                   .where(
                                     (element) =>
-                                        element.militaryCompound.id == e.id,
+                                        element.militaryCompoundId == e.id,
                                   )
                                   .length
                                   .toString(),
@@ -322,7 +325,7 @@ class _ApprenticeList extends ConsumerWidget {
                           highSchoolInstitution: 'highSchool',
                           thPeriod: 'thPeriod',
                           militaryPositionNew: 'militaryPosition',
-                          thInstitution: 'thInstitution',
+                          institutionId: 'thInstitution',
                           militaryUnit: 'militaryUnit',
                           maritalStatus: 'maritalStatus',
                         ),
@@ -342,7 +345,7 @@ class _ApprenticeList extends ConsumerWidget {
   }
 }
 
-class _ListBody extends StatelessWidget {
+class _ListBody extends ConsumerWidget {
   const _ListBody({
     required this.apprentices,
     required this.selectedIds,
@@ -354,43 +357,58 @@ class _ListBody extends StatelessWidget {
   final bool isLoading;
 
   @override
-  Widget build(BuildContext context) {
-    final children = apprentices
-        .map(
-          (e) => Skeletonizer(
-            enabled: isLoading,
-            child: ListTileWithTagsCard(
-              avatar: e.avatar,
-              name: e.fullName,
-              tags: [
-                e.highSchoolInstitution,
-                e.thPeriod,
-                e.militaryPositionNew,
-                e.thInstitution,
-                e.militaryCompound.name,
-                e.militaryUnit,
-                e.maritalStatus,
-              ],
-              isSelected: selectedIds.value.contains(e.id),
-              onTap: () => ApprenticeDetailsRouteData(id: e.id).go(context),
-              onLongPress: () {
-                if (selectedIds.value.contains(e.id)) {
-                  final newList = selectedIds;
-                  newList.value.remove(e.id);
-                  selectedIds.value = [
-                    ...newList.value,
-                  ];
-                } else {
-                  selectedIds.value = [
-                    ...selectedIds.value,
-                    e.id,
-                  ];
-                }
-              },
-            ),
+  Widget build(BuildContext context, ref) {
+    final compounds = ref.watch(compoundControllerProvider).valueOrNull;
+    final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
+
+    final children = apprentices.map(
+      (e) {
+        final compound = compounds?.singleWhere(
+              (element) => element.id == e.militaryCompoundId,
+              orElse: () => const CompoundDto(),
+            ) ??
+            const CompoundDto();
+
+        final institution = institutions?.singleWhere(
+              (element) => element.id == e.institutionId,
+              orElse: () => const InstitutionDto(),
+            ) ??
+            const InstitutionDto();
+
+        return Skeletonizer(
+          enabled: isLoading,
+          child: ListTileWithTagsCard(
+            avatar: e.avatar,
+            name: e.fullName,
+            tags: [
+              e.highSchoolInstitution,
+              e.thPeriod,
+              e.militaryPositionNew,
+              institution.name,
+              compound.name,
+              e.militaryUnit,
+              e.maritalStatus,
+            ],
+            isSelected: selectedIds.value.contains(e.id),
+            onTap: () => ApprenticeDetailsRouteData(id: e.id).go(context),
+            onLongPress: () {
+              if (selectedIds.value.contains(e.id)) {
+                final newList = selectedIds;
+                newList.value.remove(e.id);
+                selectedIds.value = [
+                  ...newList.value,
+                ];
+              } else {
+                selectedIds.value = [
+                  ...selectedIds.value,
+                  e.id,
+                ];
+              }
+            },
           ),
-        )
-        .toList();
+        );
+      },
+    ).toList();
 
     return ListView.separated(
       itemCount: children.length,
@@ -474,6 +492,8 @@ class _SearchResults extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final cityList = ref.watch(addressControllerProvider).valueOrNull ?? [];
+    final compounds = ref.watch(compoundControllerProvider).valueOrNull;
+    final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
 
     return ref.watch(apprenticesControllerProvider).when(
           loading: () => const LoadingWidget(),
@@ -487,68 +507,81 @@ class _SearchResults extends ConsumerWidget {
                 )
                 .take(1)
                 .map(
-                  (e) => ListTileWithTagsCard(
-                    avatar: e.avatar,
-                    name: e.fullName,
-                    tags: [
-                      e.highSchoolInstitution,
-                      e.thPeriod,
-                      e.militaryPositionNew,
-                      e.thInstitution,
-                      e.militaryCompound.name,
-                      e.militaryUnit,
-                      e.maritalStatus,
-                    ],
-                    isSelected: selectedIds.value.contains(e.id),
-                    onLongPress: () {
-                      if (selectedIds.value.contains(e.id)) {
-                        final newList = selectedIds;
-                        newList.value.remove(e.id);
-                        selectedIds.value = [
-                          ...newList.value,
-                        ];
-                      } else {
-                        selectedIds.value = [
-                          ...selectedIds.value,
-                          e.id,
-                        ];
-                      }
-                    },
-                    onTap: () {
-                      mapCameraPosition.value = CameraPosition(
-                        zoom: 8,
-                        target: LatLng(
-                          apprenticesList[Random().nextInt(cityList.length)]
-                              .address
-                              .lat,
-                          apprenticesList[Random().nextInt(cityList.length)]
-                              .address
-                              .lng,
-                        ),
-                      );
-                    },
-                  ),
-                )
-                .toList();
+              (e) {
+                final compound = compounds?.singleWhere(
+                      (element) => element.id == e.militaryCompoundId,
+                      orElse: () => const CompoundDto(),
+                    ) ??
+                    const CompoundDto();
+
+                final institution = institutions?.singleWhere(
+                      (element) => element.id == e.institutionId,
+                      orElse: () => const InstitutionDto(),
+                    ) ??
+                    const InstitutionDto();
+
+                return ListTileWithTagsCard(
+                  avatar: e.avatar,
+                  name: e.fullName,
+                  tags: [
+                    e.highSchoolInstitution,
+                    e.thPeriod,
+                    e.militaryPositionNew,
+                    institution.name,
+                    compound.name,
+                    e.militaryUnit,
+                    e.maritalStatus,
+                  ],
+                  isSelected: selectedIds.value.contains(e.id),
+                  onLongPress: () {
+                    if (selectedIds.value.contains(e.id)) {
+                      final newList = selectedIds;
+                      newList.value.remove(e.id);
+                      selectedIds.value = [
+                        ...newList.value,
+                      ];
+                    } else {
+                      selectedIds.value = [
+                        ...selectedIds.value,
+                        e.id,
+                      ];
+                    }
+                  },
+                  onTap: () {
+                    mapCameraPosition.value = CameraPosition(
+                      zoom: 8,
+                      target: LatLng(
+                        apprenticesList[Random().nextInt(cityList.length)]
+                            .address
+                            .lat,
+                        apprenticesList[Random().nextInt(cityList.length)]
+                            .address
+                            .lng,
+                      ),
+                    );
+                  },
+                );
+              },
+            ).toList();
 
             final apprenticeCompounds = apprenticesList
                 .where(
                   (element) =>
-                      element.militaryCompound.name.toLowerCase().contains(
+                      element.militaryCompoundId.toLowerCase().contains(
                             searchString.toLowerCase().trim(),
                           ),
                 )
                 .take(1)
                 .map(
                   (e) => _CompoundOrCityCard(
-                    title: e.militaryCompound.name,
+                    title: e.militaryCompoundId,
                     address: e.address.fullAddress,
                     onTap: () {
                       final compound = ref
                           .read(compoundControllerProvider)
                           .valueOrNull
                           ?.firstWhere(
-                            (element) => element.id == e.militaryCompound.id,
+                            (element) => element.id == e.militaryCompoundId,
                           );
                       mapCameraPosition.value = CameraPosition(
                         zoom: Consts.defaultGeolocationZoom,

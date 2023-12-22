@@ -55,7 +55,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
             .watch(apprenticesControllerProvider)
             .valueOrNull
             ?.where(
-              (element) => element.militaryCompound.id == e.id,
+              (element) => element.militaryCompoundId == e.id,
             )
             .toList() ??
         [];

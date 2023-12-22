@@ -25,7 +25,7 @@ class MessagesController extends _$MessagesController {
     // final apprentices =
     //     ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
-    final parsed = (request as List<Map<String, dynamic>>)
+    final parsed = (request.data as List<dynamic>)
         .map((e) => MessageDto.fromJson(e))
         .toList();
 

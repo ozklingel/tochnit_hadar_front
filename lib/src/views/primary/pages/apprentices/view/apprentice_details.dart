@@ -11,7 +11,9 @@ import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/contact/contact.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
+import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
@@ -20,6 +22,7 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
+import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -308,7 +311,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final compound =
         ref.watch(compoundControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == apprentice.militaryCompound.id,
+                  (element) => element.id == apprentice.militaryCompoundId,
                   orElse: () => const CompoundDto(),
                 ) ??
             const CompoundDto();
@@ -414,11 +417,8 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                     )
                                     .editApprentice(
                                       apprentice: apprentice.copyWith(
-                                        militaryCompound: apprentice
-                                            .militaryCompound
-                                            .copyWith(
-                                          name: baseController.text,
-                                        ),
+                                        militaryCompoundId:
+                                            apprentice.militaryCompoundId,
                                         militaryUnit: unitController.text,
                                         militaryPositionNew:
                                             positionNewController.text,
@@ -519,6 +519,12 @@ class _TohnitHadarTabView extends ConsumerWidget {
               (element) => element.apprentices.contains(apprentice.id),
             ) ??
         [];
+    final institution =
+        ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
+                  (element) => element.id == apprentice.institutionId,
+                  orElse: () => const InstitutionDto(),
+                ) ??
+            const InstitutionDto();
 
     return Column(
       children: [
@@ -536,8 +542,9 @@ class _TohnitHadarTabView extends ConsumerWidget {
             builder: (context, ref, child) {
               final reports =
                   ref.watch(reportsControllerProvider).valueOrNull?.where(
-                            (element) =>
-                                apprentice.reports.take(3).contains(element.id),
+                            (element) => apprentice.reportsIds
+                                .take(3)
+                                .contains(element.id),
                           ) ??
                       [];
 
@@ -580,7 +587,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             children: [
               DetailsRowItem(
                 label: 'מקום לימודים',
-                data: apprentice.thInstitution,
+                data: institution.name,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(

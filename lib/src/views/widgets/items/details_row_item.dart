@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/contact/contact.dto.dart';
 
 class DetailsRowItem extends StatelessWidget {
   const DetailsRowItem({

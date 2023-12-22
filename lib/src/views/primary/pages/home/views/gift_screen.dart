@@ -6,8 +6,10 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
@@ -28,6 +30,12 @@ class GiftScreen extends HookConsumerWidget {
                   (element) => element.events.any((e) => e.id == eventId),
                 ) ??
             const ApprenticeDto();
+    final compound =
+        ref.watch(compoundControllerProvider).valueOrNull?.singleWhere(
+                  (element) => element.id == apprentice.militaryCompoundId,
+                  orElse: () => const CompoundDto(),
+                ) ??
+            const CompoundDto();
 
     final isShowCouponCode = useState(false);
 
@@ -70,7 +78,7 @@ class GiftScreen extends HookConsumerWidget {
                             children: [
                               DetailsRowItem(
                                 label: 'בסיס',
-                                data: apprentice.militaryCompound.name,
+                                data: compound.name,
                                 dataWidth: 100,
                               ),
                               const Spacer(),

@@ -9,37 +9,32 @@ import 'package:hadar_program/src/models/task/task.dto.dart';
 class TaskCard extends StatelessWidget {
   const TaskCard({
     super.key,
-    required this.selectedItems,
     required this.task,
+    required this.onLongPress,
+    required this.isSelected,
+    required this.onTap,
   });
 
-  final ValueNotifier<List<TaskDto>> selectedItems;
+  final bool isSelected;
   final TaskDto task;
+  final VoidCallback onLongPress;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selectedItems.value.contains(task)
-          ? AppColors.blue07
-          : Colors.transparent,
+      color: isSelected ? AppColors.blue07 : Colors.transparent,
       child: InkWell(
         // TODO(noga-dev): provide callback instead of passing selectedItems
-        onLongPress: () {
-          if (selectedItems.value.contains(task)) {
-            final newList = selectedItems.value;
-            newList.remove(task);
-            selectedItems.value = [...newList];
-          } else {
-            selectedItems.value = [...selectedItems.value, task];
-          }
-        },
+        onLongPress: onLongPress,
+        onTap: onTap,
         child: ListTile(
           leading: CircleAvatar(
             radius: 16,
             backgroundImage: CachedNetworkImageProvider(
               task.apprentice.avatar,
             ),
-            child: selectedItems.value.contains(task)
+            child: isSelected
                 ? const Align(
                     alignment: Alignment.bottomRight,
                     child: CircleAvatar(
