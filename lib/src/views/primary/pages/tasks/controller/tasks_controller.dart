@@ -37,7 +37,7 @@ class TasksController extends _$TasksController {
                 minYear: 1972,
                 maxYear: DateTime.now().year,
               )
-              .millisecondsSinceEpoch,
+              .toIso8601String(),
         );
       },
     );

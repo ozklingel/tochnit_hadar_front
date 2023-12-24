@@ -7,10 +7,11 @@ part 'contact.dto.g.dart';
 @Freezed(fromJson: false)
 class ContactDto with _$ContactDto {
   const factory ContactDto({
+    @Default('') String email,
+    @Default('') String id,
     @Default('') String firstName,
     @Default('') String lastName,
     @Default('') String phone,
-    @Default('') String email,
     @Default('') String relationship,
   }) = _ContactDto;
 

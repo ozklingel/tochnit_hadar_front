@@ -31,7 +31,7 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
     final taskTextController = useTextEditingController(text: task.title);
     final detailsTextController = useTextEditingController(text: task.details);
     final frequencyController = useState(task.frequency);
-    final dateTimeController = useState(task.dateTime.asDateTime);
+    final dateTimeController = useState(DateTime.parse(task.dateTime));
     useListenable(taskTextController);
     useListenable(detailsTextController);
 
@@ -80,7 +80,7 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                 child: TextButton.icon(
                   onPressed: () => showPickDateAndTimeDialog(context),
                   label: Text(
-                    task.dateTime == 0
+                    task.dateTime.isEmpty
                         ? 'הוספת תזמון'
                         : task.dateTime.asDateTime.asTimeAgo,
                     style: TextStyles.s18w400cBlue02,

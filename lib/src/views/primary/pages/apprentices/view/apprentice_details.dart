@@ -668,7 +668,10 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ),
             child: Column(
               children: reports
-                  .sortedBy<num>((element) => element.dateTime)
+                  .sortedBy<num>(
+                    (element) =>
+                        DateTime.parse(element.dateTime).millisecondsSinceEpoch,
+                  )
                   .reversed
                   .take(3)
                   .map(
@@ -993,9 +996,9 @@ class _EventBottomSheet extends HookConsumerWidget {
                                 event: EventDto(
                                   title: titleController.text,
                                   description: descriptionController.text,
-                                  dateTime: selectedDatetime
-                                          .value?.millisecondsSinceEpoch ??
-                                      0,
+                                  dateTime: selectedDatetime.value
+                                          ?.toIso8601String() ??
+                                      DateTime.now().toIso8601String(),
                                 ),
                               );
                               if (result) {
@@ -1013,9 +1016,9 @@ class _EventBottomSheet extends HookConsumerWidget {
                                 event: edited.copyWith(
                                   title: titleController.text,
                                   description: descriptionController.text,
-                                  dateTime: selectedDatetime
-                                          .value?.millisecondsSinceEpoch ??
-                                      0,
+                                  dateTime: selectedDatetime.value
+                                          ?.toIso8601String() ??
+                                      DateTime.now().toIso8601String(),
                                 ),
                               );
 
@@ -1222,7 +1225,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'ר”מ בתיכון',
-                data: apprentice.highSchoolRavMelamed,
+                data: apprentice.highSchoolRavMelamed.fullName,
               ),
             ],
           ),
@@ -1243,7 +1246,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'מקום לימודים',
-                data: apprentice.educationalInstitution,
+                data: apprentice.educationInstitution,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(

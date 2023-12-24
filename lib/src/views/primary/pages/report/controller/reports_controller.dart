@@ -47,7 +47,7 @@ class ReportsController extends _$ReportsController {
           ),
           dateTime: faker.date
               .dateTime(minYear: 1971, maxYear: DateTime.now().year)
-              .millisecondsSinceEpoch,
+              .toIso8601String(),
         );
       },
     );
@@ -69,12 +69,16 @@ class ReportsController extends _$ReportsController {
         return;
       case SortReportBy.timeFromFarToClose:
         final result = state.value!;
-        final sorted = result.sortedBy<num>((e) => e.dateTime);
+        final sorted = result.sortedBy<num>(
+          (e) => DateTime.parse(e.dateTime).millisecondsSinceEpoch,
+        );
         state = AsyncData(sorted);
         return;
       case SortReportBy.timeFromCloseToFar:
         final result = state.value!;
-        final sorted = result.sortedBy<num>((element) => element.dateTime);
+        final sorted = result.sortedBy<num>(
+          (element) => DateTime.parse(element.dateTime).millisecondsSinceEpoch,
+        );
         final reversed = sorted.reversed.toList();
         state = AsyncData(reversed);
         return;

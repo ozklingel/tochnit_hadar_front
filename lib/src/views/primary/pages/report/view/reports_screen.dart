@@ -614,11 +614,7 @@ class _ReporsListBody extends ConsumerWidget {
                               children: [
                                 TextSpan(
                                   text: DateFormat('dd.MM.yy')
-                                      .format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                          e.dateTime,
-                                        ),
-                                      )
+                                      .format(DateTime.parse(e.dateTime))
                                       .toString(),
                                 ),
                                 const TextSpan(text: ', '),

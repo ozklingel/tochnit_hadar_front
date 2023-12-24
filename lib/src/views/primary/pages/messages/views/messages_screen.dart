@@ -67,11 +67,11 @@ class MessagesScreen extends ConsumerWidget {
                     loading: () => ListView(
                       children: List.generate(
                         10,
-                        (index) => const MessageWidget.collapsed(
+                        (index) => MessageWidget.collapsed(
                           message: MessageDto(
                             title: 'titletitletitletitle',
                             content: 'contentcontentcontent',
-                            dateTime: 0,
+                            dateTime: DateTime.now().toIso8601String(),
                             attachments: ['549247615'],
                             from: '549247615',
                           ),
@@ -140,10 +140,10 @@ class MessagesScreen extends ConsumerWidget {
                     isLoading: true,
                     messages: List.generate(
                       10,
-                      (index) => const MessageDto(
+                      (index) => MessageDto(
                         title: 'titletitletitletitle',
                         content: 'contentcontentcontent',
-                        dateTime: 0,
+                        dateTime: DateTime.now().toIso8601String(),
                         attachments: ['attachment'],
                         from: '549247615',
                       ),

@@ -14,7 +14,7 @@ class ReportDto with _$ReportDto {
     @Default([]) List<String> attachments,
     @Default('') @JsonKey(name: 'allreadyread') String allreadyRead,
     // in milliseconds since epoch
-    @Default(0) int dateTime,
+    @Default('') String dateTime,
   }) = _ReportDto;
 
   factory ReportDto.fromJson(Map<String, dynamic> json) =>

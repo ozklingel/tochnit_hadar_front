@@ -51,23 +51,21 @@ class UsersController extends _$UsersController {
           entrance: faker.lorem.word()[0],
           region: faker.address.state(),
         ),
-        dateOfBirth: faker.date
-            .dateTime(minYear: 1971, maxYear: 2004)
-            .millisecondsSinceEpoch,
+        dateOfBirth:
+            faker.date.dateTime(minYear: 1971, maxYear: 2004).toIso8601String(),
         maritalStatus: faker.lorem.word(),
         educationFaculty: faker.lorem.word(),
-        educationalInstitution: faker.lorem.word(),
+        educationInstitution: faker.lorem.word(),
         workOccupation: faker.lorem.word(),
         workPlace: faker.lorem.word(),
         workStatus: faker.lorem.word(),
         workType: faker.lorem.word(),
         highSchoolInstitution: faker.lorem.word(),
-        highSchoolRavMelamed: faker.lorem.word(),
+        highSchoolRavMelamed: const ContactDto(),
         institutionId: faker.lorem.word(),
         matsber: faker.lorem.word(),
-        militaryUpdatedDateTime: faker.date
-            .dateTime(minYear: 1971, maxYear: 2004)
-            .millisecondsSinceEpoch,
+        militaryUpdatedDateTime:
+            faker.date.dateTime(minYear: 1971, maxYear: 2004).toIso8601String(),
         thMentor: faker.person.name(),
         thPeriod: faker.lorem.word()[0],
         thRavMelamedYearA: ContactDto(
@@ -83,9 +81,9 @@ class UsersController extends _$UsersController {
         militaryCompoundId: Consts.mockCompoundGuids[
             faker.randomGenerator.integer(Consts.mockCompoundGuids.length)],
         militaryDateOfDischarge:
-            faker.date.dateTime(minYear: 1971).millisecondsSinceEpoch,
+            faker.date.dateTime(minYear: 1971).toIso8601String(),
         militaryDateOfEnlistment:
-            faker.date.dateTime(minYear: 1971).millisecondsSinceEpoch,
+            faker.date.dateTime(minYear: 1971).toIso8601String(),
         militaryPositionNew: faker.lorem.word(),
         militaryPositionOld: faker.lorem.word(),
         militaryUnit: faker.lorem.word(),
@@ -99,7 +97,7 @@ class UsersController extends _$UsersController {
             id: Consts.mockEventsGuids[index],
             title: faker.lorem.word(),
             description: faker.lorem.sentence(),
-            dateTime: faker.date.dateTime().millisecondsSinceEpoch,
+            dateTime: faker.date.dateTime().toIso8601String(),
           ),
         ),
         contacts: List.generate(

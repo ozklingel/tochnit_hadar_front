@@ -23,7 +23,7 @@ class TaskDto with _$TaskDto {
     @Default(TaskType.none) TaskType reportEventType,
     @Default(ApprenticeDto()) ApprenticeDto apprentice,
     // InMsSinceEpoch
-    @Default(0) int dateTime,
+    @Default('') String dateTime,
   }) = _TaskDto;
 
   factory TaskDto.fromJson(Map<String, dynamic> json) =>

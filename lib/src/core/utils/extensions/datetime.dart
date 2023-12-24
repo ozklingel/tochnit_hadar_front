@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:kosher_dart/kosher_dart.dart';
 import 'package:timeago/timeago.dart';
 
-extension ReportFromMillisecondsSinceEpochX on int {
-  DateTime get asDateTime => DateTime.fromMillisecondsSinceEpoch(this);
+extension ReportFromMillisecondsSinceEpochX on String {
+  DateTime get asDateTime => DateTime.parse(this);
 }
 
 extension ReportDateTimeX on DateTime? {
