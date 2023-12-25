@@ -69,18 +69,18 @@ GoRouter goRouter(GoRouterRef ref) {
               ) ??
           '';
 
-      if (userPhone.isEmpty) {
-        return const OnboardingRouteData().location;
-      }
-
-      final firstOnboarding = ref.read(storageProvider).requireValue.getBool(
-                Consts.firstOnboardingKey,
-              ) ??
-          false;
-
-      if (firstOnboarding) {
-        return OnboardingRouteData(isOnboarding: firstOnboarding).location;
-      }
+      // if (userPhone.isEmpty) {
+      //   return const OnboardingRouteData().location;
+      // }
+      //
+      // final firstOnboarding = ref.read(storageProvider).requireValue.getBool(
+      //           Consts.firstOnboardingKey,
+      //         ) ??
+      //     false;
+      //
+      // if (firstOnboarding) {
+      //   return OnboardingRouteData(isOnboarding: firstOnboarding).location;
+      // }
 
       return null;
     },

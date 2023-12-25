@@ -28,8 +28,8 @@ class HttpService {
   static final httpClient = HttpClient();
 
   static getUserNotiSetting(userid) async {
-    // print(userid);
-    // print(_getNoriSettingUrl + "?userId=" + userid);
+    userid = "972523301800";
+    print("ozzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 
     final response = await http.get(
       Uri.parse("$_getNotifSettingUrl?userId=$userid"),

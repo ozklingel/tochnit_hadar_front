@@ -37,12 +37,12 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
 
   Future<Map<String, dynamic>> _getUserDetail() async {
     // print("access");
-    var data = await HttpService.getUserDetail("+972549247616");
+    var data = await HttpService.getUserDetail("972523301800");
 
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
     myUser = userMap2;
-    // print("apprentices:" + myUser["apprentices"]);
+    print("myUser:" + myUser.toString());
     return userMap2;
   }
 
@@ -193,12 +193,11 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                       const SizedBox(height: 5),
                                       Center(
                                         child: Text(
-                                          (myUser["firstName"] ?? 'NOFIRSTNAME')
-                                                  .replaceAll(' ', '') +
+                                          (myUser["firstName"] ??
+                                                  'NOFIRSTNAME') +
                                               " " +
                                               (myUser["lastName"] ??
-                                                      'NOLASTNAME')
-                                                  .replaceAll(' ', ''),
+                                                  'NOLASTNAME'),
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
@@ -208,8 +207,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                       ),
                                       Center(
                                         child: Text(
-                                          (myUser["phone"] ?? 'NOPHONE')
-                                              .replaceAll(' ', ''),
+                                          (myUser["id"] ?? 'NOPHONE'),
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 15,
@@ -390,7 +388,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
 
-          HttpService.uploadPhoto(galleryFile!, "+972549247616");
+          HttpService.uploadPhoto(galleryFile!, "972523301800");
           setState(() {
             profileimg = FileImage(galleryFile!);
           });
@@ -659,7 +657,7 @@ class _PersonalDetailsTab extends StatelessWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            myUser["phone"] ?? 'NOPHONE',
+                            myUser["id"] ?? 'NOPHONE',
                             textAlign: TextAlign.right,
                           ),
                         ),

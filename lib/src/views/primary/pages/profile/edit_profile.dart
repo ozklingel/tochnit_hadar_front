@@ -36,7 +36,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
 
   Future<Map<String, dynamic>> _getUserDetail() async {
     // print("access");
-    var data = await HttpService.getUserDetail("+972549247616");
+    var data = await HttpService.getUserDetail("972523301800");
 
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
@@ -155,9 +155,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                           height: 5,
                         ),
                         Text(
-                          myUser["firstName"].replaceAll(' ', '') +
-                              " " +
-                              myUser["lastName"].replaceAll(' ', ''),
+                          myUser["firstName"] + " " + myUser["lastName"],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -807,7 +805,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
 
-          HttpService.uploadPhoto(galleryFile!, "549247616");
+          HttpService.uploadPhoto(galleryFile!, "972523301800");
           setState(() {
             profileimg = FileImage(galleryFile!);
           });
@@ -912,7 +910,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                       ];
                       var result = await HttpService.setUserDetail(
                         "userProfile",
-                        "+972549247616",
+                        "972523301800",
                         listOfcontrolerText,
                       );
 
