@@ -31,45 +31,39 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
       i == 0
           ? menuItems.add(
               DropdownMenuItem<String>(
-                value: list[i],
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    list[i],
-                    style: const TextStyle(fontSize: 15),
+                child: Text(
+                  list[i],
+                  style: TextStyle(
+                    fontSize: 15,
                   ),
                 ),
+                value: list[i],
               ),
             )
           : menuItems.add(
               DropdownMenuItem<String>(
-                value: list[i],
                 child: Container(
                   width: double.maxFinite,
                   alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(
+                    top: 6, // adjust the way you like
+                  ),
                   decoration: const BoxDecoration(
                     border: Border(
                       top: BorderSide(
                         color: Color.fromRGBO(236, 242, 245, 1),
-                        width: 2,
+                        width: 4,
                       ),
                     ),
                   ),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      Text(
-                        list[i],
-                        style: const TextStyle(fontSize: 15),
-                      ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                    ],
+                  child: Text(
+                    list[i],
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
                   ),
                 ),
+                value: list[i],
               ),
             );
     }

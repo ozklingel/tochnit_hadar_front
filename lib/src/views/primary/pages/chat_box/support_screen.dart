@@ -118,6 +118,11 @@ class _SupportScreenState extends State<SupportScreen> {
                   ),
                   alignment: Alignment.center,
                   child: TextFormField(
+                    onChanged: (text) {
+                      setState(() {
+                        _myController.text = text;
+                      });
+                    },
                     textAlign: TextAlign.start,
                     textAlignVertical: TextAlignVertical.top,
                     controller: _myController,
@@ -160,8 +165,8 @@ class _SupportScreenState extends State<SupportScreen> {
               ),
               onPressed: () async {
                 SupportScreen.contant = _myController.text;
-                // print(SupportScreen.contant);
-                // print(DropdownButtonExample.subject);
+                //print(SupportScreen.contant);
+                //print(DropdownButtonExample.subject);
 
                 String result = "";
                 if (SupportScreen.contant != "" &&
