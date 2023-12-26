@@ -17,11 +17,14 @@ class ChartHeader extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '${user?.fullName ?? 'N/A'}'
-          ' '
-          '(${user?.role.name ?? 'N/A'})',
-          style: TextStyles.s24w500cGrey2,
+        SizedBox(
+          width: 240,
+          child: Text(
+            '${user?.fullName ?? 'N/A'}'
+            ' '
+            '(${user?.role.name ?? 'N/A'})',
+            style: TextStyles.s24w500cGrey2,
+          ),
         ),
         const Spacer(),
         TextButton(

@@ -7,7 +7,18 @@ part 'user.dto.g.dart';
 enum UserRole {
   melave,
   ahraiTohnit,
-  other,
+  other;
+
+  String get name {
+    switch (this) {
+      case UserRole.melave:
+        return 'מלווה';
+      case UserRole.ahraiTohnit:
+        return 'אחראי תכנית';
+      default:
+        return 'USER.ROLE.ERROR';
+    }
+  }
 }
 
 @JsonSerializable()
@@ -15,7 +26,7 @@ enum UserRole {
 class UserDto with _$UserDto {
   const factory UserDto({
     @Default('') String id,
-    @Default('') String avatar,
+    @Default('') @JsonKey(defaultValue: '') String avatar,
     @Default('') String firstName,
     @Default('') String lastName,
     @Default('') String phone,

@@ -7,8 +7,8 @@ import 'package:hadar_program/src/views/secondary/charts/widgets/circular_progre
 import 'package:hadar_program/src/views/secondary/charts/widgets/linear_progress_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MelaveChartsScreen extends HookConsumerWidget {
-  const MelaveChartsScreen({
+class AhraiTohnitChartsDashboardScreen extends HookConsumerWidget {
+  const AhraiTohnitChartsDashboardScreen({
     super.key,
   });
 
