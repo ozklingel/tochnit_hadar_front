@@ -31,17 +31,18 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
       i == 0
           ? menuItems.add(
               DropdownMenuItem<String>(
+                value: list[i],
                 child: Text(
                   list[i],
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 15,
                   ),
                 ),
-                value: list[i],
               ),
             )
           : menuItems.add(
               DropdownMenuItem<String>(
+                value: list[i],
                 child: Container(
                   width: double.maxFinite,
                   alignment: Alignment.centerRight,
@@ -58,12 +59,11 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
                   ),
                   child: Text(
                     list[i],
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15,
                     ),
                   ),
                 ),
-                value: list[i],
               ),
             );
     }

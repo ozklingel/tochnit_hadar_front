@@ -42,7 +42,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
     myUser = userMap2;
-    print("myUser:" + myUser.toString());
+    debugPrint("myUser:$myUser");
     return userMap2;
   }
 
