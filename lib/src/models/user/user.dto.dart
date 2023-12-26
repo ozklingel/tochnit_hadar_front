@@ -33,6 +33,6 @@ class UserDto with _$UserDto {
       _$UserDtoFromJson(json);
 }
 
-extension UserDtoX on UserDto {
-  String get fullName => '$firstName $lastName';
+extension UserDtoX on UserDto? {
+  String get fullName => '${this?.firstName ?? ''} ${this?.lastName}';
 }

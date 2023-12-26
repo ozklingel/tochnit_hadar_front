@@ -61,37 +61,26 @@ class HadarProgram extends ConsumerWidget {
   }
 
   Map<ShortcutActivator, VoidCallback> _shortcuts(WidgetRef ref) {
+    late final context =
+        ref.read(goRouterProvider).configuration.navigatorKey.currentContext!;
+
     return {
       const SingleActivator(
         LogicalKeyboardKey.keyA,
         alt: true,
-      ): () => const OnboardingRouteData().push(
-            ref
-                .read(goRouterProvider)
-                .configuration
-                .navigatorKey
-                .currentContext!,
-          ),
+      ): () async => await const OnboardingRouteData().push(context),
       const SingleActivator(
         LogicalKeyboardKey.keyT,
         alt: true,
-      ): () => const NewTaskRouteData().push(
-            ref
-                .read(goRouterProvider)
-                .configuration
-                .navigatorKey
-                .currentContext!,
-          ),
+      ): () async => await const NewTaskRouteData().push(context),
       const SingleActivator(
         LogicalKeyboardKey.keyE,
         alt: true,
-      ): () => const ReportNewRouteData().push(
-            ref
-                .read(goRouterProvider)
-                .configuration
-                .navigatorKey
-                .currentContext!,
-          ),
+      ): () async => await const ReportNewRouteData().push(context),
+      const SingleActivator(
+        LogicalKeyboardKey.keyC,
+        alt: true,
+      ): () async => await const ChartsRouteData().push(context),
       const SingleActivator(
         LogicalKeyboardKey.escape,
       ): () => ref.read(goRouterProvider).canPop()
@@ -100,13 +89,7 @@ class HadarProgram extends ConsumerWidget {
       const SingleActivator(
         LogicalKeyboardKey.keyI,
         alt: true,
-      ): () => const InstitutionsRouteData().push(
-            ref
-                .read(goRouterProvider)
-                .configuration
-                .navigatorKey
-                .currentContext!,
-          ),
+      ): () async => await const InstitutionsRouteData().push(context),
     };
   }
 }

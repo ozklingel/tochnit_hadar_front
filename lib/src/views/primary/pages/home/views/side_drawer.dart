@@ -72,7 +72,7 @@ class SideDrawer extends ConsumerWidget {
                   child: Icon(FluentIcons.data_pie_24_regular),
                 ),
                 title: const Text('מדדי תוכנית'),
-                onTap: () => const SupportRouteData().go(context),
+                onTap: () => const ChartsRouteData().go(context),
               ),
               ListTile(
                 dense: true,

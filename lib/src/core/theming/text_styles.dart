@@ -6,6 +6,16 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 const _kFontFamily = 'rubik';
 
 abstract class TextStyles {
+  static const s34w400cGreen = TextStyle(
+    fontFamily: 'Roboto',
+    height: 1,
+    fontSize: 34,
+    color: AppColors.green1,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const s32w500cWhite = TextStyle(
     fontFamily: _kFontFamily,
     height: 1,
@@ -13,6 +23,16 @@ abstract class TextStyles {
     color: Colors.white,
     fontVariations: [
       FontVariation('wght', 500),
+    ],
+  );
+
+  // should use font Inter
+  static const s30w600 = TextStyle(
+    fontFamily: _kFontFamily,
+    height: 1,
+    fontSize: 30,
+    fontVariations: [
+      FontVariation('wght', 600),
     ],
   );
 
@@ -293,6 +313,16 @@ abstract class TextStyles {
     fontSize: 12,
     height: 1,
     color: AppColors.grey2,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
+  static const s12w400cGrey4 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 12,
+    height: 1,
+    color: AppColors.grey4,
     fontVariations: [
       FontVariation('wght', 400),
     ],

@@ -13,7 +13,27 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default(AddressDto()) AddressDto address,
     @Default('') @JsonKey(name: 'army_role') String militaryUnit,
     @Default('') @JsonKey(name: 'birthday') String dateOfBirth,
-    @Default([]) List<ContactDto> contacts,
+    @Default('') @JsonKey(name: 'contact1_email') String contact1Email,
+    @Default('') @JsonKey(name: 'contact1_first_name') String contact1FirstName,
+    @Default('') @JsonKey(name: 'contact1_last_name') String contact1LastName,
+    @Default('') @JsonKey(name: 'contact1_phone') String contact1Phone,
+    @Default('')
+    @JsonKey(name: 'contact1_relationship')
+    String contact1Relationship,
+    @Default('') @JsonKey(name: 'contact2_email') String contact2Email,
+    @Default('') @JsonKey(name: 'contact2_first_name') String contact2FirstName,
+    @Default('') @JsonKey(name: 'contact2_last_name') String contact2LastName,
+    @Default('') @JsonKey(name: 'contact2_phone') String contact2Phone,
+    @Default('')
+    @JsonKey(name: 'contact2_relationship')
+    String contact2Relationship,
+    @Default('') @JsonKey(name: 'contact3_email') String contact3Email,
+    @Default('') @JsonKey(name: 'contact3_first_name') String contact3FirstName,
+    @Default('') @JsonKey(name: 'contact3_last_name') String contact3LastName,
+    @Default('') @JsonKey(name: 'contact3_phone') String contact3Phone,
+    @Default('')
+    @JsonKey(name: 'contact3_relationship')
+    String contact3Relationship,
     @Default('') String educationFaculty,
     @Default('') String educationInstitution,
     @Default('') String email,
@@ -35,7 +55,7 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') String workStatus,
     @Default('') String workType,
     @Default('') String teudatZehut,
-    @Default('https://www.gravatar.com/avatar') String avatar,
+    @Default('') String avatar,
     @Default('') @Default('') String highSchoolInstitution,
     @Default('') String thPeriod,
     @Default('') String thMentor,

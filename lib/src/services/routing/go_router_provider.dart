@@ -18,6 +18,7 @@ import 'package:hadar_program/src/views/primary/pages/report/view/reports_screen
 import 'package:hadar_program/src/views/primary/pages/tasks/views/new_or_edit_task_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/views/task_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/views/tasks_screen.dart';
+import 'package:hadar_program/src/views/secondary/charts/charts_screen.dart';
 import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/views/institution_details_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/views/institutions_screen.dart';
@@ -60,13 +61,9 @@ GoRouter goRouter(GoRouterRef ref) {
     routes: $appRoutes,
     redirect: (context, state) {
       final userPhone = ref
-              .watch(
-                storageProvider,
-              )
+              .watch(storageProvider)
               .requireValue
-              .getString(
-                Consts.userPhoneKey,
-              ) ??
+              .getString(Consts.userPhoneKey) ??
           '';
 
       if (userPhone.isEmpty) {
@@ -132,6 +129,9 @@ GoRouter goRouter(GoRouterRef ref) {
           routes: [
             TypedGoRoute<GiftRouteData>(
               path: 'gift/:id',
+            ),
+            TypedGoRoute<ChartsRouteData>(
+              path: 'charts',
             ),
             TypedGoRoute<InstitutionsRouteData>(
               path: 'institutions',
@@ -562,5 +562,16 @@ class NewInstitutionRouteData extends GoRouteData {
     return NewOrEditInstitutionScreen(
       id: id,
     );
+  }
+}
+
+class ChartsRouteData extends GoRouteData {
+  const ChartsRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ChartsScreen();
   }
 }

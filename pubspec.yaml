@@ -63,6 +63,8 @@ dependencies:
 
   # widgets
   flutter_easyloading: ^3.0.5 # todo: remove
+  syncfusion_flutter_charts: ^24.1.41
+  syncfusion_flutter_gauges: ^24.1.41
   pin_code_fields: ^8.0.1
   dropdown_button2: ^2.3.9
   dotted_border: ^2.1.0

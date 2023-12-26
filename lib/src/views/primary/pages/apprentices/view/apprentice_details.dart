@@ -1138,80 +1138,27 @@ class _PersonalInfoTabView extends ConsumerWidget {
                   onPressed: () => Toaster.unimplemented(),
                 )
               : null,
-          child: ListView.separated(
-            controller: ScrollController(),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: apprentice.contacts.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (context, index) => Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text.rich(
-                  TextSpan(
-                    style: TextStyles.s14w400,
-                    children: [
-                      TextSpan(
-                        text: apprentice.contacts[index].relationship,
-                        style: const TextStyle(
-                          color: AppColors.gray5,
-                        ),
-                      ),
-                      const TextSpan(text: '\t'),
-                      TextSpan(
-                        text: apprentice.contacts[index].fullName,
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 140,
-                      child: Text(
-                        apprentice.contacts[index].phone,
-                        style: TextStyles.s14w400.copyWith(
-                          color: AppColors.gray2,
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
-                      _RowIconButton(
-                        onPressed: () => Toaster.unimplemented(),
-                        icon: const Icon(FluentIcons.edit_24_regular),
-                      ),
-                      _RowIconButton(
-                        onPressed: () => Toaster.unimplemented(),
-                        icon: const Icon(FluentIcons.delete_24_regular),
-                      ),
-                    ] else ...[
-                      _RowIconButton(
-                        onPressed: () => Toaster.unimplemented(),
-                        icon: const Icon(FluentIcons.chat_24_regular),
-                      ),
-                      const SizedBox(width: 4),
-                      _RowIconButton(
-                        icon: Assets.icons.whatsapp.svg(
-                          height: 20,
-                        ),
-                        onPressed: () => Toaster.unimplemented(),
-                      ),
-                      const SizedBox(width: 4),
-                      _RowIconButton(
-                        onPressed: () => Toaster.unimplemented(),
-                        icon: const Icon(FluentIcons.call_24_regular),
-                      ),
-                      const SizedBox(width: 4),
-                      _RowIconButton(
-                        onPressed: () => Toaster.unimplemented(),
-                        icon: const Icon(FluentIcons.mail_24_regular),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
+          child: Column(
+            children: [
+              _ContactRow(
+                fullName:
+                    apprentice.contact1FirstName + apprentice.contact1LastName,
+                phone: apprentice.contact1Phone,
+                relationship: apprentice.contact1Relationship,
+              ),
+              _ContactRow(
+                fullName:
+                    apprentice.contact2FirstName + apprentice.contact2LastName,
+                phone: apprentice.contact2Phone,
+                relationship: apprentice.contact2Relationship,
+              ),
+              _ContactRow(
+                fullName:
+                    apprentice.contact3FirstName + apprentice.contact3LastName,
+                phone: apprentice.contact3Phone,
+                relationship: apprentice.contact3Relationship,
+              ),
+            ],
           ),
         ),
         DetailsCard(
@@ -1266,6 +1213,105 @@ class _PersonalInfoTabView extends ConsumerWidget {
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _ContactRow extends StatelessWidget {
+  const _ContactRow({
+    super.key,
+    required this.relationship,
+    required this.phone,
+    required this.fullName,
+  });
+
+  final String relationship;
+  final String phone;
+  final String fullName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text.rich(
+          TextSpan(
+            style: TextStyles.s14w400,
+            children: [
+              TextSpan(
+                text: relationship,
+                style: const TextStyle(
+                  color: AppColors.gray5,
+                ),
+              ),
+              const TextSpan(text: '\t'),
+              TextSpan(text: fullName),
+            ],
+          ),
+        ),
+        _ContactButtons(phone: phone),
+      ],
+    );
+  }
+}
+
+class _ContactButtons extends ConsumerWidget {
+  const _ContactButtons({
+    super.key,
+    required this.phone,
+  });
+
+  final String phone;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+
+    return Row(
+      children: [
+        SizedBox(
+          width: 140,
+          child: Text(
+            phone,
+            style: TextStyles.s14w400.copyWith(
+              color: AppColors.gray2,
+            ),
+          ),
+        ),
+        const Spacer(),
+        if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+          _RowIconButton(
+            onPressed: () => Toaster.unimplemented(),
+            icon: const Icon(FluentIcons.edit_24_regular),
+          ),
+          _RowIconButton(
+            onPressed: () => Toaster.unimplemented(),
+            icon: const Icon(FluentIcons.delete_24_regular),
+          ),
+        ] else ...[
+          _RowIconButton(
+            onPressed: () => Toaster.unimplemented(),
+            icon: const Icon(FluentIcons.chat_24_regular),
+          ),
+          const SizedBox(width: 4),
+          _RowIconButton(
+            icon: Assets.icons.whatsapp.svg(
+              height: 20,
+            ),
+            onPressed: () => Toaster.unimplemented(),
+          ),
+          const SizedBox(width: 4),
+          _RowIconButton(
+            onPressed: () => Toaster.unimplemented(),
+            icon: const Icon(FluentIcons.call_24_regular),
+          ),
+          const SizedBox(width: 4),
+          _RowIconButton(
+            onPressed: () => Toaster.unimplemented(),
+            icon: const Icon(FluentIcons.mail_24_regular),
+          ),
+        ],
       ],
     );
   }

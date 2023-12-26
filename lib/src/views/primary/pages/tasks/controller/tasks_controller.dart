@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
