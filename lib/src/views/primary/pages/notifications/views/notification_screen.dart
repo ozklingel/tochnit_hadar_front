@@ -20,8 +20,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   List<Noti> notis = [];
 
   Future<List<Noti>> _getNoti() async {
-    // print("access API");
-    var jsonData = await HttpService.getUserNoti("+972549247616", context);
+    print("access API");
+    var jsonData = await HttpService.getUserNoti("972523301800", context);
     notis.clear();
     // print(jsonData.body);
     for (var u in jsonDecode(jsonData.body)) {
