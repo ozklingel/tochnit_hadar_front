@@ -49,7 +49,7 @@ Dio dio(DioRef ref) {
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) {
-        Logger().d(options.uri);
+        Logger().d(options.uri, error: options.data);
         return handler.next(options);
       },
       onResponse: (response, handler) {

@@ -1,8 +1,12 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_calls_page.dart';
+import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_conference_page.dart';
+import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_meetings_page.dart';
+import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_professional_meetings_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_details_card.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_header.dart';
+import 'package:hadar_program/src/views/secondary/charts/widgets/charts_appbar.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/circular_progress_gauge.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/linear_progress_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,17 +21,25 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
     var children = [
       const ChartHeader(),
       const CircularProgressGauge(val: .4),
-      LinearProgressCard(
+      LinearProgressCard.dashboard(
         label: 'שיחות',
         val: 5,
         total: 20,
-        onTap: () => Toaster.unimplemented(),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MelaveCallsChartPage(),
+          ),
+        ),
       ),
-      LinearProgressCard(
+      LinearProgressCard.dashboard(
         label: 'מפגשים',
         val: 8,
         total: 16,
-        onTap: () => Toaster.unimplemented(),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MelaveMeetingsChartPage(),
+          ),
+        ),
       ),
       ChartDetailsCard.percentage(
         label: 'מפגש מלווים מקצועי',
@@ -35,7 +47,11 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
         timestamp: '2 רבעונים',
         val: 2,
         total: 2,
-        onTap: () => Toaster.unimplemented(),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MelaveProfessionalMeetingChartPage(),
+          ),
+        ),
       ),
       ChartDetailsCard.percentage(
         label: 'כנס מלווים שנתי',
@@ -43,9 +59,13 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
         timestamp: '2 שנים',
         val: 1,
         total: 2,
-        onTap: () => Toaster.unimplemented(),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MelaveConferenceMeetingChartPage(),
+          ),
+        ),
       ),
-      LinearProgressCard(
+      LinearProgressCard.dashboard(
         label: 'שיחות היכרות הורים',
         val: 15,
         total: 18,
@@ -58,7 +78,7 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
         total: 43,
         onTap: () => Toaster.unimplemented(),
       ),
-      const LinearProgressCard(
+      const LinearProgressCard.dashboard(
         label: 'ביקורים בבסיס',
         val: 60,
         total: 100,
@@ -67,16 +87,7 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('מדדים'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(FluentIcons.search_24_regular),
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
+      appBar: const ChartsAppBar(),
       body: ListView.separated(
         padding: const EdgeInsets.all(24),
         itemCount: children.length,

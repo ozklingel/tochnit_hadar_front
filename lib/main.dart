@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,6 +10,7 @@ import 'package:hadar_program/src/core/theming/themes.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:timeago/timeago.dart';
 
 void main() {
@@ -90,6 +92,51 @@ class HadarProgram extends ConsumerWidget {
         LogicalKeyboardKey.keyI,
         alt: true,
       ): () async => await const InstitutionsRouteData().push(context),
+      const SingleActivator(
+        LogicalKeyboardKey.equal,
+        alt: true,
+      ): () async {
+        // only needed for now on 23/12/27
+        if (kDebugMode) {
+          await ref.read(storageProvider).requireValue.setString(
+                Consts.userPhoneKey,
+                'kDebugPhone',
+              );
+
+          await ref.read(storageProvider).requireValue.setString(
+                Consts.accessTokenKey,
+                'kDebugAccessToken',
+              );
+
+          await ref.read(storageProvider).requireValue.setBool(
+                Consts.firstOnboardingKey,
+                false,
+              );
+          Logger().d('RESET sharedPrefs values');
+        }
+      },
+      const SingleActivator(
+        LogicalKeyboardKey.minus,
+        alt: true,
+      ): () async {
+        // only needed for now on 23/12/27
+        if (kDebugMode) {
+          await ref.read(storageProvider).requireValue.setString(
+                Consts.userPhoneKey,
+                '',
+              );
+
+          await ref.read(storageProvider).requireValue.setString(
+                Consts.accessTokenKey,
+                '',
+              );
+
+          await ref.read(storageProvider).requireValue.remove(
+                Consts.firstOnboardingKey,
+              );
+          Logger().d('RESET sharedPrefs values');
+        }
+      },
     };
   }
 }

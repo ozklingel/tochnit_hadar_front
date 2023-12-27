@@ -1,22 +1,39 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 
-class OnboardingSuccessPage extends StatelessWidget {
-  const OnboardingSuccessPage.otpSuccess({
+class OnboardingSuccessPage extends HookWidget {
+  const OnboardingSuccessPage.page3otpSuccess({
     super.key,
+    required this.onLoaded,
   })  : topText = 'נוה לוי, זיהינו אותך בהצלחה!',
         bottomText = 'מיד נעבור לשלב קצר של הגדרות ראשונית של האפליקציה ';
 
-  const OnboardingSuccessPage.lastPage({
+  const OnboardingSuccessPage.page4lastPage({
     super.key,
+    required this.onLoaded,
   })  : topText = 'יופי, סיימנו!',
         bottomText = 'מיד תעבור למסך הבית, שם תוכל להתחיל לעבוד.';
 
   final String topText;
   final String bottomText;
+  final VoidCallback onLoaded;
 
   @override
   Widget build(BuildContext context) {
+    useEffect(
+      () {
+        Timer.periodic(const Duration(seconds: 3), (timer) {
+          timer.cancel();
+          onLoaded();
+        });
+        return null;
+      },
+      [],
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,

@@ -17,13 +17,13 @@ class AhraiTohnitChartsDashboardScreen extends HookConsumerWidget {
     var children = [
       const ChartHeader(),
       const CircularProgressGauge(val: .4),
-      LinearProgressCard(
+      LinearProgressCard.dashboard(
         label: 'שיחות',
         val: 5,
         total: 20,
         onTap: () => Toaster.unimplemented(),
       ),
-      LinearProgressCard(
+      LinearProgressCard.dashboard(
         label: 'מפגשים',
         val: 8,
         total: 16,
@@ -45,7 +45,7 @@ class AhraiTohnitChartsDashboardScreen extends HookConsumerWidget {
         total: 2,
         onTap: () => Toaster.unimplemented(),
       ),
-      LinearProgressCard(
+      LinearProgressCard.dashboard(
         label: 'שיחות היכרות הורים',
         val: 15,
         total: 18,
@@ -58,7 +58,7 @@ class AhraiTohnitChartsDashboardScreen extends HookConsumerWidget {
         total: 43,
         onTap: () => Toaster.unimplemented(),
       ),
-      const LinearProgressCard(
+      const LinearProgressCard.dashboard(
         label: 'ביקורים בבסיס',
         val: 60,
         total: 100,

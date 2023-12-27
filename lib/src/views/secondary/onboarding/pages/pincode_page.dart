@@ -11,8 +11,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 const _kPinCodeLength = 6;
 const _timerDuration = 60;
 
-class OnboardingPinCodePage extends HookConsumerWidget {
-  const OnboardingPinCodePage({
+class OnboardingPage2PinCode extends HookConsumerWidget {
+  const OnboardingPage2PinCode({
     super.key,
     required this.onSuccess,
     required this.phone,

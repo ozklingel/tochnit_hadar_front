@@ -85,12 +85,7 @@ class OnboardingController extends _$OnboardingController {
         final accessToken = result.data['result'].toString();
         final firstOnboarding = result.data['firsOnboarding'] as bool;
 
-        await ref
-            .read(
-              storageProvider,
-            )
-            .requireValue
-            .setString(
+        await ref.read(storageProvider).requireValue.setString(
               Consts.userPhoneKey,
               phone.fixRawPhone,
             );
@@ -114,7 +109,7 @@ class OnboardingController extends _$OnboardingController {
     return (false, false);
   }
 
-  Future<IsResponseSuccess> onboardingInfo({
+  Future<IsResponseSuccess> onboardingFillUserInfo({
     required String email,
     required DateTime dateOfBirth,
     required String city,
@@ -131,47 +126,21 @@ class OnboardingController extends _$OnboardingController {
     try {
       await ref.watch(dioProvider).put(
         '/setEntityDetails_form/setByType',
-        queryParameters: {
-          "typeOfSet": "apprenticeProflie",
-          "entityId": "+$userPhone",
+        data: {
+          "typeOfSet": "Onboarding",
+          "entityId": userPhone,
           "atrrToBeSet": {
-            "accompany_id": "+$userPhone",
-            "name": "bbb",
-            "last_name": "df",
-            "phone": "fd",
+            "phone": userPhone,
             "email": email,
             "birthday": dateOfBirth.toIso8601String(),
-            "marriage_status": true,
-            "marriage_date": "1995-07-06",
-            "wife_name": "fg",
-            "wife_phone": "er",
-            "city_id": 0,
-            "address": "yu",
-            "father_name": "ui",
-            "father_phone": "io",
-            "father_email": "hj",
-            "mother_name": "jk",
-            "mother_phone": "gh",
-            "mother_email": "df",
-            "high_school_name": "sd",
-            "high_school_teacher": "sd",
-            "high_school_teacher_phone": "as",
-            "pre_army_institution": "xc",
-            "teacher_grade_a": "bv",
-            "teacher_grade_a_phone": "cv",
-            "teacher_grade_b": "zx",
-            "teacher_grade_b_phone": "sd",
-            "institution_id": 0,
-            "hadar_plan_session": 1,
-            "base_address": "nb",
-            "unit_name": "bn",
-            "army_role": "bv",
-            "serve_type": "cv",
-            "recruitment_date": "1995-08-08",
-            "release_date": "1995-08-08",
           },
         },
       );
+
+      await ref.read(storageProvider).requireValue.setBool(
+            Consts.firstOnboardingKey,
+            false,
+          );
 
       return true;
     } catch (e) {

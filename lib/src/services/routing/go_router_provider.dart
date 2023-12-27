@@ -24,6 +24,7 @@ import 'package:hadar_program/src/views/secondary/institutions/views/institution
 import 'package:hadar_program/src/views/secondary/institutions/views/institutions_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/views/new_or_edit_institution_screen.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../views/primary/pages/chat_box/support_screen.dart';
@@ -66,7 +67,14 @@ GoRouter goRouter(GoRouterRef ref) {
               .getString(Consts.userPhoneKey) ??
           '';
 
-      if (userPhone.isEmpty) {
+      final accessToken = ref
+              .watch(storageProvider)
+              .requireValue
+              .getString(Consts.accessTokenKey) ??
+          '';
+
+      if (userPhone.isEmpty || accessToken.isEmpty) {
+        Logger().w('empty userPhone');
         return const OnboardingRouteData().location;
       }
 
@@ -76,6 +84,7 @@ GoRouter goRouter(GoRouterRef ref) {
           false;
 
       if (firstOnboarding) {
+        Logger().w('empty firstOnboarding');
         return OnboardingRouteData(isOnboarding: firstOnboarding).location;
       }
 

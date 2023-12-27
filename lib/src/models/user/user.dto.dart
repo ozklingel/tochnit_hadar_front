@@ -7,6 +7,8 @@ part 'user.dto.g.dart';
 enum UserRole {
   melave,
   ahraiTohnit,
+  rakazMosad,
+  rakazEshkol,
   other;
 
   String get name {
@@ -15,6 +17,10 @@ enum UserRole {
         return 'מלווה';
       case UserRole.ahraiTohnit:
         return 'אחראי תכנית';
+      case UserRole.rakazMosad:
+        return 'רכז מוסד';
+      case UserRole.rakazEshkol:
+        return 'רכז אשכול';
       default:
         return 'USER.ROLE.ERROR';
     }

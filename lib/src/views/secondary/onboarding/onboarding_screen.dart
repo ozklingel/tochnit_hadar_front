@@ -20,7 +20,7 @@ class OnboardingScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final pageController = usePageController(initialPage: isOnboarding ? 5 : 0);
+    final pageController = usePageController(initialPage: isOnboarding ? 4 : 0);
     final phoneController = useState('');
 
     return Scaffold(
@@ -32,8 +32,13 @@ class OnboardingScreen extends HookConsumerWidget {
               ? const AlwaysScrollableScrollPhysics()
               : const NeverScrollableScrollPhysics(),
           children: [
-            const OnboardingLogoPage(),
-            OnboardingPhonePage(
+            OnboardingPage0Logo(
+              onLoaded: () => pageController.nextPage(
+                duration: Consts.defaultDurationM,
+                curve: Curves.linear,
+              ),
+            ),
+            OnboardingPage1Phone(
               onSuccess: (phone) {
                 pageController.nextPage(
                   duration: Consts.defaultDurationM,
@@ -42,7 +47,7 @@ class OnboardingScreen extends HookConsumerWidget {
                 phoneController.value = phone;
               },
             ),
-            OnboardingPinCodePage(
+            OnboardingPage2PinCode(
               onSuccess: (isFirstOnboarding) {
                 pageController.nextPage(
                   duration: Consts.defaultDurationM,
@@ -60,8 +65,13 @@ class OnboardingScreen extends HookConsumerWidget {
               },
               phone: phoneController.value,
             ),
-            const OnboardingSuccessPage.otpSuccess(),
-            OnboardingPersonalDetails(
+            OnboardingSuccessPage.page3otpSuccess(
+              onLoaded: () => pageController.nextPage(
+                duration: Consts.defaultDurationM,
+                curve: Curves.linear,
+              ),
+            ),
+            OnboardingPage4PersonalDetails(
               onSuccess: () {
                 pageController.nextPage(
                   duration: Consts.defaultDurationM,
@@ -69,7 +79,16 @@ class OnboardingScreen extends HookConsumerWidget {
                 );
               },
             ),
-            const OnboardingSuccessPage.lastPage(),
+            OnboardingSuccessPage.page4lastPage(
+              onLoaded: () {
+                pageController.nextPage(
+                  duration: Consts.defaultDurationM,
+                  curve: Curves.linear,
+                );
+
+                const HomeRouteData().go(context);
+              },
+            ),
           ],
         ),
       ),

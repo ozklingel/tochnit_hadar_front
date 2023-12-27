@@ -11,7 +11,7 @@ class ChartDetailsCard extends StatelessWidget {
     this.timestamp = '',
     required this.val,
     required this.total,
-    required this.onTap,
+    this.onTap,
   }) : isPercentage = true;
 
   const ChartDetailsCard.absolute({
@@ -21,7 +21,7 @@ class ChartDetailsCard extends StatelessWidget {
     this.timestamp = '',
     required this.val,
     required this.total,
-    required this.onTap,
+    this.onTap,
   }) : isPercentage = false;
 
   final String label;
@@ -29,7 +29,7 @@ class ChartDetailsCard extends StatelessWidget {
   final String timestamp;
   final int val;
   final int total;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool isPercentage;
 
   @override

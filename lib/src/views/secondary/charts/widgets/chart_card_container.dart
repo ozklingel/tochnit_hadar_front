@@ -1,32 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/views/secondary/charts/widgets/chart_card_wrapper.dart';
 
 class ChartCardContainer extends StatelessWidget {
   const ChartCardContainer({
     super.key,
     required this.label,
     required this.child,
-    required this.onTap,
+    this.onTap,
+    this.isPrimary = true,
   });
 
   final String label;
   final Widget child;
   final VoidCallback? onTap;
+  final bool isPrimary;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            offset: const Offset(0, 12),
-            blurRadius: 24,
-          ),
-        ],
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
-      ),
+    return ChartCardWrapper(
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -39,12 +31,15 @@ class ChartCardContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       label,
-                      style: TextStyles.s16w500cGrey2,
+                      style: isPrimary
+                          ? TextStyles.s16w500cGrey2
+                          : TextStyles.s12w400cGrey4,
                     ),
-                    const Spacer(),
+                    if (isPrimary) const Spacer(),
                     if (onTap != null) const Icon(Icons.chevron_right),
                   ],
                 ),

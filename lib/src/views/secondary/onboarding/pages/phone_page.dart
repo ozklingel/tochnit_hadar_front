@@ -9,8 +9,8 @@ import 'package:hadar_program/src/views/secondary/onboarding/controller/onboardi
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class OnboardingPhonePage extends HookConsumerWidget {
-  const OnboardingPhonePage({
+class OnboardingPage1Phone extends HookConsumerWidget {
+  const OnboardingPage1Phone({
     super.key,
     required this.onSuccess,
   });

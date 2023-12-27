@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/controller/onboarding_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -10,8 +11,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/constants/consts.dart';
 
-class OnboardingPersonalDetails extends HookConsumerWidget {
-  const OnboardingPersonalDetails({
+class OnboardingPage4PersonalDetails extends HookConsumerWidget {
+  const OnboardingPage4PersonalDetails({
     super.key,
     required this.onSuccess,
   });
@@ -66,6 +67,9 @@ class OnboardingPersonalDetails extends HookConsumerWidget {
             borderRadius: BorderRadius.circular(36),
             child: IgnorePointer(
               child: TextField(
+                controller: TextEditingController(
+                  text: selectedDateOfBirth.value.asDayMonthYearShortSlash,
+                ),
                 decoration: InputDecoration(
                   hintText: 'תאריך לידה',
                   hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
@@ -215,7 +219,7 @@ class OnboardingPersonalDetails extends HookConsumerWidget {
                 ? () async {
                     final result = await ref
                         .read(onboardingControllerProvider.notifier)
-                        .onboardingInfo(
+                        .onboardingFillUserInfo(
                           email: emailController.text,
                           dateOfBirth: selectedDateOfBirth.value,
                           city: cityController.text,

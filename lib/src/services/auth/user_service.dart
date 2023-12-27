@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_service.g.dart';
@@ -9,6 +12,8 @@ part 'user_service.g.dart';
 @Riverpod(
   dependencies: [
     dio,
+    storage,
+    goRouter,
   ],
 )
 class UserService extends _$UserService {
@@ -20,7 +25,7 @@ class UserService extends _$UserService {
         firstName: 'אלכסוש',
         lastName: 'ינונוש',
         email: 'alexush@yanonush.com',
-        role: UserRole.ahraiTohnit,
+        role: UserRole.melave,
         apprentices: [
           ApprenticeDto(
             id: '1-11-21',
@@ -59,5 +64,20 @@ class UserService extends _$UserService {
     ref.keepAlive();
 
     return user;
+  }
+
+  Future<void> logOff() async {
+    await ref.read(storageProvider).requireValue.remove(Consts.userPhoneKey);
+
+    await ref.read(storageProvider).requireValue.remove(Consts.accessTokenKey);
+
+    await ref
+        .read(storageProvider)
+        .requireValue
+        .remove(Consts.firstOnboardingKey);
+
+    const HomeRouteData().go(
+      ref.read(goRouterProvider).configuration.navigatorKey.currentContext!,
+    );
   }
 }

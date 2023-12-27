@@ -5,8 +5,8 @@ import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SideDrawer extends ConsumerWidget {
-  const SideDrawer({
+class SideMenuDrawer extends ConsumerWidget {
+  const SideMenuDrawer({
     super.key,
   });
 
@@ -138,7 +138,7 @@ class SideDrawer extends ConsumerWidget {
                   child: Icon(FluentIcons.arrow_exit_20_regular),
                 ),
                 title: const Text('התנתקות'),
-                onTap: () => const SupportRouteData().go(context),
+                onTap: () => ref.read(userServiceProvider.notifier).logOff(),
               ),
             ],
           ),

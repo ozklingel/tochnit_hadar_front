@@ -12,7 +12,7 @@ import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/side_drawer.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/side_menu_drawer.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
     return Scaffold(
-      drawer: const SideDrawer(),
+      drawer: const SideMenuDrawer(),
       appBar: AppBar(
         centerTitle: true,
         title: Assets.images.logo.image(
