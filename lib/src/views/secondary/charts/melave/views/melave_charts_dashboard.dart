@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_call_parents_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_calls_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_conference_page.dart';
+import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_forgotten_apprentices_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_meetings_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_professional_meetings_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_details_card.dart';
@@ -69,14 +70,22 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
         label: 'שיחות היכרות הורים',
         val: 15,
         total: 18,
-        onTap: () => Toaster.unimplemented(),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MelaveCallParentsChartPage(),
+          ),
+        ),
       ),
       ChartDetailsCard.absolute(
         label: 'חניכים ‘נשכחים’',
         details: 'מספר חניכים שלא נוצר איתם קשר מעל 100 יום',
         val: 2,
         total: 43,
-        onTap: () => Toaster.unimplemented(),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MelaveForgottenApprenticesChartPage(),
+          ),
+        ),
       ),
       const LinearProgressCard.dashboard(
         label: 'ביקורים בבסיס',
