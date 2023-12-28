@@ -69,7 +69,10 @@ dependencies:
   dropdown_button2: ^2.3.9
   dotted_border: ^2.1.0
   extended_text: ^12.0.0
-  
+
+  # cicd
+  sentry_flutter: ^7.14.0
+
 dev_dependencies:
   # testing
   flutter_test:

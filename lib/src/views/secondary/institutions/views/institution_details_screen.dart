@@ -244,13 +244,9 @@ class _UsersTab extends ConsumerWidget {
                   name: e.fullName,
                   onlineStatus: e.onlineStatus,
                   tags: [
-                    e.highSchoolInstitution,
-                    e.thPeriod,
-                    e.militaryPositionNew,
+                    ...e.tags,
                     institution.name,
                     compound.name,
-                    e.militaryUnit,
-                    e.maritalStatus,
                   ],
                 );
               },

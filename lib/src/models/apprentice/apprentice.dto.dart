@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/contact/contact.dto.dart';
-import 'package:hadar_program/src/models/event/event.dto.dart';
 
 part 'apprentice.dto.f.dart';
 part 'apprentice.dto.g.dart';
@@ -18,26 +17,26 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') @JsonKey(name: 'contact1_last_name') String contact1LastName,
     @Default('') @JsonKey(name: 'contact1_phone') String contact1Phone,
     @Default('')
-    @JsonKey(name: 'contact1_relationship')
+    @JsonKey(name: 'contact1_relation')
     String contact1Relationship,
     @Default('') @JsonKey(name: 'contact2_email') String contact2Email,
     @Default('') @JsonKey(name: 'contact2_first_name') String contact2FirstName,
     @Default('') @JsonKey(name: 'contact2_last_name') String contact2LastName,
     @Default('') @JsonKey(name: 'contact2_phone') String contact2Phone,
     @Default('')
-    @JsonKey(name: 'contact2_relationship')
+    @JsonKey(name: 'contact2_relation')
     String contact2Relationship,
     @Default('') @JsonKey(name: 'contact3_email') String contact3Email,
     @Default('') @JsonKey(name: 'contact3_first_name') String contact3FirstName,
     @Default('') @JsonKey(name: 'contact3_last_name') String contact3LastName,
     @Default('') @JsonKey(name: 'contact3_phone') String contact3Phone,
     @Default('')
-    @JsonKey(name: 'contact3_relationship')
+    @JsonKey(name: 'contact3_relation')
     String contact3Relationship,
     @Default('') String educationFaculty,
-    @Default('') String educationInstitution,
+    @Default('') String educationalInstitution,
     @Default('') String email,
-    @Default([]) List<EventDto> events,
+    @Default([]) @JsonKey(name: 'events') List<String> eventIds,
     @Default(ContactDto()) ContactDto highSchoolRavMelamed,
     @Default('') String id,
     @Default('') @JsonKey(name: 'institution_id') String institutionId,
@@ -73,4 +72,11 @@ class ApprenticeDto with _$ApprenticeDto {
 
 extension ApprenticeX on ApprenticeDto {
   String get fullName => '$firstName $lastName';
+  List<String> get tags => [
+        highSchoolInstitution,
+        thPeriod,
+        militaryPositionNew,
+        militaryUnit,
+        maritalStatus,
+      ];
 }

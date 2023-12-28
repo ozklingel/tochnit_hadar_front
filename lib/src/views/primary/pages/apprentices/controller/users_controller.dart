@@ -55,7 +55,7 @@ class UsersController extends _$UsersController {
             faker.date.dateTime(minYear: 1971, maxYear: 2004).toIso8601String(),
         maritalStatus: faker.lorem.word(),
         educationFaculty: faker.lorem.word(),
-        educationInstitution: faker.lorem.word(),
+        educationalInstitution: faker.lorem.word(),
         workOccupation: faker.lorem.word(),
         workPlace: faker.lorem.word(),
         workStatus: faker.lorem.word(),
@@ -91,14 +91,9 @@ class UsersController extends _$UsersController {
           7,
           (index) => faker.guid.guid(),
         ),
-        events: List.generate(
+        eventIds: List.generate(
           Consts.mockEventsGuids.length,
-          (index) => EventDto(
-            id: Consts.mockEventsGuids[index],
-            title: faker.lorem.word(),
-            description: faker.lorem.sentence(),
-            dateTime: faker.date.dateTime().toIso8601String(),
-          ),
+          (index) => faker.guid.guid(),
         ),
         contact1Email: faker.internet.email(),
         contact1FirstName: faker.person.firstName(),
@@ -138,7 +133,7 @@ class UsersController extends _$UsersController {
     final newState = state.valueOrNull ?? [];
 
     newState[apprenticeIndex] = apprentice.copyWith(
-      events: [...apprentice.events, event],
+      eventIds: [...apprentice.eventIds, event.id],
     );
 
     final oldState = state.valueOrNull ?? [];
@@ -175,16 +170,16 @@ class UsersController extends _$UsersController {
     final newState = state.valueOrNull ?? [];
 
     final event =
-        apprentice.events.firstWhere((element) => element.id == eventId);
+        apprentice.eventIds.firstWhere((element) => element == eventId);
 
-    final newEvents = [...apprentice.events];
+    final newEvents = [...apprentice.eventIds];
 
     final oldEventIndex = newEvents.indexOf(event);
 
     newEvents.removeAt(oldEventIndex);
 
     newState[apprenticeIndex] = apprentice.copyWith(
-      events: [...newEvents],
+      eventIds: [...newEvents],
     );
 
     state = AsyncData([...newState]);
@@ -200,7 +195,7 @@ class UsersController extends _$UsersController {
     newEvents.insert(oldEventIndex, event);
 
     oldState[apprenticeIndex] = apprentice.copyWith(
-      events: [...newEvents],
+      eventIds: [...newEvents],
     );
 
     state = AsyncData([...oldState]);
@@ -226,19 +221,19 @@ class UsersController extends _$UsersController {
 
     final newState = state.valueOrNull ?? [];
 
-    final eventIndex = apprentice.events.indexWhere(
-      (element) => element.id == event.id,
+    final eventIndex = apprentice.eventIds.indexWhere(
+      (element) => element == event.id,
     );
 
     if (eventIndex == -1) return false;
 
-    final newEventsList = [...apprentice.events];
+    final newEventsList = [...apprentice.eventIds];
 
     newEventsList.removeAt(eventIndex);
-    newEventsList.insert(eventIndex, event);
+    newEventsList.insert(eventIndex, event.id);
 
     newState[apprenticeIndex] = apprentice.copyWith(
-      events: [...newEventsList],
+      eventIds: [...newEventsList],
     );
 
     state = AsyncData([...newState]);
@@ -250,7 +245,7 @@ class UsersController extends _$UsersController {
     }
 
     oldState[apprenticeIndex] = apprentice.copyWith(
-      events: [...apprentice.events],
+      eventIds: [...apprentice.eventIds],
     );
 
     state = AsyncData([...oldState]);

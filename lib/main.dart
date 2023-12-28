@@ -11,20 +11,33 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:timeago/timeago.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> main() async {
+  await SentryFlutter.init(
+    (options) {
+      // or define SENTRY_DSN via Dart environment variable (--dart-define)
+      options.dsn =
+          'https://9648d7069cc6243a7f1e8e366a6cff42@o4506474413752320.ingest.sentry.io/4506474416242688';
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  setLocaleMessages(
-    Consts.defaultLocale.languageCode,
-    HeMessages(),
-  );
+      setLocaleMessages(
+        Consts.defaultLocale.languageCode,
+        HeMessages(),
+      );
 
-  runApp(
-    const ProviderScope(
-      child: HadarProgram(),
-    ),
+      return runApp(
+        const ProviderScope(
+          child: HadarProgram(),
+        ),
+      );
+    },
   );
 }
 

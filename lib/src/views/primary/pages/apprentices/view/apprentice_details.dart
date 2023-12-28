@@ -724,14 +724,15 @@ class _TohnitHadarTabView extends ConsumerWidget {
             },
             icon: const Icon(FluentIcons.add_circle_24_regular),
           ),
-          child: apprentice.events.isEmpty
+          child: apprentice.eventIds.isEmpty
               ? const Text(
                   'אין אירועים מוזנים. לחץ כדי להוסיף אירוע',
                   textAlign: TextAlign.start,
                 )
               : Builder(
                   builder: (context) {
-                    final children = apprentice.events
+                    // TODO(noga-dev) bring back
+                    final children = apprentice.eventIds
                         .take(3)
                         .map(
                           (e) => Row(
@@ -739,14 +740,14 @@ class _TohnitHadarTabView extends ConsumerWidget {
                               SizedBox(
                                 width: 100,
                                 child: Text(
-                                  e.title,
+                                  'e.title',
                                   style: TextStyles.s14w400.copyWith(
                                     color: AppColors.gray5,
                                   ),
                                 ),
                               ),
                               Text(
-                                e.dateTime.asDateTime.asDayMonthYearShortDot,
+                                'e.dateTime.asDateTime.asDayMonthYearShortDot',
                                 style: TextStyles.s14w400.copyWith(
                                   color: AppColors.gray2,
                                 ),
@@ -754,17 +755,17 @@ class _TohnitHadarTabView extends ConsumerWidget {
                               const Spacer(),
                               Row(
                                 children: [
-                                  _RowIconButton(
-                                    onPressed: () => showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) => _EventBottomSheet(
-                                        apprentice: apprentice,
-                                        event: e,
-                                      ),
-                                    ),
-                                    icon:
-                                        const Icon(FluentIcons.edit_24_regular),
-                                  ),
+                                  // _RowIconButton(
+                                  //   onPressed: () => showModalBottomSheet(
+                                  //     context: context,
+                                  //     builder: (context) => _EventBottomSheet(
+                                  //       apprentice: apprentice,
+                                  //       event: e,
+                                  //     ),
+                                  //   ),
+                                  //   icon:
+                                  //       const Icon(FluentIcons.edit_24_regular),
+                                  // ),
                                   const SizedBox(width: 4),
                                   _RowIconButton(
                                     onPressed: () async {
@@ -775,7 +776,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                           )
                                           .deleteEvent(
                                             apprenticeId: apprentice.id,
-                                            eventId: e.id,
+                                            eventId: e,
                                           );
 
                                       if (!result) {
@@ -974,7 +975,7 @@ class _EventBottomSheet extends HookConsumerWidget {
                       ),
                     ],
                   ),
-                  Positioned(
+                  const Positioned(
                     bottom: 0,
                     left: 0,
                     right: 0,
@@ -984,52 +985,53 @@ class _EventBottomSheet extends HookConsumerWidget {
                         height: 60,
                         child: LargeFilledRoundedButton(
                           label: 'שמירה',
-                          onPressed: () async {
-                            final navContext = Navigator.of(context);
-                            final notifier = ref.read(
-                              apprenticesControllerProvider.notifier,
-                            );
+                          // TODO (noga-dev): bring back
+                          // onPressed: () async {
+                          //   final navContext = Navigator.of(context);
+                          //   final notifier = ref.read(
+                          //     apprenticesControllerProvider.notifier,
+                          //   );
 
-                            if (event.id.isEmpty) {
-                              final result = await notifier.addEvent(
-                                apprenticeId: apprentice.id,
-                                event: EventDto(
-                                  title: titleController.text,
-                                  description: descriptionController.text,
-                                  dateTime: selectedDatetime.value
-                                          ?.toIso8601String() ??
-                                      DateTime.now().toIso8601String(),
-                                ),
-                              );
-                              if (result) {
-                                navContext.maybePop();
-                              } else {
-                                Toaster.show('שגיאה בעת שמירת האירוע');
-                                return;
-                              }
-                            } else {
-                              final edited = apprentice.events.firstWhere(
-                                (element) => element.id == event.id,
-                              );
-                              final result = await notifier.editEvent(
-                                apprenticeId: apprentice.id,
-                                event: edited.copyWith(
-                                  title: titleController.text,
-                                  description: descriptionController.text,
-                                  dateTime: selectedDatetime.value
-                                          ?.toIso8601String() ??
-                                      DateTime.now().toIso8601String(),
-                                ),
-                              );
+                          //   if (event.id.isEmpty) {
+                          //     final result = await notifier.addEvent(
+                          //       apprenticeId: apprentice.id,
+                          //       event: EventDto(
+                          //         title: titleController.text,
+                          //         description: descriptionController.text,
+                          //         dateTime: selectedDatetime.value
+                          //                 ?.toIso8601String() ??
+                          //             DateTime.now().toIso8601String(),
+                          //       ),
+                          //     );
+                          //     if (result) {
+                          //       navContext.maybePop();
+                          //     } else {
+                          //       Toaster.show('שגיאה בעת שמירת האירוע');
+                          //       return;
+                          //     }
+                          //   } else {
+                          //     final edited = apprentice.eventIds.firstWhere(
+                          //       (element) => element == event.id,
+                          //     );
+                          //     final result = await notifier.editEvent(
+                          //       apprenticeId: apprentice.id,
+                          //       event: edited.copyWith(
+                          //         title: titleController.text,
+                          //         description: descriptionController.text,
+                          //         dateTime: selectedDatetime.value
+                          //                 ?.toIso8601String() ??
+                          //             DateTime.now().toIso8601String(),
+                          //       ),
+                          //     );
 
-                              if (result) {
-                                navContext.maybePop();
-                              } else {
-                                Toaster.show('שגיאה בעת שמירת האירוע');
-                                return;
-                              }
-                            }
-                          },
+                          //     if (result) {
+                          //       navContext.maybePop();
+                          //     } else {
+                          //       Toaster.show('שגיאה בעת שמירת האירוע');
+                          //       return;
+                          //     }
+                          //   }
+                          // },
                         ),
                       ),
                     ),
@@ -1193,7 +1195,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'מקום לימודים',
-                data: apprentice.educationInstitution,
+                data: apprentice.educationalInstitution,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(

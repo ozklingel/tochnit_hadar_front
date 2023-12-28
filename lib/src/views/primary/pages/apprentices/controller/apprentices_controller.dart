@@ -156,7 +156,7 @@ class ApprenticesController extends _$ApprenticesController {
     final newState = state.valueOrNull ?? [];
 
     newState[apprenticeIndex] = apprentice.copyWith(
-      events: [...apprentice.events, event],
+      eventIds: [...apprentice.eventIds, event.id],
     );
 
     final oldState = state.valueOrNull ?? [];
@@ -193,16 +193,16 @@ class ApprenticesController extends _$ApprenticesController {
     final newState = state.valueOrNull ?? [];
 
     final event =
-        apprentice.events.firstWhere((element) => element.id == eventId);
+        apprentice.eventIds.firstWhere((element) => element == eventId);
 
-    final newEvents = [...apprentice.events];
+    final newEvents = [...apprentice.eventIds];
 
     final oldEventIndex = newEvents.indexOf(event);
 
     newEvents.removeAt(oldEventIndex);
 
     newState[apprenticeIndex] = apprentice.copyWith(
-      events: [...newEvents],
+      eventIds: [...newEvents],
     );
 
     state = AsyncData([...newState]);
@@ -218,7 +218,7 @@ class ApprenticesController extends _$ApprenticesController {
     newEvents.insert(oldEventIndex, event);
 
     oldState[apprenticeIndex] = apprentice.copyWith(
-      events: [...newEvents],
+      eventIds: [...newEvents],
     );
 
     state = AsyncData([...oldState]);
@@ -244,19 +244,19 @@ class ApprenticesController extends _$ApprenticesController {
 
     final newState = state.valueOrNull ?? [];
 
-    final eventIndex = apprentice.events.indexWhere(
-      (element) => element.id == event.id,
+    final eventIndex = apprentice.eventIds.indexWhere(
+      (element) => element == event.id,
     );
 
     if (eventIndex == -1) return false;
 
-    final newEventsList = [...apprentice.events];
+    final newEventsList = [...apprentice.eventIds];
 
     newEventsList.removeAt(eventIndex);
-    newEventsList.insert(eventIndex, event);
+    newEventsList.insert(eventIndex, event.id);
 
     newState[apprenticeIndex] = apprentice.copyWith(
-      events: [...newEventsList],
+      eventIds: [...newEventsList],
     );
 
     state = AsyncData([...newState]);
@@ -268,7 +268,7 @@ class ApprenticesController extends _$ApprenticesController {
     }
 
     oldState[apprenticeIndex] = apprentice.copyWith(
-      events: [...apprentice.events],
+      eventIds: [...apprentice.eventIds],
     );
 
     state = AsyncData([...oldState]);

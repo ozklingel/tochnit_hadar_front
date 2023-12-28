@@ -294,14 +294,17 @@ class _UpcomingEvents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = [
-      _EventCard(
-        event: apprentice.events.firstOrNull ?? const EventDto(),
+      const _EventCard(
+        // event: apprentice.events.firstOrNull ?? const EventDto(),
+        event: EventDto(),
       ),
-      _EventCard(
-        event: apprentice.events.firstOrNull ?? const EventDto(),
+      const _EventCard(
+        // event: apprentice.events.firstOrNull ?? const EventDto(),
+        event: EventDto(),
       ),
-      _EventCard(
-        event: apprentice.events.firstOrNull ?? const EventDto(),
+      const _EventCard(
+        // event: apprentice.events.firstOrNull ?? const EventDto(),
+        event: EventDto(),
       ),
     ];
 
