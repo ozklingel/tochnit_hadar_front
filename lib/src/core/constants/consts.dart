@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 abstract class Consts {
@@ -16,6 +15,18 @@ abstract class Consts {
 
   static const defaultDurationM = Duration(milliseconds: 300);
   static const defaultErrorDuration = Duration(milliseconds: 4000);
+
+  static const defaultBoxDecorationWithShadow = BoxDecoration(
+    color: Colors.white,
+    boxShadow: [
+      BoxShadow(
+        color: Color(0x0d000000),
+        offset: Offset(0, 12),
+        blurRadius: 24,
+      ),
+    ],
+    borderRadius: BorderRadius.all(Radius.circular(24)),
+  );
 
   // geolocation
   static const defaultCameraPosition = CameraPosition(

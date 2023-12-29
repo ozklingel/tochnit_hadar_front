@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
-import 'package:hadar_program/src/views/secondary/charts/widgets/cartesian_quarterly_chart.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_card_wrapper.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/page_template.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
+import 'package:hadar_program/src/views/widgets/charts/cartesian_bars_chart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RakazEshkolForgottenApprenticesChartPage extends ConsumerWidget {
@@ -54,7 +54,7 @@ class RakazEshkolForgottenApprenticesChartPage extends ConsumerWidget {
               'ממוצע פילוח חודשי של חניכים נשכחים',
               style: TextStyles.s14w400cGrey4,
             ),
-            CartesianQuarterlyChart(
+            CartesianBarsChart(
               data: [
                 (x: 'רבעון\nא', y: 4.1),
                 (x: 'רבעון\nב', y: 2.5),

@@ -1,20 +1,16 @@
-import 'package:collection/collection.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:hadar_program/src/models/event/event.dto.dart';
-import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/side_menu_drawer.dart';
-import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
-import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/widgets/doughnut_charts_widget.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/widgets/home_header.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/widgets/performance_widgets.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_events_widget.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_tasks_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -22,8 +18,10 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+    // final apprentices =
+    //     ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+
+    final user = ref.watch(userServiceProvider).valueOrNull ?? const UserDto();
 
     return Scaffold(
       drawer: const SideMenuDrawer(),
@@ -43,417 +41,58 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const _Header(),
+            const HomeHeader(),
             const SizedBox(height: 44),
-            _UpcomingEvents(
-              apprentice: apprentices.firstOrNull ?? const ApprenticeDto(),
-            ),
-            const SizedBox(height: 24),
-            const _UpcomingTasks(),
-            const SizedBox(height: 14),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _UpcomingTasks extends HookConsumerWidget {
-  const _UpcomingTasks();
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
-    final selectedCalls = useState(<TaskDto>[]);
-    final selectedMeetings = useState(<TaskDto>[]);
-    final selectedParents = useState(<TaskDto>[]);
-
-    final calls = tasks
-        .where(
-          (element) => element.reportEventType == TaskType.call,
-        )
-        .take(3)
-        .toList();
-
-    final meetings = tasks
-        .where(
-          (element) => element.reportEventType == TaskType.meeting,
-        )
-        .take(3)
-        .toList();
-
-    final parents = tasks
-        .where(
-          (element) => element.reportEventType == TaskType.parents,
-        )
-        .take(3)
-        .toList();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'משימות לביצוע',
-                style: TextStyles.s20w500,
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () => const TasksRouteData().go(context),
-                child: const Text(
-                  'הצג הכל',
-                  style: TextStyles.s14w300cGray2,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _ActionsRow(
-            label: 'שיחות',
-            selectedTasks: selectedCalls.value,
-          ),
-          const SizedBox(height: 6),
-          if (calls.isEmpty)
-            const Text(
-              'אין שיחות שמחכות לביצוע',
-              style: TextStyles.s16w300cGray2,
-            )
-          else
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: calls
-                  .map(
-                    (e) => TaskCard(
-                      isSelected: selectedCalls.value.contains(e),
-                      onTap: () =>
-                          ApprenticeDetailsRouteData(id: e.apprentice.id),
-                      onLongPress: () {
-                        if (selectedCalls.value.contains(e)) {
-                          final newList = selectedCalls.value;
-                          newList.remove(e);
-                          selectedCalls.value = [...newList];
-                        } else {
-                          selectedCalls.value = [...selectedCalls.value, e];
-                        }
-                      },
-                      task: e,
-                    ),
-                  )
-                  .toList(),
-            ),
-          const SizedBox(height: 24),
-          _ActionsRow(
-            label: 'מפגשים',
-            selectedTasks: selectedMeetings.value,
-          ),
-          const SizedBox(height: 6),
-          if (meetings.isEmpty)
-            const Text(
-              'אין מפגשים שמחכים לביצוע',
-              style: TextStyles.s16w300cGray2,
-            )
-          else
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: meetings
-                  .map(
-                    (e) => TaskCard(
-                      isSelected: selectedMeetings.value.contains(e),
-                      onTap: () =>
-                          ApprenticeDetailsRouteData(id: e.apprentice.id),
-                      onLongPress: () {
-                        if (selectedMeetings.value.contains(e)) {
-                          final newList = selectedMeetings.value;
-                          newList.remove(e);
-                          selectedMeetings.value = [...newList];
-                        } else {
-                          selectedMeetings.value = [
-                            ...selectedMeetings.value,
-                            e,
-                          ];
-                        }
-                      },
-                      task: e,
-                    ),
-                  )
-                  .toList(),
-            ),
-          const SizedBox(height: 24),
-          _ActionsRow(
-            label: 'שיחות להורים',
-            selectedTasks: selectedParents.value,
-          ),
-          const SizedBox(height: 6),
-          if (parents.isEmpty)
-            const Text(
-              'אין שיחות להורים שמחכות לביצוע',
-              style: TextStyles.s16w300cGray2,
-            )
-          else
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: parents
-                  .map(
-                    (e) => TaskCard(
-                      isSelected: selectedParents.value.contains(e),
-                      onTap: () =>
-                          ApprenticeDetailsRouteData(id: e.apprentice.id),
-                      onLongPress: () {
-                        if (selectedParents.value.contains(e)) {
-                          final newList = selectedParents.value;
-                          newList.remove(e);
-                          selectedParents.value = [...newList];
-                        } else {
-                          selectedParents.value = [...selectedParents.value, e];
-                        }
-                      },
-                      task: e,
-                    ),
-                  )
-                  .toList(),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ActionsRow extends StatelessWidget {
-  const _ActionsRow({
-    required this.label,
-    required this.selectedTasks,
-  });
-
-  final String label;
-  final List<TaskDto> selectedTasks;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: TextStyles.s18w400cGray1,
-          ),
-          const Spacer(),
-          if (selectedTasks.length == 1) ...[
-            IconButton(
-              onPressed: () => Toaster.unimplemented(),
-              icon: const Icon(FluentIcons.call_24_regular),
-            ),
-            IconButton(
-              onPressed: () => Toaster.unimplemented(),
-              icon: Assets.icons.whatsapp.svg(
-                height: 20,
-              ),
-            ),
-            IconButton(
-              onPressed: () => Toaster.unimplemented(),
-              icon: const Icon(FluentIcons.clipboard_task_24_regular),
-            ),
-            PopupMenuButton(
-              offset: const Offset(0, 32),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  onTap: () => Toaster.unimplemented(),
-                  child: const Text('שליחת SMS'),
-                ),
-                PopupMenuItem(
-                  onTap: () => Toaster.unimplemented(),
-                  child: const Text('פרופיל אישי'),
-                ),
-              ],
-              icon: const Icon(FluentIcons.more_vertical_24_regular),
-            ),
-          ] else if (selectedTasks.length > 1)
-            IconButton(
-              onPressed: () => Toaster.unimplemented(),
-              icon: const Icon(FluentIcons.clipboard_task_24_regular),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _UpcomingEvents extends StatelessWidget {
-  const _UpcomingEvents({
-    required this.apprentice,
-  });
-
-  final ApprenticeDto apprentice;
-
-  @override
-  Widget build(BuildContext context) {
-    final children = [
-      const _EventCard(
-        // event: apprentice.events.firstOrNull ?? const EventDto(),
-        event: EventDto(),
-      ),
-      const _EventCard(
-        // event: apprentice.events.firstOrNull ?? const EventDto(),
-        event: EventDto(),
-      ),
-      const _EventCard(
-        // event: apprentice.events.firstOrNull ?? const EventDto(),
-        event: EventDto(),
-      ),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: Text(
-            'אירועים קרובים',
-            style: TextStyles.s20w500,
-          ),
-        ),
-        const SizedBox(height: 16),
-        SizedBox(
-          height: 100,
-          child: ListView.separated(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            separatorBuilder: (_, __) => const SizedBox(width: 16),
-            itemCount: children.length,
-            itemBuilder: (context, index) => children[index],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Header extends ConsumerWidget {
-  const _Header();
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(16),
-        ),
-        child: Stack(
-          children: [
-            DecoratedBox(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF5083bb),
-                    Color(0xFF34547c),
-                  ],
-                ),
-              ),
-              child: Assets.images.homePageHeader.svg(
-                height: 140,
-                width: 320,
-                fit: BoxFit.fitHeight,
-              ),
-            ),
-            SizedBox(
-              height: 132,
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text.rich(
-                    TextSpan(
+            if (user.role == UserRole.melave) ...[
+              const UpcomingEventsWidget(),
+              const SizedBox(height: 24),
+              const UpcomingTasksWidget(),
+              const SizedBox(height: 14),
+            ] else if (user.role == UserRole.ahraiTohnit) ...[
+              const DoughnutChartsWidget(),
+              const MelavimPerformanceWidget(),
+              const RakazimPerformanceWidget(),
+              const RakazeiEshkolPerformanceWidget(),
+              const Padding(
+                padding: EdgeInsets.all(12),
+                child: DecoratedBox(
+                  decoration: Consts.defaultBoxDecorationWithShadow,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    child: Row(
                       children: [
-                        const TextSpan(
-                          text: 'בוקר טוב',
-                          style: TextStyles.s20w300cWhite,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'חניכים נשכחים',
+                              style: TextStyles.s18w400cGray1,
+                            ),
+                            SizedBox(height: 6),
+                            Text(
+                              'לא נוצר קשר מעל 100 יום',
+                              style: TextStyles.s14w400cGrey4,
+                            ),
+                          ],
                         ),
-                        const TextSpan(text: '\n'),
-                        TextSpan(
-                          text: user.valueOrNull?.fullName,
-                          style: TextStyles.s32w500cWhite,
+                        Spacer(),
+                        Column(
+                          children: [
+                            Text(
+                              '12',
+                              style: TextStyles.s18w600cBlue2,
+                            ),
+                            SizedBox(height: 4),
+                            Text('חניכים', style: TextStyles.s12w400cGrey6),
+                          ],
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _EventCard extends ConsumerWidget {
-  const _EventCard({
-    required this.event,
-  });
-
-  final EventDto event;
-
-  @override
-  Widget build(BuildContext context, ref) {
-    return SizedBox(
-      width: 232,
-      child: DecoratedBox(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(16),
-          ),
-          gradient: LinearGradient(
-            colors: [
-              Color(0x33ECF2F5),
-              Color(0x333D94D2),
             ],
-          ),
-        ),
-        child: InkWell(
-          onTap: () => GiftRouteData(id: event.id).go(context),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  width: 160,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        event.title,
-                        style: TextStyles.s16w500cGrey2,
-                      ),
-                      Text(
-                        event.description,
-                        style: TextStyles.s14w300cGray2,
-                        maxLines: 2,
-                      ),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                const Align(
-                  alignment: Alignment.topCenter,
-                  child: Icon(FluentIcons.gift_24_regular),
-                ),
-              ],
-            ),
-          ),
+          ],
         ),
       ),
     );

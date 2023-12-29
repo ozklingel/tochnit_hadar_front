@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/secondary/charts/widgets/cartesian_monthly_chart.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_card_wrapper.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/green_text_chart_card.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/linear_progress_chart_card.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/page_template.dart';
+import 'package:hadar_program/src/views/widgets/charts/cartesian_line_chart.dart';
 
 class RakazMosadProfessionalMeetingsChartPage extends StatelessWidget {
   const RakazMosadProfessionalMeetingsChartPage({super.key});
@@ -35,7 +35,11 @@ class RakazMosadProfessionalMeetingsChartPage extends StatelessWidget {
               style: TextStyles.s14w400cGrey4,
             ),
             SizedBox(height: 12),
-            CartesianMonthlyChart(
+            CartesianLineChart(
+              xAxisTitle: 'חודשים',
+              yAxisTitle: 'ממוצע ימים',
+              interval: 1,
+              max: 12,
               data: [
                 (1, 20),
                 (2, 40),

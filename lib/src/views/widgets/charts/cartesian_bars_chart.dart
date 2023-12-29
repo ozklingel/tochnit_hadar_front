@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class CartesianQuarterlyChart extends StatelessWidget {
-  const CartesianQuarterlyChart({
+class CartesianBarsChart extends StatelessWidget {
+  const CartesianBarsChart({
     super.key,
     required this.data,
   });

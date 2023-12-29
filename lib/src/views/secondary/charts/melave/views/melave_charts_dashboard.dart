@@ -19,7 +19,7 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    var children = [
+    final children = [
       const ChartHeader(),
       const CircularProgressGauge(val: .4),
       LinearProgressChartCard(

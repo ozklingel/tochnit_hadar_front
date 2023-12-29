@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class CartesianMonthlyChart extends StatelessWidget {
-  const CartesianMonthlyChart({
+class CartesianLineChart extends StatelessWidget {
+  const CartesianLineChart({
     super.key,
     required this.data,
+    required this.xAxisTitle,
+    required this.yAxisTitle,
+    required this.max,
+    required this.interval,
   });
 
   final List<(double, double)> data;
+  final String xAxisTitle;
+  final String yAxisTitle;
+  final double max;
+  final double interval;
 
   @override
   Widget build(BuildContext context) {
@@ -16,29 +24,29 @@ class CartesianMonthlyChart extends StatelessWidget {
       child: SfCartesianChart(
         plotAreaBorderWidth: 0,
         borderWidth: 0,
-        primaryXAxis: const NumericAxis(
+        primaryXAxis: NumericAxis(
           title: AxisTitle(
-            text: 'חודשים',
+            text: xAxisTitle,
             textStyle: TextStyles.s12w400cGrey3,
           ),
-          majorGridLines: MajorGridLines(width: 0),
-          minorGridLines: MinorGridLines(width: 0),
-          majorTickLines: MajorTickLines(width: 0),
-          axisLine: AxisLine(width: 0),
+          majorGridLines: const MajorGridLines(width: 0),
+          minorGridLines: const MinorGridLines(width: 0),
+          majorTickLines: const MajorTickLines(width: 0),
+          axisLine: const AxisLine(width: 0),
           borderColor: Colors.transparent,
-          interval: 1,
+          interval: interval,
           borderWidth: 0,
-          maximum: 12,
+          maximum: max,
         ),
-        primaryYAxis: const NumericAxis(
+        primaryYAxis: NumericAxis(
           title: AxisTitle(
-            text: 'ממוצע ימים',
+            text: yAxisTitle,
             textStyle: TextStyles.s12w400cGrey3,
           ),
-          majorGridLines: MajorGridLines(width: 0),
-          minorGridLines: MinorGridLines(width: 0),
-          majorTickLines: MajorTickLines(width: 0),
-          axisLine: AxisLine(width: 0),
+          majorGridLines: const MajorGridLines(width: 0),
+          minorGridLines: const MinorGridLines(width: 0),
+          majorTickLines: const MajorTickLines(width: 0),
+          axisLine: const AxisLine(width: 0),
           borderColor: Colors.transparent,
           borderWidth: 0,
         ),
