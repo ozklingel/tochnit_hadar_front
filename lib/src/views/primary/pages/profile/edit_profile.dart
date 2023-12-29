@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../services/networking/http_service.dart';
 import '../chat_box/error_dialog.dart';
 import '../chat_box/success_dialog.dart';
+import 'drop_down_widget.dart';
 
 class ProfileEditPage extends StatefulHookConsumerWidget {
   const ProfileEditPage({super.key});
@@ -41,6 +42,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
     Map<String, dynamic> userMap = jsonDecode(data.body);
     Map<String, dynamic> userMap2 = userMap["attributes"];
     myUser = userMap2;
+    DropdownButtonExample.hint = myUser["region"];
     // print(myUser);
     return userMap2;
   }
@@ -630,8 +632,13 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                       controller:
                                           birthDayController, // <-- SEE HERE
                                       decoration: InputDecoration(
-                                        hintText:
-                                            myUser["dateOfBirthInMsSinceEpoch"],
+                                        hintText: myUser[
+                                                "dateOfBirthInMsSinceEpoch"]
+                                            .substring(
+                                                0,
+                                                myUser["dateOfBirthInMsSinceEpoch"]
+                                                        .length -
+                                                    9),
                                         isDense:
                                             true, // this will remove the default content padding
 
@@ -713,24 +720,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                   ),
                                   Directionality(
                                     textDirection: TextDirection.rtl,
-                                    child: TextField(
-                                      controller:
-                                          regionController, // <-- SEE HERE
-                                      decoration: InputDecoration(
-                                        hintText: myUser["region"],
-                                        isDense:
-                                            true, // this will remove the default content padding
-
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                            width: 1,
-                                            color: Colors.black,
-                                          ), //<-- SEE HERE
-                                          borderRadius:
-                                              BorderRadius.circular(30.0),
-                                        ),
-                                      ),
-                                    ),
+                                    child: const DropdownButtonExample(),
                                   ),
                                   const SizedBox(
                                     height: 50,
