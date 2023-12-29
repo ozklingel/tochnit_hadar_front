@@ -18,7 +18,7 @@ class ChartHeader extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 240,
+          width: 200,
           child: Text(
             '${user?.fullName ?? 'N/A'}'
             ' '

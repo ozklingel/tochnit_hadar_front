@@ -8,37 +8,35 @@ class GreenTextChartCard extends StatelessWidget {
     required this.topText,
     required this.midText,
     required this.botText,
-    required this.onTap,
+    this.onTap,
   });
 
   final String topText;
   final String midText;
   final String botText;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return ChartCardWrapper(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              topText,
-              style: TextStyles.s14w400cGrey4,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              midText,
-              style: TextStyles.s34w400cGreen,
-            ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            topText,
+            style: TextStyles.s14w400cGrey4,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            midText,
+            style: TextStyles.s34w400cGreen,
+          ),
+          if (onTap != null)
             TextButton(
               onPressed: onTap,
               child: Text(botText),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

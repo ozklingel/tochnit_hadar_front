@@ -4,9 +4,11 @@ class ChartCardWrapper extends StatelessWidget {
   const ChartCardWrapper({
     super.key,
     required this.child,
+    this.padding = const EdgeInsets.all(12),
   });
 
   final Widget child;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,10 @@ class ChartCardWrapper extends StatelessWidget {
         ],
         borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
-      child: child,
+      child: Padding(
+        padding: padding,
+        child: child,
+      ),
     );
   }
 }

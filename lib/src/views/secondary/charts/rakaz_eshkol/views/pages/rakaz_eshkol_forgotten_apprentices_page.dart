@@ -8,8 +8,8 @@ import 'package:hadar_program/src/views/secondary/charts/widgets/page_template.d
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MelaveForgottenApprenticesChartPage extends ConsumerWidget {
-  const MelaveForgottenApprenticesChartPage({super.key});
+class RakazEshkolForgottenApprenticesChartPage extends ConsumerWidget {
+  const RakazEshkolForgottenApprenticesChartPage({super.key});
 
   @override
   Widget build(BuildContext context, ref) {

@@ -8,17 +8,16 @@ class ChartCardContainer extends StatelessWidget {
     required this.label,
     required this.child,
     this.onTap,
-    this.isPrimary = true,
   });
 
   final String label;
   final Widget child;
   final VoidCallback? onTap;
-  final bool isPrimary;
 
   @override
   Widget build(BuildContext context) {
     return ChartCardWrapper(
+      padding: EdgeInsets.zero,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -35,15 +34,13 @@ class ChartCardContainer extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: isPrimary
-                          ? TextStyles.s16w500cGrey2
-                          : TextStyles.s12w400cGrey4,
+                      style: TextStyles.s16w500cGrey2,
                     ),
-                    if (isPrimary) const Spacer(),
+                    const Spacer(),
                     if (onTap != null) const Icon(Icons.chevron_right),
                   ],
                 ),
-                const SizedBox(height: 12),
+                // const SizedBox(height: 12),
                 child,
               ],
             ),

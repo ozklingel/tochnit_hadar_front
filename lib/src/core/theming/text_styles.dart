@@ -193,6 +193,16 @@ abstract class TextStyles {
     ],
   );
 
+  static const s16w400cGrey4 = TextStyle(
+    fontFamily: _kFontFamily,
+    color: AppColors.grey4,
+    fontSize: 16,
+    height: 1,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const s16w400cGrey5 = TextStyle(
     fontFamily: _kFontFamily,
     color: AppColors.grey5,
@@ -343,6 +353,16 @@ abstract class TextStyles {
     fontSize: 12,
     height: 1,
     color: AppColors.grey2,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
+  static const s12w400cGrey3 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 12,
+    height: 1,
+    color: AppColors.grey3,
     fontVariations: [
       FontVariation('wght', 400),
     ],

@@ -7,22 +7,23 @@ import 'package:hadar_program/src/views/secondary/charts/widgets/green_text_char
 import 'package:hadar_program/src/views/secondary/charts/widgets/linear_progress_chart_card.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/page_template.dart';
 
-class MelaveMeetingsChartPage extends StatelessWidget {
-  const MelaveMeetingsChartPage({super.key});
+class RakazMosadMatsberMeetingsChartPage extends StatelessWidget {
+  const RakazMosadMatsberMeetingsChartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final children = [
       LinearProgressChartCard(
-        title: '',
-        val: 9,
-        total: 23,
+        val: 12,
+        total: 34,
+        subLabelSuffix: 'שיחות לחניכים',
         trailingButtonOnTap: () => Toaster.unimplemented(),
+        trailingButtonText: 'פירוט שיחות שיש לבצע',
       ),
       GreenTextChartCard(
-        topText: 'ממוצע זמן ביצוע מפגש עם חניכים',
-        midText: '56 יום',
-        botText: 'פירוט מפגשים שבוצעו',
+        topText: 'ממוצע מרווח בין ישיבות המצב”ר',
+        midText: '68 יום',
+        botText: 'פירוט שיחות שבוצעו',
         onTap: () => Toaster.unimplemented(),
       ),
       const ChartCardWrapper(
@@ -30,7 +31,7 @@ class MelaveMeetingsChartPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'ממוצע זמן חודשי- יצירת מפגש עם החניכים',
+              'ממוצע זמן חודשי- יצירת שיחה עם החניכים',
               style: TextStyles.s14w400cGrey4,
             ),
             SizedBox(height: 12),
@@ -50,7 +51,7 @@ class MelaveMeetingsChartPage extends StatelessWidget {
     ];
 
     return ChartPageTemplate(
-      title: 'מפגשים',
+      title: 'ישיבות מצב”ר',
       children: children,
     );
   }

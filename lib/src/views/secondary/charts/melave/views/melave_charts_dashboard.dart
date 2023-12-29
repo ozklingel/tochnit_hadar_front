@@ -9,7 +9,7 @@ import 'package:hadar_program/src/views/secondary/charts/widgets/chart_details_c
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_header.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/charts_appbar.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/circular_progress_gauge.dart';
-import 'package:hadar_program/src/views/secondary/charts/widgets/linear_progress_card.dart';
+import 'package:hadar_program/src/views/secondary/charts/widgets/linear_progress_chart_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class MelaveChartsDashboardScreen extends HookConsumerWidget {
@@ -22,8 +22,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
     var children = [
       const ChartHeader(),
       const CircularProgressGauge(val: .4),
-      LinearProgressCard.dashboard(
-        label: 'שיחות',
+      LinearProgressChartCard(
+        title: 'שיחות',
         val: 5,
         total: 20,
         onTap: () => Navigator.of(context).push(
@@ -32,8 +32,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
           ),
         ),
       ),
-      LinearProgressCard.dashboard(
-        label: 'מפגשים',
+      LinearProgressChartCard(
+        title: 'מפגשים',
         val: 8,
         total: 16,
         onTap: () => Navigator.of(context).push(
@@ -66,8 +66,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
           ),
         ),
       ),
-      LinearProgressCard.dashboard(
-        label: 'שיחות היכרות הורים',
+      LinearProgressChartCard(
+        title: 'שיחות היכרות הורים',
         val: 15,
         total: 18,
         onTap: () => Navigator.of(context).push(
@@ -87,8 +87,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
           ),
         ),
       ),
-      const LinearProgressCard.dashboard(
-        label: 'ביקורים בבסיס',
+      const LinearProgressChartCard(
+        title: 'ביקורים בבסיס',
         val: 60,
         total: 100,
         timestamp: 'עברו 2 רבעונים',

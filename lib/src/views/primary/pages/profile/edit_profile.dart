@@ -632,13 +632,14 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                       controller:
                                           birthDayController, // <-- SEE HERE
                                       decoration: InputDecoration(
-                                        hintText: myUser[
-                                                "dateOfBirthInMsSinceEpoch"]
-                                            .substring(
-                                                0,
-                                                myUser["dateOfBirthInMsSinceEpoch"]
-                                                        .length -
-                                                    9),
+                                        hintText:
+                                            myUser["dateOfBirthInMsSinceEpoch"]
+                                                .substring(
+                                          0,
+                                          myUser["dateOfBirthInMsSinceEpoch"]
+                                                  .length -
+                                              9,
+                                        ),
                                         isDense:
                                             true, // this will remove the default content padding
 
@@ -718,9 +719,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                       ),
                                     ],
                                   ),
-                                  Directionality(
+                                  const Directionality(
                                     textDirection: TextDirection.rtl,
-                                    child: const DropdownButtonExample(),
+                                    child: DropdownButtonExample(),
                                   ),
                                   const SizedBox(
                                     height: 50,

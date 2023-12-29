@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class CartesianChart extends StatelessWidget {
-  const CartesianChart({
+class CartesianMonthlyChart extends StatelessWidget {
+  const CartesianMonthlyChart({
     super.key,
     required this.data,
   });
@@ -16,7 +17,10 @@ class CartesianChart extends StatelessWidget {
         plotAreaBorderWidth: 0,
         borderWidth: 0,
         primaryXAxis: const NumericAxis(
-          title: AxisTitle(text: 'חודשים'),
+          title: AxisTitle(
+            text: 'חודשים',
+            textStyle: TextStyles.s12w400cGrey3,
+          ),
           majorGridLines: MajorGridLines(width: 0),
           minorGridLines: MinorGridLines(width: 0),
           majorTickLines: MajorTickLines(width: 0),
@@ -27,7 +31,10 @@ class CartesianChart extends StatelessWidget {
           maximum: 12,
         ),
         primaryYAxis: const NumericAxis(
-          title: AxisTitle(text: 'ממוצע ימים'),
+          title: AxisTitle(
+            text: 'ממוצע ימים',
+            textStyle: TextStyles.s12w400cGrey3,
+          ),
           majorGridLines: MajorGridLines(width: 0),
           minorGridLines: MinorGridLines(width: 0),
           majorTickLines: MajorTickLines(width: 0),
@@ -43,8 +50,8 @@ class CartesianChart extends StatelessWidget {
           SplineSeries<(double, double), num>(
             splineType: SplineType.cardinal,
             dataSource: data,
-            xValueMapper: ((double, double) sales, _) => sales.$1,
-            yValueMapper: ((double, double) sales, _) => sales.$2,
+            xValueMapper: ((double, double) x, _) => x.$1,
+            yValueMapper: ((double, double) y, _) => y.$2,
           ),
         ],
       ),

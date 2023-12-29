@@ -1,36 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/cartesian_monthly_chart.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_card_wrapper.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/green_text_chart_card.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/linear_progress_chart_card.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/page_template.dart';
 
-class MelaveMeetingsChartPage extends StatelessWidget {
-  const MelaveMeetingsChartPage({super.key});
+class RakazEshkolMonthlyMeetingChartPage extends StatelessWidget {
+  const RakazEshkolMonthlyMeetingChartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final children = [
-      LinearProgressChartCard(
+      const LinearProgressChartCard(
         title: '',
-        val: 9,
-        total: 23,
-        trailingButtonOnTap: () => Toaster.unimplemented(),
+        subLabelSuffix: 'ישיבות',
+        val: 2,
+        total: 10,
       ),
-      GreenTextChartCard(
-        topText: 'ממוצע זמן ביצוע מפגש עם חניכים',
-        midText: '56 יום',
-        botText: 'פירוט מפגשים שבוצעו',
-        onTap: () => Toaster.unimplemented(),
+      const GreenTextChartCard(
+        topText: 'ממוצע מרווח ישיבות חודשיות',
+        midText: '68 יום',
+        botText: 'פירוט שיחות שבוצעו',
       ),
       const ChartCardWrapper(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'ממוצע זמן חודשי- יצירת מפגש עם החניכים',
+              'ממוצע זמן חודשי- ישיבות חודשיות עם רכזים',
               style: TextStyles.s14w400cGrey4,
             ),
             SizedBox(height: 12),
@@ -50,7 +48,7 @@ class MelaveMeetingsChartPage extends StatelessWidget {
     ];
 
     return ChartPageTemplate(
-      title: 'מפגשים',
+      title: 'שיחות הורים',
       children: children,
     );
   }
