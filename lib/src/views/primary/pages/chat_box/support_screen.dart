@@ -73,22 +73,9 @@ class _SupportScreenState extends State<SupportScreen> {
                 const SizedBox(
                   height: 40,
                 ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(3.0),
-                    ),
-                    Text(
-                      "נושא",
-                      style: TextStyle(color: Colors.black, fontSize: 15),
-                    ),
-                    Text('*', style: TextStyle(color: Colors.red)),
-                  ],
-                ),
                 const DropdownButtonExample(),
                 const SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -177,7 +164,7 @@ class _SupportScreenState extends State<SupportScreen> {
                     context,
                   );
                 }
-                // print(result);
+                print(result);
                 // print(result);
 
                 if (!mounted) {

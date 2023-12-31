@@ -29,8 +29,6 @@ class HttpService {
 
   static getUserNotiSetting(userid) async {
     userid = "972523301800";
-    debugPrint("ozzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-
     final response = await http.get(
       Uri.parse("$_getNotifSettingUrl?userId=$userid"),
       headers: {
@@ -199,8 +197,9 @@ class HttpService {
     Map<String, dynamic> request = {
       "content": contant,
       "subject": subject,
-      "created_by_id": "+972549247616",
-      "created_for_id": "+972549247616",
+      "created_by_id": "972523301800",
+      "created_for_id": "972523301800",
+      "attachments": "",
     };
 
     final headers = {'Content-Type': 'application/json'};

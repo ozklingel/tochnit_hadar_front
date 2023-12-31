@@ -20,48 +20,50 @@ class SideMenuDrawer extends ConsumerWidget {
 
     return Drawer(
       child: ListView(
-        shrinkWrap: true,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.grey.shade200,
-                  child: const CircleAvatar(
-                    radius: 70,
-                    backgroundImage: AssetImage('assets/images/exit.png'),
-                  ),
+          SizedBox(
+              height: 210.0,
+              child: DrawerHeader(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.grey.shade200,
+                            child: const CircleAvatar(
+                              radius: 70,
+                              backgroundImage:
+                                  AssetImage('assets/images/exit.png'),
+                            ),
+                          ),
+                          onTap: () => const HomeRouteData().go(context),
+                        ),
+                      ],
+                    ),
+                    const CircleAvatar(
+                      radius: 30,
+                      backgroundImage: profileimage,
+                    ),
+                    const Text(
+                      'John Doe',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Text('John@Doe', style: TextStyle(fontSize: 11)),
+                    TextButton(
+                      child: Text(
+                        "פרופיל אישי ",
+                        style: TextStyle(color: Colors.blue[900]),
+                      ),
+                      onPressed: () {
+                        const UserProfileRouteData().push(context);
+                      },
+                    ),
+                  ],
                 ),
-                onTap: () => const HomeRouteData().go(context),
-              ),
-            ],
-          ),
-          DrawerHeader(
-            child: Column(
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: profileimage,
-                ),
-                const Text(
-                  'John Doe',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text('John@Doe', style: TextStyle(fontSize: 11)),
-                TextButton(
-                  child: Text(
-                    "עריכת פרופיל",
-                    style: TextStyle(color: Colors.blue[900]),
-                  ),
-                  onPressed: () {
-                    const UserProfileRouteData().push(context);
-                  },
-                ),
-              ],
-            ),
-          ),
+              )),
           ListView(
             shrinkWrap: true,
             children: [

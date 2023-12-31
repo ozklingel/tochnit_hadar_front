@@ -54,7 +54,7 @@ void showFancyCustomDialog(BuildContext context) {
                 height: 30,
               ),
               Image(
-                image: AssetImage('assets/images/vi.png'),
+                image: AssetImage('assets/images/success-smile.png'),
               ),
               SizedBox(
                 width: double.infinity,
