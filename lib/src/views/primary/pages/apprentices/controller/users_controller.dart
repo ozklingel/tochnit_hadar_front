@@ -1,8 +1,5 @@
 import 'package:faker/faker.dart';
-import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:hadar_program/src/models/contact/contact.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,97 +16,110 @@ class UsersController extends _$UsersController {
   FutureOr<List<ApprenticeDto>> build() async {
     // ignore: unused_local_variable
     final request =
-        ref.watch(dioProvider).get('userProfile_form/myApprentices');
+        await ref.watch(dioProvider).get('userProfile_form/myApprentices');
 
-    await Future.delayed(const Duration(milliseconds: 400));
+    final result = (request.data as List<dynamic>)
+        .map(
+          (e) => ApprenticeDto.fromJson(e),
+        )
+        .toList();
 
-    return List.generate(
-      Consts.mockApprenticeGuids.length,
-      (index) => ApprenticeDto(
-        id: Consts.mockApprenticeGuids[index],
-        avatar: faker.image.image(
-          height: 75,
-          width: 75,
-          random: true,
-        ),
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        phone: faker.randomGenerator.boolean()
-            ? ''
-            : faker.randomGenerator.boolean()
-                ? faker.phoneNumber.de()
-                : faker.phoneNumber.us(),
-        email: faker.randomGenerator.boolean() ? '' : faker.internet.email(),
-        teudatZehut: faker.randomGenerator.numberOfLength(9),
-        address: AddressDto(
-          city: faker.address.city(),
-          apartment: faker.randomGenerator.integer(99999, min: 1).toString(),
-          street: faker.address.streetName(),
-          houseNumber: faker.randomGenerator.integer(999, min: 1).toString(),
-          postalCode: faker.address.zipCode(),
-          floor: faker.randomGenerator.integer(99, min: 1).toString(),
-          entrance: faker.lorem.word()[0],
-          region: faker.address.state(),
-        ),
-        dateOfBirth:
-            faker.date.dateTime(minYear: 1971, maxYear: 2004).toIso8601String(),
-        maritalStatus: faker.lorem.word(),
-        educationFaculty: faker.lorem.word(),
-        educationalInstitution: faker.lorem.word(),
-        workOccupation: faker.lorem.word(),
-        workPlace: faker.lorem.word(),
-        workStatus: faker.lorem.word(),
-        workType: faker.lorem.word(),
-        highSchoolInstitution: faker.lorem.word(),
-        highSchoolRavMelamed: const ContactDto(),
-        institutionId: faker.lorem.word(),
-        matsber: faker.lorem.word(),
-        militaryUpdatedDateTime:
-            faker.date.dateTime(minYear: 1971, maxYear: 2004).toIso8601String(),
-        thMentor: faker.person.name(),
-        thPeriod: faker.lorem.word()[0],
-        thRavMelamedYearA: ContactDto(
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          phone: faker.phoneNumber.us(),
-        ),
-        thRavMelamedYearB: ContactDto(
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          phone: faker.phoneNumber.de(),
-        ),
-        militaryCompoundId: Consts.mockCompoundGuids[
-            faker.randomGenerator.integer(Consts.mockCompoundGuids.length)],
-        militaryDateOfDischarge:
-            faker.date.dateTime(minYear: 1971).toIso8601String(),
-        militaryDateOfEnlistment:
-            faker.date.dateTime(minYear: 1971).toIso8601String(),
-        militaryPositionNew: faker.lorem.word(),
-        militaryPositionOld: faker.lorem.word(),
-        militaryUnit: faker.lorem.word(),
-        reportsIds: List.generate(
-          7,
-          (index) => faker.guid.guid(),
-        ),
-        eventIds: List.generate(
-          Consts.mockEventsGuids.length,
-          (index) => faker.guid.guid(),
-        ),
-        contact1Email: faker.internet.email(),
-        contact1FirstName: faker.person.firstName(),
-        contact1LastName: faker.person.lastName(),
-        contact1Phone: faker.phoneNumber.de(),
-        contact2Email: faker.internet.email(),
-        contact2FirstName: faker.person.firstName(),
-        contact2LastName: faker.person.lastName(),
-        contact2Phone: faker.phoneNumber.us(),
-        contact3Email: faker.internet.email(),
-        contact3FirstName: faker.person.firstName(),
-        contact3LastName: faker.person.lastName(),
-        contact3Phone: faker.phoneNumber.de(),
-        onlineStatus: faker.randomGenerator.boolean() ? 'online' : 'offline',
-      ),
-    );
+    return result;
+
+    // await Future.delayed(const Duration(milliseconds: 400));
+
+    // return List.generate(
+    //   Consts.mockApprenticeGuids.length,
+    //   (index) => ApprenticeDto(
+    //     id: Consts.mockApprenticeGuids[index],
+    //     avatar: faker.image.image(
+    //       height: 75,
+    //       width: 75,
+    //       random: true,
+    //     ),
+    //     firstName: faker.person.firstName(),
+    //     lastName: faker.person.lastName(),
+    //     phone: faker.randomGenerator.boolean()
+    //         ? ''
+    //         : faker.randomGenerator.boolean()
+    //             ? faker.phoneNumber.de()
+    //             : faker.phoneNumber.us(),
+    //     email: faker.randomGenerator.boolean() ? '' : faker.internet.email(),
+    //     teudatZehut: faker.randomGenerator.numberOfLength(9),
+    //     address: AddressDto(
+    //       city: faker.address.city(),
+    //       apartment: faker.randomGenerator.integer(99999, min: 1).toString(),
+    //       street: faker.address.streetName(),
+    //       houseNumber: faker.randomGenerator.integer(999, min: 1).toString(),
+    //       postalCode: faker.address.zipCode(),
+    //       floor: faker.randomGenerator.integer(99, min: 1).toString(),
+    //       entrance: faker.lorem.word()[0],
+    //       region: faker.address.state(),
+    //     ),
+    //     dateOfBirth:
+    //         faker.date.dateTime(minYear: 1971, maxYear: 2004).toIso8601String(),
+    //     maritalStatus: faker.lorem.word(),
+    //     educationFaculty: faker.lorem.word(),
+    //     educationalInstitution: faker.lorem.word(),
+    //     workOccupation: faker.lorem.word(),
+    //     workPlace: faker.lorem.word(),
+    //     workStatus: faker.lorem.word(),
+    //     workType: faker.lorem.word(),
+    //     highSchoolInstitution: faker.lorem.word(),
+    //     highSchoolRavMelamed: const ContactDto(),
+    //     institutionId: faker.lorem.word(),
+    //     matsber: faker.lorem.word(),
+    //     militaryUpdatedDateTime:
+    //         faker.date.dateTime(minYear: 1971, maxYear: 2004).toIso8601String(),
+    //     thMentor: faker.person.name(),
+    //     thPeriod: faker.lorem.word()[0],
+    //     thRavMelamedYearA: ContactDto(
+    //       firstName: faker.person.firstName(),
+    //       lastName: faker.person.lastName(),
+    //       phone: faker.phoneNumber.us(),
+    //     ),
+    //     thRavMelamedYearB: ContactDto(
+    //       firstName: faker.person.firstName(),
+    //       lastName: faker.person.lastName(),
+    //       phone: faker.phoneNumber.de(),
+    //     ),
+    //     militaryCompoundId: Consts.mockCompoundGuids[
+    //         faker.randomGenerator.integer(Consts.mockCompoundGuids.length)],
+    //     militaryDateOfDischarge:
+    //         faker.date.dateTime(minYear: 1971).toIso8601String(),
+    //     militaryDateOfEnlistment:
+    //         faker.date.dateTime(minYear: 1971).toIso8601String(),
+    //     militaryPositionNew: faker.lorem.word(),
+    //     militaryPositionOld: faker.lorem.word(),
+    //     militaryUnit: faker.lorem.word(),
+    //     reportsIds: List.generate(
+    //       7,
+    //       (index) => faker.guid.guid(),
+    //     ),
+    //     events: List.generate(
+    //       Consts.mockEventsGuids.length,
+    //       (index) => EventDto(
+    //         id: faker.guid.guid(),
+    //         title: faker.lorem.words(3).join(' '),
+    //         description: faker.lorem.sentence(),
+    //         dateTime: DateTime.now().toIso8601String(),
+    //       ),
+    //     ),
+    //     contact1Email: faker.internet.email(),
+    //     contact1FirstName: faker.person.firstName(),
+    //     contact1LastName: faker.person.lastName(),
+    //     contact1Phone: faker.phoneNumber.de(),
+    //     contact2Email: faker.internet.email(),
+    //     contact2FirstName: faker.person.firstName(),
+    //     contact2LastName: faker.person.lastName(),
+    //     contact2Phone: faker.phoneNumber.us(),
+    //     contact3Email: faker.internet.email(),
+    //     contact3FirstName: faker.person.firstName(),
+    //     contact3LastName: faker.person.lastName(),
+    //     contact3Phone: faker.phoneNumber.de(),
+    //     onlineStatus: faker.randomGenerator.boolean() ? 'online' : 'offline',
+    //   ),
+    // );
   }
 
   FutureOr<bool> addEvent({
@@ -133,7 +143,7 @@ class UsersController extends _$UsersController {
     final newState = state.valueOrNull ?? [];
 
     newState[apprenticeIndex] = apprentice.copyWith(
-      eventIds: [...apprentice.eventIds, event.id],
+      events: [...apprentice.events, event],
     );
 
     final oldState = state.valueOrNull ?? [];
@@ -170,16 +180,16 @@ class UsersController extends _$UsersController {
     final newState = state.valueOrNull ?? [];
 
     final event =
-        apprentice.eventIds.firstWhere((element) => element == eventId);
+        apprentice.events.firstWhere((element) => element.id == eventId);
 
-    final newEvents = [...apprentice.eventIds];
+    final newEvents = [...apprentice.events];
 
     final oldEventIndex = newEvents.indexOf(event);
 
     newEvents.removeAt(oldEventIndex);
 
     newState[apprenticeIndex] = apprentice.copyWith(
-      eventIds: [...newEvents],
+      events: [...newEvents],
     );
 
     state = AsyncData([...newState]);
@@ -195,7 +205,7 @@ class UsersController extends _$UsersController {
     newEvents.insert(oldEventIndex, event);
 
     oldState[apprenticeIndex] = apprentice.copyWith(
-      eventIds: [...newEvents],
+      events: [...newEvents],
     );
 
     state = AsyncData([...oldState]);
@@ -221,19 +231,19 @@ class UsersController extends _$UsersController {
 
     final newState = state.valueOrNull ?? [];
 
-    final eventIndex = apprentice.eventIds.indexWhere(
-      (element) => element == event.id,
+    final eventIndex = apprentice.events.indexWhere(
+      (element) => element.id == event.id,
     );
 
     if (eventIndex == -1) return false;
 
-    final newEventsList = [...apprentice.eventIds];
+    final newEventsList = [...apprentice.events];
 
     newEventsList.removeAt(eventIndex);
-    newEventsList.insert(eventIndex, event.id);
+    newEventsList.insert(eventIndex, event);
 
     newState[apprenticeIndex] = apprentice.copyWith(
-      eventIds: [...newEventsList],
+      events: [...newEventsList],
     );
 
     state = AsyncData([...newState]);
@@ -245,7 +255,7 @@ class UsersController extends _$UsersController {
     }
 
     oldState[apprenticeIndex] = apprentice.copyWith(
-      eventIds: [...apprentice.eventIds],
+      events: [...apprentice.events],
     );
 
     state = AsyncData([...oldState]);

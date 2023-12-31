@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/contact/contact.dto.dart';
+import 'package:hadar_program/src/models/event/event.dto.dart';
 
 part 'apprentice.dto.f.dart';
 part 'apprentice.dto.g.dart';
@@ -36,7 +37,7 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') String educationFaculty,
     @Default('') String educationalInstitution,
     @Default('') String email,
-    @Default([]) @JsonKey(name: 'events') List<String> eventIds,
+    @Default([]) @JsonKey(name: 'events') List<EventDto> events,
     @Default(ContactDto()) ContactDto highSchoolRavMelamed,
     @Default('') String id,
     @Default('') @JsonKey(name: 'institution_id') String institutionId,

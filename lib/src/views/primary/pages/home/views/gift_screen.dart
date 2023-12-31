@@ -27,7 +27,7 @@ class GiftScreen extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final apprentice =
         ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
-                  (element) => element.eventIds.any((e) => e == eventId),
+                  (element) => element.events.any((e) => e.id == eventId),
                 ) ??
             const ApprenticeDto();
     final compound =

@@ -10,7 +10,7 @@ class EventDto with _$EventDto {
     @Default('') String id,
     @Default('') String title,
     @Default('') String description,
-    @Default('') String dateTime,
+    @Default('') String datetime,
   }) = _EventDto;
 
   // ignore: unused_element

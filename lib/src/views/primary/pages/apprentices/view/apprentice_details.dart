@@ -724,7 +724,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             },
             icon: const Icon(FluentIcons.add_circle_24_regular),
           ),
-          child: apprentice.eventIds.isEmpty
+          child: apprentice.events.isEmpty
               ? const Text(
                   'אין אירועים מוזנים. לחץ כדי להוסיף אירוע',
                   textAlign: TextAlign.start,
@@ -732,7 +732,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
               : Builder(
                   builder: (context) {
                     // TODO(noga-dev) bring back
-                    final children = apprentice.eventIds
+                    final children = apprentice.events
                         .take(3)
                         .map(
                           (e) => Row(
@@ -776,7 +776,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                           )
                                           .deleteEvent(
                                             apprenticeId: apprentice.id,
-                                            eventId: e,
+                                            eventId: e.id,
                                           );
 
                                       if (!result) {
@@ -823,7 +823,7 @@ class _EventBottomSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final selectedDatetime = useState<DateTime?>(event.dateTime.asDateTime);
+    final selectedDatetime = useState<DateTime?>(event.datetime.asDateTime);
     final titleController = useTextEditingController(
       text: event.title,
       keys: [event],
