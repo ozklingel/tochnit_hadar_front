@@ -40,10 +40,15 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
     var data = await HttpService.getUserDetail("972523301800");
 
     Map<String, dynamic> userMap = jsonDecode(data.body);
-    Map<String, dynamic> userMap2 = userMap["attributes"];
-    myUser = userMap2;
-    debugPrint("myUser:$myUser");
-    return userMap2;
+    //Map<String, dynamic> userMap2 = userMap["attributes"];
+    myUser = userMap;
+    //debugPrint("myUser:$myUser");
+    print(
+      myUser["apprentices"][1]["first_name"] +
+          " " +
+          myUser["apprentices"][1]["last_name"],
+    );
+    return userMap;
   }
 
   @override
@@ -878,9 +883,7 @@ class _GeneralTab extends ConsumerWidget {
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
-                    itemCount:
-                        (((myUser["apprentices"] as String?) ?? '').split(','))
-                            .length,
+                    itemCount: myUser["apprentices"].length,
                     itemBuilder: (
                       BuildContext context,
                       int index,
@@ -893,7 +896,9 @@ class _GeneralTab extends ConsumerWidget {
                           ),
                         ),
                         title: Text(
-                          (myUser["apprentices"] ?? '').split(',')[index],
+                          myUser["apprentices"][index]["first_name"] +
+                              " " +
+                              myUser["apprentices"][index]["last_name"],
                           textAlign: TextAlign.right,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,

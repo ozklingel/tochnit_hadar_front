@@ -40,11 +40,11 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
     var data = await HttpService.getUserDetail("972523301800");
 
     Map<String, dynamic> userMap = jsonDecode(data.body);
-    Map<String, dynamic> userMap2 = userMap["attributes"];
-    myUser = userMap2;
+    // Map<String, dynamic> userMap2 = userMap["attributes"];
+    myUser = userMap;
     DropdownButtonExample.hint = myUser["region"];
     // print(myUser);
-    return userMap2;
+    return userMap;
   }
 
   Future<List<String>?> _getUserAprentice() async {
