@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'user.dto.f.dart';
 part 'user.dto.g.dart';
@@ -43,24 +43,41 @@ class UserDto with _$UserDto {
     @Default('') String cluster,
     @Default('') String city,
     @Default('') String region,
-    @Default(0) int dateOfBirthInMsSinceEpoch,
-    @Default([]) List<ApprenticeDto> apprentices,
+    @Default('') @JsonKey(name: 'date_of_birth') String dateOfBirth,
+    @Default([]) @JsonKey(fromJson: _parseApprentices) List<String> apprentices,
   }) = _UserDto;
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>
       _$UserDtoFromJson(json);
 }
 
-UserRole _extractUserRole(String? role) {
+List<String> _parseApprentices(List<dynamic> apprentices) {
+  final ids = apprentices
+      .cast<Map<String, dynamic>>()
+      .map((e) => e['id'].toString())
+      .toList();
+
+  return ids;
+}
+
+UserRole _extractUserRole(dynamic role) {
   if (role == null) {
     Logger().w('empty user role');
+    Sentry.captureException(Exception('failed to extract role from string'));
+    return UserRole.other;
   }
 
-  final result = UserRole.values.byName(role!);
+  final roleIndex = int.tryParse(role);
 
-  if (result == UserRole.other) {
-    Logger().w('failed to parse user role');
+  if (roleIndex == null) {
+    Logger().w('bad user role index');
+    Sentry.captureException(Exception('failed to extract role from index'));
+    return UserRole.other;
   }
+
+  final result = UserRole.values.firstWhere(
+    (element) => element.index == roleIndex,
+  );
 
   return result;
 }

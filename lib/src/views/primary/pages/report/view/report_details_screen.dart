@@ -42,6 +42,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
+    final apprentices =
+        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
     final report =
         ref.watch(reportsControllerProvider).valueOrNull?.singleWhere(
                   (element) => element.id == reportId,
@@ -51,7 +53,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     final reportApprentices = ref
             .watch(apprenticesControllerProvider)
             .valueOrNull
-            ?.where((element) => report.apprentices.contains(element.id))
+            ?.where((element) => report.apprenticeIds.contains(element.id))
             .toList() ??
         [];
     final apprenticeSearchController = useTextEditingController();
@@ -174,17 +176,16 @@ class ReportDetailsScreen extends HookConsumerWidget {
                       isRequired: true,
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton2<ApprenticeDto>(
-                          value: (user.valueOrNull?.apprentices
-                                      .singleWhere(
-                                        (element) => selectedApprentices.value
-                                            .contains(element),
-                                        orElse: () => const ApprenticeDto(),
-                                      )
-                                      .id
-                                      .isEmpty ??
-                                  true)
+                          value: (apprentices
+                                  .singleWhere(
+                                    (element) => selectedApprentices.value
+                                        .contains(element),
+                                    orElse: () => const ApprenticeDto(),
+                                  )
+                                  .id
+                                  .isEmpty)
                               ? null
-                              : user.valueOrNull?.apprentices.singleWhere(
+                              : apprentices.singleWhere(
                                   (element) => selectedApprentices.value
                                       .contains(element),
                                   orElse: () => const ApprenticeDto(),
@@ -282,7 +283,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                               ),
                             ),
                           ),
-                          items: user.valueOrNull?.apprentices.map(
+                          items: apprentices.map(
                             (e) {
                               return DropdownMenuItem(
                                 value: e,

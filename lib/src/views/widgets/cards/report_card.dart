@@ -79,7 +79,8 @@ class ReportCard extends ConsumerWidget {
                               data: (reportApprentices) {
                                 final apprentices = reportApprentices
                                     .where(
-                                      (element) => report.apprentices.contains(
+                                      (element) =>
+                                          report.apprenticeIds.contains(
                                         element.id,
                                       ),
                                     )
@@ -107,7 +108,10 @@ class ReportCard extends ConsumerWidget {
                       children: [
                         TextSpan(
                           text: DateFormat('dd.MM.yy')
-                              .format(DateTime.parse(report.dateTime))
+                              .format(
+                                DateTime.tryParse(report.dateTime) ??
+                                    DateTime.now(),
+                              )
                               .toString(),
                         ),
                         const TextSpan(text: ', '),

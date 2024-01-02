@@ -1,10 +1,20 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
-import 'package:hadar_program/src/models/contact/contact.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
+import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'apprentice.dto.f.dart';
 part 'apprentice.dto.g.dart';
+
+enum OnlineStatus {
+  online(100),
+  offline(200),
+  other(300);
+
+  const OnlineStatus(this.value);
+  final int value;
+}
 
 @JsonSerializable()
 @Freezed(fromJson: false)
@@ -38,7 +48,15 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') String educationalInstitution,
     @Default('') String email,
     @Default([]) @JsonKey(name: 'events') List<EventDto> events,
-    @Default(ContactDto()) ContactDto highSchoolRavMelamed,
+    @Default('')
+    @JsonKey(name: 'highSchoolRavMelamed_email')
+    String highSchoolRavMelamedEmail,
+    @Default('')
+    @JsonKey(name: 'highSchoolRavMelamed_name')
+    String highSchoolRavMelamedName,
+    @Default('')
+    @JsonKey(name: 'highSchoolRavMelamed_phone')
+    String highSchoolRavMelamedPhone,
     @Default('') String id,
     @Default('') @JsonKey(name: 'institution_id') String institutionId,
     @Default('') @JsonKey(name: 'last_name') String lastName,
@@ -48,8 +66,24 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') @JsonKey(name: 'name') String firstName,
     @Default('') String phone,
     @Default([]) @JsonKey(name: 'reports') List<String> reportsIds,
-    @Default(ContactDto()) ContactDto thRavMelamedYearA,
-    @Default(ContactDto()) ContactDto thRavMelamedYearB,
+    @Default('')
+    @JsonKey(name: 'thRavMelamedYearA_email')
+    String thRavMelamedYearAEmail,
+    @Default('')
+    @JsonKey(name: 'thRavMelamedYearA_name')
+    String thRavMelamedYearAName,
+    @Default('')
+    @JsonKey(name: 'thRavMelamedYearA_phone')
+    String thRavMelamedYearAPhone,
+    @Default('')
+    @JsonKey(name: 'thRavMelamedYearB_email')
+    String thRavMelamedYearBEmail,
+    @Default('')
+    @JsonKey(name: 'thRavMelamedYearB_name')
+    String thRavMelamedYearBName,
+    @Default('')
+    @JsonKey(name: 'thRavMelamedYearB_phone')
+    String thRavMelamedYearBPhone,
     @Default('') String workOccupation,
     @Default('') String workPlace,
     @Default('') String workStatus,
@@ -61,7 +95,9 @@ class ApprenticeDto with _$ApprenticeDto {
     @Default('') String thMentor,
     @Default('') String militaryPositionNew,
     @Default('') String matsber,
-    @Default('') String onlineStatus,
+    @Default(OnlineStatus.offline)
+    @JsonKey(fromJson: _parseOnlineStatus)
+    OnlineStatus onlineStatus,
     @Default('') String militaryDateOfEnlistment,
     @Default('') String militaryDateOfDischarge,
     @Default('') String militaryCompoundId,
@@ -69,6 +105,35 @@ class ApprenticeDto with _$ApprenticeDto {
 
   factory ApprenticeDto.fromJson(Map<String, dynamic> json) =>
       _$ApprenticeDtoFromJson(json);
+}
+
+OnlineStatus _parseOnlineStatus(dynamic onlineStatus) {
+  if (onlineStatus == null) {
+    Logger().w('empty user role');
+    Sentry.captureException(
+      Exception('failed to extract online status from string'),
+    );
+    return OnlineStatus.other;
+  }
+
+  final onlineStatusIndex =
+      onlineStatus is num ? onlineStatus : int.tryParse(onlineStatus);
+
+  if (onlineStatusIndex == null) {
+    Logger().w('bad online status index');
+    Sentry.captureException(
+      Exception('failed to extract online status from index'),
+    );
+    return OnlineStatus.other;
+  }
+
+  if (onlineStatusIndex == OnlineStatus.offline.value) {
+    return OnlineStatus.offline;
+  } else if (onlineStatusIndex == OnlineStatus.online.value) {
+    return OnlineStatus.online;
+  }
+
+  return OnlineStatus.other;
 }
 
 extension ApprenticeX on ApprenticeDto {
@@ -80,4 +145,5 @@ extension ApprenticeX on ApprenticeDto {
         militaryUnit,
         maritalStatus,
       ];
+  bool get isEmpty => id.isEmpty;
 }

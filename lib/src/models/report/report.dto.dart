@@ -9,12 +9,13 @@ class ReportDto with _$ReportDto {
   const factory ReportDto({
     @Default('') String id,
     @Default('') String description,
-    @Default(ReportEventType.none) ReportEventType reportEventType,
-    @Default([]) List<String> apprentices,
+    @Default(ReportEventType.none)
+    @JsonKey(name: 'title', fromJson: _extractType)
+    ReportEventType reportEventType,
+    @Default([]) @JsonKey(name: 'from') List<String> apprenticeIds,
     @Default([]) List<String> attachments,
     @Default('') @JsonKey(name: 'allreadyread') String allreadyRead,
-    // in milliseconds since epoch
-    @Default('') String dateTime,
+    @Default('') @JsonKey(name: 'date') String dateTime,
   }) = _ReportDto;
 
   factory ReportDto.fromJson(Map<String, dynamic> json) =>
@@ -35,8 +36,8 @@ enum ReportEventType {
   monthlyProfessionalConference, // כנס מלווים מקצועי חודשי
   doingForAlumni, // עשיה לבוגרים
   adminsGathering, // ישיבת רכזי תוכנית
-  failedAttempt // נסיון שכשל
-  ;
+  failedAttempt, // נסיון שכשל
+  other;
 
   String get name {
     switch (this) {
@@ -68,6 +69,42 @@ enum ReportEventType {
         return 'עשיה לבוגרים';
       case ReportEventType.adminsGathering:
         return 'ישיבת רכזי תוכנית';
+      case ReportEventType.other:
+        return 'UNKNOWN TYPE';
     }
   }
+}
+
+ReportEventType _extractType(String? val) {
+  if (val == ReportEventType.adminsGathering.name) {
+    return ReportEventType.adminsGathering;
+  } else if (val == ReportEventType.annualConference.name) {
+    return ReportEventType.annualConference;
+  } else if (val == ReportEventType.baseVisit.name) {
+    return ReportEventType.baseVisit;
+  } else if (val == ReportEventType.doingForAlumni.name) {
+    return ReportEventType.doingForAlumni;
+  } else if (val == ReportEventType.failedAttempt.name) {
+    return ReportEventType.failedAttempt;
+  } else if (val == ReportEventType.fiveMessages.name) {
+    return ReportEventType.fiveMessages;
+  } else if (val == ReportEventType.matsbarGathering.name) {
+    return ReportEventType.matsbarGathering;
+  } else if (val == ReportEventType.monthlyProfessionalConference.name) {
+    return ReportEventType.monthlyProfessionalConference;
+  } else if (val == ReportEventType.offlineMeeting.name) {
+    return ReportEventType.offlineMeeting;
+  } else if (val == ReportEventType.onlineMeeting.name) {
+    return ReportEventType.onlineMeeting;
+  } else if (val == ReportEventType.phoneCall.name) {
+    return ReportEventType.phoneCall;
+  } else if (val == ReportEventType.recurringMeeting.name) {
+    return ReportEventType.recurringMeeting;
+  } else if (val == ReportEventType.recurringSabath.name) {
+    return ReportEventType.recurringSabath;
+  } else if (val == ReportEventType.other.name) {
+    return ReportEventType.other;
+  }
+
+  return ReportEventType.none;
 }

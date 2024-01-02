@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/models/contact/contact.dto.dart';
 
 class DetailsRowItem extends StatelessWidget {
   const DetailsRowItem({
@@ -10,7 +9,8 @@ class DetailsRowItem extends StatelessWidget {
     required this.data,
     this.labelWidth = 80,
     this.dataWidth = 190,
-    this.contact,
+    this.contactName = '',
+    this.contactPhone = '',
     this.onTapPhone,
   });
 
@@ -18,7 +18,8 @@ class DetailsRowItem extends StatelessWidget {
   final String data;
   final double labelWidth;
   final double dataWidth;
-  final ContactDto? contact;
+  final String contactName;
+  final String contactPhone;
   final VoidCallback? onTapPhone;
 
   @override
@@ -37,7 +38,7 @@ class DetailsRowItem extends StatelessWidget {
         const SizedBox(width: 12),
         SizedBox(
           width: dataWidth,
-          child: contact == null
+          child: contactName.isEmpty
               ? Text(
                   data,
                   style: TextStyles.s14w400,
@@ -47,11 +48,11 @@ class DetailsRowItem extends StatelessWidget {
               : Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: contact?.fullName),
+                      TextSpan(text: contactName),
                       WidgetSpan(
                         child: TextButton(
                           onPressed: onTapPhone,
-                          child: Text(contact?.phone ?? ''),
+                          child: Text(contactPhone),
                         ),
                       ),
                     ],

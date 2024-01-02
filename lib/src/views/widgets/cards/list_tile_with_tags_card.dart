@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 
 class ListTileWithTagsCard extends StatelessWidget {
   const ListTileWithTagsCard({
@@ -14,7 +15,8 @@ class ListTileWithTagsCard extends StatelessWidget {
     this.isSelected = false,
     this.onLongPress,
     this.onTap,
-    this.onlineStatus,
+    this.onlineStatus = OnlineStatus.other,
+    this.trailing,
   });
 
   final bool isSelected;
@@ -23,7 +25,8 @@ class ListTileWithTagsCard extends StatelessWidget {
   final List<String> tags;
   final VoidCallback? onLongPress;
   final VoidCallback? onTap;
-  final String? onlineStatus;
+  final OnlineStatus onlineStatus;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -38,84 +41,82 @@ class ListTileWithTagsCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        child: AnimatedContainer(
-          duration: Consts.defaultDurationM,
-          decoration: BoxDecoration(
+      child: AnimatedContainer(
+        duration: Consts.defaultDurationM,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: isSelected ? AppColors.blue08 : Colors.white,
+        ),
+        child: Material(
+          child: InkWell(
             borderRadius: BorderRadius.circular(12),
-            color: isSelected ? AppColors.blue08 : Colors.white,
-          ),
-          child: Material(
-            child: InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: onTap,
-              onLongPress: onLongPress,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Stack(
-                      children: [
-                        avatar.isEmpty
-                            ? const CircleAvatar(
-                                radius: 20,
-                                backgroundColor: AppColors.grey6,
-                                child: Icon(
-                                  FluentIcons.person_24_filled,
-                                  size: 16,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : CircleAvatar(
-                                radius: 20,
-                                backgroundImage: CachedNetworkImageProvider(
-                                  avatar,
-                                ),
+            onTap: onTap,
+            onLongPress: onLongPress,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Stack(
+                    children: [
+                      avatar.isEmpty
+                          ? const CircleAvatar(
+                              radius: 20,
+                              backgroundColor: AppColors.grey6,
+                              child: Icon(
+                                FluentIcons.person_24_filled,
+                                size: 16,
+                                color: Colors.white,
                               ),
-                        if (onlineStatus != null)
-                          Positioned(
-                            bottom: 1,
-                            right: 1,
-                            child: CircleAvatar(
-                              radius: 6,
-                              backgroundColor: Colors.white,
-                              child: CircleAvatar(
-                                radius: 4,
-                                backgroundColor: onlineStatus == 'debug'
-                                    ? Colors.pink
-                                    : Colors.pink,
+                            )
+                          : CircleAvatar(
+                              radius: 20,
+                              backgroundImage: CachedNetworkImageProvider(
+                                avatar,
                               ),
                             ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 240,
-                          child: Text(
-                            name,
-                            style: TextStyles.s18w400cGray1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 240,
-                          child: Text(
-                            tags.join(' • '),
-                            style: TextStyles.s12w500.copyWith(
-                              color: AppColors.blue03,
-                            ),
+                      Positioned(
+                        bottom: 1,
+                        right: 1,
+                        child: CircleAvatar(
+                          radius: 6,
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius: 4,
+                            backgroundColor: onlineStatus == OnlineStatus.online
+                                ? Colors.green
+                                : onlineStatus == OnlineStatus.offline
+                                    ? Colors.red
+                                    : Colors.purple,
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 240,
+                        child: Text(
+                          name,
+                          style: TextStyles.s18w400cGray1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 240,
+                        child: Text(
+                          tags.join(' • '),
+                          style: TextStyles.s12w500.copyWith(
+                            color: AppColors.blue03,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (trailing != null) trailing!,
+                ],
               ),
             ),
           ),

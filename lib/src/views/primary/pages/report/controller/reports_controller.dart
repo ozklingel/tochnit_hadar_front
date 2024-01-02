@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:collection/collection.dart';
-import 'package:faker/faker.dart';
-import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reports_controller.g.dart';
@@ -23,34 +20,40 @@ enum SortReportBy {
 class ReportsController extends _$ReportsController {
   @override
   FutureOr<List<ReportDto>> build() async {
-    // ignore: unused_local_variable
-    final request =
-        ref.watch(dioProvider).get('userProfile_form/myApprentices');
+    final request = await ref.watch(dioProvider).get('messegaes_form/getAll');
 
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    final reports = List.generate(
-      44,
-      (index) {
-        return ReportDto(
-          id: faker.guid.guid(),
-          description: faker.lorem.sentence(),
-          apprentices: List.generate(
-            13,
-            (index) => Consts.mockApprenticeGuids[
-                Random().nextInt(Consts.mockApprenticeGuids.length)],
-          ),
-          reportEventType: ReportEventType.values[Random().nextInt(6)],
-          attachments: List.generate(
-            11,
-            (index) => faker.image.image(height: 100, width: 100),
-          ),
-          dateTime: faker.date
-              .dateTime(minYear: 1971, maxYear: DateTime.now().year)
-              .toIso8601String(),
-        );
+    final reports = (request.data as List<dynamic>).map(
+      (e) {
+        final item = ReportDto.fromJson(e);
+        Logger().d(item);
+        return item;
       },
-    );
+    ).toList();
+
+    // await Future.delayed(const Duration(milliseconds: 200));
+
+    // final reports = List.generate(
+    //   44,
+    //   (index) {
+    //     return ReportDto(
+    //       id: faker.guid.guid(),
+    //       description: faker.lorem.sentence(),
+    //       apprentices: List.generate(
+    //         13,
+    //         (index) => Consts.mockApprenticeGuids[
+    //             Random().nextInt(Consts.mockApprenticeGuids.length)],
+    //       ),
+    //       reportEventType: ReportEventType.values[Random().nextInt(6)],
+    //       attachments: List.generate(
+    //         11,
+    //         (index) => faker.image.image(height: 100, width: 100),
+    //       ),
+    //       dateTime: faker.date
+    //           .dateTime(minYear: 1971, maxYear: DateTime.now().year)
+    //           .toIso8601String(),
+    //     );
+    //   },
+    // );
 
     reports.sort(
       (a, b) => b.dateTime.compareTo(a.dateTime),

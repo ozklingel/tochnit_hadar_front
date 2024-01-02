@@ -48,7 +48,7 @@ class ReportsScreen extends HookConsumerWidget {
           return AsyncData(
             value.value!
                 .where(
-                  (element) => element.apprentices
+                  (element) => element.apprenticeIds
                       .where(
                         (e) => e == apprenticeId,
                       )
@@ -400,7 +400,9 @@ class ReportsScreen extends HookConsumerWidget {
           loading: () => _ReporsListBody(
             reports: List.generate(
               10,
-              (index) => const ReportDto(),
+              (index) => ReportDto(
+                dateTime: DateTime.now().toIso8601String(),
+              ),
             ),
             isLoading: true,
             selectedIds: selectedIds,

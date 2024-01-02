@@ -153,6 +153,26 @@ abstract class TextStyles {
     ],
   );
 
+  static const s18w400cYellow1 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 18,
+    color: AppColors.yellow1,
+    height: 1,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
+  static const s18w400cRed1 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 18,
+    color: AppColors.red1,
+    height: 1,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const s18w400cBlue02 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 18,
@@ -233,6 +253,16 @@ abstract class TextStyles {
     ],
   );
 
+  static const s16w500cBlue2 = TextStyle(
+    fontFamily: _kFontFamily,
+    color: AppColors.blue02,
+    fontSize: 16,
+    height: 1,
+    fontVariations: [
+      FontVariation('wght', 500),
+    ],
+  );
+
   static const s16w500cGrey2 = TextStyle(
     fontFamily: _kFontFamily,
     color: AppColors.grey2,
@@ -260,6 +290,16 @@ abstract class TextStyles {
     fontVariations: [
       FontVariation('wght', 400),
     ],
+  );
+
+  static const s14w400cGrey1 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 14,
+    height: 1,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+    color: AppColors.grey1,
   );
 
   static const s14w400cGrey2 = TextStyle(
@@ -315,6 +355,16 @@ abstract class TextStyles {
     fontFamily: _kFontFamily,
     fontSize: 14,
     height: 1,
+    fontVariations: [
+      FontVariation('wght', 300),
+    ],
+  );
+
+  static const s14w300cBlue2 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 14,
+    height: 1,
+    color: AppColors.blue02,
     fontVariations: [
       FontVariation('wght', 300),
     ],

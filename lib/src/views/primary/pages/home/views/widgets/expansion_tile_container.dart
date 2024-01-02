@@ -9,14 +9,16 @@ class ExpansionTileContainer extends StatelessWidget {
     super.key,
     required this.title,
     required this.children,
-    this.isApplyShadow = true,
     required this.height,
+    this.isApplyShadow = true,
+    this.onTap,
   });
 
   final String title;
   final List<Widget> children;
   final bool isApplyShadow;
   final double height;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,14 @@ class ExpansionTileContainer extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     child: DecoratedBox(
                       decoration: Consts.defaultBoxDecorationWithShadow,
-                      child: e,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: Consts.borderRadius24,
+                          onTap: onTap,
+                          child: e,
+                        ),
+                      ),
                     ),
                   ),
                 )

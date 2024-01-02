@@ -16,16 +16,18 @@ abstract class Consts {
   static const defaultDurationM = Duration(milliseconds: 300);
   static const defaultErrorDuration = Duration(milliseconds: 4000);
 
+  static const borderRadius24 = BorderRadius.all(Radius.circular(24));
+  static const defaultBoxShadow = BoxShadow(
+    color: Color(0x0d000000),
+    offset: Offset(0, 12),
+    blurRadius: 24,
+  );
   static const defaultBoxDecorationWithShadow = BoxDecoration(
     color: Colors.white,
     boxShadow: [
-      BoxShadow(
-        color: Color(0x0d000000),
-        offset: Offset(0, 12),
-        blurRadius: 24,
-      ),
+      defaultBoxShadow,
     ],
-    borderRadius: BorderRadius.all(Radius.circular(24)),
+    borderRadius: borderRadius24,
   );
 
   // geolocation

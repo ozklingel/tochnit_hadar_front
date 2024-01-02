@@ -11,7 +11,6 @@ import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
-import 'package:hadar_program/src/models/contact/contact.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
@@ -516,7 +515,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
     final reports = ref.watch(reportsControllerProvider).valueOrNull?.where(
-              (element) => element.apprentices.contains(apprentice.id),
+              (element) => element.apprenticeIds.contains(apprentice.id),
             ) ??
         [];
     final institution =
@@ -598,10 +597,11 @@ class _TohnitHadarTabView extends ConsumerWidget {
               DetailsRowItem(
                 label: 'ר”מ שנה א',
                 data: '',
-                contact: apprentice.thRavMelamedYearA,
+                contactName: apprentice.thRavMelamedYearAName,
+                contactPhone: apprentice.thRavMelamedYearAPhone,
                 onTapPhone: () async {
                   final phoneCallAction =
-                      Uri.parse('tel:${apprentice.thRavMelamedYearA.phone}');
+                      Uri.parse('tel:${apprentice.thRavMelamedYearAPhone}');
                   if (await canLaunchUrl(phoneCallAction)) {
                     await launchUrl(phoneCallAction);
                   }
@@ -611,10 +611,11 @@ class _TohnitHadarTabView extends ConsumerWidget {
               DetailsRowItem(
                 label: 'ר”מ שנה ב',
                 data: '',
-                contact: apprentice.thRavMelamedYearB,
+                contactName: apprentice.thRavMelamedYearBName,
+                contactPhone: apprentice.thRavMelamedYearBPhone,
                 onTapPhone: () async {
                   final phoneCallAction =
-                      Uri.parse('tel:${apprentice.thRavMelamedYearB.phone}');
+                      Uri.parse('tel:${apprentice.thRavMelamedYearBPhone}');
                   if (await canLaunchUrl(phoneCallAction)) {
                     await launchUrl(phoneCallAction);
                   }
@@ -1174,7 +1175,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'ר”מ בתיכון',
-                data: apprentice.highSchoolRavMelamed.fullName,
+                data: apprentice.highSchoolRavMelamedName,
               ),
             ],
           ),

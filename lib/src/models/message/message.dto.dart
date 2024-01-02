@@ -14,7 +14,7 @@ class MessageDto with _$MessageDto {
     @Default('') String icon,
     @Default('') @JsonKey(name: 'allreadyread') String allreadyRead,
     @Default([]) List<String> attachments,
-    @Default('') String dateTime,
+    @Default('') @JsonKey(name: 'date') String dateTime,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>

@@ -10,6 +10,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentic
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user/new_user_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/gift_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/home_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/apprentices_status_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/messages_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/new_message_screen.dart';
@@ -138,6 +139,9 @@ GoRouter goRouter(GoRouterRef ref) {
           routes: [
             TypedGoRoute<GiftRouteData>(
               path: 'gift/:id',
+            ),
+            TypedGoRoute<ApprenticesStatusRouteData>(
+              path: 'apprentices-status',
             ),
             TypedGoRoute<ChartsRouteData>(
               path: 'charts',
@@ -529,6 +533,20 @@ class GiftRouteData extends GoRouteData {
   Widget build(BuildContext context, GoRouterState state) {
     return GiftScreen(
       eventId: id,
+    );
+  }
+}
+
+class ApprenticesStatusRouteData extends GoRouteData {
+  const ApprenticesStatusRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ApprenticesStatusScreen(
+      isExtended: true,
+      title: 'סטטוס חניכים',
     );
   }
 }

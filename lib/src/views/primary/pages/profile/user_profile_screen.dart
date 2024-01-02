@@ -43,7 +43,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
     //Map<String, dynamic> userMap2 = userMap["attributes"];
     myUser = userMap;
     //debugPrint("myUser:$myUser");
-    print(
+    debugPrint(
       myUser["apprentices"][1]["first_name"] +
           " " +
           myUser["apprentices"][1]["last_name"],
