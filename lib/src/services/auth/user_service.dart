@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
@@ -63,7 +64,11 @@ class UserService extends _$UserService {
 
     ref.keepAlive();
 
-    return user.copyWith(role: UserRole.ahraiTohnit);
+    if (kDebugMode) {
+      return user.copyWith(role: UserRole.ahraiTohnit);
+    }
+
+    return user;
   }
 
   Future<void> logOff() async {

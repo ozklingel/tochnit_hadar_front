@@ -5,6 +5,8 @@ import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/home/controllers/ahrai_home_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/home/models/ahrai_home.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/apprentices_status_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/side_menu_drawer.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/doughnut_charts_widget.dart';
@@ -46,21 +48,56 @@ class HomeScreen extends ConsumerWidget {
           children: [
             const HomeHeader(),
             const SizedBox(height: 44),
-            if (user.role == UserRole.melave) ...[
-              const UpcomingEventsWidget(),
-              const SizedBox(height: 24),
-              const UpcomingTasksWidget(),
-              const SizedBox(height: 14),
-            ] else if (user.role == UserRole.ahraiTohnit) ...[
-              const DoughnutChartsWidget(),
-              const MelavimPerformanceWidget(),
-              const RakazimPerformanceWidget(),
-              const RakazeiEshkolPerformanceWidget(),
-              const _ForgottenApprentices(),
-            ],
+            if (user.role == UserRole.melave)
+              const _MelaveBody()
+            else if (user.role == UserRole.ahraiTohnit)
+              const _AhraiTohnitBody(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _MelaveBody extends StatelessWidget {
+  const _MelaveBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        UpcomingEventsWidget(),
+        SizedBox(height: 24),
+        UpcomingTasksWidget(),
+        SizedBox(height: 14),
+      ],
+    );
+  }
+}
+
+class _AhraiTohnitBody extends ConsumerWidget {
+  const _AhraiTohnitBody({super.key});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final ahraiTohnit = ref.watch(ahraiHomeControllerProvider).valueOrNull ??
+        const AhraiHomeDto();
+
+    return Column(
+      children: [
+        DoughnutChartsWidget(
+          callsGreen: ahraiTohnit.greenvisitcalls,
+          callsOrange: ahraiTohnit.orangevisitcalls,
+          callsRed: ahraiTohnit.redvisitcalls,
+          meeetingsGreen: ahraiTohnit.greenvisitmeetings,
+          meeetingsOrange: ahraiTohnit.orangevisitmeetings,
+          meeetingsRed: ahraiTohnit.redvisitmeetings,
+        ),
+        const MelavimPerformanceWidget(),
+        const RakazimPerformanceWidget(),
+        const RakazeiEshkolPerformanceWidget(),
+        const _ForgottenApprentices(),
+      ],
     );
   }
 }

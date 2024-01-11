@@ -8,7 +8,20 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class DoughnutChartsWidget extends StatelessWidget {
   const DoughnutChartsWidget({
     super.key,
+    required this.callsRed,
+    required this.callsGreen,
+    required this.callsOrange,
+    required this.meeetingsRed,
+    required this.meeetingsOrange,
+    required this.meeetingsGreen,
   });
+
+  final double meeetingsRed;
+  final double meeetingsOrange;
+  final double meeetingsGreen;
+  final double callsRed;
+  final double callsOrange;
+  final double callsGreen;
 
   @override
   Widget build(BuildContext context) {
@@ -16,21 +29,21 @@ class DoughnutChartsWidget extends StatelessWidget {
       title: 'סטטוס חניכים',
       height: 180,
       onTap: () => const ApprenticesStatusRouteData().push(context),
-      children: const [
+      children: [
         _DoughnutChart(
           title: 'מפגשים',
           data: [
-            (x: 'לא תקין', y: 12),
-            (x: 'תקין חלקית', y: 43),
-            (x: 'תקין', y: 145),
+            (x: 'לא תקין', y: meeetingsRed),
+            (x: 'תקין חלקית', y: meeetingsOrange),
+            (x: 'תקין', y: meeetingsGreen),
           ],
         ),
         _DoughnutChart(
           title: 'שיחות',
           data: [
-            (x: 'לא תקין', y: 12),
-            (x: 'תקין חלקית', y: 43),
-            (x: 'תקין', y: 145),
+            (x: 'לא תקין', y: callsRed),
+            (x: 'תקין חלקית', y: callsOrange),
+            (x: 'תקין', y: callsGreen),
           ],
         ),
       ],

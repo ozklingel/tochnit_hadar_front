@@ -15,12 +15,12 @@ targets:
             '.dart': '.g.dart'
       json_serializable|json_serializable:
         generate_for:
-          - "lib/src/models/**.dto.dart"
+          - "lib/src/**.dto.dart"
         options:
           explicit_to_json: false
       freezed:
         generate_for:
-          - "lib/src/models/**.dto.dart"
+          - "lib/src/**.dto.dart"
         options:
           build_extensions:
             '.dart': '.f.dart'

@@ -14,7 +14,6 @@ part 'users_controller.g.dart';
 class UsersController extends _$UsersController {
   @override
   FutureOr<List<ApprenticeDto>> build() async {
-    // ignore: unused_local_variable
     final request =
         await ref.watch(dioProvider).get('userProfile_form/myApprentices');
 
