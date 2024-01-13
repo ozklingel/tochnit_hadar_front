@@ -51,7 +51,9 @@ class HomeScreen extends ConsumerWidget {
             if (user.role == UserRole.melave)
               const _MelaveBody()
             else if (user.role == UserRole.ahraiTohnit)
-              const _AhraiTohnitBody(),
+              const _AhraiTohnitBody()
+            else
+              const Text('BAD USER ROLE'),
           ],
         ),
       ),
