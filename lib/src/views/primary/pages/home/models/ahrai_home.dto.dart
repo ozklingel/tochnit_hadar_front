@@ -10,13 +10,24 @@ class AhraiHomeDto with _$AhraiHomeDto {
     @Default(0) double forgotenApprenticCount,
     @Default(0) double greenvisitcalls,
     @Default(0) double greenvisitmeetings,
-    @Default([]) @JsonKey(name: 'melave_score') List<List<double>> melaveScore,
     @Default([])
-    @JsonKey(name: 'Mosad_Cooordinator_score')
-    List<List<double>> rakazimScore,
+    @JsonKey(
+      name: 'melave_score',
+      fromJson: _extractScore,
+    )
+    List<(double, double)> melaveScore,
     @Default([])
-    @JsonKey(name: 'eshcol_Cooordinator_score')
-    List<List<double>> eshkolScore,
+    @JsonKey(
+      name: 'Mosad_Cooordinator_score',
+      fromJson: _extractScore,
+    )
+    List<(double, double)> rakazimScore,
+    @Default([])
+    @JsonKey(
+      name: 'eshcol_Cooordinator_score',
+      fromJson: _extractScore,
+    )
+    List<(double, double)> eshkolScore,
     @Default(0) double orangevisitcalls,
     @Default(0) double orangevisitmeetings,
     @Default(0) double redvisitcalls,
@@ -26,4 +37,15 @@ class AhraiHomeDto with _$AhraiHomeDto {
 
   factory AhraiHomeDto.fromJson(Map<String, dynamic> json) =>
       _$AhraiHomeDtoFromJson(json);
+}
+
+List<(double, double)> _extractScore(List<dynamic> data) {
+  if (data.first.isEmpty) {
+    return [(0, 0), (0, 0)];
+  }
+
+  return data
+      .map<(num, num)>((e) => (e[0], e[1]))
+      .map<(double, double)>((e) => (e.$1.toDouble(), e.$2.toDouble()))
+      .toList();
 }

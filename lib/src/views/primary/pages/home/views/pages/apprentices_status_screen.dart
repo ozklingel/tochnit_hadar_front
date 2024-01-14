@@ -117,19 +117,19 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
                             Tab(
                               child: Align(
                                 alignment: Alignment.center,
-                                child: Text("APPS"),
+                                child: Text("כללי"),
                               ),
                             ),
                             Tab(
                               child: Align(
                                 alignment: Alignment.center,
-                                child: Text("MOVIES"),
+                                child: Text("שיחות"),
                               ),
                             ),
                             Tab(
                               child: Align(
                                 alignment: Alignment.center,
-                                child: Text("GAMES"),
+                                child: Text("מפגשים"),
                               ),
                             ),
                           ],

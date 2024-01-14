@@ -8,10 +8,11 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/ahrai_home_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/models/ahrai_home.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/apprentices_status_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/performance_status_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/side_menu_drawer.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/doughnut_charts_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/home_header.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/widgets/performance_widgets.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/widgets/performance_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_events_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_tasks_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -95,20 +96,38 @@ class _AhraiTohnitBody extends ConsumerWidget {
           meeetingsOrange: ahraiTohnit.orangevisitmeetings,
           meeetingsRed: ahraiTohnit.redvisitmeetings,
         ),
-        MelavimPerformanceWidget(
-          data: ahraiTohnit.melaveScore.first.isEmpty
-              ? [(0, 0)]
-              : ahraiTohnit.melaveScore.map((e) => (e[0], e[1])).toList(),
+        PerformanceWidget(
+          title: 'תפקוד מלווים',
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const PerformanceStatusScreen(
+                title: 'תפקוד מלווים',
+              ),
+            ),
+          ),
+          data: ahraiTohnit.melaveScore,
         ),
-        RakazimPerformanceWidget(
-          data: ahraiTohnit.rakazimScore.first.isEmpty
-              ? [(0, 0)]
-              : ahraiTohnit.rakazimScore.map((e) => (e[0], e[1])).toList(),
+        PerformanceWidget(
+          title: 'תפקוד רכזים',
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const PerformanceStatusScreen(
+                title: 'תפקוד רכזים',
+              ),
+            ),
+          ),
+          data: ahraiTohnit.rakazimScore,
         ),
-        RakazeiEshkolPerformanceWidget(
-          data: ahraiTohnit.eshkolScore.first.isEmpty
-              ? [(0, 0)]
-              : ahraiTohnit.eshkolScore.map((e) => (e[0], e[1])).toList(),
+        PerformanceWidget(
+          title: 'תפקוד רכזי אשכול',
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const PerformanceStatusScreen(
+                title: 'תפקוד רכזים',
+              ),
+            ),
+          ),
+          data: ahraiTohnit.eshkolScore,
         ),
         const _ForgottenApprentices(),
       ],
