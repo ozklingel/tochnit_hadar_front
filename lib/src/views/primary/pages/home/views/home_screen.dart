@@ -95,9 +95,21 @@ class _AhraiTohnitBody extends ConsumerWidget {
           meeetingsOrange: ahraiTohnit.orangevisitmeetings,
           meeetingsRed: ahraiTohnit.redvisitmeetings,
         ),
-        const MelavimPerformanceWidget(),
-        const RakazimPerformanceWidget(),
-        const RakazeiEshkolPerformanceWidget(),
+        MelavimPerformanceWidget(
+          data: ahraiTohnit.melaveScore.first.isEmpty
+              ? [(0, 0)]
+              : ahraiTohnit.melaveScore.map((e) => (e[0], e[1])).toList(),
+        ),
+        RakazimPerformanceWidget(
+          data: ahraiTohnit.rakazimScore.first.isEmpty
+              ? [(0, 0)]
+              : ahraiTohnit.rakazimScore.map((e) => (e[0], e[1])).toList(),
+        ),
+        RakazeiEshkolPerformanceWidget(
+          data: ahraiTohnit.eshkolScore.first.isEmpty
+              ? [(0, 0)]
+              : ahraiTohnit.eshkolScore.map((e) => (e[0], e[1])).toList(),
+        ),
         const _ForgottenApprentices(),
       ],
     );

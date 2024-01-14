@@ -6,7 +6,10 @@ import 'package:hadar_program/src/views/widgets/charts/cartesian_line_chart.dart
 class MelavimPerformanceWidget extends StatelessWidget {
   const MelavimPerformanceWidget({
     super.key,
+    required this.data,
   });
+
+  final List<(double, double)> data;
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +29,7 @@ class MelavimPerformanceWidget extends StatelessWidget {
           yAxisTitle: 'כמות מלווים',
           interval: 20,
           max: 100,
-          data: const [
-            (0, 20),
-            (20, 40),
-            (40, 74),
-            (60, 20),
-            (80, 10),
-            (100, 50),
-          ],
+          data: data,
         ),
       ],
     );
@@ -43,7 +39,10 @@ class MelavimPerformanceWidget extends StatelessWidget {
 class RakazimPerformanceWidget extends StatelessWidget {
   const RakazimPerformanceWidget({
     super.key,
+    required this.data,
   });
+
+  final List<(double, double)> data;
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +62,7 @@ class RakazimPerformanceWidget extends StatelessWidget {
           yAxisTitle: 'כמות מלווים',
           interval: 20,
           max: 100,
-          data: const [
-            (0, 20),
-            (20, 40),
-            (40, 74),
-            (60, 20),
-            (80, 10),
-            (100, 50),
-          ],
+          data: data,
         ),
       ],
     );
@@ -80,7 +72,10 @@ class RakazimPerformanceWidget extends StatelessWidget {
 class RakazeiEshkolPerformanceWidget extends StatelessWidget {
   const RakazeiEshkolPerformanceWidget({
     super.key,
+    required this.data,
   });
+
+  final List<(double, double)> data;
 
   @override
   Widget build(BuildContext context) {
@@ -100,14 +95,7 @@ class RakazeiEshkolPerformanceWidget extends StatelessWidget {
           yAxisTitle: 'כמות מלווים',
           interval: 20,
           max: 100,
-          data: const [
-            (0, 20),
-            (20, 40),
-            (40, 74),
-            (60, 20),
-            (80, 10),
-            (100, 50),
-          ],
+          data: data,
         ),
       ],
     );
