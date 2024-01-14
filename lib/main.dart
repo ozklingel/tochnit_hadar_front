@@ -17,6 +17,8 @@ import 'package:timeago/timeago.dart';
 Future<void> main() async {
   await SentryFlutter.init(
     (options) {
+      options.debug = kDebugMode;
+      options.attachScreenshot = kReleaseMode;
       // or define SENTRY_DSN via Dart environment variable (--dart-define)
       options.dsn =
           'https://9648d7069cc6243a7f1e8e366a6cff42@o4506474413752320.ingest.sentry.io/4506474416242688';
@@ -34,7 +36,9 @@ Future<void> main() async {
 
       return runApp(
         const ProviderScope(
-          child: HadarProgram(),
+          child: SentryScreenshotWidget(
+            child: HadarProgram(),
+          ),
         ),
       );
     },

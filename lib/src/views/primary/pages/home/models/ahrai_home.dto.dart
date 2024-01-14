@@ -39,8 +39,8 @@ class AhraiHomeDto with _$AhraiHomeDto {
       _$AhraiHomeDtoFromJson(json);
 }
 
-List<(double, double)> _extractScore(List<dynamic> data) {
-  if (data.first.isEmpty) {
+List<(double, double)> _extractScore(List<dynamic>? data) {
+  if (data == null || data.isEmpty || data.first!.isEmpty) {
     return [(0, 0), (0, 0)];
   }
 
