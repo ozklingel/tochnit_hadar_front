@@ -47,11 +47,11 @@ class SideMenuDrawer extends ConsumerWidget {
                     radius: 30,
                     backgroundImage: profileimage,
                   ),
-                  const Text(
-                    'John Doe',
+                  Text(
+                    user.valueOrNull!.fullName,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  const Text('John@Doe', style: TextStyle(fontSize: 11)),
+                  Text(user.valueOrNull!.email, style: TextStyle(fontSize: 11)),
                   TextButton(
                     child: Text(
                       "פרופיל אישי ",

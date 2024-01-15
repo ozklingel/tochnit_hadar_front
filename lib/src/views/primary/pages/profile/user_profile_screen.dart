@@ -25,7 +25,7 @@ class UserProfileScreen extends StatefulHookConsumerWidget {
 class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
     with SingleTickerProviderStateMixin {
   ImageProvider<Object>? profileimg = const NetworkImage(
-    "https://th01-s3.s3.eu-north-1.amazonaws.com/c2fb87a53199453ca9f2ac14fb672cfc.jpg",
+    'https://www.gravatar.com/avatar',
   );
   File? galleryFile;
   final picker = ImagePicker();
@@ -36,19 +36,23 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   Map<String, dynamic> myUser = {};
 
   Future<Map<String, dynamic>> _getUserDetail() async {
-    // print("access");
+    //print("access");
     var data = await HttpService.getUserDetail("972523301800");
-
-    Map<String, dynamic> userMap = jsonDecode(data.body);
+    setState(() {
+      myUser = jsonDecode(data.body);
+    });
     //Map<String, dynamic> userMap2 = userMap["attributes"];
-    myUser = userMap;
     //debugPrint("myUser:$myUser");
-    debugPrint(
-      myUser["apprentices"][1]["first_name"] +
-          " " +
-          myUser["apprentices"][1]["last_name"],
-    );
-    return userMap;
+    // debugPrint(
+    //   myUser["apprentices"][1]["first_name"] +
+    //       " " +
+    //       myUser["apprentices"][1]["last_name"],
+    // );
+    // print("ozzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+    //
+    // print(myUser["apprentices"]);
+
+    return myUser;
   }
 
   @override
@@ -212,7 +216,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                       ),
                                       Center(
                                         child: Text(
-                                          (myUser["id"] ?? 'NOPHONE'),
+                                          "0" + (myUser["id"] ?? 'NOPHONE'),
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 15,
@@ -662,7 +666,7 @@ class _PersonalDetailsTab extends StatelessWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            myUser["id"] ?? 'NOPHONE',
+                            "0" + myUser["id"] ?? 'NOPHONE',
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -730,7 +734,6 @@ class _GeneralTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
-
     return Column(
       children: [
         Padding(
@@ -896,7 +899,7 @@ class _GeneralTab extends ConsumerWidget {
                           ),
                         ),
                         title: Text(
-                          myUser["apprentices"][index]["first_name"] +
+                          myUser["apprentices"][index]["name"] +
                               " " +
                               myUser["apprentices"][index]["last_name"],
                           textAlign: TextAlign.right,

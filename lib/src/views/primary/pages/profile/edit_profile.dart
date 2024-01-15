@@ -20,7 +20,7 @@ class ProfileEditPage extends StatefulHookConsumerWidget {
 class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
     with SingleTickerProviderStateMixin {
   ImageProvider<Object>? profileimg = const NetworkImage(
-    "https://th01-s3.s3.eu-north-1.amazonaws.com/c2fb87a53199453ca9f2ac14fb672cfc.jpg",
+    'https://www.gravatar.com/avatar',
   );
   File? galleryFile;
   final picker = ImagePicker();
@@ -38,13 +38,14 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
   Future<Map<String, dynamic>> _getUserDetail() async {
     // print("access");
     var data = await HttpService.getUserDetail("972523301800");
-
-    Map<String, dynamic> userMap = jsonDecode(data.body);
+    setState(() {
+      myUser = jsonDecode(data.body);
+    });
     // Map<String, dynamic> userMap2 = userMap["attributes"];
-    myUser = userMap;
     DropdownButtonExample.hint = myUser["region"];
+    // print("ozzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
     // print(myUser);
-    return userMap;
+    return myUser;
   }
 
   Future<List<String>?> _getUserAprentice() async {
@@ -165,7 +166,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                           ),
                         ),
                         Text(
-                          myUser["phone"],
+                          "0" + myUser["phone"],
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,
@@ -633,12 +634,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                           birthDayController, // <-- SEE HERE
                                       decoration: InputDecoration(
                                         hintText:
-                                            myUser["dateOfBirthInMsSinceEpoch"]
-                                                .substring(
+                                            myUser["date_of_birth"].substring(
                                           0,
-                                          myUser["dateOfBirthInMsSinceEpoch"]
-                                                  .length -
-                                              9,
+                                          myUser["date_of_birth"].length - 9,
                                         ),
                                         isDense:
                                             true, // this will remove the default content padding
