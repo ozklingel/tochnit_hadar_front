@@ -37,7 +37,7 @@ enum AddressRegion {
 @Riverpod(
   dependencies: [
     dio,
-    storage,
+    Storage,
   ],
 )
 class OnboardingController extends _$OnboardingController {

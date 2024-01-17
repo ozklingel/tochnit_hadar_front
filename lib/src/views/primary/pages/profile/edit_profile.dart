@@ -166,7 +166,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                           ),
                         ),
                         Text(
-                          "0" + myUser["phone"],
+                          "0${myUser["phone"]}",
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 15,

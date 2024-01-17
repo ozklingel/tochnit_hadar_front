@@ -64,7 +64,7 @@ class HttpService {
 
   static getUserNoti(userid, context) async {
     // print(userid);
-    print("$_getNoriUrl?userId=" + userid);
+    debugPrint("$_getNoriUrl?userId=$userid");
     final response = await http.get(
       Uri.parse("$_getNoriUrl?userId=$userid"),
       headers: {
@@ -129,7 +129,7 @@ class HttpService {
   }
 
   static sendAllreadyread(notiId) async {
-    print(_sendAllreadyreadUrl);
+    debugPrint(_sendAllreadyreadUrl.toString());
     var request = http.MultipartRequest(
       'POST',
       _sendAllreadyreadUrl,
@@ -146,7 +146,7 @@ class HttpService {
 
   static Future<http.Response> getUserDetail(userid) async {
     // print(userid);
-    print("$_getUserDetailUrl?userId=$userid");
+    debugPrint("$_getUserDetailUrl?userId=$userid");
     final response = await http.get(
       Uri.parse("$_getUserDetailUrl?userId=$userid"),
       headers: {

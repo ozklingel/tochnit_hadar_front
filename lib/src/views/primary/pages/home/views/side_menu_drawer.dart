@@ -49,9 +49,12 @@ class SideMenuDrawer extends ConsumerWidget {
                   ),
                   Text(
                     user.valueOrNull!.fullName,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(user.valueOrNull!.email, style: TextStyle(fontSize: 11)),
+                  Text(
+                    user.valueOrNull!.email,
+                    style: const TextStyle(fontSize: 11),
+                  ),
                   TextButton(
                     child: Text(
                       "פרופיל אישי ",

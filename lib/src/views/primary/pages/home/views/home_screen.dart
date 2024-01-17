@@ -51,7 +51,11 @@ class HomeScreen extends ConsumerWidget {
             const SizedBox(height: 44),
             if (user.role == UserRole.melave)
               const _MelaveBody()
-            else if (user.role == UserRole.ahraiTohnit)
+            else if ([
+              UserRole.ahraiTohnit,
+              UserRole.rakazEshkol,
+              UserRole.rakazMosad,
+            ].contains(user.role))
               const _AhraiTohnitBody()
             else
               const Text('BAD USER ROLE'),

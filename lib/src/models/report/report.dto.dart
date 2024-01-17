@@ -10,7 +10,10 @@ class ReportDto with _$ReportDto {
     @Default('') String id,
     @Default('') String description,
     @Default(ReportEventType.none)
-    @JsonKey(name: 'title', fromJson: _extractType)
+    @JsonKey(
+      name: 'title',
+      fromJson: _extractType,
+    )
     ReportEventType reportEventType,
     @Default([]) @JsonKey(name: 'from') List<String> apprenticeIds,
     @Default([]) List<String> attachments,

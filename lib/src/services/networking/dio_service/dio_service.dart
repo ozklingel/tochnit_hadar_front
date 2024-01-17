@@ -9,7 +9,7 @@ part 'dio_service.g.dart';
 
 @Riverpod(
   dependencies: [
-    storage,
+    Storage,
   ],
 )
 Dio dio(DioRef ref) {

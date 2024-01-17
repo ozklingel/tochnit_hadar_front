@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/views/secondary/charts/rakaz_eshkol/controllers/rakaz_eshkol_chart_controller.dart';
+import 'package:hadar_program/src/views/secondary/charts/rakaz_eshkol/models/rakaz_eshkol_chart.dto.dart';
 import 'package:hadar_program/src/views/secondary/charts/rakaz_eshkol/views/pages/rakaz_eshkol_forgotten_apprentices_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/rakaz_eshkol/views/pages/rakaz_eshkol_monthly_meetings_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_details_card.dart';
@@ -15,9 +17,13 @@ class RakazEshkolChartsDashboardScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final controller =
+        ref.watch(rakazEshkolChartControllerProvider).valueOrNull ??
+            const RakazEshkolChartDto();
+
     var children = [
       const ChartHeader(),
-      const CircularProgressGauge(val: .4),
+      CircularProgressGauge(val: controller.progressBarScore),
       LinearProgressChartCard(
         title: 'ישיבה חודשית עם רכז',
         subLabelSuffix: 'ישיבות',

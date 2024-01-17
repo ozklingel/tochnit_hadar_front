@@ -18,8 +18,10 @@ enum UserRole {
         return 'מלווה';
       case UserRole.ahraiTohnit:
         return 'אחראי תכנית';
+      // Mosad_Cooordinator
       case UserRole.rakazMosad:
         return 'רכז מוסד';
+      // eshcol_Cooordinator
       case UserRole.rakazEshkol:
         return 'רכז אשכול';
       default:

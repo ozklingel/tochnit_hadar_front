@@ -216,7 +216,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                       ),
                                       Center(
                                         child: Text(
-                                          "0" + (myUser["id"] ?? 'NOPHONE'),
+                                          "0${myUser["id"] ?? 'NOPHONE'}",
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 15,
@@ -666,7 +666,7 @@ class _PersonalDetailsTab extends StatelessWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            "0" + myUser["id"] ?? 'NOPHONE',
+                            "0${myUser["id"] ?? 'NOPHONE'}",
                             textAlign: TextAlign.right,
                           ),
                         ),

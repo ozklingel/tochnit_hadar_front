@@ -22,7 +22,6 @@ class TaskDto with _$TaskDto {
     @Default(false) bool isComplete,
     @Default(TaskType.none) TaskType reportEventType,
     @Default(ApprenticeDto()) ApprenticeDto apprentice,
-    // InMsSinceEpoch
     @Default('') String dateTime,
   }) = _TaskDto;
 

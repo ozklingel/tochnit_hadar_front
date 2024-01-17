@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_meetings_page.dart';
+import 'package:hadar_program/src/views/secondary/charts/rakaz_mosad/controllers/rakaz_mosad_chart_controller.dart';
+import 'package:hadar_program/src/views/secondary/charts/rakaz_mosad/models/rakaz_mosad_chart.dto.dart';
 import 'package:hadar_program/src/views/secondary/charts/rakaz_mosad/views/pages/rakaz_mosad_forgotten_apprentices_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/rakaz_mosad/views/pages/rakaz_mosad_good_alumni_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/rakaz_mosad/views/pages/rakaz_mosad_interactions_page.dart';
@@ -20,9 +22,13 @@ class RakazMosadChartsDashboardScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final controller =
+        ref.watch(rakazMosadChartControllerProvider).valueOrNull ??
+            const RakazMosadChartDto();
+
     var children = [
       const ChartHeader(),
-      const CircularProgressGauge(val: .4),
+      CircularProgressGauge(val: controller.progressBar / 100),
       LinearProgressChartCard(
         title: 'מפגשים מקצועיים למלווים',
         subLabelSuffix: 'מפגשים שבוצעו',

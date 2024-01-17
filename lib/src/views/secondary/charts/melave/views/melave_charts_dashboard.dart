@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/views/secondary/charts/melave/controllers/melave_chart_controller.dart';
+import 'package:hadar_program/src/views/secondary/charts/melave/models/melave_chart.dto.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_call_parents_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_calls_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_conference_page.dart';
@@ -19,9 +21,12 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final controller = ref.watch(melaveChartControllerProvider).valueOrNull ??
+        const MelaveChartDto();
+
     final children = [
       const ChartHeader(),
-      const CircularProgressGauge(val: .4),
+      CircularProgressGauge(val: controller.progressBarScore / 100),
       LinearProgressChartCard(
         title: 'שיחות',
         val: 5,

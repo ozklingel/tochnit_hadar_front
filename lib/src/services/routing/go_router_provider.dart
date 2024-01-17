@@ -45,7 +45,7 @@ final _apprenticesNavKey = GlobalKey<NavigatorState>(debugLabel: 'apprentices');
 
 @Riverpod(
   dependencies: [
-    storage,
+    Storage,
   ],
 )
 GoRouter goRouter(GoRouterRef ref) {
