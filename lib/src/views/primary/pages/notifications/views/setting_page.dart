@@ -2,18 +2,20 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../../services/auth/user_service.dart';
 import '../../../../../services/networking/http_service.dart';
 import '../../../../../services/routing/go_router_provider.dart';
 
-class SettingPage extends StatefulWidget {
+class SettingPage extends StatefulHookConsumerWidget {
   const SettingPage({Key? key}) : super(key: key);
 
   @override
-  State<SettingPage> createState() => _SettingPageState();
+  ConsumerState<SettingPage> createState() => _SettingPageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _SettingPageState extends ConsumerState<SettingPage> {
   bool t1 = false;
   bool t2 = false;
   bool t3 = false;
@@ -21,19 +23,24 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
+    final user = ref.watch(userServiceProvider);
 
-    var jsonData = await HttpService.getUserNotiSetting("+972549247616");
+    var jsonData =
+        await HttpService.getUserNotiSetting(user.valueOrNull!.phone);
     var u = jsonDecode(jsonData.body);
-
+    //print("starttttt");
+    //print(u);
     super.setState(() {
-      t1 = u["notifyStartWeek"];
-      t2 = u["notifyDayBefore"];
-      t3 = u["notifyMorning"];
+      t1 = !u["notifyStartWeek"];
+      t2 = !u["notifyDayBefore"];
+      t3 = !u["notifyMorning"];
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userServiceProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
@@ -42,7 +49,7 @@ class _SettingPageState extends State<SettingPage> {
             color: Colors.black,
           ),
           onTap: () => {
-            HttpService.setSetting("+972549247616", t1, t2, t3),
+            HttpService.setSetting(user.valueOrNull!.phone, t1, t2, t3),
             const NotificationRouteData().go(context),
           },
         ),
@@ -97,7 +104,7 @@ class _SettingPageState extends State<SettingPage> {
                             ? Colors.blue.shade700
                             : CupertinoColors.inactiveGray,
                         onChanged: (v) => setState(() {
-                          // print(t1);
+                          print(t1);
                           t1 = v;
                         }),
                       ),

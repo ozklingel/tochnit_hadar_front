@@ -35,9 +35,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   bool isLoading = true;
   Map<String, dynamic> myUser = {};
 
-  Future<Map<String, dynamic>> _getUserDetail() async {
-    //print("access");
-    var data = await HttpService.getUserDetail("972523301800");
+  Future<Map<String, dynamic>> _getUserDetail(String phone) async {
+    var data = await HttpService.getUserDetail(phone);
+    print(data);
     setState(() {
       myUser = jsonDecode(data.body);
     });
@@ -73,10 +73,13 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
-
+    profileimg = NetworkImage(user.valueOrNull!.avatar);
+    print(user.valueOrNull!.avatar);
     final userDetails = useFuture(
       useMemoized(
-        () => _getUserDetail(),
+        () => _getUserDetail(
+          user.valueOrNull!.phone,
+        ),
         [],
       ),
     );
@@ -390,6 +393,8 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   Future getImage(
     ImageSource img,
   ) async {
+    final user = ref.watch(userServiceProvider);
+
     final pickedFile = await picker.pickImage(source: img);
     XFile? xfilePick = pickedFile;
     setState(
@@ -397,7 +402,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
 
-          HttpService.uploadPhoto(galleryFile!, "972523301800");
+          HttpService.uploadPhoto(galleryFile!, user.valueOrNull!.phone);
           setState(() {
             profileimg = FileImage(galleryFile!);
           });

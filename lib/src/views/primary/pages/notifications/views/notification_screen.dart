@@ -2,26 +2,29 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../models/notification/noti.dart';
+import '../../../../../services/auth/user_service.dart';
 import '../../../../../services/networking/http_service.dart';
 import '../../../../../services/routing/go_router_provider.dart';
 import 'empty_screen.dart';
 
-class NotificationScreen extends StatefulWidget {
+class NotificationScreen extends StatefulHookConsumerWidget {
   const NotificationScreen({Key? key}) : super(key: key);
 
   @override
-  State<NotificationScreen> createState() => _NotificationScreenState();
+  ConsumerState<NotificationScreen> createState() => _NotificationScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> {
+class _NotificationScreenState extends ConsumerState<NotificationScreen>
+    with SingleTickerProviderStateMixin {
   List<Noti> notis = [];
 
-  Future<List<Noti>> _getNoti() async {
+  Future<List<Noti>> _getNoti(String phone) async {
     debugPrint("access API");
-    var jsonData = await HttpService.getUserNoti("972523301800", context);
+    var jsonData = await HttpService.getUserNoti(phone, context);
     notis.clear();
     // print(jsonData.body);
     for (var u in jsonDecode(jsonData.body)) {
@@ -42,6 +45,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userServiceProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
@@ -67,7 +72,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           margin: const EdgeInsets.all(1.0),
           padding: const EdgeInsets.all(3.0),
           child: FutureBuilder(
-            future: _getNoti(),
+            future: _getNoti(user.valueOrNull!.phone),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               // print(snapshot.data.length);
               if (snapshot.data == null || snapshot.data.length == 0) {

@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../services/auth/user_service.dart';
 import '../../../../services/networking/http_service.dart';
 import '../chat_box/error_dialog.dart';
 import '../chat_box/success_dialog.dart';
@@ -35,9 +38,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
   int scrolength = 2000;
   late Map<String, dynamic> myUser;
 
-  Future<Map<String, dynamic>> _getUserDetail() async {
+  Future<Map<String, dynamic>> _getUserDetail(String phone) async {
     // print("access");
-    var data = await HttpService.getUserDetail("972523301800");
+    var data = await HttpService.getUserDetail(phone);
     setState(() {
       myUser = jsonDecode(data.body);
     });
@@ -63,6 +66,17 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userServiceProvider);
+    profileimg = NetworkImage(user.valueOrNull!.avatar);
+
+    final userDetails = useFuture(
+      useMemoized(
+        () => _getUserDetail(
+          user.valueOrNull!.phone,
+        ),
+        [],
+      ),
+    );
     //display image selected from gallery
     Size size = MediaQuery.of(context).size;
 
@@ -87,7 +101,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
           ),
         ),
         body: FutureBuilder<Map<String, dynamic>>(
-          future: _getUserDetail(),
+          future: _getUserDetail(user.valueOrNull!.phone),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return const Center(
@@ -728,7 +742,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                               ),
                             ),
                           ),
-                          floatingActionButton: yourButtonWidget(),
+                          floatingActionButton: yourButtonWidget(user),
                           floatingActionButtonLocation:
                               FloatingActionButtonLocation.centerFloat,
                         ),
@@ -751,6 +765,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
   void _showPicker({
     required BuildContext context,
   }) {
+    final user = ref.watch(userServiceProvider);
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -761,7 +777,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                 leading: const Icon(Icons.photo_library),
                 title: const Text('Photo Library'),
                 onTap: () {
-                  getImage(ImageSource.gallery);
+                  getImage(ImageSource.gallery, user);
                   Navigator.of(context).pop();
                 },
               ),
@@ -773,7 +789,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                 ),
                 title: const Text('Camera'),
                 onTap: () {
-                  getImage(ImageSource.camera);
+                  getImage(ImageSource.camera, user);
                   Navigator.of(context).pop();
                 },
               ),
@@ -784,9 +800,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
     );
   }
 
-  Future getImage(
-    ImageSource img,
-  ) async {
+  Future getImage(ImageSource img, user) async {
     final pickedFile = await picker.pickImage(source: img);
     XFile? xfilePick = pickedFile;
     setState(
@@ -794,7 +808,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
 
-          HttpService.uploadPhoto(galleryFile!, "972523301800");
+          HttpService.uploadPhoto(galleryFile!, user.valueOrNull!.phone);
           setState(() {
             profileimg = FileImage(galleryFile!);
           });
@@ -808,7 +822,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
     );
   }
 
-  yourButtonWidget() {
+  yourButtonWidget(AsyncValue<UserDto> user) {
     Size size = MediaQuery.of(context).size;
 
     return Container(
@@ -899,7 +913,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                       ];
                       var result = await HttpService.setUserDetail(
                         "userProfile",
-                        "972523301800",
+                        user.valueOrNull!.phone,
                         listOfcontrolerText,
                       );
 
