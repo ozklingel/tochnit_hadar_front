@@ -37,7 +37,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
 
   Future<Map<String, dynamic>> _getUserDetail(String phone) async {
     var data = await HttpService.getUserDetail(phone);
-    print(data);
+    debugPrint(data.body);
     setState(() {
       myUser = jsonDecode(data.body);
     });
@@ -74,7 +74,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
     profileimg = NetworkImage(user.valueOrNull!.avatar);
-    print(user.valueOrNull!.avatar);
+    debugPrint(user.valueOrNull!.avatar);
     final userDetails = useFuture(
       useMemoized(
         () => _getUserDetail(

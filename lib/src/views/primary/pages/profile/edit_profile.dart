@@ -59,7 +59,6 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     tabController = TabController(length: 2, vsync: this, initialIndex: 1);
   }
@@ -69,6 +68,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
     final user = ref.watch(userServiceProvider);
     profileimg = NetworkImage(user.valueOrNull!.avatar);
 
+    //? TODO(Oz): why is this unused?
     final userDetails = useFuture(
       useMemoized(
         () => _getUserDetail(
@@ -77,6 +77,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
         [],
       ),
     );
+
     //display image selected from gallery
     Size size = MediaQuery.of(context).size;
 

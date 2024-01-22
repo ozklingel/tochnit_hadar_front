@@ -104,7 +104,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                             ? Colors.blue.shade700
                             : CupertinoColors.inactiveGray,
                         onChanged: (v) => setState(() {
-                          print(t1);
+                          debugPrint(t1.toString());
                           t1 = v;
                         }),
                       ),

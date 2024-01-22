@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +13,18 @@ import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_but
 import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 class NewMessageScreen extends HookWidget {
   const NewMessageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final filters = Random().nextBool() ? 'something' : '';
+    final selectedRecipients = useState<List<ApprenticeDto>>([]);
+    final type = useState<String?>(null);
+    final title = useTextEditingController();
+    final body = useTextEditingController();
+    final isAddUserInMsg = useState(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -70,13 +73,22 @@ class NewMessageScreen extends HookWidget {
                         label: const Text('הוספת נמענים ידנית'),
                         labelStyle: TextStyles.s14w400cBlue2,
                         side: const BorderSide(color: AppColors.blue06),
-                        onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (val) {
-                              return const _FindUsersPage();
-                            },
-                          ),
-                        ),
+                        onPressed: () async {
+                          final result = await Navigator.of(context)
+                              .push<List<ApprenticeDto>>(
+                            MaterialPageRoute(
+                              builder: (val) {
+                                return const _FindUsersPage();
+                              },
+                            ),
+                          );
+
+                          if (result == null || result.isEmpty) {
+                            return;
+                          }
+
+                          selectedRecipients.value = result;
+                        },
                       ),
                       const SizedBox(width: 12),
                       ActionChip(
@@ -95,21 +107,23 @@ class NewMessageScreen extends HookWidget {
                   ),
                 ),
               ),
-              if (filters.isNotEmpty) ...[
+              if (selectedRecipients.value.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 ChoiceChip(
                   selected: true,
-                  onSelected: (val) {},
+                  onSelected: (val) => selectedRecipients.value = [],
                   showCheckmark: false,
-                  label: const Row(
+                  label: Row(
                     children: [
                       Expanded(
                         child: Text(
-                          'אבי מלאכי, שליו עידן, נתנאל מכלוף, חניכים, שנה ב +21',
+                          '${selectedRecipients.value.map((e) => e.fullName)}'
+                          ' '
+                          '(${selectedRecipients.value.length.toString()})',
                           style: TextStyles.s14w400cBlue2,
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.close,
                         color: AppColors.blue02,
                         size: 20,
@@ -129,6 +143,7 @@ class NewMessageScreen extends HookWidget {
                       'בחר את סוג ההודעה',
                       style: TextStyles.s16w400cGrey5,
                     ),
+                    value: type.value,
                     onMenuStateChange: (isOpen) {},
                     dropdownSearchData: const DropdownSearchData(
                       searchInnerWidgetHeight: 50,
@@ -154,7 +169,7 @@ class NewMessageScreen extends HookWidget {
                       padding: const EdgeInsets.only(right: 8),
                     ),
                     onChanged: (value) {
-                      // selectedUserType.value = value ?? selectedUserType.value;
+                      type.value = value ?? '';
                     },
                     dropdownStyleData: const DropdownStyleData(
                       decoration: BoxDecoration(
@@ -201,11 +216,12 @@ class NewMessageScreen extends HookWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const InputFieldContainer(
+              InputFieldContainer(
                 label: 'כותרת',
                 isRequired: true,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: title,
+                  decoration: const InputDecoration(
                     hintText: 'הזן כותרת',
                     hintStyle: TextStyles.s16w400cGrey5,
                   ),
@@ -215,6 +231,7 @@ class NewMessageScreen extends HookWidget {
               InputFieldContainer(
                 label: 'תוכן ההודעה',
                 child: TextFormField(
+                  controller: body,
                   minLines: 8,
                   maxLines: 8,
                   decoration: const InputDecoration(
@@ -227,8 +244,9 @@ class NewMessageScreen extends HookWidget {
               Row(
                 children: [
                   Switch(
-                    value: false,
-                    onChanged: (val) => Toaster.unimplemented(),
+                    value: isAddUserInMsg.value,
+                    onChanged: (val) =>
+                        isAddUserInMsg.value = !isAddUserInMsg.value,
                   ),
                   const SizedBox(width: 12),
                   const Text('הוסף את שם הנמען בהודעה'),
@@ -240,14 +258,21 @@ class NewMessageScreen extends HookWidget {
                   Expanded(
                     child: LargeFilledRoundedButton(
                       label: 'שליחה',
-                      onPressed: () => showPickDateAndTimeDialog(context),
+                      onPressed: () async {
+                        final result = await showPickDateAndTimeDialog(
+                          context,
+                          onTap: () => Toaster.show('submit1???'),
+                        );
+
+                        Logger().d(result);
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: LargeFilledRoundedButton.cancel(
                       label: 'ביטול',
-                      onPressed: () => Toaster.unimplemented(),
+                      onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
                 ],
@@ -412,7 +437,9 @@ class _FindUsersPage extends HookConsumerWidget {
                           child: LargeFilledRoundedButton(
                             label: 'הוסף',
                             fontSize: 12,
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pop(selectedUsers.value);
+                            },
                           ),
                         ),
                       ),

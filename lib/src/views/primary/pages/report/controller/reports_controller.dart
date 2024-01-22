@@ -20,7 +20,7 @@ enum SortReportBy {
 class ReportsController extends _$ReportsController {
   @override
   FutureOr<List<ReportDto>> build() async {
-    final request = await ref.watch(dioProvider).get('messegaes_form/getAll');
+    final request = await ref.watch(dioProvider).get('reports_form/getAll');
 
     final reports = (request.data as List<dynamic>).map(
       (e) {

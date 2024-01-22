@@ -4,19 +4,29 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 
-showPickDateAndTimeDialog(BuildContext context) => showDialog(
+showPickDateAndTimeDialog<T>(
+  BuildContext context, {
+  VoidCallback? onTap,
+}) =>
+    showDialog<T>(
       context: context,
       builder: (context) {
-        return const PickDateAndTimeDialog();
+        return _PickDateAndTimeDialog(
+          onTap: onTap ?? () => Toaster.show('EMPTY???'),
+        );
       },
     );
 
-class PickDateAndTimeDialog extends HookWidget {
-  const PickDateAndTimeDialog({
+class _PickDateAndTimeDialog extends HookWidget {
+  const _PickDateAndTimeDialog({
     super.key,
+    required this.onTap,
   });
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +129,22 @@ class PickDateAndTimeDialog extends HookWidget {
                 height: 46,
                 child: AcceptCancelButtons(
                   onPressedCancel: () => Navigator.of(context).pop(),
+                  onPressedOk: () {
+                    if (selectedDateTime.value == null ||
+                        selectedTimeOfDay.value == null) {
+                      return;
+                    }
+
+                    Navigator.of(context).pop(
+                      DateTime(
+                        selectedDateTime.value!.year,
+                        selectedDateTime.value!.month,
+                        selectedDateTime.value!.day,
+                        selectedTimeOfDay.value!.hour,
+                        selectedTimeOfDay.value!.minute,
+                      ),
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),

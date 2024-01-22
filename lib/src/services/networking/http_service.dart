@@ -28,7 +28,7 @@ class HttpService {
   static final httpClient = HttpClient();
 
   static getUserNotiSetting(userid) async {
-    userid = "972" + userid;
+    userid = "972$userid";
     final response = await http.get(
       Uri.parse("$_getNotifSettingUrl?userId=$userid"),
       headers: {
@@ -64,7 +64,7 @@ class HttpService {
 
   static getUserNoti(userid, context) async {
     // print(userid);
-    userid = "972" + userid;
+    userid = "972$userid";
 
     debugPrint("$_getNoriUrl?userId=$userid");
     final response = await http.get(
@@ -84,15 +84,17 @@ class HttpService {
     bool notifyDayBefore,
     bool notifyMorning,
   ) async {
-    userId = "972" + userId;
+    userId = "972$userId";
 
     var request = http.MultipartRequest(
       'POST',
       _setSettingUrl,
     );
-    print(notifyStartWeek.toString() +
-        notifyDayBefore.toString() +
-        notifyMorning.toString());
+    debugPrint(
+      notifyStartWeek.toString() +
+          notifyDayBefore.toString() +
+          notifyMorning.toString(),
+    );
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
 
     request.fields['userId'] = userId;
@@ -107,7 +109,7 @@ class HttpService {
   }
 
   static uploadPhoto(File selectedImage, userid) async {
-    userid = "972" + userid;
+    userid = "972$userid";
 
     var request = http.MultipartRequest(
       'POST',
@@ -128,9 +130,10 @@ class HttpService {
 
     request.headers.addAll(headers);
 
-    print("request image: " + request.toString());
+    debugPrint("request image: $request");
 
-    var res = await request.send();
+    // ignore: unused_local_variable
+    final res = await request.send();
 
     //http.Response response = await http.Response.fromStream(res);
   }
@@ -153,7 +156,7 @@ class HttpService {
 
   static Future<http.Response> getUserDetail(userid) async {
     // print(userid);
-    userid = "972" + userid;
+    userid = "972$userid";
     debugPrint("$_getUserDetailUrl?userId=$userid");
     final response = await http.get(
       Uri.parse("$_getUserDetailUrl?userId=$userid"),
@@ -171,7 +174,7 @@ class HttpService {
     // print(atrrToBeSet);
     // print(entityId);
     // print(typeOfSet);
-    entityId = "972" + entityId;
+    entityId = "972$entityId";
 
     var atrrToBeSetString = "{";
     for (var age in atrrToBeSet) {
@@ -203,12 +206,12 @@ class HttpService {
     return responsePayload['result'];
   }
 
-  static chatBoxUrl(created_by_id, subject, contant, context) async {
-    created_by_id = "972" + created_by_id;
+  static chatBoxUrl(createdById, subject, contant, context) async {
+    createdById = "972$createdById";
     Map<String, dynamic> request = {
       "content": contant,
       "subject": subject,
-      "created_by_id": created_by_id,
+      "created_by_id": createdById,
       "created_for_id": "972523301800",
       "attachments": [""],
     };
@@ -220,7 +223,7 @@ class HttpService {
       body: json.encode(request),
     );
     Map<String, dynamic> responsePayload = json.decode(response.body);
-    print(responsePayload);
+    debugPrint(responsePayload.toString());
     return responsePayload['result'];
   }
 }
