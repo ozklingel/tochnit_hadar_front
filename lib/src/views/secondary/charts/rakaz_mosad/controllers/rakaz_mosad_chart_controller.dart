@@ -7,6 +7,7 @@ part 'rakaz_mosad_chart_controller.g.dart';
 
 @Riverpod(
   dependencies: [
+    Storage,
     dio,
   ],
 )
