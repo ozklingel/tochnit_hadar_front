@@ -45,8 +45,10 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
     final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
     final tabController = useTabController(initialLength: 2);
     useListenable(tabController);
-    final incompleteTasks = tasks.where((element) => !element.isComplete);
-    final completeTasks = tasks.where((element) => element.isComplete);
+    final incompleteTasks =
+        tasks.where((element) => element.status == TaskStatus.todo);
+    final completeTasks =
+        tasks.where((element) => element.status == TaskStatus.done);
 
     return Scaffold(
       appBar: AppBar(
@@ -234,7 +236,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
         .toList();
 
     final parents = filteredList
-        .where((element) => element.reportEventType == TaskType.parents)
+        .where((element) => element.reportEventType == TaskType.parentsMeeting)
         .map<Widget>(
           (e) => TaskCard(
             task: e,

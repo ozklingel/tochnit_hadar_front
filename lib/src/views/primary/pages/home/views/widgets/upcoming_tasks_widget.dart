@@ -36,7 +36,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
 
     final parents = tasks
         .where(
-          (element) => element.reportEventType == TaskType.parents,
+          (element) => element.reportEventType == TaskType.parentsMeeting,
         )
         .take(3)
         .toList();

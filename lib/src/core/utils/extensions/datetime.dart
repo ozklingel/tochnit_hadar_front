@@ -4,7 +4,13 @@ import 'package:kosher_dart/kosher_dart.dart';
 import 'package:timeago/timeago.dart';
 
 extension ReportFromMillisecondsSinceEpochX on String {
-  DateTime get asDateTime => DateTime.tryParse(this) ?? DateTime.now();
+  DateTime get asDateTime {
+    if (isEmpty) {
+      return DateTime.now();
+    }
+
+    return DateTime.tryParse(this) ?? DateTime.now();
+  }
 }
 
 extension ReportDateTimeX on DateTime? {

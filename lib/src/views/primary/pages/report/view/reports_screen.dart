@@ -70,7 +70,7 @@ class ReportsScreen extends HookConsumerWidget {
           title: const Text('דיווחים'),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => const ReportNewRouteData().push(context),
           shape: const CircleBorder(),
           backgroundColor: AppColors.blue02,
           child: const Icon(

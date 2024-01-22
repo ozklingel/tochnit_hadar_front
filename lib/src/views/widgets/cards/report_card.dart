@@ -8,7 +8,6 @@ import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart';
 
 class ReportCard extends ConsumerWidget {
@@ -107,12 +106,8 @@ class ReportCard extends ConsumerWidget {
                       style: TextStyles.s14w400,
                       children: [
                         TextSpan(
-                          text: DateFormat('dd.MM.yy')
-                              .format(
-                                DateTime.tryParse(report.dateTime) ??
-                                    DateTime.now(),
-                              )
-                              .toString(),
+                          text:
+                              report.dateTime.asDateTime.asDayMonthYearShortDot,
                         ),
                         const TextSpan(text: ', '),
                         TextSpan(
