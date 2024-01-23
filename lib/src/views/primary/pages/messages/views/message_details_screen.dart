@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
@@ -6,7 +7,7 @@ import 'package:hadar_program/src/views/primary/pages/messages/controller/messag
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MessageDetailsScreen extends ConsumerWidget {
+class MessageDetailsScreen extends HookConsumerWidget {
   const MessageDetailsScreen({
     super.key,
     required this.messageId,
@@ -29,7 +30,19 @@ class MessageDetailsScreen extends ConsumerWidget {
       ),
     );
 
-    final navContext = Navigator.of(context);
+    useEffect(
+      () {
+        if (ref.read(userServiceProvider).valueOrNull?.role ==
+            UserRole.melave) {
+          ref
+              .read(messagesControllerProvider.notifier)
+              .setToReadStatus(message);
+        }
+
+        return null;
+      },
+      [],
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -45,6 +58,8 @@ class MessageDetailsScreen extends ConsumerWidget {
                     value: 'delete',
                     child: const Text('מחק הודעה'),
                     onTap: () async {
+                      final navContext = Navigator.of(context);
+
                       final result = await ref
                           .read(messagesControllerProvider.notifier)
                           .deleteMessage(messageId);
@@ -59,6 +74,8 @@ class MessageDetailsScreen extends ConsumerWidget {
                     value: 'delete',
                     child: const Text('מחיקה'),
                     onTap: () async {
+                      final navContext = Navigator.of(context);
+
                       final result = await ref
                           .read(messagesControllerProvider.notifier)
                           .deleteMessage(messageId);

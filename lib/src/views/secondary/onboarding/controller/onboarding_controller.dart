@@ -36,21 +36,21 @@ enum AddressRegion {
 
 @Riverpod(
   dependencies: [
-    dio,
+    DioService,
     Storage,
   ],
 )
 class OnboardingController extends _$OnboardingController {
   @override
   void build() {
-    ref.watch(dioProvider);
+    ref.watch(dioServiceProvider);
   }
 
   Future<IsResponseSuccess> getOtp({
     required String phone,
   }) async {
     try {
-      final result = await ref.watch(dioProvider).get(
+      final result = await ref.watch(dioServiceProvider).get(
         '/onboarding_form/getOTP',
         queryParameters: {
           'created_by_phone': phone.fixRawPhone,
@@ -73,7 +73,7 @@ class OnboardingController extends _$OnboardingController {
     required String otp,
   }) async {
     try {
-      final result = await ref.watch(dioProvider).get(
+      final result = await ref.watch(dioServiceProvider).get(
         '/onboarding_form/verifyOTP',
         queryParameters: {
           'created_by_phone': phone.fixRawPhone,
@@ -124,7 +124,7 @@ class OnboardingController extends _$OnboardingController {
         );
 
     try {
-      await ref.watch(dioProvider).put(
+      await ref.watch(dioServiceProvider).put(
         '/setEntityDetails_form/setByType',
         data: {
           "typeOfSet": "Onboarding",

@@ -8,7 +8,7 @@ part 'rakaz_eshkol_chart_controller.g.dart';
 @Riverpod(
   dependencies: [
     Storage,
-    dio,
+    DioService,
   ],
 )
 class RakazEshkolChartController extends _$RakazEshkolChartController {
@@ -16,7 +16,7 @@ class RakazEshkolChartController extends _$RakazEshkolChartController {
   Future<RakazEshkolChartDto> build() async {
     final phone = ref.watch(storageProvider.notifier).getUserPhone();
 
-    final result = await ref.watch(dioProvider).get(
+    final result = await ref.watch(dioServiceProvider).get(
       'madadim/eshcolCoordinator',
       queryParameters: {'eshcolCoordinator': phone},
     );

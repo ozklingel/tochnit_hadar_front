@@ -16,7 +16,7 @@ enum SortInstitutionBy {
 
 @Riverpod(
   dependencies: [
-    dio,
+    DioService,
   ],
 )
 class InstitutionsController extends _$InstitutionsController {
@@ -24,7 +24,7 @@ class InstitutionsController extends _$InstitutionsController {
   FutureOr<List<InstitutionDto>> build() async {
     // ignore: unused_local_variable
     final request =
-        ref.watch(dioProvider).get('userProfile_form/myApprentices');
+        ref.watch(dioServiceProvider).get('userProfile_form/myApprentices');
 
     await Future.delayed(const Duration(milliseconds: 400));
 

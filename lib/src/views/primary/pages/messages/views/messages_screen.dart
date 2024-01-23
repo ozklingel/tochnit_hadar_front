@@ -96,7 +96,9 @@ class MessagesScreen extends ConsumerWidget {
                                 child: MessageWidget.collapsed(
                                   message: e,
                                   hasIcon: true,
-                                  backgroundColor: Colors.white,
+                                  backgroundColor: e.allreadyRead
+                                      ? Colors.white
+                                      : AppColors.blue08,
                                 ),
                               ),
                             )

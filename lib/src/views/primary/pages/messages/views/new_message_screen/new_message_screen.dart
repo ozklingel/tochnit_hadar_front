@@ -42,7 +42,14 @@ class NewMessageScreen extends HookWidget {
               ),
               PopupMenuItem(
                 child: const Text('תזמון שליחה'),
-                onTap: () => Toaster.unimplemented(),
+                onTap: () async {
+                  final result = await showPickDateAndTimeDialog(
+                    context,
+                    onTap: () => Toaster.show('submit1???'),
+                  );
+
+                  Logger().d(result);
+                },
               ),
               PopupMenuItem(
                 child: const Text('מחיקה'),
@@ -258,14 +265,7 @@ class NewMessageScreen extends HookWidget {
                   Expanded(
                     child: LargeFilledRoundedButton(
                       label: 'שליחה',
-                      onPressed: () async {
-                        final result = await showPickDateAndTimeDialog(
-                          context,
-                          onTap: () => Toaster.show('submit1???'),
-                        );
-
-                        Logger().d(result);
-                      },
+                      onPressed: () async {},
                     ),
                   ),
                   const SizedBox(width: 12),

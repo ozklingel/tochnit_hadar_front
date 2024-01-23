@@ -6,13 +6,14 @@ part 'tasks_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    dio,
+    DioService,
   ],
 )
 class TasksController extends _$TasksController {
   @override
   Future<List<TaskDto>> build() async {
-    final request = await ref.watch(dioProvider).get('tasks_form/getTasks');
+    final request =
+        await ref.watch(dioServiceProvider).get('tasks_form/getTasks');
 
     final result = (request.data as List<dynamic>)
         .map(

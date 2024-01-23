@@ -8,7 +8,7 @@ part 'melave_chart_controller.g.dart';
 @Riverpod(
   dependencies: [
     Storage,
-    dio,
+    DioService,
   ],
 )
 class MelaveChartController extends _$MelaveChartController {
@@ -16,7 +16,7 @@ class MelaveChartController extends _$MelaveChartController {
   Future<MelaveChartDto> build() async {
     final phone = ref.watch(storageProvider.notifier).getUserPhone();
 
-    final result = await ref.watch(dioProvider).get(
+    final result = await ref.watch(dioServiceProvider).get(
       '/madadim/melave',
       queryParameters: {'melaveId': phone},
     );

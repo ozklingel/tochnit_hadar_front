@@ -50,7 +50,7 @@ class HadarProgram extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final router = ref.watch(goRouterProvider);
+    final router = ref.watch(goRouterServiceProvider);
 
     return _EagerInitialization(
       child: MaterialApp.router(
@@ -80,8 +80,11 @@ class HadarProgram extends ConsumerWidget {
   }
 
   Map<ShortcutActivator, VoidCallback> _shortcuts(WidgetRef ref) {
-    late final context =
-        ref.read(goRouterProvider).configuration.navigatorKey.currentContext!;
+    late final context = ref
+        .read(goRouterServiceProvider)
+        .configuration
+        .navigatorKey
+        .currentContext!;
 
     return {
       const SingleActivator(
@@ -102,8 +105,8 @@ class HadarProgram extends ConsumerWidget {
       ): () async => await const ChartsRouteData().push(context),
       const SingleActivator(
         LogicalKeyboardKey.escape,
-      ): () => ref.read(goRouterProvider).canPop()
-          ? ref.read(goRouterProvider).pop()
+      ): () => ref.read(goRouterServiceProvider).canPop()
+          ? ref.read(goRouterServiceProvider).pop()
           : null,
       const SingleActivator(
         LogicalKeyboardKey.keyI,

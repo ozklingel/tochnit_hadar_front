@@ -4,21 +4,25 @@ import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'messages_controller.g.dart';
 
 @Riverpod(
   dependencies: [
     ApprenticesController,
-    dio,
+    DioService,
+    Storage,
   ],
 )
 class MessagesController extends _$MessagesController {
   @override
   FutureOr<List<MessageDto>> build() async {
-    final request = await ref.watch(dioProvider).get('messegaes_form/getAll');
+    final request =
+        await ref.watch(dioServiceProvider).get('messegaes_form/getAll');
 
     // await Future.delayed(const Duration(milliseconds: 200));
 
@@ -65,6 +69,28 @@ class MessagesController extends _$MessagesController {
     // );
   }
 
+  Future<bool> setToReadStatus(MessageDto msg) async {
+    if (msg.allreadyRead) {
+      return true;
+    }
+
+    try {
+      await ref.read(dioServiceProvider).post(
+        'messegaes_form/setWasRead',
+        data: {
+          'message_id': msg.id,
+        },
+      );
+
+      ref.invalidateSelf();
+
+      return true;
+    } catch (e) {
+      Sentry.captureException(e);
+      return false;
+    }
+  }
+
   Future<bool> deleteMessage(String messageId) async {
     await Future.delayed(const Duration(milliseconds: 200));
 
@@ -79,6 +105,26 @@ class MessagesController extends _$MessagesController {
     }
 
     return result;
+  }
+
+  Future<bool> sendMessage(MessageDto msg) async {
+    try {
+      await ref.read(dioServiceProvider).post(
+        'messegaes_form/add',
+        data: {
+          'created_by_id': ref.read(storageProvider.notifier).getUserPhone(),
+          'created_for_id': ref.read(storageProvider.notifier).getUserPhone(),
+          'subject': msg.title,
+          'content': msg.content,
+          'attachments': msg.attachments,
+          'icon': 'icon',
+        },
+      );
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<List<ApprenticeDto>> searchApprentices(String keyword) async {

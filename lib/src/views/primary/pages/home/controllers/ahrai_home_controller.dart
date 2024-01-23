@@ -6,14 +6,14 @@ part 'ahrai_home_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    dio,
+    DioService,
   ],
 )
 class AhraiHomeController extends _$AhraiHomeController {
   @override
   Future<AhraiHomeDto> build() async {
     final request =
-        await ref.watch(dioProvider).get('/homepage_form/initMaster');
+        await ref.watch(dioServiceProvider).get('/homepage_form/initMaster');
 
     final result = AhraiHomeDto.fromJson(request.data);
 

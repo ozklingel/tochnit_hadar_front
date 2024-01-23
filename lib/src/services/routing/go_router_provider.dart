@@ -43,55 +43,54 @@ final _homeNavKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 final _reportsNavKey = GlobalKey<NavigatorState>(debugLabel: 'reports');
 final _apprenticesNavKey = GlobalKey<NavigatorState>(debugLabel: 'apprentices');
 
-@Riverpod(
-  dependencies: [
-    Storage,
-  ],
-)
-GoRouter goRouter(GoRouterRef ref) {
-  return GoRouter(
-    navigatorKey: _rootNavKey,
-    initialLocation: const HomeRouteData().location,
-    debugLogDiagnostics: kDebugMode,
-    observers: [
-      BotToastNavigatorObserver(),
-    ],
-    errorBuilder: (context, state) => RouteErrorScreen(
-      errorMsg: state.error.toString(),
-      key: state.pageKey,
-    ),
-    routes: $appRoutes,
-    redirect: (context, state) {
-      final userPhone = ref
-              .watch(storageProvider)
-              .requireValue
-              .getString(Consts.userPhoneKey) ??
-          '';
+@riverpod
+class GoRouterService extends _$GoRouterService {
+  @override
+  GoRouter build() {
+    return GoRouter(
+      navigatorKey: _rootNavKey,
+      initialLocation: const HomeRouteData().location,
+      debugLogDiagnostics: kDebugMode,
+      observers: [
+        BotToastNavigatorObserver(),
+      ],
+      errorBuilder: (context, state) => RouteErrorScreen(
+        errorMsg: state.error.toString(),
+        key: state.pageKey,
+      ),
+      routes: $appRoutes,
+      redirect: (context, state) {
+        final userPhone = ref
+                .read(storageProvider)
+                .requireValue
+                .getString(Consts.userPhoneKey) ??
+            '';
 
-      final accessToken = ref
-              .watch(storageProvider)
-              .requireValue
-              .getString(Consts.accessTokenKey) ??
-          '';
+        final accessToken = ref
+                .read(storageProvider)
+                .requireValue
+                .getString(Consts.accessTokenKey) ??
+            '';
 
-      if (userPhone.isEmpty || accessToken.isEmpty) {
-        Logger().w('empty userPhone');
-        return const OnboardingRouteData().location;
-      }
+        if (userPhone.isEmpty || accessToken.isEmpty) {
+          Logger().w('empty userPhone');
+          return const OnboardingRouteData().location;
+        }
 
-      final firstOnboarding = ref.read(storageProvider).requireValue.getBool(
-                Consts.firstOnboardingKey,
-              ) ??
-          false;
+        final firstOnboarding = ref.read(storageProvider).requireValue.getBool(
+                  Consts.firstOnboardingKey,
+                ) ??
+            false;
 
-      if (firstOnboarding) {
-        Logger().w('empty firstOnboarding');
-        return OnboardingRouteData(isOnboarding: firstOnboarding).location;
-      }
+        if (firstOnboarding) {
+          Logger().w('empty firstOnboarding');
+          return OnboardingRouteData(isOnboarding: firstOnboarding).location;
+        }
 
-      return null;
-    },
-  );
+        return null;
+      },
+    );
+  }
 }
 
 @TypedStatefulShellRoute<DashboardShellRouteData>(

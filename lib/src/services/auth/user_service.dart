@@ -10,8 +10,7 @@ part 'user_service.g.dart';
 
 @Riverpod(
   dependencies: [
-    dio,
-    goRouter,
+    DioService,
     Storage,
     FlagsService,
   ],
@@ -26,12 +25,12 @@ class UserService extends _$UserService {
     }
 
     final request = await ref
-        .watch(dioProvider)
+        .watch(dioServiceProvider)
         .get('userProfile_form/getProfileAtributes');
 
     final user = UserDto.fromJson(request.data);
 
-    // ref.keepAlive();
+    ref.keepAlive();
 
     // NOTE(noga-dev): this is for my debugging purposes
     if (user.id == '523301800') {
@@ -52,7 +51,12 @@ class UserService extends _$UserService {
         .remove(Consts.firstOnboardingKey);
 
     const HomeRouteData().go(
-      ref.read(goRouterProvider).configuration.navigatorKey.currentContext!,
+      ref
+          // ignore: avoid_manual_providers_as_generated_provider_dependency
+          .read(goRouterServiceProvider)
+          .configuration
+          .navigatorKey
+          .currentContext!,
     );
   }
 }

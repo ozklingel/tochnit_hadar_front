@@ -8,14 +8,15 @@ part 'users_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    dio,
+    DioService,
   ],
 )
 class UsersController extends _$UsersController {
   @override
   FutureOr<List<ApprenticeDto>> build() async {
-    final request =
-        await ref.watch(dioProvider).get('userProfile_form/myApprentices');
+    final request = await ref
+        .watch(dioServiceProvider)
+        .get('userProfile_form/myApprentices');
 
     final result = (request.data as List<dynamic>)
         .map(

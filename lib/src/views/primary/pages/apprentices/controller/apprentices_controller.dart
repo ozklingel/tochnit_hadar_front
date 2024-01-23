@@ -9,7 +9,7 @@ part 'apprentices_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    dio,
+    DioService,
     FlagsService,
   ],
 )
@@ -22,8 +22,9 @@ class ApprenticesController extends _$ApprenticesController {
       return flags.apprentices;
     }
 
-    final request =
-        await ref.watch(dioProvider).get('userProfile_form/myApprentices');
+    final request = await ref
+        .watch(dioServiceProvider)
+        .get('userProfile_form/myApprentices');
 
     // await Future.delayed(const Duration(milliseconds: 400));
 

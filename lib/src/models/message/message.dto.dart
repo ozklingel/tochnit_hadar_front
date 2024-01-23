@@ -12,11 +12,29 @@ class MessageDto with _$MessageDto {
     @Default('') String content,
     @Default('') String from,
     @Default('') String icon,
-    @Default('') @JsonKey(name: 'allreadyread') String allreadyRead,
+    @Default(false)
+    @JsonKey(name: 'allreadyread', fromJson: _extractIsAlreadyRead)
+    bool allreadyRead,
     @Default([]) List<String> attachments,
     @Default('') @JsonKey(name: 'date') String dateTime,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
       _$MessageDtoFromJson(json);
+}
+
+bool _extractIsAlreadyRead(String? data) {
+  if (data == null) {
+    return false;
+  }
+
+  if (data.toLowerCase() == 'true') {
+    return true;
+  }
+
+  if (data.toLowerCase() == 'false') {
+    return false;
+  }
+
+  return false;
 }

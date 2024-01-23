@@ -8,7 +8,7 @@ part 'rakaz_mosad_chart_controller.g.dart';
 @Riverpod(
   dependencies: [
     Storage,
-    dio,
+    DioService,
   ],
 )
 class RakazMosadChartController extends _$RakazMosadChartController {
@@ -16,7 +16,7 @@ class RakazMosadChartController extends _$RakazMosadChartController {
   Future<RakazMosadChartDto> build() async {
     final phone = ref.watch(storageProvider.notifier).getUserPhone();
 
-    final result = await ref.watch(dioProvider).get(
+    final result = await ref.watch(dioServiceProvider).get(
       '/madadim/mosadCoordinator',
       queryParameters: {'mosadCoordinator': phone},
     );

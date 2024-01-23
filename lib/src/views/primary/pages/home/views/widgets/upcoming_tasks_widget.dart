@@ -15,26 +15,27 @@ class UpcomingTasksWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
+    final tasksScreenController =
+        ref.watch(tasksControllerProvider).valueOrNull ?? [];
     final selectedCalls = useState(<TaskDto>[]);
     final selectedMeetings = useState(<TaskDto>[]);
     final selectedParents = useState(<TaskDto>[]);
 
-    final calls = tasks
+    final calls = tasksScreenController
         .where(
           (element) => element.reportEventType == TaskType.call,
         )
         .take(3)
         .toList();
 
-    final meetings = tasks
+    final meetings = tasksScreenController
         .where(
           (element) => element.reportEventType == TaskType.meeting,
         )
         .take(3)
         .toList();
 
-    final parents = tasks
+    final parents = tasksScreenController
         .where(
           (element) => element.reportEventType == TaskType.parentsMeeting,
         )
