@@ -11,10 +11,12 @@ import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 class TasksScreen extends ConsumerWidget {
   const TasksScreen({super.key});
@@ -49,6 +51,8 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
         tasks.where((element) => element.status == TaskStatus.todo);
     final completeTasks =
         tasks.where((element) => element.status == TaskStatus.done);
+
+    Logger().d(tasks.length);
 
     return Scaffold(
       appBar: AppBar(
@@ -91,7 +95,7 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
                     onChanged: (value) =>
                         TaskDetailsRouteData(id: e.id).push(context),
                     title: Text(
-                      e.title,
+                      e.reportEventType.name,
                       style: TextStyles.s18w500cGray1,
                     ),
                     subtitle: Text(
@@ -177,6 +181,8 @@ class _MelaveTasksBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final controller = ref.watch(tasksControllerProvider).valueOrNull ?? [];
+    final apprentices =
+        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
     final tabController = useTabController(initialLength: 3);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
@@ -187,7 +193,14 @@ class _MelaveTasksBody extends HookConsumerWidget {
     useListenable(tabController);
 
     final filteredList = controller.where(
-      (element) => element.apprentice.fullName.toLowerCase().contains(
+      (element) => apprentices
+          .singleWhere(
+            (e) => e.id == element.apprenticeId,
+            orElse: () => const ApprenticeDto(),
+          )
+          .fullName
+          .toLowerCase()
+          .contains(
             searchController.text.toLowerCase().trim(),
           ),
     );
@@ -198,7 +211,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
           (e) => TaskCard(
             task: e,
             isSelected: selectedCalls.value.contains(e),
-            onTap: () => ApprenticeDetailsRouteData(id: e.apprentice.id),
+            onTap: () => ApprenticeDetailsRouteData(id: e.apprenticeId),
             onLongPress: () {
               if (selectedCalls.value.contains(e)) {
                 final newList = selectedCalls.value;
@@ -218,7 +231,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
           (e) => TaskCard(
             task: e,
             isSelected: selectedMeetings.value.contains(e),
-            onTap: () => ApprenticeDetailsRouteData(id: e.apprentice.id),
+            onTap: () => ApprenticeDetailsRouteData(id: e.apprenticeId),
             onLongPress: () {
               if (selectedMeetings.value.contains(e)) {
                 final newList = selectedMeetings.value;
@@ -241,7 +254,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
           (e) => TaskCard(
             task: e,
             isSelected: selectedParents.value.contains(e),
-            onTap: () => ApprenticeDetailsRouteData(id: e.apprentice.id),
+            onTap: () => ApprenticeDetailsRouteData(id: e.apprenticeId),
             onLongPress: () {
               if (selectedParents.value.contains(e)) {
                 final newList = selectedParents.value;

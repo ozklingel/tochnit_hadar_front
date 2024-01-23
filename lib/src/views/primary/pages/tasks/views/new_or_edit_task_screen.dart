@@ -11,7 +11,6 @@ import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_but
 import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 class NewOrEditTaskScreen extends HookConsumerWidget {
   const NewOrEditTaskScreen({
@@ -29,10 +28,11 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
             ) ??
         const TaskDto();
 
-    final taskTextController = useTextEditingController(text: task.title);
+    final taskTextController =
+        useTextEditingController(text: task.reportEventType.name);
     final detailsTextController = useTextEditingController(text: task.details);
     final frequencyController = useState(task.frequency);
-    final dateTimeController = useState(DateTime.parse(task.dateTime));
+    final dateTimeController = useState(task.dateTime.asDateTime);
     useListenable(taskTextController);
     useListenable(detailsTextController);
 
@@ -80,17 +80,22 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton.icon(
                   onPressed: () async {
-                    final result = await showPickDateAndTimeDialog(
+                    final result = await showPickDateAndTimeDialog<DateTime?>(
                       context,
                       onTap: () => Toaster.show('submit2???'),
+                      initVal: dateTimeController.value,
                     );
 
-                    Logger().d(result);
+                    if (result == null) {
+                      return;
+                    }
+
+                    dateTimeController.value = result;
                   },
                   label: Text(
-                    task.dateTime.isEmpty
+                    dateTimeController.value.isAtSameMomentAs(DateTime.now())
                         ? 'הוספת תזמון'
-                        : task.dateTime.asDateTime.asTimeAgo,
+                        : dateTimeController.value.asTimeAgo,
                     style: TextStyles.s18w400cBlue02,
                   ),
                   icon: const Icon(
@@ -103,14 +108,26 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton.icon(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const _PickFrequencyDialog();
-                    },
-                  ),
+                  onPressed: () async {
+                    final result = await showDialog<TaskFrequency?>(
+                      context: context,
+                      builder: (context) {
+                        return _PickFrequencyDialog(
+                          initFrequency: frequencyController.value,
+                        );
+                      },
+                    );
+
+                    if (result == null) {
+                      return;
+                    }
+
+                    frequencyController.value = result;
+                  },
                   label: Text(
-                    task.frequency.isEmpty ? 'חד פעמי' : task.frequency,
+                    frequencyController.value == TaskFrequency.once
+                        ? 'חד פעמי'
+                        : frequencyController.value.name,
                     style: TextStyles.s18w400cBlue02,
                   ),
                   icon: const Icon(
@@ -126,7 +143,6 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                   label: 'שמירה',
                   onPressed: taskTextController.text.isEmpty ||
                           detailsTextController.text.isEmpty ||
-                          frequencyController.value.isEmpty ||
                           dateTimeController.value.isBefore(DateTime.now())
                       ? null
                       : () => Toaster.unimplemented(),
@@ -140,23 +156,17 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
   }
 }
 
-enum _Frequency {
-  once,
-  daily,
-  weekly,
-  monthly,
-  yearly,
-  custom,
-}
-
 class _PickFrequencyDialog extends HookWidget {
   const _PickFrequencyDialog({
     super.key,
+    this.initFrequency = TaskFrequency.once,
   });
+
+  final TaskFrequency initFrequency;
 
   @override
   Widget build(BuildContext context) {
-    final selectedFrequency = useState(_Frequency.once);
+    final selectedFrequency = useState(initFrequency);
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -175,9 +185,12 @@ class _PickFrequencyDialog extends HookWidget {
                 style: TextStyles.s16w400cGrey5,
               ),
               RadioListTile(
-                value: _Frequency.once,
+                value: TaskFrequency.once,
                 groupValue: selectedFrequency.value,
-                onChanged: (val) => selectedFrequency.value = val!,
+                onChanged: (val) => _handleSelectFreq(
+                  navState: Navigator.of(context),
+                  freq: val!,
+                ),
                 fillColor: MaterialStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
@@ -187,9 +200,12 @@ class _PickFrequencyDialog extends HookWidget {
                 ),
               ),
               RadioListTile(
-                value: _Frequency.daily,
+                value: TaskFrequency.daily,
                 groupValue: selectedFrequency.value,
-                onChanged: (val) => selectedFrequency.value = val!,
+                onChanged: (val) => _handleSelectFreq(
+                  navState: Navigator.of(context),
+                  freq: val!,
+                ),
                 fillColor: MaterialStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
@@ -199,9 +215,12 @@ class _PickFrequencyDialog extends HookWidget {
                 ),
               ),
               RadioListTile(
-                value: _Frequency.weekly,
+                value: TaskFrequency.weekly,
                 groupValue: selectedFrequency.value,
-                onChanged: (val) => selectedFrequency.value = val!,
+                onChanged: (val) => _handleSelectFreq(
+                  navState: Navigator.of(context),
+                  freq: val!,
+                ),
                 fillColor: MaterialStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
@@ -211,9 +230,12 @@ class _PickFrequencyDialog extends HookWidget {
                 ),
               ),
               RadioListTile(
-                value: _Frequency.monthly,
+                value: TaskFrequency.monthly,
                 groupValue: selectedFrequency.value,
-                onChanged: (val) => selectedFrequency.value = val!,
+                onChanged: (val) => _handleSelectFreq(
+                  navState: Navigator.of(context),
+                  freq: val!,
+                ),
                 fillColor: MaterialStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
@@ -223,9 +245,12 @@ class _PickFrequencyDialog extends HookWidget {
                 ),
               ),
               RadioListTile(
-                value: _Frequency.yearly,
+                value: TaskFrequency.yearly,
                 groupValue: selectedFrequency.value,
-                onChanged: (val) => selectedFrequency.value = val!,
+                onChanged: (val) => _handleSelectFreq(
+                  navState: Navigator.of(context),
+                  freq: val!,
+                ),
                 fillColor: MaterialStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
@@ -234,28 +259,39 @@ class _PickFrequencyDialog extends HookWidget {
                   style: TextStyles.s16w400cGrey2,
                 ),
               ),
-              RadioListTile(
-                value: _Frequency.custom,
-                groupValue: selectedFrequency.value,
-                onChanged: (val) async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const _CustomFrequencyPage(),
+              // TODO(noga-dev): come back to this once oz implements it
+              IgnorePointer(
+                child: Opacity(
+                  opacity: 0.3,
+                  child: RadioListTile(
+                    value: TaskFrequency.custom,
+                    groupValue: selectedFrequency.value,
+                    onChanged: (val) async {
+                      final navContext = Navigator.of(context);
+
+                      final result = await navContext.push(
+                        MaterialPageRoute(
+                          builder: (context) => const _CustomFrequencyPage(),
+                        ),
+                      );
+
+                      if (result == null) {
+                        return;
+                      }
+
+                      _handleSelectFreq(
+                        navState: navContext,
+                        freq: val!,
+                      );
+                    },
+                    fillColor: MaterialStateColor.resolveWith(
+                      (states) => AppColors.blue02,
                     ),
-                  );
-
-                  if (result == null) {
-                    return;
-                  }
-
-                  selectedFrequency.value = val!;
-                },
-                fillColor: MaterialStateColor.resolveWith(
-                  (states) => AppColors.blue02,
-                ),
-                title: const Text(
-                  'בהתאמה אישית',
-                  style: TextStyles.s16w400cGrey2,
+                    title: const Text(
+                      'בהתאמה אישית',
+                      style: TextStyles.s16w400cGrey2,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -263,6 +299,13 @@ class _PickFrequencyDialog extends HookWidget {
         ),
       ),
     );
+  }
+
+  void _handleSelectFreq({
+    required NavigatorState navState,
+    required TaskFrequency freq,
+  }) {
+    navState.pop(freq);
   }
 }
 

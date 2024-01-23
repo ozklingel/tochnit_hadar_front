@@ -5,8 +5,10 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends ConsumerWidget {
   const TaskCard({
     super.key,
     required this.task,
@@ -21,7 +23,11 @@ class TaskCard extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final apprentice =
+        (ref.watch(apprenticesControllerProvider).valueOrNull ?? [])
+            .firstWhere((element) => element.id == task.apprenticeId);
+
     return Material(
       color: isSelected ? AppColors.blue07 : Colors.transparent,
       child: InkWell(
@@ -32,7 +38,7 @@ class TaskCard extends StatelessWidget {
           leading: CircleAvatar(
             radius: 16,
             backgroundImage: CachedNetworkImageProvider(
-              task.apprentice.avatar,
+              apprentice.avatar,
             ),
             child: isSelected
                 ? const Align(
@@ -50,7 +56,7 @@ class TaskCard extends StatelessWidget {
                 : null,
           ),
           title: Text(
-            task.apprentice.fullName,
+            apprentice.fullName,
             style: TextStyles.s18w500cGray1,
           ),
           subtitle: Text(

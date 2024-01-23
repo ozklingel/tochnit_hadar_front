@@ -58,7 +58,7 @@ class HomeScreen extends ConsumerWidget {
             ].contains(user.role))
               const _AhraiTohnitBody()
             else
-              const Text('BAD USER ROLE'),
+              const Center(child: Text('BAD USER ROLE')),
           ],
         ),
       ),

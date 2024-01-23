@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 
 part 'task.dto.f.dart';
 part 'task.dto.g.dart';
@@ -18,22 +17,36 @@ enum TaskStatus {
   done,
 }
 
+enum TaskFrequency {
+  once,
+  daily,
+  weekly,
+  monthly,
+  yearly,
+  custom,
+  unknown,
+}
+
 @JsonSerializable()
 @Freezed(fromJson: false)
 class TaskDto with _$TaskDto {
   const factory TaskDto({
     @Default('') String id,
-    @Default('') String title,
     @Default('') String details,
-    @Default('') String frequency,
+    @Default(TaskFrequency.unknown)
+    @JsonKey(fromJson: _extractFrequency)
+    TaskFrequency frequency,
     @Default(TaskStatus.unknown)
     @JsonKey(fromJson: _extractStatus)
     TaskStatus status,
     @Default(TaskType.none)
-    @JsonKey(fromJson: _extractTaskType)
+    @JsonKey(
+      name: 'title',
+      fromJson: _extractTaskType,
+    )
     TaskType reportEventType,
-    @Default(ApprenticeDto()) ApprenticeDto apprentice,
-    @Default('') String dateTime,
+    @Default('') String apprenticeId,
+    @Default('') @JsonKey(name: 'date') String dateTime,
   }) = _TaskDto;
 
   factory TaskDto.fromJson(Map<String, dynamic> json) =>
@@ -52,6 +65,25 @@ TaskType _extractTaskType(String? data) {
       return TaskType.parentsMeeting;
     default:
       return TaskType.none;
+  }
+}
+
+TaskFrequency _extractFrequency(String? data) {
+  switch (data) {
+    case 'once':
+      return TaskFrequency.once;
+    case 'daily':
+      return TaskFrequency.daily;
+    case 'weekly':
+      return TaskFrequency.weekly;
+    case 'monthly':
+      return TaskFrequency.monthly;
+    case 'yearly':
+      return TaskFrequency.yearly;
+    case 'custom':
+      return TaskFrequency.custom;
+    default:
+      return TaskFrequency.unknown;
   }
 }
 

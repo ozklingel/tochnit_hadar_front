@@ -58,7 +58,7 @@ class TaskDetailsScreen extends ConsumerWidget {
                 InputFieldContainer(
                   label: 'המשימה',
                   child: Text(
-                    task.title,
+                    task.reportEventType.name,
                     style: TextStyles.s14w400cGrey2,
                   ),
                 ),
@@ -80,7 +80,7 @@ class TaskDetailsScreen extends ConsumerWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        task.frequency,
+                        task.frequency.name,
                         style: TextStyles.s14w400cGrey2,
                       ),
                     ),

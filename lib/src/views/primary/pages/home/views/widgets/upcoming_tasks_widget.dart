@@ -82,7 +82,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                     (e) => TaskCard(
                       isSelected: selectedCalls.value.contains(e),
                       onTap: () =>
-                          ApprenticeDetailsRouteData(id: e.apprentice.id),
+                          ApprenticeDetailsRouteData(id: e.apprenticeId),
                       onLongPress: () {
                         if (selectedCalls.value.contains(e)) {
                           final newList = selectedCalls.value;
@@ -117,7 +117,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                     (e) => TaskCard(
                       isSelected: selectedMeetings.value.contains(e),
                       onTap: () =>
-                          ApprenticeDetailsRouteData(id: e.apprentice.id),
+                          ApprenticeDetailsRouteData(id: e.apprenticeId),
                       onLongPress: () {
                         if (selectedMeetings.value.contains(e)) {
                           final newList = selectedMeetings.value;
@@ -155,7 +155,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                     (e) => TaskCard(
                       isSelected: selectedParents.value.contains(e),
                       onTap: () =>
-                          ApprenticeDetailsRouteData(id: e.apprentice.id),
+                          ApprenticeDetailsRouteData(id: e.apprenticeId),
                       onLongPress: () {
                         if (selectedParents.value.contains(e)) {
                           final newList = selectedParents.value;

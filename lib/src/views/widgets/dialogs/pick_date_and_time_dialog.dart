@@ -10,12 +10,14 @@ import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.da
 showPickDateAndTimeDialog<T>(
   BuildContext context, {
   VoidCallback? onTap,
+  DateTime? initVal,
 }) =>
     showDialog<T>(
       context: context,
       builder: (context) {
         return _PickDateAndTimeDialog(
           onTap: onTap ?? () => Toaster.show('EMPTY???'),
+          initDateTime: initVal,
         );
       },
     );
@@ -24,15 +26,20 @@ class _PickDateAndTimeDialog extends HookWidget {
   const _PickDateAndTimeDialog({
     super.key,
     required this.onTap,
+    this.initDateTime,
   });
 
   final VoidCallback onTap;
+  final DateTime? initDateTime;
 
   @override
   Widget build(BuildContext context) {
-    final selectedDateTime = useState<DateTime?>(null);
-    final selectedTimeOfDay = useState<TimeOfDay?>(null);
-
+    final selectedDateTime = useState<DateTime?>(initDateTime);
+    final selectedTimeOfDay = useState<TimeOfDay?>(
+      initDateTime == null
+          ? null
+          : TimeOfDay(hour: initDateTime!.hour, minute: initDateTime!.minute),
+    );
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
