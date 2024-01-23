@@ -81,8 +81,11 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                   .map(
                     (e) => TaskCard(
                       isSelected: selectedCalls.value.contains(e),
-                      onTap: () =>
-                          ApprenticeDetailsRouteData(id: e.apprenticeId),
+                      onTap: () => e.apprenticeIds.isEmpty
+                          ? null
+                          : ApprenticeDetailsRouteData(
+                              id: e.apprenticeIds.first,
+                            ),
                       onLongPress: () {
                         if (selectedCalls.value.contains(e)) {
                           final newList = selectedCalls.value;
@@ -116,8 +119,11 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                   .map(
                     (e) => TaskCard(
                       isSelected: selectedMeetings.value.contains(e),
-                      onTap: () =>
-                          ApprenticeDetailsRouteData(id: e.apprenticeId),
+                      onTap: () => e.apprenticeIds.isEmpty
+                          ? null
+                          : ApprenticeDetailsRouteData(
+                              id: e.apprenticeIds.first,
+                            ),
                       onLongPress: () {
                         if (selectedMeetings.value.contains(e)) {
                           final newList = selectedMeetings.value;
@@ -154,8 +160,11 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                   .map(
                     (e) => TaskCard(
                       isSelected: selectedParents.value.contains(e),
-                      onTap: () =>
-                          ApprenticeDetailsRouteData(id: e.apprenticeId),
+                      onTap: () => e.apprenticeIds.isEmpty
+                          ? null
+                          : ApprenticeDetailsRouteData(
+                              id: e.apprenticeIds.first,
+                            ),
                       onLongPress: () {
                         if (selectedParents.value.contains(e)) {
                           final newList = selectedParents.value;

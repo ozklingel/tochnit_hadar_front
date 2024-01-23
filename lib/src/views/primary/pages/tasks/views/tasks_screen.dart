@@ -177,7 +177,8 @@ class _MelaveTasksBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final controller = ref.watch(tasksControllerProvider).valueOrNull ?? [];
+    final tasksScreenController =
+        ref.watch(tasksControllerProvider).valueOrNull ?? [];
     final apprentices =
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
     final tabController = useTabController(initialLength: 3);
@@ -189,10 +190,10 @@ class _MelaveTasksBody extends HookConsumerWidget {
     useListenable(searchController);
     useListenable(tabController);
 
-    final filteredList = controller.where(
+    final filteredList = tasksScreenController.where(
       (element) => apprentices
           .singleWhere(
-            (e) => e.id == element.apprenticeId,
+            (e) => element.apprenticeIds.contains(e.id),
             orElse: () => const ApprenticeDto(),
           )
           .fullName
@@ -208,7 +209,9 @@ class _MelaveTasksBody extends HookConsumerWidget {
           (e) => TaskCard(
             task: e,
             isSelected: selectedCalls.value.contains(e),
-            onTap: () => ApprenticeDetailsRouteData(id: e.apprenticeId),
+            onTap: () => e.apprenticeIds.isEmpty
+                ? null
+                : ApprenticeDetailsRouteData(id: e.apprenticeIds.first),
             onLongPress: () {
               if (selectedCalls.value.contains(e)) {
                 final newList = selectedCalls.value;
@@ -228,7 +231,9 @@ class _MelaveTasksBody extends HookConsumerWidget {
           (e) => TaskCard(
             task: e,
             isSelected: selectedMeetings.value.contains(e),
-            onTap: () => ApprenticeDetailsRouteData(id: e.apprenticeId),
+            onTap: () => e.apprenticeIds.isEmpty
+                ? null
+                : ApprenticeDetailsRouteData(id: e.apprenticeIds.first),
             onLongPress: () {
               if (selectedMeetings.value.contains(e)) {
                 final newList = selectedMeetings.value;
@@ -251,7 +256,9 @@ class _MelaveTasksBody extends HookConsumerWidget {
           (e) => TaskCard(
             task: e,
             isSelected: selectedParents.value.contains(e),
-            onTap: () => ApprenticeDetailsRouteData(id: e.apprenticeId),
+            onTap: () => e.apprenticeIds.isEmpty
+                ? null
+                : ApprenticeDetailsRouteData(id: e.apprenticeIds.first),
             onLongPress: () {
               if (selectedParents.value.contains(e)) {
                 final newList = selectedParents.value;

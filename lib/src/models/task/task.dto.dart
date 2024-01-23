@@ -45,7 +45,7 @@ class TaskDto with _$TaskDto {
       fromJson: _extractTaskType,
     )
     TaskType reportEventType,
-    @Default('') String apprenticeId,
+    @Default([]) @JsonKey(name: 'apprenticeId') List<String> apprenticeIds,
     @Default('') @JsonKey(name: 'date') String dateTime,
   }) = _TaskDto;
 

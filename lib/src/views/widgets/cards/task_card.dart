@@ -25,8 +25,10 @@ class TaskCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final apprentice =
-        (ref.watch(apprenticesControllerProvider).valueOrNull ?? [])
-            .firstWhere((element) => element.id == task.apprenticeId);
+        ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
+                  (element) => task.apprenticeIds.contains(element.id),
+                ) ??
+            const ApprenticeDto();
 
     return Material(
       color: isSelected ? AppColors.blue07 : Colors.transparent,
