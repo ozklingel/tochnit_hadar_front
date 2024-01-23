@@ -48,11 +48,7 @@ class ReportsScreen extends HookConsumerWidget {
           return AsyncData(
             value.value!
                 .where(
-                  (element) => element.apprenticeIds
-                      .where(
-                        (e) => e == apprenticeId,
-                      )
-                      .isNotEmpty,
+                  (element) => element.apprenticeId == apprenticeId,
                 )
                 .toList(),
           );

@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
-import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reports_controller.g.dart';
@@ -25,7 +24,7 @@ class ReportsController extends _$ReportsController {
     final reports = (request.data as List<dynamic>).map(
       (e) {
         final item = ReportDto.fromJson(e);
-        Logger().d(item);
+        // Logger().d(item);
         return item;
       },
     ).toList();

@@ -79,9 +79,7 @@ class ReportCard extends ConsumerWidget {
                                 final apprentices = reportApprentices
                                     .where(
                                       (element) =>
-                                          report.apprenticeIds.contains(
-                                        element.id,
-                                      ),
+                                          report.apprenticeId == element.id,
                                     )
                                     .toList();
 

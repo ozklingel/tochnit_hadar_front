@@ -15,7 +15,7 @@ class ReportDto with _$ReportDto {
       fromJson: _extractType,
     )
     ReportEventType reportEventType,
-    @Default([]) @JsonKey(name: 'from') List<String> apprenticeIds,
+    @Default('') @JsonKey(name: 'from') String apprenticeId,
     @Default([]) List<String> attachments,
     @Default('') @JsonKey(name: 'allreadyread') String allreadyRead,
     @Default('') @JsonKey(name: 'date') String dateTime,
@@ -23,6 +23,10 @@ class ReportDto with _$ReportDto {
 
   factory ReportDto.fromJson(Map<String, dynamic> json) =>
       _$ReportDtoFromJson(json);
+}
+
+List<String> _extractFrom(List<dynamic> data) {
+  return data.map((e) => e.toString()).toList();
 }
 
 enum ReportEventType {

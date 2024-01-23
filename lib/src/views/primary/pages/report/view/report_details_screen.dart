@@ -53,7 +53,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     final reportApprentices = ref
             .watch(apprenticesControllerProvider)
             .valueOrNull
-            ?.where((element) => report.apprenticeIds.contains(element.id))
+            ?.where((element) => report.apprenticeId == element.id)
             .toList() ??
         [];
     final apprenticeSearchController = useTextEditingController();
