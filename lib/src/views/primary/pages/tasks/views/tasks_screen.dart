@@ -16,7 +16,6 @@ import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_con
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 class TasksScreen extends ConsumerWidget {
   const TasksScreen({super.key});
@@ -51,8 +50,6 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
         tasks.where((element) => element.status == TaskStatus.todo);
     final completeTasks =
         tasks.where((element) => element.status == TaskStatus.done);
-
-    Logger().d(tasks.length);
 
     return Scaffold(
       appBar: AppBar(

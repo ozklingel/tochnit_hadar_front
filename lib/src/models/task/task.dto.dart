@@ -32,7 +32,7 @@ enum TaskFrequency {
 class TaskDto with _$TaskDto {
   const factory TaskDto({
     @Default('') String id,
-    @Default('') String details,
+    @Default('') @JsonKey(name: 'description') String details,
     @Default(TaskFrequency.unknown)
     @JsonKey(fromJson: _extractFrequency)
     TaskFrequency frequency,
