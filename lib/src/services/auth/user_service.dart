@@ -10,9 +10,10 @@ part 'user_service.g.dart';
 
 @Riverpod(
   dependencies: [
+    FlagsService,
     DioService,
     Storage,
-    FlagsService,
+    GoRouterService,
   ],
 )
 class UserService extends _$UserService {
@@ -52,7 +53,6 @@ class UserService extends _$UserService {
 
     const HomeRouteData().go(
       ref
-          // ignore: avoid_manual_providers_as_generated_provider_dependency
           .read(goRouterServiceProvider)
           .configuration
           .navigatorKey

@@ -43,7 +43,11 @@ final _homeNavKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 final _reportsNavKey = GlobalKey<NavigatorState>(debugLabel: 'reports');
 final _apprenticesNavKey = GlobalKey<NavigatorState>(debugLabel: 'apprentices');
 
-@riverpod
+@Riverpod(
+  dependencies: [
+    Storage,
+  ],
+)
 class GoRouterService extends _$GoRouterService {
   @override
   GoRouter build() {
