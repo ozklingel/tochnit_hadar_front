@@ -26,7 +26,7 @@ class LinearProgressChartCard extends StatelessWidget {
   final String subtitle;
   final String subLabelPrefix;
   final String subLabelSuffix;
-  final int val;
+  final num val;
   final int total;
   final String timestamp;
   final bool isPrimary;

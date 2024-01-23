@@ -7,22 +7,28 @@ part 'rakaz_eshkol_chart.dto.g.dart';
 @Freezed(fromJson: false)
 class RakazEshkolChartDto with _$RakazEshkolChartDto {
   const factory RakazEshkolChartDto({
-    @Default(0)
+    @Default(-1)
     @JsonKey(name: 'Apprentice_forgoten_count')
-    double apprenticeForgottenCount,
-    @Default(0)
+    int apprenticeForgottenCount, // Apprentice_forgoten_count
+    @Default(-1)
+    @JsonKey(name: 'all_EshcolApprentices_count')
+    int allEshcolApprenticesCount, // all_EshcolApprentices_count
+    @Default(-1)
     @JsonKey(name: 'all_MosadCoordinator_count')
-    double allMosadCoordinatorCount,
-    @Default(0) @JsonKey(name: 'eshcolCoordinator') double progressBarScore,
+    int allMosadCoordinatorCount, // all_MosadCoordinator_count
     @Default([])
     @JsonKey(name: 'forgotenApprentice_full_details')
-    List<dynamic> forgottenApprenticeFullDetails,
-    @Default(0)
-    @JsonKey(name: 'good_apprenties_mosad_call')
-    double goodApprenticesMosadCall,
-    @Default(0)
+    List<dynamic>
+        forgottenApprenticeFullDetails, // forgotenApprentice_full_details
+    @Default(-1)
+    @JsonKey(name: 'eshcolCoordinator_score')
+    int eshkolCoordinatorScore, // eshcolCoordinator_score
+    @Default(-1)
+    @JsonKey(name: 'good__mosad_racaz_meeting')
+    int goodMosadRacazMeeting, // good__mosad_racaz_meeting
+    @Default(-1)
     @JsonKey(name: 'newvisit_yeshiva_Tohnit')
-    double newVisitYeshivaTohnit,
+    int newVisitYeshivaTohnit, // newvisit_yeshiva_Tohnit
   }) = _RakazEshkolChartDto;
 
   factory RakazEshkolChartDto.fromJson(Map<String, dynamic> json) =>

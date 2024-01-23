@@ -21,14 +21,14 @@ class RakazEshkolChartsDashboardScreen extends HookConsumerWidget {
         ref.watch(rakazEshkolChartControllerProvider).valueOrNull ??
             const RakazEshkolChartDto();
 
-    var children = [
+    final children = [
       const ChartHeader(),
-      CircularProgressGauge(val: controller.progressBarScore),
+      CircularProgressGauge(val: controller.eshkolCoordinatorScore / 100),
       LinearProgressChartCard(
         title: 'ישיבה חודשית עם רכז',
         subLabelSuffix: 'ישיבות',
-        val: 2,
-        total: 3,
+        val: controller.goodMosadRacazMeeting,
+        total: controller.allMosadCoordinatorCount,
         timestamp: 'אוקטובר',
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
@@ -36,17 +36,17 @@ class RakazEshkolChartsDashboardScreen extends HookConsumerWidget {
           ),
         ),
       ),
-      const ChartDetailsCard.percentage(
+      ChartDetailsCard.percentage(
         label: 'מפגש חודשי עם ראש התוכנית',
         suffixText: 'מפגשים',
-        val: 2,
-        total: 2,
+        val: controller.newVisitYeshivaTohnit,
+        total: controller.allMosadCoordinatorCount,
       ),
       ChartDetailsCard.absolute(
         label: 'חניכים ‘נשכחים’',
         details: 'מספר חניכים שלא נוצר איתם קשר מעל 100 יום',
-        val: 23,
-        total: 158,
+        val: controller.apprenticeForgottenCount,
+        total: controller.allEshcolApprenticesCount,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) =>

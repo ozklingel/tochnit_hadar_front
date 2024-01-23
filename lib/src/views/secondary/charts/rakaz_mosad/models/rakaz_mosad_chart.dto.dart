@@ -7,38 +7,49 @@ part 'rakaz_mosad_chart.dto.g.dart';
 @Freezed(fromJson: false)
 class RakazMosadChartDto with _$RakazMosadChartDto {
   const factory RakazMosadChartDto({
-    @Default(0)
+    @Default(-1)
     @JsonKey(name: 'Apprentice_forgoten_count')
-    double apprenticeForgottenCount,
-    @Default(0) @JsonKey(name: 'all_Melave_mosad') double allMelaveMosad,
-    @Default(0)
+    int apprenticeForgottenCount, // Apprentice_forgoten_count
+    @Default(-1)
+    @JsonKey(name: 'all_Melave_mosad_count')
+    int allMelaveMosadCount, // all_Melave_mosad_count
+    @Default(-1)
     @JsonKey(name: 'all_apprenties_mosad')
-    double allApprenticesMosad,
+    int allApprentiesMosadCount, // all_apprenties_mosad
     @Default([])
     @JsonKey(name: 'forgotenApprentice_full_details')
-    List<List<dynamic>> forgottenApprenticesFullDetails,
-    @Default(0)
+    List<List<dynamic>>
+        forgottenApprenticesFullDetails, // forgotenApprentice_full_details
+    @Default(-1)
+    @JsonKey(name: 'avg_presence_MelavimMeeting')
+    double avgPresenceMelavimMeeting, // avg_presence_MelavimMeeting
+    @Default(-1)
     @JsonKey(name: 'good_Melave_ids_matzbar')
-    double goodMelaveIdsMatzbar,
-    @Default(0)
+    int goodMelaveIdsMatzbar, // good_Melave_ids_matzbar
+    @Default(-1)
     @JsonKey(name: 'good_Melave_ids_sadna')
-    double goodMelaveIdsSadna,
-    @Default(0)
-    @JsonKey(name: 'good_MelavimMeeting_count')
-    double goodMelaveMeetingCount,
-    @Default(0)
+    int goodMelaveIdsSadna, // good_Melave_ids_sadna
+    @Default(-1)
     @JsonKey(name: 'good_apprentice_mosad_groupMeet')
-    double goodApprenticeMosadGroupMeet,
-    @Default(0)
+    int goodApprenticeMosadGroupMeet, // good_apprentice_mosad_groupMeet
+    @Default(-1)
     @JsonKey(name: 'good_apprenties_mosad_call')
-    double goodApprenticeMosadCall,
-    @Default(0)
+    int goodApprenticeMosadCall, // good_apprenties_mosad_call
+    @Default(-1)
     @JsonKey(name: 'good_apprenties_mosad_meet')
-    double goodApprenticeMosadMeet,
-    @Default(false) @JsonKey(name: 'isVisitenterMahzor') bool isVisitedMahzor,
-    @Default(0) @JsonKey(name: 'mosadCoordinator_score') double progressBar,
-    @Default(0) @JsonKey(name: 'new_MelavimMeeting') double newMelaveMeeting,
-    @Default(0) @JsonKey(name: 'visitDoForBogrim') double visitDoForBogrim,
+    int goodApprenticeMosadMeet, // good_apprenties_mosad_meet
+    @Default(-1)
+    @JsonKey(name: 'mosadCoordinator_score')
+    int mosadCoordinatorScore, // mosadCoordinator_score
+    @Default(-1)
+    @JsonKey(name: 'new_MelavimMeeting')
+    int newMelaveMeeting, // new_MelavimMeeting
+    @Default(-1)
+    @JsonKey(name: 'visitDoForBogrim')
+    int visitDoForBogrim, // visitDoForBogrim
+    @Default(false)
+    @JsonKey(name: 'isVisitenterMahzor')
+    bool isVisitedMahzor, // isVisitenterMahzor
   }) = _RakazMosadChartDto;
 
   factory RakazMosadChartDto.fromJson(Map<String, dynamic> json) =>

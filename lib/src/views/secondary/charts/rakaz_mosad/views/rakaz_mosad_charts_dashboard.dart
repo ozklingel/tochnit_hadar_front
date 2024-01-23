@@ -28,12 +28,12 @@ class RakazMosadChartsDashboardScreen extends HookConsumerWidget {
 
     var children = [
       const ChartHeader(),
-      CircularProgressGauge(val: controller.progressBar / 100),
+      CircularProgressGauge(val: controller.mosadCoordinatorScore / 100),
       LinearProgressChartCard(
         title: 'מפגשים מקצועיים למלווים',
         subLabelSuffix: 'מפגשים שבוצעו',
-        val: 5,
-        total: 20,
+        val: controller.goodMelaveIdsSadna,
+        total: controller.allMelaveMosadCount,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) =>
@@ -44,8 +44,8 @@ class RakazMosadChartsDashboardScreen extends HookConsumerWidget {
       LinearProgressChartCard(
         title: 'ישיבות מצב”ר',
         subLabelSuffix: 'ישיבות שבוצעו',
-        val: 8,
-        total: 16,
+        val: controller.goodMelaveIdsMatzbar,
+        total: controller.allMelaveMosadCount,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const RakazMosadMatsberMeetingsChartPage(),
@@ -64,8 +64,8 @@ class RakazMosadChartsDashboardScreen extends HookConsumerWidget {
             LinearProgressChartCard(
               subtitle: 'מפגשים',
               subLabelSuffix: 'מפגשים שבוצעו',
-              val: 8,
-              total: 16,
+              val: controller.goodApprenticeMosadMeet,
+              total: controller.allApprentiesMosadCount,
               wrapInCardContainer: false,
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
@@ -77,8 +77,8 @@ class RakazMosadChartsDashboardScreen extends HookConsumerWidget {
             LinearProgressChartCard(
               subtitle: 'שיחות',
               subLabelSuffix: 'שיחות שבוצעו',
-              val: 8,
-              total: 16,
+              val: controller.goodApprenticeMosadCall,
+              total: controller.allApprentiesMosadCount,
               wrapInCardContainer: false,
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
@@ -90,8 +90,8 @@ class RakazMosadChartsDashboardScreen extends HookConsumerWidget {
             LinearProgressChartCard(
               subtitle: 'מפגשים פיזיים קבוצתיים',
               subLabelSuffix: 'מפגשים פיזיים שבוצעו',
-              val: 8,
-              total: 16,
+              val: controller.goodApprenticeMosadGroupMeet,
+              total: controller.allApprentiesMosadCount,
               wrapInCardContainer: false,
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
@@ -102,28 +102,33 @@ class RakazMosadChartsDashboardScreen extends HookConsumerWidget {
           ],
         ),
       ),
-      const ChartCardContainer(
+      ChartCardContainer(
         label: 'הכנסת מחזור חדש למערכת',
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
             children: [
               Text(
-                'הכנסת מחזור 2023',
+                'הכנסת מחזור ${DateTime.now().year}',
                 style: TextStyles.s12w400cGrey4,
               ),
-              Spacer(),
-              Text(
-                'בוצע',
-                style: TextStyles.s24w400cGreen,
-              ),
+              const Spacer(),
+              controller.isVisitedMahzor
+                  ? const Text(
+                      'בוצע',
+                      style: TextStyles.s24w400cGreen,
+                    )
+                  : const Text(
+                      'לא בוצע',
+                      style: TextStyles.s24w400cRed,
+                    ),
             ],
           ),
         ),
       ),
       LinearProgressChartCard(
-        val: 2,
-        total: 3,
+        val: controller.visitDoForBogrim,
+        total: controller.allApprentiesMosadCount,
         title: 'עשיה לטובת בוגרים',
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
@@ -132,16 +137,16 @@ class RakazMosadChartsDashboardScreen extends HookConsumerWidget {
         ),
         subLabelSuffix: 'עשיה לטובת בוגרים',
       ),
-      const LinearProgressChartCard(
-        val: 1,
-        total: 2,
+      LinearProgressChartCard(
+        val: controller.newMelaveMeeting,
+        total: controller.allApprentiesMosadCount,
         title: 'ביצוע מפגשים עם המלווים',
         subLabelSuffix: 'מפגשים',
         timestamp: 'רבעון שני',
       ),
-      const LinearProgressChartCard(
-        val: 3,
-        total: 4,
+      LinearProgressChartCard(
+        val: controller.avgPresenceMelavimMeeting,
+        total: controller.allApprentiesMosadCount,
         title: 'נוכחות בישיבה חודשית',
         subLabelSuffix: 'ישיבות',
         timestamp: 'עברו 3 רבעונים',
@@ -154,24 +159,24 @@ class RakazMosadChartsDashboardScreen extends HookConsumerWidget {
                 const RakazMosadForgottenApprenticesChartPage(),
           ),
         ),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            const Text(
               'מספר חניכים שלא נוצר איתם קשר מעל 100 יום',
               style: TextStyles.s12w400cGrey4,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
-                    text: '2',
+                    text: controller.apprenticeForgottenCount.toString(),
                     style: TextStyles.s34w400cGreen,
                   ),
-                  TextSpan(text: ' '),
+                  const TextSpan(text: ' '),
                   TextSpan(
-                    text: 'מתוך 43',
+                    text: 'מתוך ${controller.allApprentiesMosadCount}',
                     style: TextStyles.s14w400cGrey2,
                   ),
                 ],

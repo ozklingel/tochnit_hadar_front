@@ -35,7 +35,7 @@ class UserService extends _$UserService {
 
     // NOTE(noga-dev): this is for my debugging purposes
     if (user.id == '523301800') {
-      return user.copyWith(role: UserRole.ahraiTohnit);
+      return user.copyWith(role: UserRole.rakazMosad);
     }
 
     return user;

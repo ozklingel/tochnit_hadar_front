@@ -7,22 +7,31 @@ part 'melave_chart.dto.g.dart';
 @Freezed(fromJson: false)
 class MelaveChartDto with _$MelaveChartDto {
   const factory MelaveChartDto({
-    @Default(0) @JsonKey(name: 'NovisitHorim') double noVisitHorim,
-    @Default(0) @JsonKey(name: 'OldvisitCenes') double oldVisitCenes,
-    @Default(0) @JsonKey(name: 'OldvisitSadna') double oldVisitSadna,
-    @Default(0)
-    @JsonKey(name: 'Oldvisitmeeting_Army')
-    double oldVisitMeetingArmy,
-    @Default(0) @JsonKey(name: 'Oldvisitmeetings') double oldVisitMeeting,
-    @Default(0)
+    @Default(-1)
+    @JsonKey(name: 'No_visitHorim')
+    int noVisitHorim, // No_visitHorim
+    @Default(-1) @JsonKey(name: 'cenes_score') int kenesScore, // cenes_score
+    @Default(-1) @JsonKey(name: 'sadna_score') int sadnaScore, // sadna_score
+    @Default(-1)
+    @JsonKey(name: 'new_visitmeeting_Army')
+    int newVisitMeetingArmy, // new_visitmeeting_Army
+    @Default(-1)
+    @JsonKey(name: 'Oldvisitmeetings')
+    int oldVisitMeeting, // Oldvisitmeetings
+    @Default(-1)
     @JsonKey(name: 'forgotenApprenticeCount')
-    double forgottenApprenticeCount,
+    int forgottenApprenticeCount, // forgotenApprenticeCount
     @Default([])
     @JsonKey(name: 'forgotenApprentice_full_details')
-    List<dynamic> forgottenApprenticeFullDetails,
-    @Default(0) @JsonKey(name: 'melave') double progressBarScore,
-    @Default(0) @JsonKey(name: 'numOfApprentice') double apprenticesCount,
-    @Default(0) @JsonKey(name: 'oldvisitcalls') double oldVisitCalls,
+    List<dynamic>
+        forgottenApprenticeFullDetails, // forgotenApprentice_full_details
+    @Default(-1) @JsonKey(name: 'melave_score') int melaveScore, // melave_score
+    @Default(-1)
+    @JsonKey(name: 'numOfApprentice')
+    int apprenticesCount, // numOfApprentice
+    @Default(-1)
+    @JsonKey(name: 'oldvisitcalls')
+    int oldVisitCalls, // oldvisitcalls
   }) = _MelaveChartDto;
 
   factory MelaveChartDto.fromJson(Map<String, dynamic> json) =>

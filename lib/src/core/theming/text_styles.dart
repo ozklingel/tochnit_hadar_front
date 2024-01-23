@@ -65,6 +65,16 @@ abstract class TextStyles {
     color: AppColors.green1,
   );
 
+  static const s24w400cRed = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 24,
+    height: 1,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+    color: AppColors.red1,
+  );
+
   static const s24w500cGrey2 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 24,

@@ -17,7 +17,7 @@ class RakazEshkolChartController extends _$RakazEshkolChartController {
     final phone = ref.watch(storageProvider.notifier).getUserPhone();
 
     final result = await ref.watch(dioProvider).get(
-      '/madadim/eshcolCoordinator',
+      'madadim/eshcolCoordinator',
       queryParameters: {'eshcolCoordinator': phone},
     );
 
