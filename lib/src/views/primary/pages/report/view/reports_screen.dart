@@ -67,6 +67,7 @@ class ReportsScreen extends HookConsumerWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => const ReportNewRouteData().push(context),
+          heroTag: UniqueKey(),
           shape: const CircleBorder(),
           backgroundColor: AppColors.blue02,
           child: const Icon(
@@ -377,6 +378,7 @@ class ReportsScreen extends HookConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
+        heroTag: UniqueKey(),
         backgroundColor: AppColors.blue02,
         foregroundColor: AppColors.blue06,
         child: const Icon(FluentIcons.add_32_filled),

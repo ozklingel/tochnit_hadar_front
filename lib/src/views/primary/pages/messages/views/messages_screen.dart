@@ -46,6 +46,7 @@ class MessagesScreen extends ConsumerWidget {
             floatingActionButton: user.valueOrNull?.role == UserRole.ahraiTohnit
                 ? FloatingActionButton(
                     onPressed: () => const NewMessageRouteData().push(context),
+                    heroTag: UniqueKey(),
                     shape: const CircleBorder(),
                     backgroundColor: AppColors.blue02,
                     child: const Text(

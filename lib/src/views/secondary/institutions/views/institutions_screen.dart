@@ -71,6 +71,7 @@ class InstitutionsScreen extends HookConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => const NewInstitutionRouteData().push(context),
+        heroTag: UniqueKey(),
         backgroundColor: AppColors.blue02,
         shape: const CircleBorder(),
         child: const Icon(

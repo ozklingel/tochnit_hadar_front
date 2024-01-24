@@ -75,6 +75,7 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
       floatingActionButton: tabController.index == 0
           ? FloatingActionButton(
               onPressed: () => const NewTaskRouteData().push(context),
+              heroTag: UniqueKey(),
               shape: const CircleBorder(),
               backgroundColor: AppColors.blue02,
               child: const Icon(

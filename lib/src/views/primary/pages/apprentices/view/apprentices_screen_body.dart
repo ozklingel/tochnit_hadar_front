@@ -212,6 +212,7 @@ class _MapWidget extends HookConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: FloatingActionButton(
+              heroTag: UniqueKey(),
               shape: const CircleBorder(),
               onPressed: () async {
                 final controller = await mapController.value.future;
@@ -248,6 +249,7 @@ class _MapWidget extends HookConsumerWidget {
             padding: const EdgeInsets.all(20),
             child: FloatingActionButton.extended(
               onPressed: onListTypePressed,
+              heroTag: UniqueKey(),
               backgroundColor: AppColors.mainCTA,
               foregroundColor: Colors.white,
               extendedTextStyle: const TextStyle(

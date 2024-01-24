@@ -46,6 +46,7 @@ class UsersScreenBody extends HookConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => const NewUserRouteData().push(context),
+        heroTag: UniqueKey(),
         shape: const CircleBorder(),
         backgroundColor: AppColors.blue02,
         child: const Text(
