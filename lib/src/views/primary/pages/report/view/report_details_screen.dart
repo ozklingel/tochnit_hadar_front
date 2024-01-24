@@ -358,15 +358,23 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             label: const Text('הוספת נמענים ידנית'),
                             labelStyle: TextStyles.s14w400cBlue2,
                             backgroundColor: Colors.white,
-                            onPressed: () async => selectedApprentices.value =
-                                await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    _AddRecipientsManuallyScreen(
-                                  initiallySelected: selectedApprentices.value,
+                            onPressed: () async {
+                              final result = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      _AddRecipientsManuallyScreen(
+                                    initiallySelected:
+                                        selectedApprentices.value,
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+
+                              if (result == null) {
+                                return;
+                              }
+
+                              selectedApprentices.value = result!;
+                            },
                           ),
                           ActionChip(
                             label: const Text('הוספת קבוצת נמענים'),

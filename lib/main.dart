@@ -105,9 +105,11 @@ class HadarProgram extends ConsumerWidget {
       ): () async => await const ChartsRouteData().push(context),
       const SingleActivator(
         LogicalKeyboardKey.escape,
-      ): () => ref.read(goRouterServiceProvider).canPop()
-          ? ref.read(goRouterServiceProvider).pop()
-          : null,
+      ): () {
+        if (ref.read(goRouterServiceProvider).canPop()) {
+          ref.read(goRouterServiceProvider).pop();
+        }
+      },
       const SingleActivator(
         LogicalKeyboardKey.keyI,
         alt: true,

@@ -174,6 +174,7 @@ class UsersScreenBody extends HookConsumerWidget {
             ),
             data: (usersList) {
               return SliverList.builder(
+                itemCount: usersList.length,
                 itemBuilder: (ctx, idx) => Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,

@@ -8,8 +8,16 @@ part 'compound.dto.g.dart';
 @Freezed(fromJson: false)
 class CompoundDto with _$CompoundDto {
   const factory CompoundDto({
-    @Default('') String id,
-    @Default('') String name,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String id,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String name,
     @Default(AddressDto()) AddressDto address,
   }) = _CompoundDto;
 

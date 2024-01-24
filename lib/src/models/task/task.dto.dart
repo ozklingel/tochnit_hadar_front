@@ -31,8 +31,17 @@ enum TaskFrequency {
 @Freezed(fromJson: false)
 class TaskDto with _$TaskDto {
   const factory TaskDto({
-    @Default('') String id,
-    @Default('') @JsonKey(name: 'description') String details,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String id,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'description',
+    )
+    String details,
     @Default(TaskFrequency.unknown)
     @JsonKey(fromJson: _extractFrequency)
     TaskFrequency frequency,
@@ -45,8 +54,18 @@ class TaskDto with _$TaskDto {
       fromJson: _extractTaskType,
     )
     TaskType reportEventType,
-    @Default([]) @JsonKey(name: 'apprenticeId') List<String> apprenticeIds,
-    @Default('') @JsonKey(name: 'date') String dateTime,
+    @Default([])
+    @JsonKey(
+      defaultValue: [],
+      name: 'apprenticeId',
+    )
+    List<String> apprenticeIds,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'date',
+    )
+    String dateTime,
   }) = _TaskDto;
 
   factory TaskDto.fromJson(Map<String, dynamic> json) =>

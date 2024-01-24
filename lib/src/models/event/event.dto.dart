@@ -7,10 +7,27 @@ part 'event.dto.g.dart';
 @Freezed(fromJson: false)
 class EventDto with _$EventDto {
   const factory EventDto({
-    @Default('') String id,
-    @Default('') String title,
-    @Default('') String description,
-    @Default('') @JsonKey(name: 'date') String datetime,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String id,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String title,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String description,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'date',
+    )
+    String datetime,
   }) = _EventDto;
 
   // ignore: unused_element

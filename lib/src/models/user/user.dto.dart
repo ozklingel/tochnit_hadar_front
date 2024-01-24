@@ -34,19 +34,72 @@ enum UserRole {
 @Freezed(fromJson: false)
 class UserDto with _$UserDto {
   const factory UserDto({
-    @Default('') String id,
-    @Default('') @JsonKey(defaultValue: '') String avatar,
-    @Default('') String firstName,
-    @Default('') String lastName,
-    @Default('') String phone,
-    @Default('') String email,
-    @Default(UserRole.other) @JsonKey(fromJson: _extractUserRole) UserRole role,
-    @Default('') String institution,
-    @Default('') String cluster,
-    @Default('') String city,
-    @Default('') String region,
-    @Default('') @JsonKey(name: 'date_of_birth') String dateOfBirth,
-    @Default([]) @JsonKey(fromJson: _parseApprentices) List<String> apprentices,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String id,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String avatar,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String firstName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String lastName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String phone,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String email,
+    @Default(UserRole.other)
+    @JsonKey(
+      fromJson: _extractUserRole,
+    )
+    UserRole role,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String institution,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String cluster,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String city,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String region,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'date_of_birth',
+    )
+    String dateOfBirth,
+    @Default([])
+    @JsonKey(
+      fromJson: _parseApprentices,
+    )
+    List<String> apprentices,
   }) = _UserDto;
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>

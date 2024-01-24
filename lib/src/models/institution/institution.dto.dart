@@ -8,19 +8,71 @@ part 'institution.dto.g.dart';
 @Freezed(fromJson: false)
 class InstitutionDto with _$InstitutionDto {
   const factory InstitutionDto({
-    @Default('') String id,
-    @Default('') String name,
-    @Default('') String rakaz,
-    @Default('') String rakazPhoneNumber,
-    @Default('') String shluha,
-    @Default('') String phoneNumber,
-    @Default('') String roshMehinaName,
-    @Default('') String roshMehinaPhoneNumber,
-    @Default('') String menahelAdministrativiName,
-    @Default('') String menahelAdministrativiPhoneNumber,
-    @Default([]) List<String> melavim,
-    @Default([]) List<String> hanihim,
-    @Default(0) double score,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String id,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String name,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String rakaz,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String rakazPhoneNumber,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String shluha,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String phoneNumber,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String roshMehinaName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String roshMehinaPhoneNumber,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String menahelAdministrativiName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String menahelAdministrativiPhoneNumber,
+    @Default([])
+    @JsonKey(
+      defaultValue: [],
+    )
+    List<String> melavim,
+    @Default([])
+    @JsonKey(
+      defaultValue: [],
+    )
+    List<String> hanihim,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+    )
+    double score,
     @Default(AddressDto()) AddressDto address,
   }) = _InstitutionDto;
 

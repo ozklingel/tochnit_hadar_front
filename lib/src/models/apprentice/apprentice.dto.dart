@@ -21,86 +21,306 @@ enum OnlineStatus {
 class ApprenticeDto with _$ApprenticeDto {
   const factory ApprenticeDto({
     @Default(AddressDto()) AddressDto address,
-    @Default('') @JsonKey(name: 'army_role') String militaryUnit,
-    @Default('') @JsonKey(name: 'birthday') String dateOfBirth,
-    @Default('') @JsonKey(name: 'contact1_email') String contact1Email,
-    @Default('') @JsonKey(name: 'contact1_first_name') String contact1FirstName,
-    @Default('') @JsonKey(name: 'contact1_last_name') String contact1LastName,
-    @Default('') @JsonKey(name: 'contact1_phone') String contact1Phone,
     @Default('')
-    @JsonKey(name: 'contact1_relation')
+    @JsonKey(
+      defaultValue: '',
+      name: 'army_role',
+    )
+    String militaryUnit,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'birthday',
+    )
+    String dateOfBirth,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact1_email',
+    )
+    String contact1Email,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact1_first_name',
+    )
+    String contact1FirstName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact1_last_name',
+    )
+    String contact1LastName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact1_phone',
+    )
+    String contact1Phone,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact1_relation',
+    )
     String contact1Relationship,
-    @Default('') @JsonKey(name: 'contact2_email') String contact2Email,
-    @Default('') @JsonKey(name: 'contact2_first_name') String contact2FirstName,
-    @Default('') @JsonKey(name: 'contact2_last_name') String contact2LastName,
-    @Default('') @JsonKey(name: 'contact2_phone') String contact2Phone,
     @Default('')
-    @JsonKey(name: 'contact2_relation')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact2_email',
+    )
+    String contact2Email,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact2_first_name',
+    )
+    String contact2FirstName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact2_last_name',
+    )
+    String contact2LastName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact2_phone',
+    )
+    String contact2Phone,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact2_relation',
+    )
     String contact2Relationship,
-    @Default('') @JsonKey(name: 'contact3_email') String contact3Email,
-    @Default('') @JsonKey(name: 'contact3_first_name') String contact3FirstName,
-    @Default('') @JsonKey(name: 'contact3_last_name') String contact3LastName,
-    @Default('') @JsonKey(name: 'contact3_phone') String contact3Phone,
     @Default('')
-    @JsonKey(name: 'contact3_relation')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact3_email',
+    )
+    String contact3Email,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact3_first_name',
+    )
+    String contact3FirstName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact3_last_name',
+    )
+    String contact3LastName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact3_phone',
+    )
+    String contact3Phone,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'contact3_relation',
+    )
     String contact3Relationship,
-    @Default('') String educationFaculty,
-    @Default('') String educationalInstitution,
-    @Default('') String email,
-    @Default([]) @JsonKey(name: 'events') List<EventDto> events,
     @Default('')
-    @JsonKey(name: 'highSchoolRavMelamed_email')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String educationFaculty,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String educationalInstitution,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String email,
+    @Default([])
+    @JsonKey(
+      defaultValue: [],
+      name: 'events',
+    )
+    List<EventDto> events,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'highSchoolRavMelamed_email',
+    )
     String highSchoolRavMelamedEmail,
     @Default('')
-    @JsonKey(name: 'highSchoolRavMelamed_name')
+    @JsonKey(
+      defaultValue: '',
+      name: 'highSchoolRavMelamed_name',
+    )
     String highSchoolRavMelamedName,
     @Default('')
-    @JsonKey(name: 'highSchoolRavMelamed_phone')
+    @JsonKey(
+      defaultValue: '',
+      name: 'highSchoolRavMelamed_phone',
+    )
     String highSchoolRavMelamedPhone,
-    @Default('') String id,
-    @Default('') @JsonKey(name: 'institution_id') String institutionId,
-    @Default('') @JsonKey(name: 'last_name') String lastName,
-    @Default('') @JsonKey(name: 'marriage_status') String maritalStatus,
-    @Default('') String militaryPositionOld,
-    @Default('') String militaryUpdatedDateTime,
-    @Default('') @JsonKey(name: 'name') String firstName,
-    @Default('') String phone,
-    @Default([]) @JsonKey(name: 'reports') List<String> reportsIds,
     @Default('')
-    @JsonKey(name: 'thRavMelamedYearA_email')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String id,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'institution_id',
+    )
+    String institutionId,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'last_name',
+    )
+    String lastName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'marriage_status',
+    )
+    String maritalStatus,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String militaryPositionOld,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String militaryUpdatedDateTime,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'name',
+    )
+    String firstName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String phone,
+    @Default([])
+    @JsonKey(
+      defaultValue: [],
+      name: 'reports',
+    )
+    List<String> reportsIds,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'thRavMelamedYearA_email',
+    )
     String thRavMelamedYearAEmail,
     @Default('')
-    @JsonKey(name: 'thRavMelamedYearA_name')
+    @JsonKey(
+      defaultValue: '',
+      name: 'thRavMelamedYearA_name',
+    )
     String thRavMelamedYearAName,
     @Default('')
-    @JsonKey(name: 'thRavMelamedYearA_phone')
+    @JsonKey(
+      defaultValue: '',
+      name: 'thRavMelamedYearA_phone',
+    )
     String thRavMelamedYearAPhone,
     @Default('')
-    @JsonKey(name: 'thRavMelamedYearB_email')
+    @JsonKey(
+      defaultValue: '',
+      name: 'thRavMelamedYearB_email',
+    )
     String thRavMelamedYearBEmail,
     @Default('')
-    @JsonKey(name: 'thRavMelamedYearB_name')
+    @JsonKey(
+      defaultValue: '',
+      name: 'thRavMelamedYearB_name',
+    )
     String thRavMelamedYearBName,
     @Default('')
-    @JsonKey(name: 'thRavMelamedYearB_phone')
+    @JsonKey(
+      defaultValue: '',
+      name: 'thRavMelamedYearB_phone',
+    )
     String thRavMelamedYearBPhone,
-    @Default('') String workOccupation,
-    @Default('') String workPlace,
-    @Default('') String workStatus,
-    @Default('') String workType,
-    @Default('') String teudatZehut,
-    @Default('') String avatar,
-    @Default('') @Default('') String highSchoolInstitution,
-    @Default('') String thPeriod,
-    @Default('') String thMentor,
-    @Default('') String militaryPositionNew,
-    @Default('') String matsber,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String workOccupation,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String workPlace,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String workStatus,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String workType,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String teudatZehut,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String avatar,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String highSchoolInstitution,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String thPeriod,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String thMentor,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String militaryPositionNew,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String matsber,
     @Default(OnlineStatus.offline)
     @JsonKey(fromJson: _parseOnlineStatus)
     OnlineStatus onlineStatus,
-    @Default('') String militaryDateOfEnlistment,
-    @Default('') String militaryDateOfDischarge,
-    @Default('') String militaryCompoundId,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String militaryDateOfEnlistment,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String militaryDateOfDischarge,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String militaryCompoundId,
   }) = _Apprentice;
 
   factory ApprenticeDto.fromJson(Map<String, dynamic> json) =>

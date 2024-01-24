@@ -7,18 +7,67 @@ part 'address.dto.g.dart';
 @Freezed(fromJson: false)
 class AddressDto with _$AddressDto {
   const factory AddressDto({
-    @Default('') String apartment,
-    @Default('') String city,
-    @Default(0) int cityId,
-    @Default('') @JsonKey(name: 'country') String countryCode,
-    @Default('') String entrance,
-    @Default('') String floor,
-    @Default('') String houseNumber,
-    @Default(0.0) double lat,
-    @Default(0.0) double lng,
-    @Default('') String postalCode,
-    @Default('') String region,
-    @Default('') String street,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String apartment,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String city,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+    )
+    int cityId,
+    @Default('')
+    @JsonKey(
+      name: 'country',
+      defaultValue: '',
+    )
+    String countryCode,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String entrance,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String floor,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String houseNumber,
+    @Default(0.0)
+    @JsonKey(
+      defaultValue: 0,
+    )
+    double lat,
+    @Default(0.0)
+    @JsonKey(
+      defaultValue: 0,
+    )
+    double lng,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String postalCode,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String region,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String street,
   }) = _AddressDto;
 
   factory AddressDto.fromJson(Map<String, dynamic> json) =>

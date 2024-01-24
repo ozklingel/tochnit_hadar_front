@@ -7,16 +7,48 @@ part 'message.dto.g.dart';
 @Freezed(fromJson: false)
 class MessageDto with _$MessageDto {
   const factory MessageDto({
-    @Default('') String id,
-    @Default('') String title,
-    @Default('') String content,
-    @Default('') String from,
-    @Default('') String icon,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String id,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String title,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String content,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String from,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String icon,
     @Default(false)
-    @JsonKey(name: 'allreadyread', fromJson: _extractIsAlreadyRead)
+    @JsonKey(
+      name: 'allreadyread',
+      fromJson: _extractIsAlreadyRead,
+    )
     bool allreadyRead,
-    @Default([]) List<String> attachments,
-    @Default('') @JsonKey(name: 'date') String dateTime,
+    @Default([])
+    @JsonKey(
+      defaultValue: [],
+    )
+    List<String> attachments,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'date',
+    )
+    String dateTime,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>

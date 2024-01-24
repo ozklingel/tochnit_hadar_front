@@ -7,18 +7,45 @@ part 'report.dto.g.dart';
 @Freezed(fromJson: false)
 class ReportDto with _$ReportDto {
   const factory ReportDto({
-    @Default('') String id,
-    @Default('') String description,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String id,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String description,
     @Default(ReportEventType.none)
     @JsonKey(
       name: 'title',
       fromJson: _extractType,
     )
     ReportEventType reportEventType,
-    @Default('') @JsonKey(name: 'from') String apprenticeId,
-    @Default([]) List<String> attachments,
-    @Default('') @JsonKey(name: 'allreadyread') String allreadyRead,
-    @Default('') @JsonKey(name: 'date') String dateTime,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'from',
+    )
+    String apprenticeId,
+    @Default([])
+    @JsonKey(
+      defaultValue: [],
+    )
+    List<String> attachments,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'allreadyread',
+    )
+    String allreadyRead,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'date',
+    )
+    String dateTime,
   }) = _ReportDto;
 
   factory ReportDto.fromJson(Map<String, dynamic> json) =>
