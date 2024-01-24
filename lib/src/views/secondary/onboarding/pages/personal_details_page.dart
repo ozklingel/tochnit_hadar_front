@@ -23,7 +23,7 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final emailController = useTextEditingController();
     final selectedDateOfBirth = useState(DateTime.now());
-    final cityController = useTextEditingController();
+    final selectedCity = useState('');
     final selectedRegion = useState(AddressRegion.none);
     final isTermsOfServiceAccepted = useState(false);
 
@@ -84,22 +84,81 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
               ),
             ),
           ),
-          TextField(
-            controller: cityController,
-            decoration: const InputDecoration(
-              hintText: 'יישוב / עיר',
-              suffixIcon: Padding(
-                padding: EdgeInsets.only(left: 16),
-                child: RotatedBox(
-                  quarterTurns: 1,
-                  child: Icon(
-                    Icons.chevron_left,
-                    color: AppColors.grey6,
+          ref.watch(getCitiesListProvider).when(
+                loading: () => const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+                error: (error, stack) => TextField(
+                  onChanged: (value) => selectedCity.value = value,
+                  decoration: const InputDecoration(
+                    hintText: 'יישוב / עיר',
+                    suffixIcon: Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: RotatedBox(
+                        quarterTurns: 1,
+                        child: Icon(
+                          Icons.chevron_left,
+                          color: AppColors.grey6,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                data: (citiesList) => DropdownButtonHideUnderline(
+                  child: DropdownButton2(
+                    value:
+                        selectedCity.value.isEmpty ? null : selectedCity.value,
+                    hint: const Text('יישוב / עיר'),
+                    style: Theme.of(context).inputDecorationTheme.hintStyle,
+                    buttonStyleData: ButtonStyleData(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(36),
+                        border: Border.all(
+                          color: AppColors.shade03,
+                        ),
+                      ),
+                      elevation: 0,
+                      padding: const EdgeInsets.only(right: 8),
+                    ),
+                    onChanged: (value) => selectedCity.value = value.toString(),
+                    dropdownStyleData: const DropdownStyleData(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                    ),
+                    iconStyleData: const IconStyleData(
+                      icon: Padding(
+                        padding: EdgeInsets.only(left: 16),
+                        child: RotatedBox(
+                          quarterTurns: 1,
+                          child: Icon(
+                            Icons.chevron_left,
+                            color: AppColors.grey6,
+                          ),
+                        ),
+                      ),
+                      openMenuIcon: Padding(
+                        padding: EdgeInsets.only(left: 16),
+                        child: RotatedBox(
+                          quarterTurns: 3,
+                          child: Icon(
+                            Icons.chevron_left,
+                            color: AppColors.grey6,
+                          ),
+                        ),
+                      ),
+                    ),
+                    items: citiesList
+                        .map(
+                          (e) => DropdownMenuItem(
+                            value: e,
+                            child: Text(e),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ),
-            ),
-          ),
           DropdownButtonHideUnderline(
             child: DropdownButton2(
               value: selectedRegion.value == AddressRegion.none
@@ -222,7 +281,7 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
                         .onboardingFillUserInfo(
                           email: emailController.text,
                           dateOfBirth: selectedDateOfBirth.value,
-                          city: cityController.text,
+                          city: selectedCity.value,
                         );
 
                     if (result) {

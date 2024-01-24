@@ -29,6 +29,7 @@ class OnboardingSuccessPage extends HookWidget {
           timer.cancel();
           onLoaded();
         });
+
         return null;
       },
       [],

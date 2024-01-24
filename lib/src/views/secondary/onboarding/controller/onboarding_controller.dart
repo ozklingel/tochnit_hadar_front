@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
@@ -146,6 +147,30 @@ class OnboardingController extends _$OnboardingController {
     } catch (e) {
       return false;
     }
+  }
+}
+
+@Riverpod(
+  dependencies: [
+    DioService,
+  ],
+)
+class GetCitiesList extends _$GetCitiesList {
+  @override
+  Future<List<String>> build() async {
+    final result =
+        await ref.watch(dioServiceProvider).get('onboarding_form/get_CitiesDB');
+
+    final parsed = result.data as List<dynamic>;
+
+    return parsed
+        .map((e) => e.toString().trim())
+        .where(
+          (element) => RegExp(r'[a-z\u0590-\u05fe]+').hasMatch(element),
+        )
+        .toSet()
+        .sortedBy((element) => element)
+        .toList();
   }
 }
 
