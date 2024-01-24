@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
@@ -31,6 +32,7 @@ class MessagesController extends _$MessagesController {
 
     final parsed = (request.data as List<dynamic>)
         .map((e) => MessageDto.fromJson(e))
+        .sortedBy((element) => element.dateTime)
         .toList();
 
     return parsed;

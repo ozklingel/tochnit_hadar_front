@@ -53,7 +53,10 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('משימות לביצוע'),
+        title: const Text(
+          'משימות לביצוע',
+          style: TextStyles.s22w400cGrey2,
+        ),
         actions: [
           IconButton(
             onPressed: () => Toaster.unimplemented(),
@@ -299,7 +302,10 @@ class _MelaveTasksBody extends HookConsumerWidget {
                     ),
                   ),
                 )
-              : const Text('משימות לביצוע'),
+              : const Text(
+                  'משימות לביצוע',
+                  style: TextStyles.s22w400cGrey2,
+                ),
         ),
         actions: isSearchOpen.value
             ? []
@@ -379,10 +385,59 @@ class _MelaveTasksBody extends HookConsumerWidget {
               ],
         bottom: TabBar(
           controller: tabController,
-          tabs: const [
-            Tab(text: 'שיחות'),
-            Tab(text: 'מפגשים'),
-            Tab(text: 'הורים'),
+          labelColor: AppColors.grey2,
+          unselectedLabelColor: AppColors.grey2,
+          labelStyle: TextStyles.s14w400cGrey2,
+          unselectedLabelStyle: TextStyles.s14w500cGrey2,
+          tabs: [
+            Tab(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('שיחות'),
+                  if (calls.isNotEmpty)
+                    const Padding(
+                      padding: EdgeInsets.only(right: 2),
+                      child: CircleAvatar(
+                        radius: 3,
+                        backgroundColor: AppColors.blue03,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Tab(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('מפגשים'),
+                  if (meetings.isNotEmpty)
+                    const Padding(
+                      padding: EdgeInsets.only(right: 2),
+                      child: CircleAvatar(
+                        radius: 3,
+                        backgroundColor: AppColors.blue03,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Tab(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('הורים'),
+                  if (parents.isNotEmpty)
+                    const Padding(
+                      padding: EdgeInsets.only(right: 2),
+                      child: CircleAvatar(
+                        radius: 3,
+                        backgroundColor: AppColors.blue03,
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -34,7 +34,7 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Assets.images.logo.image(
-          height: 48,
+          height: 42,
         ),
         actions: [
           IconButton(

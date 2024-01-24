@@ -42,146 +42,155 @@ class UpcomingTasksWidget extends HookConsumerWidget {
         .take(3)
         .toList();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
+    return Column(
+      children: [
+        Row(
+          children: [
+            const SizedBox(width: 24),
+            const Text(
+              'משימות לביצוע',
+              style: TextStyles.s20w500,
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () => const TasksRouteData().go(context),
+              child: const Text(
+                'הצג הכל',
+                style: TextStyles.s14w300cGray2,
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                'משימות לביצוע',
-                style: TextStyles.s20w500,
+              const SizedBox(height: 6),
+              _ActionsRow(
+                label: 'שיחות',
+                selectedTasks: selectedCalls.value,
               ),
-              const Spacer(),
-              TextButton(
-                onPressed: () => const TasksRouteData().go(context),
-                child: const Text(
-                  'הצג הכל',
-                  style: TextStyles.s14w300cGray2,
+              const SizedBox(height: 6),
+              if (calls.isEmpty)
+                const Text(
+                  'אין שיחות שמחכות לביצוע',
+                  style: TextStyles.s16w300cGray2,
+                )
+              else
+                ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: calls
+                      .map(
+                        (e) => TaskCard(
+                          isSelected: selectedCalls.value.contains(e),
+                          onTap: () => e.apprenticeIds.isEmpty
+                              ? null
+                              : ApprenticeDetailsRouteData(
+                                  id: e.apprenticeIds.first,
+                                ),
+                          onLongPress: () {
+                            if (selectedCalls.value.contains(e)) {
+                              final newList = selectedCalls.value;
+                              newList.remove(e);
+                              selectedCalls.value = [...newList];
+                            } else {
+                              selectedCalls.value = [...selectedCalls.value, e];
+                            }
+                          },
+                          task: e,
+                        ),
+                      )
+                      .toList(),
                 ),
+              const SizedBox(height: 24),
+              _ActionsRow(
+                label: 'מפגשים',
+                selectedTasks: selectedMeetings.value,
               ),
+              const SizedBox(height: 6),
+              if (meetings.isEmpty)
+                const Text(
+                  'אין מפגשים שמחכים לביצוע',
+                  style: TextStyles.s16w300cGray2,
+                )
+              else
+                ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: meetings
+                      .map(
+                        (e) => TaskCard(
+                          isSelected: selectedMeetings.value.contains(e),
+                          onTap: () => e.apprenticeIds.isEmpty
+                              ? null
+                              : ApprenticeDetailsRouteData(
+                                  id: e.apprenticeIds.first,
+                                ),
+                          onLongPress: () {
+                            if (selectedMeetings.value.contains(e)) {
+                              final newList = selectedMeetings.value;
+                              newList.remove(e);
+                              selectedMeetings.value = [...newList];
+                            } else {
+                              selectedMeetings.value = [
+                                ...selectedMeetings.value,
+                                e,
+                              ];
+                            }
+                          },
+                          task: e,
+                        ),
+                      )
+                      .toList(),
+                ),
+              const SizedBox(height: 24),
+              _ActionsRow(
+                label: 'שיחות להורים',
+                selectedTasks: selectedParents.value,
+              ),
+              const SizedBox(height: 6),
+              if (parents.isEmpty)
+                const Text(
+                  'אין שיחות להורים שמחכות לביצוע',
+                  style: TextStyles.s16w300cGray2,
+                )
+              else
+                ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: parents
+                      .map(
+                        (e) => TaskCard(
+                          isSelected: selectedParents.value.contains(e),
+                          onTap: () => e.apprenticeIds.isEmpty
+                              ? null
+                              : ApprenticeDetailsRouteData(
+                                  id: e.apprenticeIds.first,
+                                ),
+                          onLongPress: () {
+                            if (selectedParents.value.contains(e)) {
+                              final newList = selectedParents.value;
+                              newList.remove(e);
+                              selectedParents.value = [...newList];
+                            } else {
+                              selectedParents.value = [
+                                ...selectedParents.value,
+                                e,
+                              ];
+                            }
+                          },
+                          task: e,
+                        ),
+                      )
+                      .toList(),
+                ),
             ],
           ),
-          const SizedBox(height: 12),
-          _ActionsRow(
-            label: 'שיחות',
-            selectedTasks: selectedCalls.value,
-          ),
-          const SizedBox(height: 6),
-          if (calls.isEmpty)
-            const Text(
-              'אין שיחות שמחכות לביצוע',
-              style: TextStyles.s16w300cGray2,
-            )
-          else
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: calls
-                  .map(
-                    (e) => TaskCard(
-                      isSelected: selectedCalls.value.contains(e),
-                      onTap: () => e.apprenticeIds.isEmpty
-                          ? null
-                          : ApprenticeDetailsRouteData(
-                              id: e.apprenticeIds.first,
-                            ),
-                      onLongPress: () {
-                        if (selectedCalls.value.contains(e)) {
-                          final newList = selectedCalls.value;
-                          newList.remove(e);
-                          selectedCalls.value = [...newList];
-                        } else {
-                          selectedCalls.value = [...selectedCalls.value, e];
-                        }
-                      },
-                      task: e,
-                    ),
-                  )
-                  .toList(),
-            ),
-          const SizedBox(height: 24),
-          _ActionsRow(
-            label: 'מפגשים',
-            selectedTasks: selectedMeetings.value,
-          ),
-          const SizedBox(height: 6),
-          if (meetings.isEmpty)
-            const Text(
-              'אין מפגשים שמחכים לביצוע',
-              style: TextStyles.s16w300cGray2,
-            )
-          else
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: meetings
-                  .map(
-                    (e) => TaskCard(
-                      isSelected: selectedMeetings.value.contains(e),
-                      onTap: () => e.apprenticeIds.isEmpty
-                          ? null
-                          : ApprenticeDetailsRouteData(
-                              id: e.apprenticeIds.first,
-                            ),
-                      onLongPress: () {
-                        if (selectedMeetings.value.contains(e)) {
-                          final newList = selectedMeetings.value;
-                          newList.remove(e);
-                          selectedMeetings.value = [...newList];
-                        } else {
-                          selectedMeetings.value = [
-                            ...selectedMeetings.value,
-                            e,
-                          ];
-                        }
-                      },
-                      task: e,
-                    ),
-                  )
-                  .toList(),
-            ),
-          const SizedBox(height: 24),
-          _ActionsRow(
-            label: 'שיחות להורים',
-            selectedTasks: selectedParents.value,
-          ),
-          const SizedBox(height: 6),
-          if (parents.isEmpty)
-            const Text(
-              'אין שיחות להורים שמחכות לביצוע',
-              style: TextStyles.s16w300cGray2,
-            )
-          else
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: parents
-                  .map(
-                    (e) => TaskCard(
-                      isSelected: selectedParents.value.contains(e),
-                      onTap: () => e.apprenticeIds.isEmpty
-                          ? null
-                          : ApprenticeDetailsRouteData(
-                              id: e.apprenticeIds.first,
-                            ),
-                      onLongPress: () {
-                        if (selectedParents.value.contains(e)) {
-                          final newList = selectedParents.value;
-                          newList.remove(e);
-                          selectedParents.value = [...newList];
-                        } else {
-                          selectedParents.value = [...selectedParents.value, e];
-                        }
-                      },
-                      task: e,
-                    ),
-                  )
-                  .toList(),
-            ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -71,7 +71,7 @@ class MessageWidget extends ConsumerWidget {
                       if (isExpanded) const SizedBox(height: 16),
                       Text(
                         message.content,
-                        maxLines: isExpanded ? null : 1,
+                        maxLines: isExpanded ? 2 : 1,
                         overflow: isExpanded ? null : TextOverflow.ellipsis,
                         style: TextStyles.s16w400cGrey2,
                       ),

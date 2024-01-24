@@ -33,29 +33,56 @@ class TaskCard extends ConsumerWidget {
     return Material(
       color: isSelected ? AppColors.blue07 : Colors.transparent,
       child: InkWell(
-        // TODO(noga-dev): provide callback instead of passing selectedItems
         onLongPress: onLongPress,
         onTap: onTap,
         child: ListTile(
-          leading: CircleAvatar(
-            radius: 16,
-            backgroundImage: CachedNetworkImageProvider(
-              apprentice.avatar,
-            ),
-            child: isSelected
-                ? const Align(
-                    alignment: Alignment.bottomRight,
+          leading: Stack(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: CachedNetworkImageProvider(
+                  apprentice.avatar,
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 6,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
                     child: CircleAvatar(
-                      radius: 8,
-                      backgroundColor: AppColors.green1,
-                      child: Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 12,
-                      ),
+                      radius: 4,
+                      backgroundColor:
+                          apprentice.onlineStatus == OnlineStatus.online
+                              ? AppColors.green2
+                              : apprentice.onlineStatus == OnlineStatus.offline
+                                  ? AppColors.red2
+                                  : AppColors.yellow1,
                     ),
-                  )
-                : null,
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: isSelected
+                    ? const Align(
+                        alignment: Alignment.bottomRight,
+                        child: CircleAvatar(
+                          radius: 6,
+                          backgroundColor: AppColors.green1,
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 12,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
           ),
           title: Text(
             apprentice.fullName,

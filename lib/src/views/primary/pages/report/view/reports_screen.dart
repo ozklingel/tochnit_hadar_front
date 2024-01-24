@@ -57,7 +57,7 @@ class ReportsScreen extends HookConsumerWidget {
     );
 
     final selectedIds = useState(<String>[]);
-    final filters = useState(<String>['test1', 'test2']);
+    final filters = useState(<String>[]);
     final sortBy = useState(SortReportBy.fromA2Z);
 
     if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
@@ -130,12 +130,14 @@ class ReportsScreen extends HookConsumerWidget {
                               Positioned(
                                 right: 8,
                                 top: 8,
-                                child: CircleAvatar(
-                                  backgroundColor: AppColors.red1,
-                                  radius: 7,
-                                  child: Text(
-                                    filters.value.length.toString(),
-                                    style: TextStyles.s11w500fRoboto,
+                                child: IgnorePointer(
+                                  child: CircleAvatar(
+                                    backgroundColor: AppColors.red1,
+                                    radius: 7,
+                                    child: Text(
+                                      filters.value.length.toString(),
+                                      style: TextStyles.s11w500fRoboto,
+                                    ),
                                   ),
                                 ),
                               ),

@@ -1101,7 +1101,7 @@ class FilterResultsPage extends HookConsumerWidget {
                     Expanded(
                       child: LargeFilledRoundedButton.cancel(
                         label: 'ביטול',
-                        onPressed: () => Toaster.unimplemented(),
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
                     ),
                   ],
