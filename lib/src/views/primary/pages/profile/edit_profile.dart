@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -69,14 +68,14 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
     profileimg = NetworkImage(user.valueOrNull!.avatar);
 
     //? TODO(Oz): why is this unused?
-    final userDetails = useFuture(
-      useMemoized(
-        () => _getUserDetail(
-          user.valueOrNull!.phone,
-        ),
-        [],
-      ),
-    );
+    // final userDetails = useFuture(
+    //   useMemoized(
+    //     () => _getUserDetail(
+    //       user.valueOrNull!.phone,
+    //     ),
+    //     [],
+    //   ),
+    // );
 
     //display image selected from gallery
     Size size = MediaQuery.of(context).size;

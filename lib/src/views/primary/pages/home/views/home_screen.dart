@@ -45,7 +45,7 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const HomeHeader(),
             const SizedBox(height: 44),
