@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -29,17 +30,9 @@ class SideMenuDrawer extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
-                        child: CircleAvatar(
-                          radius: 10,
-                          backgroundColor: Colors.grey.shade200,
-                          child: const CircleAvatar(
-                            radius: 70,
-                            backgroundImage:
-                                AssetImage('assets/images/exit.png'),
-                          ),
-                        ),
-                        onTap: () => const HomeRouteData().go(context),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
                     ],
                   ),
@@ -73,76 +66,52 @@ class SideMenuDrawer extends ConsumerWidget {
             children: [
               ListTile(
                 dense: true,
-                leading: const CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: Icon(FluentIcons.data_pie_24_regular),
-                ),
+                leading: const Icon(FluentIcons.data_pie_24_regular),
                 title: const Text('מדדי תוכנית'),
                 onTap: () => const ChartsRouteData().go(context),
               ),
               ListTile(
                 dense: true,
-                leading: const CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: Icon(FluentIcons.map_24_regular),
-                ),
+                leading: const Icon(FluentIcons.map_24_regular),
                 title: const Text('מפת מיקומים'),
-                onTap: () => const SupportRouteData().go(context),
+                onTap: () => Toaster.unimplemented(),
               ),
               if (user.valueOrNull?.role == UserRole.melave) ...[
                 ListTile(
                   dense: true,
-                  leading: const CircleAvatar(
-                    radius: 10,
-                    backgroundImage: AssetImage('assets/images/envalop.png'),
-                  ),
+                  leading: const Icon(FluentIcons.mail_24_regular),
                   title: const Text('הודעות מערכת'),
-                  onTap: () => const SupportRouteData().go(context),
+                  onTap: () => Toaster.unimplemented(),
                 ),
                 ListTile(
                   dense: true,
-                  leading: const CircleAvatar(
-                    radius: 10,
-                    backgroundImage: AssetImage('assets/images/call.png'),
-                  ),
+                  leading: const Icon(FluentIcons.call_24_regular),
                   title: const Text('פניות שירות'),
-                  onTap: () => const SupportRouteData().go(context),
+                  onTap: () => Toaster.unimplemented(),
                 ),
               ] else if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                 ListTile(
                   dense: true,
-                  leading: const CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    child: Icon(FluentIcons.person_24_regular),
-                  ),
+                  leading: const Icon(FluentIcons.person_24_regular),
                   title: const Text('ניהול משתמשים'),
-                  onTap: () => const SupportRouteData().go(context),
+                  onTap: () => Toaster.unimplemented(),
                 ),
                 ListTile(
                   dense: true,
-                  leading: const CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    child: Icon(FluentIcons.book_open_24_regular),
-                  ),
+                  leading: const Icon(FluentIcons.book_open_24_regular),
                   title: const Text('מוסדות לימוד'),
                   onTap: () => const InstitutionsRouteData().push(context),
                 ),
               ],
               ListTile(
                 dense: true,
-                leading: const CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: Icon(FluentIcons.settings_24_regular),
-                ),
+                leading: const Icon(FluentIcons.settings_24_regular),
                 title: const Text('הגדרות והתראות'),
                 onTap: () => const SupportRouteData().go(context),
               ),
               ListTile(
                 dense: true,
-                leading: const CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: Icon(FluentIcons.arrow_exit_20_regular),
-                ),
+                leading: const Icon(FluentIcons.arrow_exit_20_regular),
                 title: const Text('התנתקות'),
                 onTap: () => ref.read(userServiceProvider.notifier).logOff(),
               ),

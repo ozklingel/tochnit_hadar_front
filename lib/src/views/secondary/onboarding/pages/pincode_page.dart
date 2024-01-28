@@ -40,136 +40,152 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
     );
 
     return FocusTraversalGroup(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Assets.images.logomark.image(),
-          Text(
-            'קוד אימות',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium!,
-          ),
-          Text.rich(
-            TextSpan(
-              children: [
-                if (isVoiceMFA.value) ...[
-                  const TextSpan(text: 'שלחנו לך קוד למספר'),
-                  const TextSpan(text: '\n'),
-                ] else ...[
-                  const TextSpan(text: 'שלחנו לך קוד בהודעה קולית'),
-                  const TextSpan(text: '\n'),
-                  const TextSpan(text: 'למספר'),
-                ],
-                const TextSpan(text: ' '),
-                TextSpan(
-                  text: phone,
-                  style: Theme.of(context).textTheme.displayMedium!,
-                ),
-                const TextSpan(text: '\n'),
-                const TextSpan(text: 'יש להקיש אותו כאן למטה'),
-              ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Assets.images.logomark.image(),
+            Text(
+              'קוד אימות',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium!,
             ),
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium!,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: PinCodeTextField(
-                appContext: context,
-                controller: pinCodeController,
-                autoDisposeControllers: false,
-                length: _kPinCodeLength,
-                hintCharacter: '*',
-                cursorColor: AppColors.shade09,
-                pinTheme: PinTheme(
-                  inactiveColor: AppColors.shade09,
-                  selectedColor: AppColors.shade09,
-                  activeColor: AppColors.shade09,
-                  errorBorderColor: AppColors.error500,
-                  selectedBorderWidth: 2,
-                  inactiveBorderWidth: 1,
-                  activeBorderWidth: 1,
+            Text.rich(
+              TextSpan(
+                children: [
+                  if (isVoiceMFA.value) ...[
+                    const TextSpan(text: 'שלחנו לך קוד למספר'),
+                    const TextSpan(text: '\n'),
+                  ] else ...[
+                    const TextSpan(text: 'שלחנו לך קוד בהודעה קולית'),
+                    const TextSpan(text: '\n'),
+                    const TextSpan(text: 'למספר'),
+                  ],
+                  const TextSpan(text: ' '),
+                  TextSpan(
+                    text: phone,
+                    style: Theme.of(context).textTheme.displayMedium!,
+                  ),
+                  const TextSpan(text: '\n'),
+                  const TextSpan(text: 'יש להקיש אותו כאן למטה'),
+                ],
+              ),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium!,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: PinCodeTextField(
+                  appContext: context,
+                  autoFocus: true,
+                  controller: pinCodeController,
+                  autoDisposeControllers: false,
+                  length: _kPinCodeLength,
+                  hintCharacter: '*',
+                  cursorColor: AppColors.shade09,
+                  pinTheme: PinTheme(
+                    inactiveColor: AppColors.shade09,
+                    selectedColor: AppColors.shade09,
+                    activeColor: AppColors.shade09,
+                    errorBorderColor: AppColors.error500,
+                    selectedBorderWidth: 2,
+                    inactiveBorderWidth: 1,
+                    activeBorderWidth: 1,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 24,
-            child: timer.value == 0
-                ? TextButton(
-                    onPressed: () async {
-                      await ref
-                          .read(onboardingControllerProvider.notifier)
-                          .getOtp(phone: phone);
-                      timer.value = _timerDuration;
-                      pinCodeController.text = '';
-                    },
-                    child: Text(
-                      'שליחת קוד חדש',
-                      style: Theme.of(context).textTheme.displayMedium!,
-                    ),
-                  )
-                : Center(
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'לא קיבלתם קוד?',
-                            style: Theme.of(context).textTheme.displayMedium!,
-                          ),
-                          const TextSpan(text: ' '),
-                          TextSpan(
-                            text:
-                                'נוכל לשלוח לך קוד חדש בעוד ${timer.value.toString()} שניות',
-                          ),
-                        ],
+            SizedBox(
+              height: 24,
+              child: timer.value == 0
+                  ? TextButton(
+                      onPressed: () async {
+                        await ref
+                            .read(onboardingControllerProvider.notifier)
+                            .getOtp(phone: phone);
+                        timer.value = _timerDuration;
+                        pinCodeController.text = '';
+                      },
+                      child: Text(
+                        'שליחת קוד חדש',
+                        style: Theme.of(context).textTheme.displayMedium!,
                       ),
-                      style: Theme.of(context).textTheme.bodyMedium!,
+                    )
+                  : Center(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'לא קיבלתם קוד?',
+                              style: Theme.of(context).textTheme.displayMedium!,
+                            ),
+                            const TextSpan(text: ' '),
+                            TextSpan(
+                              text:
+                                  'נוכל לשלוח לך קוד חדש בעוד ${timer.value.toString()} שניות',
+                            ),
+                          ],
+                        ),
+                        style: Theme.of(context).textTheme.bodyMedium!,
+                      ),
                     ),
-                  ),
-          ),
-          CheckboxListTile.adaptive(
-            value: isRememberMeChecked.value,
-            focusNode: FocusNode(skipTraversal: true),
-            onChanged: (val) =>
-                isRememberMeChecked.value = !isRememberMeChecked.value,
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Text(
-              'זכור אותי בכניסות הבאות',
-              style: Theme.of(context).textTheme.bodySmall!,
             ),
-          ),
-          TextButton(
-            onPressed: () => isVoiceMFA.value = !isVoiceMFA.value,
-            child: Text(
-              isVoiceMFA.value
-                  ? 'שלחו לי את הקוד בהודעה קולית'
-                  : 'שלחו לי את הקוד בהודעת טקסט',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                    color: AppColors.blue02,
-                  ),
+            ListTile(
+              focusNode: FocusNode(skipTraversal: true),
+              title: Text(
+                'זכור אותי בכניסות הבאות',
+                style: Theme.of(context).textTheme.bodySmall!,
+              ),
+              leading: Checkbox(
+                value: isRememberMeChecked.value,
+                onChanged: (val) =>
+                    isRememberMeChecked.value = !isRememberMeChecked.value,
+              ),
             ),
-          ),
-          LargeFilledRoundedButton(
-            label: 'המשך',
-            onPressed: pinCodeController.text.length != _kPinCodeLength
-                ? null
-                : () async {
-                    final result = await ref
-                        .read(onboardingControllerProvider.notifier)
-                        .verifyOtp(
-                          phone: phone,
-                          otp: pinCodeController.text,
-                        );
+            TextButton(
+              onPressed: () => isVoiceMFA.value = !isVoiceMFA.value,
+              child: Text(
+                isVoiceMFA.value
+                    ? 'שלחו לי את הקוד בהודעה קולית'
+                    : 'שלחו לי את הקוד בהודעת טקסט',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                      color: AppColors.blue02,
+                    ),
+              ),
+            ),
+            LargeFilledRoundedButton(
+              label: 'המשך',
+              onPressed: pinCodeController.text.length != _kPinCodeLength
+                  ? null
+                  : () async {
+                      final result = await ref
+                          .read(onboardingControllerProvider.notifier)
+                          .verifyOtp(
+                            phone: phone,
+                            otp: pinCodeController.text,
+                          );
 
-                    onSuccess(result.$2);
-                  },
-          ),
-        ],
+                      if (!result.$1) {
+                        // ignore: use_build_context_synchronously
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const AlertDialog.adaptive(
+                              content: Text('תקלה'),
+                            );
+                          },
+                        );
+                      }
+
+                      onSuccess(result.$2);
+                    },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -8,7 +8,7 @@ class OnboardingSuccessPage extends HookWidget {
   const OnboardingSuccessPage.page3otpSuccess({
     super.key,
     required this.onLoaded,
-  })  : topText = 'נוה לוי, זיהינו אותך בהצלחה!',
+  })  : topText = 'זיהינו אותך בהצלחה!',
         bottomText = 'מיד נעבור לשלב קצר של הגדרות ראשונית של האפליקציה ';
 
   const OnboardingSuccessPage.page4lastPage({

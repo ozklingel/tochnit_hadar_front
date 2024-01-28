@@ -488,7 +488,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
               EmptyState(
                 image: Assets.images.noTasks.svg(),
                 topText: 'איזה יופי!',
-                bottomText: 'אין הורים לבצע',
+                bottomText: 'אין שיחות לבצע',
               )
             else
               ListView.builder(

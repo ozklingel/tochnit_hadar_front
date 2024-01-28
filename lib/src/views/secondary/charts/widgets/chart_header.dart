@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ChartHeader extends ConsumerWidget {
@@ -28,7 +28,7 @@ class ChartHeader extends ConsumerWidget {
         ),
         const Spacer(),
         TextButton(
-          onPressed: () => Toaster.unimplemented(),
+          onPressed: () => const UserProfileRouteData().push(context),
           child: const Text('כרטיס אישי'),
         ),
       ],

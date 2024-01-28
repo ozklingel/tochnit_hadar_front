@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_controller.g.dart';
 
-typedef FirstOnboarding = bool;
+typedef IsFirstOnboarding = bool;
 typedef IsResponseSuccess = bool;
 
 enum AddressRegion {
@@ -69,7 +69,7 @@ class OnboardingController extends _$OnboardingController {
     return false;
   }
 
-  Future<(IsResponseSuccess, FirstOnboarding)> verifyOtp({
+  Future<(IsResponseSuccess, IsFirstOnboarding)> verifyOtp({
     required String phone,
     required String otp,
   }) async {
