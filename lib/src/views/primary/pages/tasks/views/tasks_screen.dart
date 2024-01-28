@@ -13,6 +13,7 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
+import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -277,113 +278,78 @@ class _MelaveTasksBody extends HookConsumerWidget {
         .toList();
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: AnimatedSwitcher(
-          duration: Consts.defaultDurationM,
-          transitionBuilder: (child, animation) => FadeTransition(
-            opacity: animation,
-            child: SizeTransition(
-              sizeFactor: animation,
-              axis: Axis.horizontal,
-              child: child,
+      appBar: SearchAppBar(
+        text: 'משימות לביצוע',
+        isSearchOpen: isSearchOpen,
+        controller: searchController,
+        actions: [
+          if ((tabController.index == 0 && selectedCalls.value.length < 2) ||
+              (tabController.index == 1 && selectedMeetings.value.length < 2) ||
+              (tabController.index == 2 && selectedParents.value.length < 2))
+            IconButton(
+              onPressed: () => isSearchOpen.value = true,
+              icon: const Icon(FluentIcons.search_24_regular),
             ),
-          ),
-          child: isSearchOpen.value
-              ? SearchBar(
-                  controller: searchController,
-                  elevation: MaterialStateProperty.all(0),
-                  backgroundColor: MaterialStateProperty.all(AppColors.blue07),
-                  hintText: 'חיפוש...',
-                  leading: IconButton(
-                    onPressed: () => isSearchOpen.value = false,
-                    icon: const Icon(
-                      FluentIcons.arrow_left_24_regular,
-                      color: AppColors.gray2,
-                    ),
-                  ),
-                )
-              : const Text(
-                  'משימות לביצוע',
-                  style: TextStyles.s22w400cGrey2,
+          if (tabController.index == 2 && selectedParents.value.length == 1)
+            PopupMenuButton(
+              icon: const Icon(FluentIcons.more_vertical_24_regular),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: const Text('להתקשר לאמא'),
+                  onTap: () => Toaster.unimplemented(),
                 ),
-        ),
-        actions: isSearchOpen.value
-            ? []
-            : [
-                if ((tabController.index == 0 &&
-                        selectedCalls.value.length < 2) ||
-                    (tabController.index == 1 &&
-                        selectedMeetings.value.length < 2) ||
-                    (tabController.index == 2 &&
-                        selectedParents.value.length < 2))
-                  IconButton(
-                    onPressed: () => isSearchOpen.value = true,
-                    icon: const Icon(FluentIcons.search_24_regular),
-                  ),
-                if (tabController.index == 2 &&
-                    selectedParents.value.length == 1)
-                  PopupMenuButton(
-                    icon: const Icon(FluentIcons.more_vertical_24_regular),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: const Text('להתקשר לאמא'),
-                        onTap: () => Toaster.unimplemented(),
-                      ),
-                      PopupMenuItem(
-                        child: const Text('להתקשר לאבא'),
-                        onTap: () => Toaster.unimplemented(),
-                      ),
-                      PopupMenuItem(
-                        child: const Text('דיווח'),
-                        onTap: () => Toaster.unimplemented(),
-                      ),
-                      PopupMenuItem(
-                        child: const Text('פרופיל אישי'),
-                        onTap: () => Toaster.unimplemented(),
-                      ),
-                    ],
-                  ),
-                if (tabController.index == 0 && selectedCalls.value.length == 1)
-                  PopupMenuButton(
-                    icon: const Icon(FluentIcons.more_vertical_24_regular),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: const Text('להתקשר'),
-                        onTap: () => Toaster.unimplemented(),
-                      ),
-                      PopupMenuItem(
-                        child: const Text('שליחת וואטסאפ'),
-                        onTap: () => Toaster.unimplemented(),
-                      ),
-                      PopupMenuItem(
-                        child: const Text('שליחת SMS'),
-                        onTap: () => Toaster.unimplemented(),
-                      ),
-                      PopupMenuItem(
-                        child: const Text('דיווח'),
-                        onTap: () => Toaster.unimplemented(),
-                      ),
-                      PopupMenuItem(
-                        child: const Text('פרופיל אישי'),
-                        onTap: () => Toaster.unimplemented(),
-                      ),
-                    ],
-                  )
-                else if ((tabController.index == 0 &&
-                        selectedCalls.value.length > 1) ||
-                    (tabController.index == 1 &&
-                        selectedMeetings.value.length > 1) ||
-                    (tabController.index == 2 &&
-                        selectedParents.value.length > 1))
-                  IconButton(
-                    onPressed: () => Toaster.unimplemented(),
-                    icon: const Icon(
-                      FluentIcons.clipboard_24_regular,
-                    ),
-                  ),
-                const SizedBox(width: 8),
+                PopupMenuItem(
+                  child: const Text('להתקשר לאבא'),
+                  onTap: () => Toaster.unimplemented(),
+                ),
+                PopupMenuItem(
+                  child: const Text('דיווח'),
+                  onTap: () => Toaster.unimplemented(),
+                ),
+                PopupMenuItem(
+                  child: const Text('פרופיל אישי'),
+                  onTap: () => Toaster.unimplemented(),
+                ),
               ],
+            ),
+          if (tabController.index == 0 && selectedCalls.value.length == 1)
+            PopupMenuButton(
+              icon: const Icon(FluentIcons.more_vertical_24_regular),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: const Text('להתקשר'),
+                  onTap: () => Toaster.unimplemented(),
+                ),
+                PopupMenuItem(
+                  child: const Text('שליחת וואטסאפ'),
+                  onTap: () => Toaster.unimplemented(),
+                ),
+                PopupMenuItem(
+                  child: const Text('שליחת SMS'),
+                  onTap: () => Toaster.unimplemented(),
+                ),
+                PopupMenuItem(
+                  child: const Text('דיווח'),
+                  onTap: () => Toaster.unimplemented(),
+                ),
+                PopupMenuItem(
+                  child: const Text('פרופיל אישי'),
+                  onTap: () => Toaster.unimplemented(),
+                ),
+              ],
+            )
+          else if ((tabController.index == 0 &&
+                  selectedCalls.value.length > 1) ||
+              (tabController.index == 1 && selectedMeetings.value.length > 1) ||
+              (tabController.index == 2 && selectedParents.value.length > 1))
+            IconButton(
+              onPressed: () => Toaster.unimplemented(),
+              icon: const Icon(
+                FluentIcons.clipboard_24_regular,
+              ),
+            ),
+          const SizedBox(width: 8),
+        ],
         bottom: TabBar(
           controller: tabController,
           labelColor: AppColors.grey2,

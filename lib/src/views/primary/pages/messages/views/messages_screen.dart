@@ -1,26 +1,34 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
+import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class MessagesScreen extends ConsumerWidget {
+class MessagesScreen extends HookConsumerWidget {
   const MessagesScreen({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
     final msgsController = ref.watch(messagesControllerProvider);
+    final isSearchOpen = useState(false);
+    final searchController = useTextEditingController();
+    useListenable(searchController);
+
+    if (user.isLoading) {
+      return const CircularProgressIndicator.adaptive();
+    }
 
     switch (user.valueOrNull?.role) {
       case UserRole.ahraiTohnit:
@@ -28,8 +36,10 @@ class MessagesScreen extends ConsumerWidget {
           length: 3,
           initialIndex: 1,
           child: Scaffold(
-            appBar: AppBar(
-              title: const Text('הודעות', style: TextStyles.s22w400cGrey2),
+            appBar: SearchAppBar(
+              controller: searchController,
+              isSearchOpen: isSearchOpen,
+              text: 'הודעות',
               actions: const [
                 Icon(FluentIcons.search_24_regular),
                 SizedBox(width: 12),
@@ -116,15 +126,17 @@ class MessagesScreen extends ConsumerWidget {
       case UserRole.melave:
       default:
         return Scaffold(
-          appBar: AppBar(
+          appBar: SearchAppBar(
+            controller: searchController,
+            isSearchOpen: isSearchOpen,
+            text: 'הודעות נכנסות',
             actions: [
               IconButton(
-                onPressed: () => Toaster.unimplemented(),
+                onPressed: () => isSearchOpen.value = true,
                 icon: const Icon(FluentIcons.search_24_regular),
               ),
               const SizedBox(width: 16),
             ],
-            title: const Text('הודעות נכנסות'),
           ),
           body: RefreshIndicator.adaptive(
             onRefresh: () => ref.refresh(messagesControllerProvider.future),
@@ -154,7 +166,17 @@ class MessagesScreen extends ConsumerWidget {
                   ),
                   data: (messages) => _ResultsBody(
                     isLoading: false,
-                    messages: messages,
+                    messages: messages
+                        .where(
+                          (element) =>
+                              element.content
+                                  .toLowerCase()
+                                  .contains(searchController.text) ||
+                              element.title
+                                  .toLowerCase()
+                                  .contains(searchController.text),
+                        )
+                        .toList(),
                   ),
                 ),
           ),

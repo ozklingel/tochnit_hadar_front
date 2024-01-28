@@ -42,8 +42,13 @@ class HomeHeader extends ConsumerWidget {
                       child: Text.rich(
                         TextSpan(
                           children: [
-                            const TextSpan(
-                              text: 'בוקר טוב',
+                            TextSpan(
+                              text: DateTime.now().hour > 3 &&
+                                      DateTime.now().hour < 11
+                                  ? 'בוקר טוב'
+                                  : DateTime.now().hour < 21
+                                      ? 'ערב טוב'
+                                      : 'לילה טוב',
                               style: TextStyles.s20w300cWhite,
                             ),
                             const TextSpan(text: '\n\n'),

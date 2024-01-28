@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -110,7 +111,10 @@ class _EventCard extends ConsumerWidget {
                 const Spacer(),
                 const Align(
                   alignment: Alignment.topCenter,
-                  child: Icon(FluentIcons.gift_24_regular),
+                  child: Icon(
+                    FluentIcons.gift_24_regular,
+                    color: AppColors.blue02,
+                  ),
                 ),
               ],
             ),

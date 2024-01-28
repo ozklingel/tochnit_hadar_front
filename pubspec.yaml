@@ -26,7 +26,7 @@ dependencies:
   widget_to_marker: ^1.0.4
 
   # location
-  google_maps_flutter: ^2.5.0
+  google_maps_flutter: ^2.5.3
   location: ^5.0.3
   image_picker: ^1.0.2
 
