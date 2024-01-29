@@ -51,7 +51,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
   }
 
   Future<List<String>?> _getUserAprentice() async {
-    List<String>? result = myUser["apprentices"].split(',');
+    List<String>? result = myUser["apprentices"].toString().split(',');
     // print(result);
     return result;
   }
@@ -920,6 +920,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                         "${birthDayController.text}-birthday",
                         "${emailController.text}-email",
                       ];
+                      print(listOfcontrolerText.toString());
                       var result = await HttpService.setUserDetail(
                         "userProfile",
                         user.valueOrNull!.phone,

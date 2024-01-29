@@ -178,22 +178,24 @@ class HttpService {
     // print(entityId);
     // print(typeOfSet);
     entityId = "972$entityId";
+    //I/flutter ( 5746): ozzzzzzzzzzz{"[ggh, name][0]":"[ggh, name][0]"}}
 
     var atrrToBeSetString = "{";
     for (var age in atrrToBeSet) {
       var agesplited = age.split("-");
       if (agesplited[0] != null && agesplited[0] != "") {
-        atrrToBeSetString += "${"${"\"$agesplited[1]"}\":\"$agesplited[0]"}\",";
+        atrrToBeSetString +=
+            "\"" + agesplited[1] + "\":" + "\"" + agesplited[0] + "\",";
       }
     }
     atrrToBeSetString =
         atrrToBeSetString.substring(0, atrrToBeSetString.length - 1);
     atrrToBeSetString += "}";
-    // print(atrrToBeSetString);
+    print("ozzzzzzzzzzz" + atrrToBeSetString);
     Map<String, dynamic> request = {
       "typeOfSet": typeOfSet,
       "entityId": entityId,
-      "atrrToBeSet": atrrToBeSetString,
+      "atrrToBeSet": jsonDecode(atrrToBeSetString),
     };
 
     final headers = {
