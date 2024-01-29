@@ -65,7 +65,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
-    profileimg = NetworkImage(user.valueOrNull!.avatar);
+    String imageUrl = user.valueOrNull!.avatar;
 
     //? TODO(Oz): why is this unused?
     // final userDetails = useFuture(
@@ -127,11 +127,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                             children: [
                               CircleAvatar(
                                 radius: 75,
+                                backgroundImage: NetworkImage(imageUrl),
                                 backgroundColor: Colors.grey.shade200,
-                                child: CircleAvatar(
-                                  radius: 70,
-                                  backgroundImage: profileimg,
-                                ),
                               ),
                               Positioned(
                                 bottom: 1,
@@ -518,7 +515,10 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                       controller:
                                           firstNameController, // <-- SEE HERE
                                       decoration: InputDecoration(
-                                        hintText: myUser["firstName"],
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 5.0),
+
+                                        hintText: "   " + myUser["firstName"],
                                         isDense:
                                             true, // this will remove the default content padding
 
@@ -561,7 +561,10 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                       controller:
                                           lastNameController, // <-- SEE HERE
                                       decoration: InputDecoration(
-                                        hintText: myUser["lastName"],
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 5.0),
+
+                                        hintText: "   " + myUser["lastName"],
                                         isDense:
                                             true, // this will remove the default content padding
 
@@ -604,7 +607,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                       controller: emailController,
                                       // <-- SEE HERE
                                       decoration: InputDecoration(
-                                        hintText: myUser["email"],
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 5.0),
+                                        hintText: "   " + myUser["email"],
                                         isDense:
                                             true, // this will remove the default content padding
 
@@ -647,6 +652,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                       controller:
                                           birthDayController, // <-- SEE HERE
                                       decoration: InputDecoration(
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 5.0),
                                         hintText:
                                             myUser["date_of_birth"].substring(
                                           0,
@@ -694,7 +701,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                       controller:
                                           cityController, // <-- SEE HERE
                                       decoration: InputDecoration(
-                                        hintText: myUser["city"],
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 5.0),
+                                        hintText: "   " + myUser["city"],
                                         isDense:
                                             true, // this will remove the default content padding
 

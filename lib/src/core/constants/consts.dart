@@ -6,7 +6,7 @@ abstract class Consts {
   static const defaultLocale = Locale('he', 'IL');
 
   static const baseUrl =
-      'http://ec2-13-53-126-125.eu-north-1.compute.amazonaws.com/';
+      'https://mis11ka38j.execute-api.us-east-1.amazonaws.com/';
 
   // storage
   static const accessTokenKey = 'accessTokenKey';

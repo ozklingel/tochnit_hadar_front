@@ -15,15 +15,11 @@ class SideMenuDrawer extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
 
-    const profileimage = NetworkImage(
-      "https://th01-s3.s3.eu-north-1.amazonaws.com/638a1e29dc924e25ba6096f5c93583ca.jpg",
-    );
-
     return Drawer(
       child: ListView(
         children: <Widget>[
           SizedBox(
-            height: 210.0,
+            height: 250.0,
             child: DrawerHeader(
               child: Column(
                 children: [
@@ -32,13 +28,13 @@ class SideMenuDrawer extends ConsumerWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () => Navigator.pop(context),
                       ),
                     ],
                   ),
-                  const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: profileimage,
+                  CircleAvatar(
+                    radius: 40, // Image radius
+                    backgroundImage: NetworkImage(user.valueOrNull!.avatar),
                   ),
                   Text(
                     user.valueOrNull!.fullName,

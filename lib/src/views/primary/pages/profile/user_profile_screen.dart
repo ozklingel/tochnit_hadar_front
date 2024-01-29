@@ -24,9 +24,6 @@ class UserProfileScreen extends StatefulHookConsumerWidget {
 
 class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
     with SingleTickerProviderStateMixin {
-  ImageProvider<Object>? profileimg = const NetworkImage(
-    'https://www.gravatar.com/avatar',
-  );
   File? galleryFile;
   final picker = ImagePicker();
   final emailController = TextEditingController();
@@ -73,7 +70,8 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
-    profileimg = NetworkImage(user.valueOrNull!.avatar);
+    String imageUrl = user.valueOrNull!.avatar;
+
     debugPrint(user.valueOrNull!.avatar);
     final userDetails = useFuture(
       useMemoized(
@@ -157,12 +155,10 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                           children: [
                                             CircleAvatar(
                                               radius: 75,
+                                              backgroundImage:
+                                                  NetworkImage(imageUrl),
                                               backgroundColor:
                                                   Colors.grey.shade200,
-                                              child: CircleAvatar(
-                                                radius: 70,
-                                                backgroundImage: profileimg,
-                                              ),
                                             ),
                                             Align(
                                               alignment:
@@ -403,9 +399,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
           galleryFile = File(pickedFile!.path);
 
           HttpService.uploadPhoto(galleryFile!, user.valueOrNull!.phone);
-          setState(() {
-            profileimg = FileImage(galleryFile!);
-          });
+          setState(() {});
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             // is this context <<<

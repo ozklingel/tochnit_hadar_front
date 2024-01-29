@@ -49,7 +49,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
             color: Colors.black,
           ),
           onTap: () => {
-            HttpService.setSetting(user.valueOrNull!.phone, t1, t2, t3),
+            HttpService.setSetting(user.valueOrNull!.phone, !t1, !t2, !t3),
             const NotificationRouteData().go(context),
           },
         ),

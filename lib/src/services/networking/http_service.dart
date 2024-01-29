@@ -75,6 +75,7 @@ class HttpService {
         'Authorization': 'Bearer $token',
       },
     );
+    print(response);
     return response;
   }
 
@@ -90,21 +91,23 @@ class HttpService {
       'POST',
       _setSettingUrl,
     );
-    debugPrint(
-      notifyStartWeek.toString() +
-          notifyDayBefore.toString() +
-          notifyMorning.toString(),
-    );
+    print(notifyStartWeek.toString() +
+        notifyDayBefore.toString() +
+        notifyMorning.toString() +
+        " " +
+        _setSettingUrl.toString());
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
 
     request.fields['userId'] = userId;
-    request.fields['notifyMorning'] = (!notifyMorning).toString();
-    request.fields['notifyDayBefore'] = (!notifyDayBefore).toString();
-    request.fields['notifyStartWeek'] = (!notifyStartWeek).toString();
+    request.fields['notifyMorning'] = (notifyMorning).toString();
+    request.fields['notifyDayBefore'] = (notifyDayBefore).toString();
+    request.fields['notifyStartWeek'] = (notifyStartWeek).toString();
     // print(notifyStartWeek);
     request.headers.addAll(headers);
+    print("ozzzz" + request.toString());
 
     var res = await request.send();
+    print("ozzzz" + res.toString());
     return res;
   }
 

@@ -26,11 +26,11 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
     debugPrint("access API");
     var jsonData = await HttpService.getUserNoti(phone, context);
     notis.clear();
-    // print(jsonData.body);
+    //print(jsonData.body);
     for (var u in jsonDecode(jsonData.body)) {
       Noti noti = Noti(
         u["id"].toString(),
-        u["apprenticeId"].toString(),
+        u["apprenticeName"].toString(),
         u["event"].toString(),
         u["date"].toString(),
         u["daysfromnow"].toString(),
@@ -40,13 +40,13 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
       );
       notis.add(noti);
     }
+    //print(notis);
     return notis;
   }
 
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
-
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
