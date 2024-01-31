@@ -6,6 +6,7 @@ import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/ahrai_home_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/home/controllers/notifications_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/models/ahrai_home.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/apprentices_status_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/performance_status_screen.dart';
@@ -15,6 +16,7 @@ import 'package:hadar_program/src/views/primary/pages/home/views/widgets/home_he
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/performance_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_events_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_tasks_widget.dart';
+import 'package:hadar_program/src/views/widgets/badges/unread_count_badge_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -37,10 +39,26 @@ class HomeScreen extends ConsumerWidget {
           height: 42,
         ),
         actions: [
-          IconButton(
-            onPressed: () => const NotificationRouteData().go(context),
-            icon: const Icon(Icons.notifications_none),
-          ),
+          ref.watch(notificationsControllerProvider).when(
+                loading: () => UnreadCounterBadgeWidget(
+                  isLoading: true,
+                  child: IconButton(
+                    onPressed: () => const NotificationRouteData().go(context),
+                    icon: const Icon(Icons.notifications_none),
+                  ),
+                ),
+                error: (error, stack) => IconButton(
+                  onPressed: () => const NotificationRouteData().go(context),
+                  icon: const Icon(Icons.notifications_none),
+                ),
+                data: (notifications) => UnreadCounterBadgeWidget(
+                  count: notifications.length,
+                  child: IconButton(
+                    onPressed: () => const NotificationRouteData().go(context),
+                    icon: const Icon(Icons.notifications_none),
+                  ),
+                ),
+              ),
         ],
       ),
       body: SingleChildScrollView(

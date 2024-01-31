@@ -1,40 +1,22 @@
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
-import 'package:hadar_program/src/services/arch/flags_service.dart';
-import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'apprentices_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    DioService,
-    FlagsService,
+    GetApprentices,
   ],
 )
 class ApprenticesController extends _$ApprenticesController {
   @override
   FutureOr<List<ApprenticeDto>> build() async {
-    final flags = ref.watch(flagsServiceProvider);
+    final apprentices = await ref.watch(getApprenticesProvider.future);
 
-    if (flags.isMock) {
-      return flags.apprentices;
-    }
-
-    final request = await ref
-        .watch(dioServiceProvider)
-        .get('userProfile_form/myApprentices');
-
-    // await Future.delayed(const Duration(milliseconds: 400));
-
-    final result = (request.data as List<dynamic>)
-        .map(
-          (e) => ApprenticeDto.fromJson(e),
-        )
-        .toList();
-
-    return result;
+    return apprentices;
   }
 
   FutureOr<bool> addEvent({

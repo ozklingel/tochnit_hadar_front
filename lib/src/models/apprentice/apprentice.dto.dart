@@ -329,10 +329,11 @@ class ApprenticeDto with _$ApprenticeDto {
 
 OnlineStatus _parseOnlineStatus(dynamic onlineStatus) {
   if (onlineStatus == null) {
-    Logger().w('empty user role');
+    Logger().w('online status null');
     Sentry.captureException(
       Exception('failed to extract online status from string'),
     );
+
     return OnlineStatus.other;
   }
 
@@ -344,6 +345,7 @@ OnlineStatus _parseOnlineStatus(dynamic onlineStatus) {
     Sentry.captureException(
       Exception('failed to extract online status from index'),
     );
+
     return OnlineStatus.other;
   }
 
@@ -352,6 +354,11 @@ OnlineStatus _parseOnlineStatus(dynamic onlineStatus) {
   } else if (onlineStatusIndex == OnlineStatus.online.value) {
     return OnlineStatus.online;
   }
+
+  Logger().w('online status index too high');
+  Sentry.captureException(
+    Exception('failed to extract online status index too high'),
+  );
 
   return OnlineStatus.other;
 }

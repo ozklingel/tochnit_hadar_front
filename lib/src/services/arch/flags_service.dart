@@ -17,21 +17,23 @@ class FlagsService extends _$FlagsService {
   FlagsDto build() {
     return FlagsDto(
       isMock: false,
-      user: UserDto(
-        id: '1',
-        firstName: 'אלכסוש',
-        lastName: 'ינונוש',
-        email: 'alexush@yanonush.com',
-        role: UserRole.ahraiTohnit,
-        apprentices: (_apprentices..shuffle())
-            .take(faker.randomGenerator.integer(10, min: 5))
-            .map((e) => e.id)
-            .toList(),
-      ),
+      user: _userDto,
       apprentices: _apprentices,
     );
   }
 }
+
+final _userDto = UserDto(
+  id: '1',
+  firstName: 'אלכסוש',
+  lastName: 'ינונוש',
+  email: 'alexush@yanonush.com',
+  role: UserRole.ahraiTohnit,
+  apprentices: (_apprentices..shuffle())
+      .take(faker.randomGenerator.integer(10, min: 5))
+      .map((e) => e.id)
+      .toList(),
+);
 
 final _apprentices = List.generate(
   Consts.mockApprenticeGuids.length,

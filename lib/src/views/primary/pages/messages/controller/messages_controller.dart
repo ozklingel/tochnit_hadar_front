@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -14,7 +14,7 @@ part 'messages_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    ApprenticesController,
+    GetApprentices,
     DioService,
     Storage,
   ],
@@ -130,17 +130,15 @@ class MessagesController extends _$MessagesController {
   }
 
   Future<List<ApprenticeDto>> searchApprentices(String keyword) async {
-    await Future.delayed(const Duration(milliseconds: 200));
+    final apprentices = await ref.read(getApprenticesProvider.future);
 
-    return ref
-            .read(apprenticesControllerProvider)
-            .valueOrNull
-            ?.where(
-              (element) => element.fullName
-                  .toLowerCase()
-                  .contains(keyword.toLowerCase()),
-            )
-            .toList() ??
-        [];
+    final filtered = apprentices
+        .where(
+          (element) =>
+              element.fullName.toLowerCase().contains(keyword.toLowerCase()),
+        )
+        .toList();
+
+    return filtered;
   }
 }

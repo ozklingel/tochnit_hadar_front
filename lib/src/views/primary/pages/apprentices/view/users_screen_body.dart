@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -141,7 +143,7 @@ class UsersScreenBody extends HookConsumerWidget {
                             color: AppColors.gray2,
                           ),
                           label: Text(
-                            '345 משתמשים',
+                            '${(users.valueOrNull ?? []).length} משתמשים',
                             style: TextStyles.s14w400
                                 .copyWith(color: AppColors.gray5),
                           ),
@@ -149,7 +151,13 @@ class UsersScreenBody extends HookConsumerWidget {
                         const SizedBox(width: 6),
                         const Spacer(),
                         TextButton.icon(
-                          onPressed: () => Toaster.unimplemented(),
+                          onPressed: () {
+                            if (Platform.isAndroid || Platform.isIOS) {
+                              Toaster.unimplemented();
+                            } else {
+                              Toaster.unimplemented();
+                            }
+                          },
                           style: TextButton.styleFrom(
                             textStyle: TextStyles.s14w400,
                             foregroundColor: AppColors.gray1,

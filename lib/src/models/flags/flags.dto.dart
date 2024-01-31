@@ -12,6 +12,7 @@ class FlagsDto with _$FlagsDto {
     @Default(false) bool isMock,
     @Default(UserDto()) UserDto user,
     @Default([]) List<ApprenticeDto> apprentices,
+    @Default([]) List<Map<String, dynamic>> notifications,
   }) = _FlagsDto;
 
   // ignore: unused_element
