@@ -75,7 +75,7 @@ class HttpService {
         'Authorization': 'Bearer $token',
       },
     );
-    print(response);
+    debugPrint(response.toString());
     return response;
   }
 
@@ -91,11 +91,9 @@ class HttpService {
       'POST',
       _setSettingUrl,
     );
-    print(notifyStartWeek.toString() +
-        notifyDayBefore.toString() +
-        notifyMorning.toString() +
-        " " +
-        _setSettingUrl.toString());
+    debugPrint(
+      "$notifyStartWeek$notifyDayBefore$notifyMorning $_setSettingUrl",
+    );
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
 
     request.fields['userId'] = userId;
@@ -104,10 +102,10 @@ class HttpService {
     request.fields['notifyStartWeek'] = (notifyStartWeek).toString();
     // print(notifyStartWeek);
     request.headers.addAll(headers);
-    print("ozzzz" + request.toString());
+    debugPrint("ozzzz$request");
 
     var res = await request.send();
-    print("ozzzz" + res.toString());
+    debugPrint("ozzzz$res");
     return res;
   }
 
@@ -184,14 +182,13 @@ class HttpService {
     for (var age in atrrToBeSet) {
       var agesplited = age.split("-");
       if (agesplited[0] != null && agesplited[0] != "") {
-        atrrToBeSetString +=
-            "\"" + agesplited[1] + "\":" + "\"" + agesplited[0] + "\",";
+        atrrToBeSetString += "\"${agesplited[1]}\":\"${agesplited[0]}\",";
       }
     }
     atrrToBeSetString =
         atrrToBeSetString.substring(0, atrrToBeSetString.length - 1);
     atrrToBeSetString += "}";
-    print("ozzzzzzzzzzz" + atrrToBeSetString);
+    debugPrint("ozzzzzzzzzzz$atrrToBeSetString");
     Map<String, dynamic> request = {
       "typeOfSet": typeOfSet,
       "entityId": entityId,

@@ -83,6 +83,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/setting.png
   AssetGenImage get setting => const AssetGenImage('assets/images/setting.png');
 
+  /// File path: assets/images/success-smile.png
+  AssetGenImage get successSmile =>
+      const AssetGenImage('assets/images/success-smile.png');
+
   /// File path: assets/images/success.svg
   SvgGenImage get success => const SvgGenImage('assets/images/success.svg');
 
@@ -109,6 +113,7 @@ class $AssetsImagesGen {
         person,
         person2,
         setting,
+        successSmile,
         success,
         vi
       ];

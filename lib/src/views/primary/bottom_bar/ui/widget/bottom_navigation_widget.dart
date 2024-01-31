@@ -8,6 +8,7 @@ import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
+import 'package:hadar_program/src/views/widgets/badges/unread_count_badge_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class BottomNavigationWidget extends ConsumerWidget {
@@ -50,30 +51,22 @@ class BottomNavigationWidget extends ConsumerWidget {
           items: [
             BottomNavigationBarItem(
               activeIcon: const Icon(FluentIcons.clipboard_task_24_regular),
-              icon: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  const Icon(FluentIcons.clipboard_task_24_regular),
-                  Positioned(
-                    right: -6,
-                    top: -6,
-                    child: ref.watch(tasksControllerProvider).when(
-                          loading: () => const Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          ),
-                          error: (error, stack) => const SizedBox(),
-                          data: (tasks) => _UnreadCountBadge(
-                            count: tasks
-                                .where(
-                                  (element) =>
-                                      element.status == TaskStatus.todo,
-                                )
-                                .length,
-                          ),
-                        ),
+              icon: ref.watch(tasksControllerProvider).when(
+                    loading: () => const UnreadCounterBadgeWidget(
+                      isLoading: true,
+                      child: Icon(FluentIcons.clipboard_task_24_regular),
+                    ),
+                    error: (error, stack) =>
+                        const Icon(FluentIcons.clipboard_task_24_regular),
+                    data: (tasks) => UnreadCounterBadgeWidget(
+                      count: tasks
+                          .where(
+                            (element) => element.status == TaskStatus.todo,
+                          )
+                          .length,
+                      child: const Icon(FluentIcons.clipboard_task_24_regular),
+                    ),
                   ),
-                ],
-              ),
               label: 'משימות',
             ),
             const BottomNavigationBarItem(
@@ -88,27 +81,20 @@ class BottomNavigationWidget extends ConsumerWidget {
             ),
             BottomNavigationBarItem(
               activeIcon: const Icon(FluentIcons.mail_24_regular),
-              icon: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  const Icon(FluentIcons.mail_24_regular),
-                  Positioned(
-                    right: -6,
-                    top: -6,
-                    child: ref.watch(messagesControllerProvider).when(
-                          loading: () => const Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          ),
-                          error: (error, stack) => const SizedBox(),
-                          data: (messages) => _UnreadCountBadge(
-                            count: messages
-                                .where((element) => !element.allreadyRead)
-                                .length,
-                          ),
-                        ),
+              icon: ref.watch(messagesControllerProvider).when(
+                    loading: () => const UnreadCounterBadgeWidget(
+                      isLoading: true,
+                      child: Icon(FluentIcons.mail_24_regular),
+                    ),
+                    error: (error, stack) =>
+                        const Icon(FluentIcons.mail_24_regular),
+                    data: (messages) => UnreadCounterBadgeWidget(
+                      count: messages
+                          .where((element) => !element.allreadyRead)
+                          .length,
+                      child: const Icon(FluentIcons.mail_24_regular),
+                    ),
                   ),
-                ],
-              ),
               label: 'הודעות',
             ),
             if (user.valueOrNull?.role == UserRole.melave)
@@ -124,33 +110,6 @@ class BottomNavigationWidget extends ConsumerWidget {
                 label: 'משתמשים',
               ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _UnreadCountBadge extends StatelessWidget {
-  const _UnreadCountBadge({
-    super.key,
-    this.count = 0,
-  });
-
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    if (count < 1) {
-      return const SizedBox.shrink();
-    }
-
-    return IgnorePointer(
-      child: CircleAvatar(
-        backgroundColor: AppColors.red1,
-        radius: 9,
-        child: Text(
-          count.toString(),
-          style: TextStyles.s11w500fRoboto,
         ),
       ),
     );

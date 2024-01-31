@@ -14,6 +14,8 @@ abstract class Consts {
   static const firstOnboardingKey = 'firstOnboarding';
 
   static const defaultDurationM = Duration(milliseconds: 300);
+  static const defaultDurationL = Duration(milliseconds: 600);
+  static const defaultDurationXL = Duration(milliseconds: 900);
   static const defaultErrorDuration = Duration(milliseconds: 4000);
 
   static const borderRadius24 = BorderRadius.all(Radius.circular(24));

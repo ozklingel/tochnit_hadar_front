@@ -516,9 +516,11 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                           firstNameController, // <-- SEE HERE
                                       decoration: InputDecoration(
                                         contentPadding:
-                                            EdgeInsets.symmetric(vertical: 5.0),
+                                            const EdgeInsets.symmetric(
+                                          vertical: 5.0,
+                                        ),
 
-                                        hintText: "   " + myUser["firstName"],
+                                        hintText: "   ${myUser["firstName"]}",
                                         isDense:
                                             true, // this will remove the default content padding
 
@@ -562,9 +564,11 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                           lastNameController, // <-- SEE HERE
                                       decoration: InputDecoration(
                                         contentPadding:
-                                            EdgeInsets.symmetric(vertical: 5.0),
+                                            const EdgeInsets.symmetric(
+                                          vertical: 5.0,
+                                        ),
 
-                                        hintText: "   " + myUser["lastName"],
+                                        hintText: "   ${myUser["lastName"]}",
                                         isDense:
                                             true, // this will remove the default content padding
 
@@ -608,8 +612,10 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                       // <-- SEE HERE
                                       decoration: InputDecoration(
                                         contentPadding:
-                                            EdgeInsets.symmetric(vertical: 5.0),
-                                        hintText: "   " + myUser["email"],
+                                            const EdgeInsets.symmetric(
+                                          vertical: 5.0,
+                                        ),
+                                        hintText: "   ${myUser["email"]}",
                                         isDense:
                                             true, // this will remove the default content padding
 
@@ -653,7 +659,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                           birthDayController, // <-- SEE HERE
                                       decoration: InputDecoration(
                                         contentPadding:
-                                            EdgeInsets.symmetric(vertical: 5.0),
+                                            const EdgeInsets.symmetric(
+                                          vertical: 5.0,
+                                        ),
                                         hintText:
                                             myUser["date_of_birth"].substring(
                                           0,
@@ -702,8 +710,10 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                                           cityController, // <-- SEE HERE
                                       decoration: InputDecoration(
                                         contentPadding:
-                                            EdgeInsets.symmetric(vertical: 5.0),
-                                        hintText: "   " + myUser["city"],
+                                            const EdgeInsets.symmetric(
+                                          vertical: 5.0,
+                                        ),
+                                        hintText: "   ${myUser["city"]}",
                                         isDense:
                                             true, // this will remove the default content padding
 
@@ -920,7 +930,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                         "${birthDayController.text}-birthday",
                         "${emailController.text}-email",
                       ];
-                      print(listOfcontrolerText.toString());
+                      debugPrint(listOfcontrolerText.toString());
                       var result = await HttpService.setUserDetail(
                         "userProfile",
                         user.valueOrNull!.phone,
