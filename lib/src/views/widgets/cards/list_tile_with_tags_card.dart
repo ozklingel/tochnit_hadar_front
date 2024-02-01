@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/views/widgets/images/avatar_widget.dart';
 
 class ListTileWithTagsCard extends StatelessWidget {
   const ListTileWithTagsCard({
@@ -15,7 +15,7 @@ class ListTileWithTagsCard extends StatelessWidget {
     this.isSelected = false,
     this.onLongPress,
     this.onTap,
-    this.onlineStatus = OnlineStatus.other,
+    this.onlineStatus = UserStatus.other,
     this.trailing,
   });
 
@@ -25,7 +25,7 @@ class ListTileWithTagsCard extends StatelessWidget {
   final List<String> tags;
   final VoidCallback? onLongPress;
   final VoidCallback? onTap;
-  final OnlineStatus onlineStatus;
+  final UserStatus onlineStatus;
   final Widget? trailing;
 
   @override
@@ -68,11 +68,9 @@ class ListTileWithTagsCard extends StatelessWidget {
                                 color: Colors.white,
                               ),
                             )
-                          : CircleAvatar(
+                          : AvatarWidget(
                               radius: 20,
-                              backgroundImage: CachedNetworkImageProvider(
-                                avatar,
-                              ),
+                              avatarUrl: avatar,
                             ),
                       Positioned(
                         bottom: 1,
@@ -82,9 +80,9 @@ class ListTileWithTagsCard extends StatelessWidget {
                           backgroundColor: Colors.white,
                           child: CircleAvatar(
                             radius: 4,
-                            backgroundColor: onlineStatus == OnlineStatus.online
+                            backgroundColor: onlineStatus == UserStatus.online
                                 ? Colors.green
-                                : onlineStatus == OnlineStatus.offline
+                                : onlineStatus == UserStatus.offline
                                     ? Colors.red
                                     : Colors.purple,
                           ),

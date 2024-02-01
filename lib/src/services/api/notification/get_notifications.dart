@@ -1,10 +1,9 @@
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/arch/flags_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'my_apprentices.g.dart';
+part 'get_notifications.g.dart';
 
 @Riverpod(
   dependencies: [
@@ -12,22 +11,20 @@ part 'my_apprentices.g.dart';
     DioService,
   ],
 )
-class GetApprentices extends _$GetApprentices {
+class GetNotifications extends _$GetNotifications {
   @override
-  FutureOr<List<ApprenticeDto>> build() async {
+  FutureOr<List<Map<String, dynamic>>> build() async {
     final flags = ref.watch(flagsServiceProvider);
 
     if (flags.isMock) {
-      return flags.apprentices;
+      return flags.notifications;
     }
 
     final request =
-        await ref.watch(dioServiceProvider).get(Consts.getAllApprentices);
+        await ref.watch(dioServiceProvider).get(Consts.getAllNotifications);
 
     final result = (request.data as List<dynamic>)
-        .map(
-          (e) => ApprenticeDto.fromJson(e),
-        )
+        .map<Map<String, dynamic>>((e) => e)
         .toList();
 
     return result;

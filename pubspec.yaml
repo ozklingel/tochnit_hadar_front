@@ -32,8 +32,8 @@ dependencies:
 
 
   # state
-  hooks_riverpod: ^2.4.0
-  flutter_hooks: ^0.20.1
+  hooks_riverpod: ^2.4.9
+  flutter_hooks: ^0.20.4
   freezed_annotation: ^2.4.1
   riverpod_annotation: ^2.0.0
   json_annotation: ^4.8.1
@@ -81,13 +81,13 @@ dev_dependencies:
   # analysis
   flutter_lints: ^2.0.3
   analyzer: ^6.2.0
-  custom_lint: ^0.5.3
-  riverpod_lint: ^2.0.4
+  custom_lint: ^0.5.11
+  riverpod_lint: ^2.3.7
 
   # codegen
   build_runner: ^2.4.6
   freezed: ^2.4.2
-  riverpod_generator: ^2.3.2
+  riverpod_generator: ^2.3.9
   flutter_gen_runner: ^5.3.1
   json_serializable: ^6.7.1
   go_router_builder: ^2.3.2

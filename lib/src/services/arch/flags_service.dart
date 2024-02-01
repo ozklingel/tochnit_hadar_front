@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/flags/flags.dto.dart';
+import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,9 +23,20 @@ class FlagsService extends _$FlagsService {
       isMock: false,
       user: _userDto,
       apprentices: _apprentices,
+      messages: _messages,
+      notifications: _notifications,
+      tasks: _tasks,
     );
   }
 }
+
+final _notifications = [
+  {
+    faker.person.firstName(): faker.person.lastName(),
+    faker.person.firstName(): faker.person.lastName(),
+    faker.person.firstName(): faker.person.lastName(),
+  },
+];
 
 final _userDto = UserDto(
   id: '1',
@@ -29,10 +44,72 @@ final _userDto = UserDto(
   lastName: 'ינונוש',
   email: 'alexush@yanonush.com',
   role: UserRole.ahraiTohnit,
-  apprentices: (_apprentices..shuffle())
+  apprentices: ([..._apprentices]..shuffle())
       .take(faker.randomGenerator.integer(10, min: 5))
       .map((e) => e.id)
       .toList(),
+);
+
+final _messages = List.generate(
+  31,
+  (index) {
+    return MessageDto(
+      id: faker.guid.guid(),
+      from: _apprentices.isEmpty
+          ? const ApprenticeDto().phone
+          : _apprentices[Random().nextInt(_apprentices.length)].phone,
+      title: faker.lorem.sentence(),
+      content: faker.lorem.sentence(),
+      icon: faker.food.dish(),
+      allreadyRead: faker.randomGenerator.boolean(),
+      dateTime: faker.randomGenerator.boolean()
+          ? faker.date
+              .dateTime(
+                minYear: 1971,
+                maxYear: DateTime.now().year,
+              )
+              .toIso8601String()
+          : faker.date
+              .dateTime(
+                minYear: DateTime.now().year,
+                maxYear: DateTime.now().year + 1,
+              )
+              .toIso8601String(),
+      attachments: List.generate(
+        Random().nextInt(2),
+        (index) => faker.image.image(height: 100, width: 100),
+      ),
+    );
+  },
+);
+
+final _tasks = List.generate(
+  Consts.mockTasksGuids.length,
+  (index) {
+    final newApprentices = [..._apprentices];
+    newApprentices.shuffle();
+
+    return TaskDto(
+      id: Consts.mockTasksGuids[index],
+      status: TaskStatus
+          .values[faker.randomGenerator.integer(TaskStatus.values.length)],
+      details: faker.lorem.sentence(),
+      apprenticeIds: newApprentices
+          .take(faker.randomGenerator.integer(5))
+          .map((e) => e.id)
+          .toList(),
+      frequency: TaskFrequency
+          .values[faker.randomGenerator.integer(TaskFrequency.values.length)],
+      reportEventType: TaskType
+          .values[faker.randomGenerator.integer(TaskType.values.length)],
+      dateTime: faker.date
+          .dateTime(
+            minYear: 1972,
+            maxYear: DateTime.now().year,
+          )
+          .toIso8601String(),
+    );
+  },
 );
 
 final _apprentices = List.generate(

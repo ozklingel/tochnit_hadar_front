@@ -1,8 +1,9 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -14,61 +15,18 @@ part 'messages_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    GetApprentices,
-    DioService,
     Storage,
+    DioService,
+    GetMessages,
+    GetApprentices,
   ],
 )
 class MessagesController extends _$MessagesController {
   @override
   FutureOr<List<MessageDto>> build() async {
-    final request =
-        await ref.watch(dioServiceProvider).get('messegaes_form/getAll');
+    final messages = await ref.watch(getMessagesProvider.future);
 
-    // await Future.delayed(const Duration(milliseconds: 200));
-
-    // final apprentices =
-    //     ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
-
-    final parsed = (request.data as List<dynamic>)
-        .map((e) => MessageDto.fromJson(e))
-        .sortedBy((element) => element.dateTime)
-        .toList();
-
-    return parsed;
-
-    // return List.generate(
-    //   31,
-    //   (index) {
-    //     return MessageDto(
-    //       id: faker.guid.guid(),
-    //       from: apprentices.isEmpty
-    //           ? const ApprenticeDto().phone
-    //           : apprentices[Random().nextInt(apprentices.length)].phone,
-    //       title: faker.lorem.sentence(),
-    //       content: faker.lorem.sentence(),
-    //       icon: faker.food.dish(),
-    //       allreadyRead: faker.randomGenerator.boolean().toString(),
-    //       dateTime: faker.randomGenerator.boolean()
-    //           ? faker.date
-    //               .dateTime(
-    //                 minYear: 1971,
-    //                 maxYear: DateTime.now().year,
-    //               )
-    //               .millisecondsSinceEpoch
-    //           : faker.date
-    //               .dateTime(
-    //                 minYear: DateTime.now().year,
-    //                 maxYear: DateTime.now().year + 1,
-    //               )
-    //               .millisecondsSinceEpoch,
-    //       attachments: List.generate(
-    //         Random().nextInt(2),
-    //         (index) => faker.image.image(height: 100, width: 100),
-    //       ),
-    //     );
-    //   },
-    // );
+    return messages;
   }
 
   Future<bool> setToReadStatus(MessageDto msg) async {
@@ -78,7 +36,7 @@ class MessagesController extends _$MessagesController {
 
     try {
       await ref.read(dioServiceProvider).post(
-        'messegaes_form/setWasRead',
+        Consts.setMessagesWasRead,
         data: {
           'message_id': msg.id,
         },
@@ -94,25 +52,22 @@ class MessagesController extends _$MessagesController {
   }
 
   Future<bool> deleteMessage(String messageId) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-
     final result = Random().nextBool();
 
     if (result) {
-      state = AsyncValue.data(
-        state.value!.where((e) => e.id != messageId).toList(),
-      );
     } else {
       Toaster.show('המחיקה נכשלה');
     }
 
-    return result;
+    // ref.invalidateSelf();
+
+    return false;
   }
 
   Future<bool> sendMessage(MessageDto msg) async {
     try {
       await ref.read(dioServiceProvider).post(
-        'messegaes_form/add',
+        Consts.addMessage,
         data: {
           'created_by_id': ref.read(storageProvider.notifier).getUserPhone(),
           'created_for_id': ref.read(storageProvider.notifier).getUserPhone(),

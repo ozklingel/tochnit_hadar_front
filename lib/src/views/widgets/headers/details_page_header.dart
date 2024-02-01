@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/widgets/images/avatar_widget.dart';
 
 class DetailsPageHeader extends StatelessWidget {
   const DetailsPageHeader({
@@ -47,11 +47,9 @@ class DetailsPageHeader extends StatelessWidget {
                         ),
                       )
                     else
-                      CircleAvatar(
+                      AvatarWidget(
                         radius: 120,
-                        backgroundImage: CachedNetworkImageProvider(
-                          avatar,
-                        ),
+                        avatarUrl: avatar,
                       ),
                     Positioned(
                       bottom: 0,

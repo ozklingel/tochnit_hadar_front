@@ -5,19 +5,36 @@ abstract class Consts {
   static const appTitle = 'תכנית הדר';
   static const defaultLocale = Locale('he', 'IL');
 
-  static const baseUrl =
-      'https://mis11ka38j.execute-api.us-east-1.amazonaws.com/';
-
   // storage
   static const accessTokenKey = 'accessTokenKey';
   static const userPhoneKey = 'userPhoneKey';
   static const firstOnboardingKey = 'firstOnboarding';
 
+  // apis
+  static const baseUrl =
+      'https://mis11ka38j.execute-api.us-east-1.amazonaws.com/';
+
+  // messages
+  static const getAllMessages = 'messegaes_form/getAll';
+  static const setMessagesWasRead = 'messegaes_form/setWasRead';
+  static const addMessage = 'messegaes_form/add';
+
+  // notifications
+  static const getAllNotifications = 'notification_form/getAll';
+
+  // tasks
+  static const getAllTasks = 'tasks_form/getTasks';
+
+  // user profile / apprentices
+  static const getAllApprentices = 'userProfile_form/myApprentices';
+
+  // durations
   static const defaultDurationM = Duration(milliseconds: 300);
   static const defaultDurationL = Duration(milliseconds: 600);
   static const defaultDurationXL = Duration(milliseconds: 900);
   static const defaultErrorDuration = Duration(milliseconds: 4000);
 
+  // widget props
   static const borderRadius24 = BorderRadius.all(Radius.circular(24));
   static const defaultBoxShadow = BoxShadow(
     color: Color(0x0d000000),

@@ -51,7 +51,11 @@ class DioService extends _$DioService {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          Logger().d(options.uri, error: options.data);
+          Logger().d(
+            options.uri,
+            error: options.data,
+            stackTrace: StackTrace.current,
+          );
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -59,7 +63,11 @@ class DioService extends _$DioService {
           return handler.next(response);
         },
         onError: (error, handler) {
-          Logger().e(error);
+          Logger().e(
+            error.requestOptions.uri,
+            error: error,
+            stackTrace: StackTrace.current,
+          );
           Toaster.error(error.type.name);
           return handler.next(error);
         },

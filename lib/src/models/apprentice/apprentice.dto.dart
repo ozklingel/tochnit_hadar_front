@@ -7,12 +7,12 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 part 'apprentice.dto.f.dart';
 part 'apprentice.dto.g.dart';
 
-enum OnlineStatus {
+enum UserStatus {
   online(100),
   offline(200),
   other(300);
 
-  const OnlineStatus(this.value);
+  const UserStatus(this.value);
   final int value;
 }
 
@@ -303,9 +303,9 @@ class ApprenticeDto with _$ApprenticeDto {
       defaultValue: '',
     )
     String matsber,
-    @Default(OnlineStatus.offline)
+    @Default(UserStatus.offline)
     @JsonKey(fromJson: _parseOnlineStatus)
-    OnlineStatus onlineStatus,
+    UserStatus onlineStatus,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -327,40 +327,40 @@ class ApprenticeDto with _$ApprenticeDto {
       _$ApprenticeDtoFromJson(json);
 }
 
-OnlineStatus _parseOnlineStatus(dynamic onlineStatus) {
+UserStatus _parseOnlineStatus(dynamic onlineStatus) {
   if (onlineStatus == null) {
-    Logger().w('online status null');
+    Logger().w('user status null');
     Sentry.captureException(
-      Exception('failed to extract online status from string'),
+      Exception('failed to extract user status from string'),
     );
 
-    return OnlineStatus.other;
+    return UserStatus.other;
   }
 
   final onlineStatusIndex =
       onlineStatus is num ? onlineStatus : int.tryParse(onlineStatus);
 
   if (onlineStatusIndex == null) {
-    Logger().w('bad online status index');
+    Logger().w('bad user status index');
     Sentry.captureException(
-      Exception('failed to extract online status from index'),
+      Exception('failed to extract user status from index'),
     );
 
-    return OnlineStatus.other;
+    return UserStatus.other;
   }
 
-  if (onlineStatusIndex == OnlineStatus.offline.value) {
-    return OnlineStatus.offline;
-  } else if (onlineStatusIndex == OnlineStatus.online.value) {
-    return OnlineStatus.online;
+  if (onlineStatusIndex == UserStatus.offline.value) {
+    return UserStatus.offline;
+  } else if (onlineStatusIndex == UserStatus.online.value) {
+    return UserStatus.online;
   }
 
-  Logger().w('online status index too high');
+  Logger().w('user status index too high');
   Sentry.captureException(
-    Exception('failed to extract online status index too high'),
+    Exception('failed to extract user status index too high'),
   );
 
-  return OnlineStatus.other;
+  return UserStatus.other;
 }
 
 extension ApprenticeX on ApprenticeDto {

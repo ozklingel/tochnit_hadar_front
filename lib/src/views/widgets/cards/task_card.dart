@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
@@ -6,6 +5,7 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/widgets/images/avatar_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TaskCard extends ConsumerWidget {
@@ -38,11 +38,9 @@ class TaskCard extends ConsumerWidget {
         child: ListTile(
           leading: Stack(
             children: [
-              CircleAvatar(
+              AvatarWidget(
                 radius: 16,
-                backgroundImage: CachedNetworkImageProvider(
-                  apprentice.avatar,
-                ),
+                avatarUrl: apprentice.avatar,
               ),
               Positioned(
                 bottom: 0,
@@ -55,9 +53,9 @@ class TaskCard extends ConsumerWidget {
                     child: CircleAvatar(
                       radius: 4,
                       backgroundColor:
-                          apprentice.onlineStatus == OnlineStatus.online
+                          apprentice.onlineStatus == UserStatus.online
                               ? AppColors.green2
-                              : apprentice.onlineStatus == OnlineStatus.offline
+                              : apprentice.onlineStatus == UserStatus.offline
                                   ? AppColors.red2
                                   : AppColors.yellow1,
                     ),
