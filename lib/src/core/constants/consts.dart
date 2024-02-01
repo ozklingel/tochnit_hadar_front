@@ -10,7 +10,7 @@ abstract class Consts {
   static const userPhoneKey = 'userPhoneKey';
   static const firstOnboardingKey = 'firstOnboarding';
 
-  // apis
+  // START APIS
   static const baseUrl =
       'https://mis11ka38j.execute-api.us-east-1.amazonaws.com/';
 
@@ -25,8 +25,13 @@ abstract class Consts {
   // tasks
   static const getAllTasks = 'tasks_form/getTasks';
 
+  // reports
+  static const getAllReports = 'reports_form/getAll';
+
   // user profile / apprentices
   static const getAllApprentices = 'userProfile_form/myApprentices';
+
+  // END APIS
 
   // durations
   static const defaultDurationM = Duration(milliseconds: 300);

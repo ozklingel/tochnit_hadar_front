@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
+import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,41 +20,7 @@ enum SortReportBy {
 class ReportsController extends _$ReportsController {
   @override
   FutureOr<List<ReportDto>> build() async {
-    final request =
-        await ref.watch(dioServiceProvider).get('reports_form/getAll');
-
-    final reports = (request.data as List<dynamic>).map(
-      (e) {
-        final item = ReportDto.fromJson(e);
-        // Logger().d(item);
-        return item;
-      },
-    ).toList();
-
-    // await Future.delayed(const Duration(milliseconds: 200));
-
-    // final reports = List.generate(
-    //   44,
-    //   (index) {
-    //     return ReportDto(
-    //       id: faker.guid.guid(),
-    //       description: faker.lorem.sentence(),
-    //       apprentices: List.generate(
-    //         13,
-    //         (index) => Consts.mockApprenticeGuids[
-    //             Random().nextInt(Consts.mockApprenticeGuids.length)],
-    //       ),
-    //       reportEventType: ReportEventType.values[Random().nextInt(6)],
-    //       attachments: List.generate(
-    //         11,
-    //         (index) => faker.image.image(height: 100, width: 100),
-    //       ),
-    //       dateTime: faker.date
-    //           .dateTime(minYear: 1971, maxYear: DateTime.now().year)
-    //           .toIso8601String(),
-    //     );
-    //   },
-    // );
+    final reports = await ref.watch(getReportsProvider.future);
 
     reports.sort(
       (a, b) => b.dateTime.compareTo(a.dateTime),

@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 
@@ -17,9 +18,9 @@ class FlagsDto with _$FlagsDto {
     @Default([]) List<Map<String, dynamic>> notifications,
     @Default([]) List<MessageDto> messages,
     @Default([]) List<TaskDto> tasks,
+    @Default([]) List<ReportDto> reports,
   }) = _FlagsDto;
 
-  // ignore: unused_element
   factory FlagsDto.fromJson(Map<String, dynamic> json) =>
       _$FlagsDtoFromJson(json);
 }

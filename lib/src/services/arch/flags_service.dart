@@ -7,6 +7,7 @@ import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/flags/flags.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,6 +27,7 @@ class FlagsService extends _$FlagsService {
       messages: _messages,
       notifications: _notifications,
       tasks: _tasks,
+      reports: _reports,
     );
   }
 }
@@ -48,6 +50,26 @@ final _userDto = UserDto(
       .take(faker.randomGenerator.integer(10, min: 5))
       .map((e) => e.id)
       .toList(),
+);
+
+final _reports = List.generate(
+  44,
+  (index) {
+    return ReportDto(
+      id: faker.guid.guid(),
+      description: faker.lorem.sentence(),
+      apprenticeId:
+          _apprentices[faker.randomGenerator.integer(_apprentices.length)].id,
+      reportEventType: ReportEventType.values[Random().nextInt(6)],
+      attachments: List.generate(
+        11,
+        (index) => faker.image.image(height: 100, width: 100),
+      ),
+      dateTime: faker.date
+          .dateTime(minYear: 1971, maxYear: DateTime.now().year)
+          .toIso8601String(),
+    );
+  },
 );
 
 final _messages = List.generate(
