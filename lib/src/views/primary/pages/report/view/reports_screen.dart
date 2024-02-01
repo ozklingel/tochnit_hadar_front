@@ -11,6 +11,7 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/filter/filter_results_page.dart';
+import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/report_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -59,6 +60,9 @@ class ReportsScreen extends HookConsumerWidget {
     final selectedIds = useState(<String>[]);
     final filters = useState(<String>[]);
     final sortBy = useState(SortReportBy.fromA2Z);
+    final isSearchOpen = useState(false);
+    final searchController = useTextEditingController();
+    useListenable(searchController);
 
     if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
       return Scaffold(
@@ -263,11 +267,14 @@ class ReportsScreen extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: SearchAppBar(
+        text: 'דיווחים',
+        isSearchOpen: isSearchOpen,
+        controller: searchController,
         actions: [
           if (selectedIds.value.isEmpty)
             IconButton(
-              onPressed: () => Toaster.unimplemented(),
+              onPressed: () => isSearchOpen.value = true,
               icon: const Icon(FluentIcons.search_24_regular),
             )
           else if (selectedIds.value.length == 1) ...[
@@ -374,7 +381,6 @@ class ReportsScreen extends HookConsumerWidget {
             ),
           const SizedBox(width: 16),
         ],
-        title: const Text('דיווחים'),
       ),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
@@ -407,11 +413,21 @@ class ReportsScreen extends HookConsumerWidget {
             isLoading: true,
             selectedIds: selectedIds,
           ),
-          data: (reports) => _ReporsListBody(
-            reports: reports,
-            isLoading: false,
-            selectedIds: selectedIds,
-          ),
+          data: (reports) {
+            final filteredList = [...reports];
+
+            return _ReporsListBody(
+              reports: filteredList
+                  .where(
+                    (element) => element.description
+                        .toLowerCase()
+                        .contains(searchController.text),
+                  )
+                  .toList(),
+              isLoading: false,
+              selectedIds: selectedIds,
+            );
+          },
         ),
       ),
     );
