@@ -1,3 +1,4 @@
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hadar_program/src/views/secondary/charts/rakaz_eshkol/models/rakaz_eshkol_chart.dto.dart';
@@ -17,7 +18,7 @@ class RakazEshkolChartController extends _$RakazEshkolChartController {
     final phone = ref.watch(storageProvider.notifier).getUserPhone();
 
     final result = await ref.watch(dioServiceProvider).get(
-      'madadim/eshcolCoordinator',
+      Consts.chartsEshkol,
       queryParameters: {'eshcolCoordinator': phone},
     );
 

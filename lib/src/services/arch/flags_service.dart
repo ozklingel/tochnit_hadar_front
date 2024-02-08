@@ -6,6 +6,7 @@ import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/flags/flags.dto.dart';
+import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
@@ -50,6 +51,43 @@ final _userDto = UserDto(
       .take(faker.randomGenerator.integer(10, min: 5))
       .map((e) => e.id)
       .toList(),
+);
+
+final _institutions = List.generate(
+  Consts.mockInstitutionsGuids.length,
+  (index) => InstitutionDto(
+    id: Consts.mockInstitutionsGuids[index],
+    name: faker.company.name(),
+    rakaz: faker.person.name(),
+    rakazPhoneNumber: faker.phoneNumber.de(),
+    address: AddressDto(
+      city: faker.address.city(),
+      apartment: faker.randomGenerator.integer(99999, min: 1).toString(),
+      street: faker.address.streetName(),
+      houseNumber: faker.randomGenerator.integer(999, min: 1).toString(),
+      postalCode: faker.address.zipCode(),
+      floor: faker.randomGenerator.integer(99, min: 1).toString(),
+      entrance: faker.lorem.word()[0],
+      region: faker.address.state(),
+    ),
+    shluha: faker.lorem.word(),
+    phoneNumber: faker.phoneNumber.de(),
+    roshMehinaName: faker.person.name(),
+    roshMehinaPhoneNumber: faker.phoneNumber.us(),
+    menahelAdministrativiName: faker.person.name(),
+    menahelAdministrativiPhoneNumber: faker.phoneNumber.de(),
+    hanihim: Consts.mockApprenticeGuids
+        .take(
+          faker.randomGenerator.integer(Consts.mockApprenticeGuids.length),
+        )
+        .toList(),
+    melavim: Consts.mockApprenticeGuids
+        .take(
+          faker.randomGenerator.integer(Consts.mockApprenticeGuids.length),
+        )
+        .toList(),
+    score: faker.randomGenerator.integer(100).toDouble(),
+  ),
 );
 
 final _reports = List.generate(

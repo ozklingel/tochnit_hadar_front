@@ -14,7 +14,7 @@ enum SortReportBy {
 
 @Riverpod(
   dependencies: [
-    DioService,
+    GetReports,
   ],
 )
 class ReportsController extends _$ReportsController {

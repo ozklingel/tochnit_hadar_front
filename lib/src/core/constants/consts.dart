@@ -19,6 +19,9 @@ abstract class Consts {
   static const setMessagesWasRead = 'messegaes_form/setWasRead';
   static const addMessage = 'messegaes_form/add';
 
+  // homepage
+  static const homePageInitMaster = '/homepage_form/initMaster';
+
   // notifications
   static const getAllNotifications = 'notification_form/getAll';
 
@@ -27,6 +30,11 @@ abstract class Consts {
 
   // reports
   static const getAllReports = 'reports_form/getAll';
+
+  // madadim charts
+  static const chartsMelave = 'madadim/melave';
+  static const chartsEshkol = 'madadim/eshcolCoordinator';
+  static const chartsMosad = 'madadim/mosadCoordinator';
 
   // user profile / apprentices
   static const getAllApprentices = 'userProfile_form/myApprentices';

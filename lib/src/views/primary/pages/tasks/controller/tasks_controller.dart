@@ -7,7 +7,7 @@ part 'tasks_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    DioService,
+    GetTasks,
   ],
 )
 class TasksController extends _$TasksController {
