@@ -163,9 +163,7 @@ class _ApprenticeDetailsScreenState
                               ),
                               _ActionButton(
                                 text: 'וואטסאפ',
-                                icon: Assets.icons.whatsapp.svg(
-                                  height: 20,
-                                ),
+                                icon: Assets.icons.whatsapp.svg(height: 20),
                                 onPressed: () => Toaster.unimplemented(),
                               ),
                               _ActionButton(
