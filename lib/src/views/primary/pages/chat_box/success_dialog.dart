@@ -53,9 +53,13 @@ void showFancyCustomDialog(BuildContext context) {
                 width: double.infinity,
                 height: 30,
               ),
-              Image(
+              Padding(
+                padding: EdgeInsets.only(top: 2,bottom: 10:left: 2.right: 2),
+                child: Image(
+width: 150,
+height: 160,
                 image: AssetImage('assets/images/success-smile.png'),
-              ),
+              )),
               SizedBox(
                 width: double.infinity,
                 height: 5,
