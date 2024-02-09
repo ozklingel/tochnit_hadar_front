@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
-import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reports_controller.g.dart';

@@ -21,7 +21,8 @@ abstract class Toaster {
 
   static void error(Object? message) => BotToast.showText(
         duration: Consts.defaultErrorDuration,
-        text: message?.toString().split(' ').take(120).toString() ?? '???',
+        text: message?.toString().split(' ').take(120).join(' ').toString() ??
+            '???',
         align: const Alignment(0.9, -0.9),
         contentColor: AppColors.error500,
         contentPadding: const EdgeInsets.all(16),

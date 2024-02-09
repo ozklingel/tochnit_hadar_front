@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
@@ -20,15 +21,15 @@ List<PopupMenuItem<dynamic>> getApprenticeCardPopupItems({
   return [
     PopupMenuItem(
       child: const Text('להתקשר'),
-      onTap: () => Toaster.unimplemented(),
+      onTap: () => launchPhone(phone: apprentice.phone),
     ),
     PopupMenuItem(
       child: const Text('שליחת וואטסאפ'),
-      onTap: () => Toaster.unimplemented(),
+      onTap: () => launchWhatsapp(phone: apprentice.phone),
     ),
     PopupMenuItem(
       child: const Text('שליחת SMS'),
-      onTap: () => Toaster.unimplemented(),
+      onTap: () => launchSms(phone: apprentice.phone),
     ),
     PopupMenuItem(
       child: const Text('דיווח'),

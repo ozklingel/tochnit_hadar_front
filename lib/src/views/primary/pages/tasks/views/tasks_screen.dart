@@ -47,20 +47,21 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
     final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
     final tabController = useTabController(initialLength: 2);
     useListenable(tabController);
+    final isSearchOpen = useState(false);
+    final searchController = useTextEditingController();
     final incompleteTasks =
         tasks.where((element) => element.status == TaskStatus.todo);
     final completeTasks =
         tasks.where((element) => element.status == TaskStatus.done);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'משימות לביצוע',
-          style: TextStyles.s22w400cGrey2,
-        ),
+      appBar: SearchAppBar(
+        controller: searchController,
+        isSearchOpen: isSearchOpen,
+        text: 'משימות לביצוע',
         actions: [
           IconButton(
-            onPressed: () => Toaster.unimplemented(),
+            onPressed: () => isSearchOpen.value = true,
             icon: const Icon(FluentIcons.search_24_regular),
           ),
           const SizedBox(width: 6),

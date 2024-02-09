@@ -7,6 +7,7 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
@@ -97,7 +98,9 @@ class _ApprenticeDetailsScreenState
                   onTap: () => showDialog(
                     context: context,
                     builder: (context) {
-                      return const _DeleteApprenticeDialog();
+                      return _DeleteApprenticeDialog(
+                        apprenticeId: apprentice.id,
+                      );
                     },
                   ),
                   child: const Text('מחיקה מהמערכת'),
@@ -164,12 +167,14 @@ class _ApprenticeDetailsScreenState
                               _ActionButton(
                                 text: 'וואטסאפ',
                                 icon: Assets.icons.whatsapp.svg(height: 20),
-                                onPressed: () => Toaster.unimplemented(),
+                                onPressed: () =>
+                                    launchWhatsapp(phone: apprentice.phone),
                               ),
                               _ActionButton(
                                 text: 'SMS',
                                 icon: const Icon(FluentIcons.chat_24_regular),
-                                onPressed: () => Toaster.unimplemented(),
+                                onPressed: () =>
+                                    launchSms(phone: apprentice.phone),
                               ),
                               _ActionButton(
                                 text: 'דיווח',
@@ -238,13 +243,16 @@ class _ApprenticeDetailsScreenState
   }
 }
 
-class _DeleteApprenticeDialog extends StatelessWidget {
+class _DeleteApprenticeDialog extends ConsumerWidget {
   const _DeleteApprenticeDialog({
+    required this.apprenticeId,
     super.key,
   });
 
+  final String apprenticeId;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Dialog(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(6)),
@@ -284,7 +292,9 @@ class _DeleteApprenticeDialog extends StatelessWidget {
                     const SizedBox(height: 16),
                     LargeFilledRoundedButton.cancel(
                       label: 'מחק',
-                      onPressed: () => Toaster.unimplemented(),
+                      onPressed: () => ref
+                          .read(apprenticesControllerProvider.notifier)
+                          .deleteApprentice(apprenticeId),
                     ),
                   ],
                 ),
@@ -1141,24 +1151,30 @@ class _PersonalInfoTabView extends ConsumerWidget {
               : null,
           child: Column(
             children: [
-              _ContactRow(
-                fullName:
-                    apprentice.contact1FirstName + apprentice.contact1LastName,
-                phone: apprentice.contact1Phone,
-                relationship: apprentice.contact1Relationship,
-              ),
-              _ContactRow(
-                fullName:
-                    apprentice.contact2FirstName + apprentice.contact2LastName,
-                phone: apprentice.contact2Phone,
-                relationship: apprentice.contact2Relationship,
-              ),
-              _ContactRow(
-                fullName:
-                    apprentice.contact3FirstName + apprentice.contact3LastName,
-                phone: apprentice.contact3Phone,
-                relationship: apprentice.contact3Relationship,
-              ),
+              if (apprentice.contact1FirstName.isNotEmpty)
+                _ContactRow(
+                  email: apprentice.contact1Email,
+                  fullName: apprentice.contact1FirstName +
+                      apprentice.contact1LastName,
+                  phone: apprentice.contact1Phone,
+                  relationship: apprentice.contact1Relationship,
+                ),
+              if (apprentice.contact2FirstName.isNotEmpty)
+                _ContactRow(
+                  email: apprentice.contact2Email,
+                  fullName: apprentice.contact2FirstName +
+                      apprentice.contact2LastName,
+                  phone: apprentice.contact2Phone,
+                  relationship: apprentice.contact2Relationship,
+                ),
+              if (apprentice.contact3FirstName.isNotEmpty)
+                _ContactRow(
+                  email: apprentice.contact3Email,
+                  fullName: apprentice.contact3FirstName +
+                      apprentice.contact3LastName,
+                  phone: apprentice.contact3Phone,
+                  relationship: apprentice.contact3Relationship,
+                ),
             ],
           ),
         ),
@@ -1225,11 +1241,13 @@ class _ContactRow extends StatelessWidget {
     required this.relationship,
     required this.phone,
     required this.fullName,
+    required this.email,
   });
 
   final String relationship;
   final String phone;
   final String fullName;
+  final String email;
 
   @override
   Widget build(BuildContext context) {
@@ -1251,7 +1269,10 @@ class _ContactRow extends StatelessWidget {
             ],
           ),
         ),
-        _ContactButtons(phone: phone),
+        _ContactButtons(
+          phone: phone,
+          email: email,
+        ),
       ],
     );
   }
@@ -1261,9 +1282,11 @@ class _ContactButtons extends ConsumerWidget {
   const _ContactButtons({
     super.key,
     required this.phone,
+    required this.email,
   });
 
   final String phone;
+  final String email;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -1292,7 +1315,7 @@ class _ContactButtons extends ConsumerWidget {
           ),
         ] else ...[
           _RowIconButton(
-            onPressed: () => Toaster.unimplemented(),
+            onPressed: () => launchSms(phone: phone),
             icon: const Icon(FluentIcons.chat_24_regular),
           ),
           const SizedBox(width: 4),
@@ -1300,16 +1323,16 @@ class _ContactButtons extends ConsumerWidget {
             icon: Assets.icons.whatsapp.svg(
               height: 20,
             ),
-            onPressed: () => Toaster.unimplemented(),
+            onPressed: () => launchWhatsapp(phone: phone),
           ),
           const SizedBox(width: 4),
           _RowIconButton(
-            onPressed: () => Toaster.unimplemented(),
+            onPressed: () => launchPhone(phone: phone),
             icon: const Icon(FluentIcons.call_24_regular),
           ),
           const SizedBox(width: 4),
           _RowIconButton(
-            onPressed: () => Toaster.unimplemented(),
+            onPressed: () => launchEmail(email: email),
             icon: const Icon(FluentIcons.mail_24_regular),
           ),
         ],

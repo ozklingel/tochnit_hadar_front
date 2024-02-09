@@ -7,14 +7,14 @@ part 'user_filter.dto.g.dart';
 @Freezed(fromJson: false)
 class UserFilterDto with _$UserFilterDto {
   const factory UserFilterDto({
-    @Default('') String role,
-    @Default('') String year,
-    @Default('') String institution,
-    @Default('') String period,
-    @Default('') String eshkol,
-    @Default('') String status,
-    @Default('') String base,
-    @Default('') String hativa,
+    @Default([]) List<String> roles,
+    @Default([]) List<String> years,
+    @Default([]) List<String> institutions,
+    @Default([]) List<String> periods,
+    @Default([]) List<String> eshkols,
+    @Default([]) List<String> statuses,
+    @Default([]) List<String> bases,
+    @Default([]) List<String> hativot,
     @Default('') String region,
     @Default('') String city,
   }) = _UserFilterDto;

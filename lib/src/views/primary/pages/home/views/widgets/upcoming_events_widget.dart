@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -82,7 +83,14 @@ class _EventCard extends ConsumerWidget {
           ),
         ),
         child: InkWell(
-          onTap: () => GiftRouteData(id: event.id).go(context),
+          onTap: () {
+            if (event.id.isEmpty) {
+              Toaster.error('missing gift id');
+              return;
+            }
+
+            GiftRouteData(id: event.id).go(context);
+          },
           borderRadius: const BorderRadius.all(
             Radius.circular(16),
           ),

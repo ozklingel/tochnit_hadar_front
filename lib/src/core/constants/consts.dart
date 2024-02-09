@@ -22,6 +22,9 @@ abstract class Consts {
   // homepage
   static const homePageInitMaster = '/homepage_form/initMaster';
 
+  // master
+  static const deleteApprentice = 'master_user/deleteEnt';
+
   // notifications
   static const getAllNotifications = 'notification_form/getAll';
 

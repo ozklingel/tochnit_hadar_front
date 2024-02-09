@@ -1,6 +1,5 @@
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/api/tasks_form/get_tasks.dart';
-import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tasks_controller.g.dart';
@@ -16,5 +15,9 @@ class TasksController extends _$TasksController {
     final tasks = await ref.watch(getTasksProvider.future);
 
     return tasks;
+  }
+
+  Future<bool> createNewTask(TaskDto task) async {
+    return true;
   }
 }

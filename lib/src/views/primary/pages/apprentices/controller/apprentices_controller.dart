@@ -1,14 +1,19 @@
+import 'dart:convert';
+
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
+import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'apprentices_controller.g.dart';
 
 @Riverpod(
   dependencies: [
     GetApprentices,
+    DioService,
   ],
 )
 class ApprenticesController extends _$ApprenticesController {
@@ -17,6 +22,26 @@ class ApprenticesController extends _$ApprenticesController {
     final apprentices = await ref.watch(getApprenticesProvider.future);
 
     return apprentices;
+  }
+
+  FutureOr<bool> deleteApprentice(String apprenticeId) async {
+    try {
+      final result = await ref.read(dioServiceProvider).put(
+            apprenticeId,
+            data: jsonEncode({
+              'typeOfSet': 'user',
+              'entityId': apprenticeId,
+            }),
+          );
+
+      if (result.data['result'] == 'sucess') {
+        return true;
+      }
+    } catch (e) {
+      Sentry.captureException(e);
+    }
+
+    return false;
   }
 
   FutureOr<bool> addEvent({
