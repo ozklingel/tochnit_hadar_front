@@ -52,9 +52,9 @@ class ReportDto with _$ReportDto {
       _$ReportDtoFromJson(json);
 }
 
-List<String> _extractFrom(List<dynamic> data) {
-  return data.map((e) => e.toString()).toList();
-}
+// List<String> _extractFrom(List<dynamic> data) {
+//   return data.map((e) => e.toString()).toList();
+// }
 
 enum ReportEventType {
   none,

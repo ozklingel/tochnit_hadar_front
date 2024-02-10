@@ -125,7 +125,6 @@ class NewUserScreen extends HookWidget {
 
 class _FormOrImportPage extends StatelessWidget {
   const _FormOrImportPage({
-    super.key,
     required this.selectedUserType,
     required this.selectedDataType,
     required this.files,
@@ -249,7 +248,6 @@ class _FormOrImportPage extends StatelessWidget {
 
 class _FormField extends StatelessWidget {
   const _FormField({
-    super.key,
     required this.label,
     required this.hint,
   });
@@ -294,7 +292,6 @@ class _FormField extends StatelessWidget {
 
 class _SelectDataFillType extends StatelessWidget {
   const _SelectDataFillType({
-    super.key,
     required this.selecteDataType,
   });
 
@@ -327,7 +324,6 @@ class _SelectDataFillType extends StatelessWidget {
 
 class _SelectUserTypePage extends StatelessWidget {
   const _SelectUserTypePage({
-    super.key,
     required this.selectedUserType,
   });
 

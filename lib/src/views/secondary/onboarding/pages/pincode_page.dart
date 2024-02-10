@@ -169,7 +169,7 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                             otp: pinCodeController.text,
                           );
 
-                      if (!result.$1) {
+                      if (!result.isResponseSuccess) {
                         // ignore: use_build_context_synchronously
                         showDialog(
                           context: context,
@@ -181,7 +181,7 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                         );
                       }
 
-                      onSuccess(result.$2);
+                      onSuccess(result.isFirstOnboarding);
                     },
             ),
           ],

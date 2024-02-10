@@ -145,7 +145,18 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                           detailsTextController.text.isEmpty ||
                           dateTimeController.value.isBefore(DateTime.now())
                       ? null
-                      : () => Toaster.unimplemented(),
+                      : () async {
+                          final providerNotifier =
+                              ref.read(tasksControllerProvider.notifier);
+
+                          final result = task.id.isEmpty
+                              ? await providerNotifier.createNewTask(task)
+                              : await providerNotifier.updateExistingTask(task);
+
+                          if (!result) {
+                            Toaster.error('error creating or updating task');
+                          }
+                        },
                 ),
               ),
             ],
@@ -158,7 +169,6 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
 
 class _PickFrequencyDialog extends HookWidget {
   const _PickFrequencyDialog({
-    super.key,
     this.initFrequency = TaskFrequency.once,
   });
 
@@ -316,9 +326,7 @@ enum _EndFrequencyValue {
 }
 
 class _CustomFrequencyPage extends HookWidget {
-  const _CustomFrequencyPage({
-    super.key,
-  });
+  const _CustomFrequencyPage();
 
   @override
   Widget build(BuildContext context) {

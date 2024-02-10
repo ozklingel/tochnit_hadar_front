@@ -85,7 +85,7 @@ class HomeScreen extends ConsumerWidget {
 }
 
 class _MelaveBody extends StatelessWidget {
-  const _MelaveBody({super.key});
+  const _MelaveBody();
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class _MelaveBody extends StatelessWidget {
 }
 
 class _AhraiTohnitBody extends ConsumerWidget {
-  const _AhraiTohnitBody({super.key});
+  const _AhraiTohnitBody();
 
   @override
   Widget build(BuildContext context, ref) {
@@ -158,9 +158,7 @@ class _AhraiTohnitBody extends ConsumerWidget {
 }
 
 class _ForgottenApprentices extends StatelessWidget {
-  const _ForgottenApprentices({
-    super.key,
-  });
+  const _ForgottenApprentices();
 
   @override
   Widget build(BuildContext context) {

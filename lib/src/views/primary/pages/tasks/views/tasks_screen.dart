@@ -40,7 +40,7 @@ class TasksScreen extends ConsumerWidget {
 }
 
 class _AhraiTohnitTasksBody extends HookConsumerWidget {
-  const _AhraiTohnitTasksBody({super.key});
+  const _AhraiTohnitTasksBody();
 
   @override
   Widget build(BuildContext context, ref) {
@@ -179,7 +179,7 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
 }
 
 class _MelaveTasksBody extends HookConsumerWidget {
-  const _MelaveTasksBody({super.key});
+  const _MelaveTasksBody();
 
   @override
   Widget build(BuildContext context, ref) {

@@ -286,9 +286,7 @@ class NewMessageScreen extends HookWidget {
 }
 
 class _FindUsersPage extends HookConsumerWidget {
-  const _FindUsersPage({
-    super.key,
-  });
+  const _FindUsersPage();
 
   @override
   Widget build(BuildContext context, ref) {

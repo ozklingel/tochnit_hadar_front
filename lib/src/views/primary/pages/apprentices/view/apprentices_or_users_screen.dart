@@ -15,8 +15,12 @@ class ApprenticesOrUsersScreen extends ConsumerWidget {
     switch (user.valueOrNull?.role) {
       case UserRole.melave:
         return const ApprenticesScreenBody();
-      default:
+      case UserRole.ahraiTohnit:
         return const UsersScreenBody();
+      default:
+        return const Center(
+          child: Text('USER ROLE?'),
+        );
     }
   }
 }

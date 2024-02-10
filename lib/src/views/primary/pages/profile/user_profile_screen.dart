@@ -413,7 +413,6 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
 
 class _PersonalDetailsTab extends StatelessWidget {
   const _PersonalDetailsTab({
-    super.key,
     required this.myUser,
   });
 
@@ -724,7 +723,6 @@ class _PersonalDetailsTab extends StatelessWidget {
 
 class _GeneralTab extends ConsumerWidget {
   const _GeneralTab({
-    super.key,
     required this.myUser,
   });
 

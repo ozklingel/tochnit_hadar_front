@@ -148,7 +148,6 @@ class _InstitutionDetailsScreenState
 
 class _UsersTab extends ConsumerWidget {
   const _UsersTab({
-    super.key,
     required this.id,
   });
 
@@ -260,7 +259,6 @@ class _UsersTab extends ConsumerWidget {
 
 class _GeneralTab extends StatelessWidget {
   const _GeneralTab({
-    super.key,
     required this.institution,
   });
 

@@ -1,14 +1,17 @@
-import 'dart:math';
+// ignore_for_file: unused_element
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/enums/address_region.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/api/onboarding_form/city_list.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -87,9 +90,10 @@ class FilterResultsPage extends HookConsumerWidget {
     final selectedStatus = useState(<_StatusInProgram>[]);
     final compoundController = useTextEditingController();
     final hativaController = useTextEditingController();
-    final areaController = useTextEditingController();
-    final cityController = useTextEditingController();
+    final selectedRegion = useState(<AddressRegion>[]);
+    final selectedCities = useState(<String>[]);
     final selectedRamim = useState(<_RamimYear>[]);
+    final selectedRecipients = useState(<({String id, String name})>[]);
 
     final ramim = [
       ChoiceChip(
@@ -1159,40 +1163,45 @@ class FilterResultsPage extends HookConsumerWidget {
                   label: 'אזור מגורים',
                   labelStyle: TextStyles.s16w400cGrey2,
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      value: '',
-                      hint: const Text('בחירת אזור מגורים'),
-                      selectedItemBuilder: (context) {
-                        return [];
-                      },
-                      onMenuStateChange: (isOpen) {},
-                      dropdownSearchData: DropdownSearchData(
-                        searchInnerWidgetHeight: 50,
-                        searchInnerWidget: TextField(
-                          controller: areaController,
-                          decoration: const InputDecoration(
-                            focusedBorder: UnderlineInputBorder(),
-                            enabledBorder: InputBorder.none,
-                            prefixIcon: Icon(Icons.search),
-                            hintText: 'חיפוש',
-                            hintStyle: TextStyles.s14w400,
-                          ),
-                        ),
+                    child: DropdownButton2(
+                      hint: Text(
+                        selectedRegion.value.isEmpty
+                            ? 'אזור מגורים'
+                            : selectedRegion.value
+                                .map((e) => e.name)
+                                .join(', '),
                       ),
-                      style: TextStyles.s16w400cGrey5,
+                      style: Theme.of(context).inputDecorationTheme.hintStyle,
                       buttonStyleData: ButtonStyleData(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(36),
                           border: Border.all(
-                            color: AppColors.shades300,
+                            color: AppColors.shade04,
                           ),
                         ),
                         elevation: 0,
                         padding: const EdgeInsets.only(right: 8),
                       ),
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        if (value == null) {
+                          return;
+                        }
+
+                        if (selectedRegion.value.contains(value)) {
+                          selectedRegion.value = [
+                            ...selectedRegion.value
+                                .where((element) => element != value),
+                          ];
+                        } else {
+                          selectedRegion.value = [
+                            ...selectedRegion.value,
+                            value,
+                          ];
+                        }
+                      },
                       dropdownStyleData: const DropdownStyleData(
                         decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(16)),
                         ),
                       ),
@@ -1218,7 +1227,28 @@ class FilterResultsPage extends HookConsumerWidget {
                           ),
                         ),
                       ),
-                      items: const [],
+                      items: [
+                        DropdownMenuItem(
+                          value: AddressRegion.center,
+                          child: Text(AddressRegion.center.name),
+                        ),
+                        DropdownMenuItem(
+                          value: AddressRegion.jerusalem,
+                          child: Text(AddressRegion.jerusalem.name),
+                        ),
+                        DropdownMenuItem(
+                          value: AddressRegion.north,
+                          child: Text(AddressRegion.north.name),
+                        ),
+                        DropdownMenuItem(
+                          value: AddressRegion.south,
+                          child: Text(AddressRegion.south.name),
+                        ),
+                        DropdownMenuItem(
+                          value: AddressRegion.yehuda,
+                          child: Text(AddressRegion.yehuda.name),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -1226,84 +1256,59 @@ class FilterResultsPage extends HookConsumerWidget {
                 InputFieldContainer(
                   label: 'יישוב /עיר מגורים',
                   labelStyle: TextStyles.s16w400cGrey2,
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      value: '',
-                      hint: const Text('בחירת יישוב/ עיר'),
-                      selectedItemBuilder: (context) {
-                        return [];
-                      },
-                      onMenuStateChange: (isOpen) {},
-                      dropdownSearchData: DropdownSearchData(
-                        searchInnerWidgetHeight: 50,
-                        searchInnerWidget: TextField(
-                          controller: cityController,
-                          decoration: const InputDecoration(
-                            focusedBorder: UnderlineInputBorder(),
-                            enabledBorder: InputBorder.none,
-                            prefixIcon: Icon(Icons.search),
-                            hintText: 'חיפוש',
-                            hintStyle: TextStyles.s14w400,
-                          ),
+                  child: ref.watch(getCitiesListProvider).when(
+                        loading: () => const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                        error: (error, stack) => _CityListWidget(
+                          selectedCities: selectedCities,
+                          citiesList: const [],
+                        ),
+                        data: (citiesList) => _CityListWidget(
+                          selectedCities: selectedCities,
+                          citiesList: citiesList,
                         ),
                       ),
-                      style: TextStyles.s16w400cGrey5,
-                      buttonStyleData: ButtonStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(36),
-                          border: Border.all(
-                            color: AppColors.shades300,
-                          ),
-                        ),
-                        elevation: 0,
-                        padding: const EdgeInsets.only(right: 8),
-                      ),
-                      onChanged: (value) {},
-                      dropdownStyleData: const DropdownStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
-                        ),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        icon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 1,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
-                            ),
-                          ),
-                        ),
-                        openMenuIcon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 3,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
-                            ),
-                          ),
-                        ),
-                      ),
-                      items: const [],
-                    ),
-                  ),
                 ),
                 const SizedBox(height: 24),
                 Row(
                   children: [
                     Expanded(
-                      child: LargeFilledRoundedButton(
-                        label: 'הבא',
-                        onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (val) {
-                              return const _SelectedUsersPage();
-                            },
+                      child: ref.watch(getApprenticesProvider).when(
+                            loading: () => const Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                            error: (error, stack) => const Center(
+                              child: Text('failed to get apprentices'),
+                            ),
+                            data: (apprentices) => LargeFilledRoundedButton(
+                              label: 'הבא',
+                              onPressed: () async {
+                                final result = await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (val) {
+                                      return _SelectedUsersPage(
+                                        items: apprentices
+                                            .map(
+                                              (e) =>
+                                                  (id: e.id, name: e.fullName),
+                                            )
+                                            .toList(),
+                                        initiallySelected:
+                                            selectedRecipients.value,
+                                      );
+                                    },
+                                  ),
+                                );
+
+                                if (result == null) {
+                                  return;
+                                }
+
+                                selectedRecipients.value = [...result];
+                              },
+                            ),
                           ),
-                        ),
-                      ),
                     ),
                     const SizedBox(width: 24),
                     Expanded(
@@ -1323,13 +1328,105 @@ class FilterResultsPage extends HookConsumerWidget {
   }
 }
 
-class _SelectedUsersPage extends StatelessWidget {
-  const _SelectedUsersPage({
+class _CityListWidget extends StatelessWidget {
+  const _CityListWidget({
     super.key,
+    required this.citiesList,
+    required this.selectedCities,
   });
+
+  final List<String> citiesList;
+  final ValueNotifier<List<String>> selectedCities;
 
   @override
   Widget build(BuildContext context) {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton2(
+        hint: SizedBox(
+          width: 260,
+          child: Text(
+            selectedCities.value.isEmpty
+                ? 'יישוב / עיר'
+                : selectedCities.value.join(', '),
+            overflow: TextOverflow.fade,
+          ),
+        ),
+        style: Theme.of(context).inputDecorationTheme.hintStyle,
+        buttonStyleData: ButtonStyleData(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(36),
+            border: Border.all(color: AppColors.shade04),
+          ),
+          elevation: 0,
+          padding: const EdgeInsets.only(right: 8),
+        ),
+        onChanged: (value) {
+          if (selectedCities.value.contains(value)) {
+            selectedCities.value = [
+              ...selectedCities.value.where((element) => element != value),
+            ];
+          } else {
+            selectedCities.value = [
+              ...selectedCities.value,
+              value.toString(),
+            ];
+          }
+        },
+        dropdownStyleData: const DropdownStyleData(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
+        ),
+        iconStyleData: const IconStyleData(
+          icon: Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: RotatedBox(
+              quarterTurns: 1,
+              child: Icon(
+                Icons.chevron_left,
+                color: AppColors.grey6,
+              ),
+            ),
+          ),
+          openMenuIcon: Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: RotatedBox(
+              quarterTurns: 3,
+              child: Icon(
+                Icons.chevron_left,
+                color: AppColors.grey6,
+              ),
+            ),
+          ),
+        ),
+        items: citiesList
+            .map(
+              (e) => DropdownMenuItem(
+                value: e,
+                child: Text(e),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
+class _SelectedUsersPage extends HookWidget {
+  const _SelectedUsersPage({
+    super.key,
+    required this.items,
+    required this.initiallySelected,
+  });
+
+  final List<({String id, String name})> items;
+  final List<({String id, String name})> initiallySelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = useState(initiallySelected);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -1346,33 +1443,47 @@ class _SelectedUsersPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const ColoredBox(
+              ColoredBox(
                 color: Colors.white,
                 child: Text(
-                  'סה”כ 127',
+                  'סה”כ ${items.length}',
                   style: TextStyles.s14w300cGray5,
                 ),
               ),
               const SizedBox(height: 12),
               Expanded(
                 child: ListView(
-                  children: List.generate(
-                    33,
-                    (index) => CheckboxListTile(
-                      value: Random().nextBool(),
-                      title: const Text('name'),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      checkColor: Colors.white,
-                      fillColor: MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.selected)) {
-                          return AppColors.blue03;
-                        }
+                  children: items
+                      .map(
+                        (e) => CheckboxListTile(
+                          value: selected.value.contains(e),
+                          title: const Text('name'),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          checkColor: Colors.white,
+                          fillColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (states.contains(MaterialState.selected)) {
+                              return AppColors.blue03;
+                            }
 
-                        return null;
-                      }),
-                      onChanged: (val) => Toaster.unimplemented(),
-                    ),
-                  ),
+                            return null;
+                          }),
+                          onChanged: (val) {
+                            if (selected.value.contains(e)) {
+                              selected.value = [
+                                ...selected.value
+                                    .where((element) => element.id != e.id),
+                              ];
+                            } else {
+                              selected.value = [
+                                ...selected.value,
+                                e,
+                              ];
+                            }
+                          },
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
               ColoredBox(
@@ -1386,14 +1497,15 @@ class _SelectedUsersPage extends StatelessWidget {
                         Expanded(
                           child: LargeFilledRoundedButton(
                             label: 'אישור',
-                            onPressed: () => Toaster.unimplemented(),
+                            onPressed: () =>
+                                Navigator.of(context).pop(selected.value),
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: LargeFilledRoundedButton.cancel(
                             label: 'הקודם',
-                            onPressed: () => Toaster.unimplemented(),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
                         ),
                       ],

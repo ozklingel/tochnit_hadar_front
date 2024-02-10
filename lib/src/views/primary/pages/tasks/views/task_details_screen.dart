@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -38,7 +37,9 @@ class TaskDetailsScreen extends ConsumerWidget {
               ),
               PopupMenuItem(
                 child: const Text('מחיקה'),
-                onTap: () => Toaster.unimplemented(),
+                onTap: () => ref
+                    .read(tasksControllerProvider.notifier)
+                    .deleteExistingTask(task),
               ),
             ],
             icon: const Icon(FluentIcons.more_vertical_24_regular),

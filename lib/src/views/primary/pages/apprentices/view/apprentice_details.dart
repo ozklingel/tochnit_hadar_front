@@ -21,6 +21,7 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -246,7 +247,6 @@ class _ApprenticeDetailsScreenState
 class _DeleteApprenticeDialog extends ConsumerWidget {
   const _DeleteApprenticeDialog({
     required this.apprenticeId,
-    super.key,
   });
 
   final String apprenticeId;
@@ -533,6 +533,17 @@ class _TohnitHadarTabView extends ConsumerWidget {
                 ) ??
             const InstitutionDto();
 
+    final events = ref
+            .watch(eventsControllerProvider)
+            .valueOrNull
+            ?.where(
+              (element) => apprentice.events
+                  .where((e2) => e2.id == element.id)
+                  .isNotEmpty,
+            )
+            .toList() ??
+        const [];
+
     return Column(
       children: [
         DetailsCard(
@@ -727,6 +738,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                 builder: (context) {
                   return _EventBottomSheet(
                     apprentice: apprentice,
+                    event: events.firstOrNull ?? const EventDto(),
                   );
                 },
               );
@@ -824,7 +836,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
 class _EventBottomSheet extends HookConsumerWidget {
   const _EventBottomSheet({
     required this.apprentice,
-    this.event = const EventDto(),
+    required this.event,
   });
 
   final ApprenticeDto apprentice;
@@ -1237,7 +1249,6 @@ class _PersonalInfoTabView extends ConsumerWidget {
 
 class _ContactRow extends StatelessWidget {
   const _ContactRow({
-    super.key,
     required this.relationship,
     required this.phone,
     required this.fullName,
@@ -1280,7 +1291,6 @@ class _ContactRow extends StatelessWidget {
 
 class _ContactButtons extends ConsumerWidget {
   const _ContactButtons({
-    super.key,
     required this.phone,
     required this.email,
   });

@@ -1,39 +1,9 @@
-import 'package:collection/collection.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_controller.g.dart';
-
-typedef IsFirstOnboarding = bool;
-typedef IsResponseSuccess = bool;
-
-enum AddressRegion {
-  none,
-  center,
-  jerusalem,
-  north,
-  south,
-  yehuda;
-
-  String get name {
-    switch (this) {
-      case AddressRegion.none:
-        return '';
-      case AddressRegion.center:
-        return 'אזור המרכז';
-      case AddressRegion.jerusalem:
-        return 'ירושלים והסביבה';
-      case AddressRegion.north:
-        return 'אזור הצפון';
-      case AddressRegion.south:
-        return 'אזור הדרום';
-      case AddressRegion.yehuda:
-        return 'יהודה ושומרון';
-    }
-  }
-}
 
 @Riverpod(
   dependencies: [
@@ -47,7 +17,7 @@ class OnboardingController extends _$OnboardingController {
     ref.watch(dioServiceProvider);
   }
 
-  Future<IsResponseSuccess> getOtp({
+  Future<bool> getOtp({
     required String phone,
   }) async {
     try {
@@ -69,7 +39,7 @@ class OnboardingController extends _$OnboardingController {
     return false;
   }
 
-  Future<(IsResponseSuccess, IsFirstOnboarding)> verifyOtp({
+  Future<({bool isResponseSuccess, bool isFirstOnboarding})> verifyOtp({
     required String phone,
     required String otp,
   }) async {
@@ -101,16 +71,22 @@ class OnboardingController extends _$OnboardingController {
               firstOnboarding,
             );
 
-        return (true, firstOnboarding);
+        return (
+          isResponseSuccess: true,
+          isFirstOnboarding: firstOnboarding,
+        );
       }
     } catch (e) {
       rethrow;
     }
 
-    return (false, false);
+    return (
+      isResponseSuccess: false,
+      isFirstOnboarding: false,
+    );
   }
 
-  Future<IsResponseSuccess> onboardingFillUserInfo({
+  Future<bool> onboardingFillUserInfo({
     required String email,
     required DateTime dateOfBirth,
     required String city,
@@ -147,30 +123,6 @@ class OnboardingController extends _$OnboardingController {
     } catch (e) {
       return false;
     }
-  }
-}
-
-@Riverpod(
-  dependencies: [
-    DioService,
-  ],
-)
-class GetCitiesList extends _$GetCitiesList {
-  @override
-  Future<List<String>> build() async {
-    final result =
-        await ref.watch(dioServiceProvider).get('onboarding_form/get_CitiesDB');
-
-    final parsed = result.data as List<dynamic>;
-
-    return parsed
-        .map((e) => e.toString().trim())
-        .where(
-          (element) => RegExp(r'[a-z\u0590-\u05fe]+').hasMatch(element),
-        )
-        .toSet()
-        .sortedBy((element) => element)
-        .toList();
   }
 }
 

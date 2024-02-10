@@ -29,6 +29,7 @@ class FlagsService extends _$FlagsService {
       notifications: _notifications,
       tasks: _tasks,
       reports: _reports,
+      institutions: _institutions,
     );
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -16,7 +18,8 @@ showPickDateAndTimeDialog<T>(
       context: context,
       builder: (context) {
         return _PickDateAndTimeDialog(
-          onTap: onTap ?? () => Toaster.show('EMPTY???'),
+          onTap: onTap ??
+              () => Toaster.show('Missing pick date time ontap function'),
           initDateTime: initVal,
         );
       },
@@ -69,7 +72,7 @@ class _PickDateAndTimeDialog extends HookWidget {
                     final result = await showDatePicker(
                       context: context,
                       initialDate: selectedDateTime.value ?? DateTime.now(),
-                      firstDate: DateTime.now(),
+                      firstDate: selectedDateTime.value ?? DateTime.now(),
                       lastDate: DateTime.now().add(
                         const Duration(days: 365 * 10),
                       ),
