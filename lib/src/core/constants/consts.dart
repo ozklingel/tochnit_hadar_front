@@ -21,6 +21,7 @@ abstract class Consts {
   static const getAllMessages = 'messegaes_form/getAll';
   static const setMessagesWasRead = 'messegaes_form/setWasRead';
   static const addMessage = 'messegaes_form/add';
+  static const deleteMessage = 'messegaes_form/delete';
 
   // homepage
   static const homePageInitMaster = '/homepage_form/initMaster';

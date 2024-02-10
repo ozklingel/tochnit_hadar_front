@@ -15,11 +15,11 @@ import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
-class NewMessageScreen extends HookWidget {
+class NewMessageScreen extends HookConsumerWidget {
   const NewMessageScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final selectedRecipients = useState<List<ApprenticeDto>>([]);
     final type = useState<String?>(null);
     final title = useTextEditingController();
@@ -30,6 +30,10 @@ class NewMessageScreen extends HookWidget {
       appBar: AppBar(
         title: const Text('שליחת הודעה'),
         actions: [
+          IconButton(
+            icon: const Icon(FluentIcons.attach_24_filled),
+            onPressed: () => Toaster.unimplemented(),
+          ),
           PopupMenuButton(
             icon: const Icon(
               FluentIcons.more_vertical_24_regular,
@@ -53,13 +57,9 @@ class NewMessageScreen extends HookWidget {
               ),
               PopupMenuItem(
                 child: const Text('מחיקה'),
-                onTap: () => Toaster.unimplemented(),
+                onTap: () => Navigator.of(context).pop(),
               ),
             ],
-          ),
-          IconButton(
-            icon: const Icon(FluentIcons.attach_24_filled),
-            onPressed: () => Toaster.unimplemented(),
           ),
           const SizedBox(width: 12),
         ],

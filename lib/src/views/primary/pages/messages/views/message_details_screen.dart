@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,8 +19,6 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
-
     final message = ref.watch(
       messagesControllerProvider.select(
         (val) {
@@ -53,23 +53,18 @@ class MessageDetailsScreen extends HookConsumerWidget {
             child: const Icon(Icons.more_vert),
             itemBuilder: (context) {
               return [
-                if (user.valueOrNull?.role == UserRole.melave)
+                if (message.type == MessageType.draft ||
+                    message.dateTime.asDateTime.isAfter(DateTime.now()))
                   PopupMenuItem(
-                    value: 'delete',
-                    child: const Text('מחק הודעה'),
-                    onTap: () async {
-                      final navContext = Navigator.of(context);
-
-                      final result = await ref
-                          .read(messagesControllerProvider.notifier)
-                          .deleteMessage(messageId);
-
-                      if (result) {
-                        navContext.pop();
-                      }
-                    },
-                  )
-                else ...[
+                    child: const Text('עריכה'),
+                    onTap: () => Toaster.unimplemented(),
+                  ),
+                PopupMenuItem(
+                  child: const Text('שכפול'),
+                  onTap: () async {},
+                ),
+                if (message.type == MessageType.draft ||
+                    message.dateTime.asDateTime.isAfter(DateTime.now()))
                   PopupMenuItem(
                     value: 'delete',
                     child: const Text('מחיקה'),
@@ -85,7 +80,6 @@ class MessageDetailsScreen extends HookConsumerWidget {
                       }
                     },
                   ),
-                ],
               ];
             },
           ),

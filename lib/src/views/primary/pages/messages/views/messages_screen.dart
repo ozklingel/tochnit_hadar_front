@@ -68,58 +68,125 @@ class MessagesScreen extends HookConsumerWidget {
                     ),
                   )
                 : null,
-            body: TabBarView(
-              children: [
-                const Placeholder(),
-                RefreshIndicator.adaptive(
-                  onRefresh: () =>
-                      ref.refresh(messagesControllerProvider.future),
-                  child: msgsController.when(
-                    loading: () => ListView(
-                      children: List.generate(
-                        10,
-                        (index) => MessageWidget.collapsed(
-                          message: MessageDto(
-                            title: 'titletitletitletitle',
-                            content: 'contentcontentcontent',
-                            dateTime: DateTime.now().toIso8601String(),
-                            attachments: ['549247615'],
-                            from: '549247615',
-                          ),
-                        ),
+            body: RefreshIndicator.adaptive(
+              onRefresh: () => ref.refresh(messagesControllerProvider.future),
+              child: msgsController.when(
+                loading: () => ListView(
+                  children: List.generate(
+                    10,
+                    (index) => MessageWidget.collapsed(
+                      message: MessageDto(
+                        title: 'titletitletitletitle',
+                        content: 'contentcontentcontent',
+                        dateTime: DateTime.now().toIso8601String(),
+                        attachments: ['549247615'],
+                        from: '549247615',
                       ),
                     ),
-                    error: (error, stack) => Text(error.toString()),
-                    data: (msgList) {
-                      if (msgList.isEmpty) {
-                        return EmptyState(
+                  ),
+                ),
+                error: (error, stack) => Text(error.toString()),
+                data: (msgList) {
+                  final customerService = msgList
+                      .where(
+                        (element) =>
+                            element.type == MessageType.customerService,
+                      )
+                      .toList();
+
+                  final sent = msgList
+                      .where(
+                        (element) => element.type == MessageType.sent,
+                      )
+                      .toList();
+
+                  final draft = msgList
+                      .where(
+                        (element) => element.type == MessageType.draft,
+                      )
+                      .toList();
+
+                  return TabBarView(
+                    children: [
+                      if (customerService.isEmpty)
+                        EmptyState(
                           image: Assets.images.noMessages.svg(),
                           topText: 'אין הודעות נכנסות',
                           bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
-                        );
-                      }
-
-                      return ListView(
-                        children: msgList
-                            .map(
-                              (e) => Skeletonizer(
-                                enabled: false,
-                                child: MessageWidget.collapsed(
-                                  message: e,
-                                  hasIcon: true,
-                                  backgroundColor: e.allreadyRead
-                                      ? Colors.white
-                                      : AppColors.blue08,
+                        )
+                      else
+                        ListView(
+                          children: customerService
+                              .map(
+                                (e) => Skeletonizer(
+                                  enabled: false,
+                                  child: MessageWidget.collapsed(
+                                    message: e,
+                                    hasIcon: true,
+                                    backgroundColor: e.allreadyRead
+                                        ? Colors.white
+                                        : AppColors.blue08,
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(),
-                      );
-                    },
-                  ),
-                ),
-                const Placeholder(),
-              ],
+                              )
+                              .toList(),
+                        ),
+                      if (sent.isEmpty)
+                        EmptyState(
+                          image: Assets.images.noMessages.svg(),
+                          topText: 'אין הודעות נכנסות',
+                          bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
+                        )
+                      else
+                        ListView(
+                          children: msgList
+                              .where(
+                                (element) => element.type == MessageType.sent,
+                              )
+                              .map(
+                                (e) => Skeletonizer(
+                                  enabled: false,
+                                  child: MessageWidget.collapsed(
+                                    message: e,
+                                    hasIcon: true,
+                                    backgroundColor: e.allreadyRead
+                                        ? Colors.white
+                                        : AppColors.blue08,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      if (draft.isEmpty)
+                        EmptyState(
+                          image: Assets.images.noMessages.svg(),
+                          topText: 'אין הודעות נכנסות',
+                          bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
+                        )
+                      else
+                        ListView(
+                          children: msgList
+                              .where(
+                                (element) => element.type == MessageType.draft,
+                              )
+                              .map(
+                                (e) => Skeletonizer(
+                                  enabled: false,
+                                  child: MessageWidget.collapsed(
+                                    message: e,
+                                    hasIcon: true,
+                                    backgroundColor: e.allreadyRead
+                                        ? Colors.white
+                                        : AppColors.blue08,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         );
@@ -151,7 +218,7 @@ class MessagesScreen extends HookConsumerWidget {
                       ),
                     ],
                   ),
-                  loading: () => _ResultsBody(
+                  loading: () => _SearchResultsBody(
                     isLoading: true,
                     messages: List.generate(
                       10,
@@ -164,7 +231,7 @@ class MessagesScreen extends HookConsumerWidget {
                       ),
                     ),
                   ),
-                  data: (messages) => _ResultsBody(
+                  data: (messages) => _SearchResultsBody(
                     isLoading: false,
                     messages: messages
                         .where(
@@ -185,8 +252,8 @@ class MessagesScreen extends HookConsumerWidget {
   }
 }
 
-class _ResultsBody extends StatelessWidget {
-  const _ResultsBody({
+class _SearchResultsBody extends StatelessWidget {
+  const _SearchResultsBody({
     required this.messages,
     required this.isLoading,
   });
