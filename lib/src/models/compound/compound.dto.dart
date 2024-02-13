@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hadar_program/src/models/address/address.dto.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 part 'compound.dto.f.dart';
 part 'compound.dto.g.dart';
@@ -18,9 +18,44 @@ class CompoundDto with _$CompoundDto {
       defaultValue: '',
     )
     String name,
-    @Default(AddressDto()) AddressDto address,
+    @Default(0) @JsonKey(fromJson: _extractLat) double lat,
+    @Default(0) @JsonKey(fromJson: _extractLng) double lng,
   }) = _CompoundDto;
 
   factory CompoundDto.fromJson(Map<String, dynamic> json) =>
       _$CompoundDtoFromJson(json);
+}
+
+extension CompoundDtoX on CompoundDto {
+  LatLng get latLng => LatLng(lat, lng);
+}
+
+double _extractLat(String data) {
+  final result = _extractCoordinates(data);
+
+  return result.latitude;
+}
+
+double _extractLng(String data) {
+  final result = _extractCoordinates(data);
+
+  return result.longitude;
+}
+
+LatLng _extractCoordinates(String? data) {
+  if (data == null) {
+    return const LatLng(0, 0);
+  }
+
+  final parts = data.split(' ');
+
+  final lat = parts[0];
+  final lng = parts[1];
+
+  final parsedLat = double.tryParse(lat) ?? 0;
+  final parsedLng = double.tryParse(lng) ?? 0;
+
+  final result = LatLng(parsedLat, parsedLng);
+
+  return result;
 }

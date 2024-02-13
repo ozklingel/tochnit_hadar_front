@@ -69,26 +69,6 @@ class MessagesController extends _$MessagesController {
     return false;
   }
 
-  Future<bool> sendMessage(MessageDto msg) async {
-    try {
-      await ref.read(dioServiceProvider).post(
-        Consts.addMessage,
-        data: {
-          'created_by_id': ref.read(storageProvider.notifier).getUserPhone(),
-          'created_for_id': ref.read(storageProvider.notifier).getUserPhone(),
-          'subject': msg.title,
-          'content': msg.content,
-          'attachments': msg.attachments,
-          'icon': 'icon',
-        },
-      );
-
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   Future<List<ApprenticeDto>> searchApprentices(String keyword) async {
     final apprentices = await ref.read(getApprenticesProvider.future);
 

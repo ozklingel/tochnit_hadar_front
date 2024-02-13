@@ -1,6 +1,5 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -48,10 +47,8 @@ class CompoundController extends _$CompoundController {
       (index) => CompoundDto(
         id: Consts.mockCompoundGuids[index],
         name: 'קומפאונד $index',
-        address: AddressDto(
-          lat: _compoundCoordinates[index].latitude,
-          lng: _compoundCoordinates[index].longitude,
-        ),
+        lat: _compoundCoordinates[index].latitude,
+        lng: _compoundCoordinates[index].longitude,
       ),
     );
   }

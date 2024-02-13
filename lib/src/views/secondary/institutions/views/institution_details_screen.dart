@@ -11,7 +11,7 @@ import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
-import 'package:hadar_program/src/views/secondary/filter/filter_results_page.dart';
+import 'package:hadar_program/src/views/secondary/filter/find_objects_page.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
@@ -198,8 +198,7 @@ class _UsersTab extends ConsumerWidget {
               IconButton(
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>
-                        const FilterResultsPage.institutions(),
+                    builder: (context) => const FindObjectsPage.institutions(),
                   ),
                 ),
                 icon: const Icon(

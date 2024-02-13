@@ -38,6 +38,18 @@ abstract class Consts {
   // reports
   static const getAllReports = 'reports_form/getAll';
 
+  // base / compound
+  static const getAllCompounds = 'base/getAll';
+
+  // eshkol
+  static const getAllEshkols = 'eshkol/getAll';
+
+  // sessions / tohnit hadar plan
+  static const getAllSessions = 'hadar_plan_session/getAll';
+
+  // hativot
+  static const getAllHativot = 'Hativot/getAll';
+
   // madadim charts
   static const chartsMelave = 'madadim/melave';
   static const chartsEshkol = 'madadim/eshcolCoordinator';

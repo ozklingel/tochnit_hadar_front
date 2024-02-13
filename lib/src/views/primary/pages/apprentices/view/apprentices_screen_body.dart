@@ -118,8 +118,8 @@ class _MapWidget extends HookConsumerWidget {
               Marker(
                 markerId: MarkerId(e.id),
                 position: LatLng(
-                  e.address.lat,
-                  e.address.lng,
+                  e.lat,
+                  e.lng,
                 ),
                 onTap: () => showModalBottomSheet(
                   context: context,
@@ -588,8 +588,8 @@ class _SearchResults extends ConsumerWidget {
                       mapCameraPosition.value = CameraPosition(
                         zoom: Consts.defaultGeolocationZoom,
                         target: LatLng(
-                          compound?.address.lat ?? Consts.defaultGeolocationLat,
-                          compound?.address.lng ?? Consts.defaultGeolocationLng,
+                          compound?.lat ?? Consts.defaultGeolocationLat,
+                          compound?.lng ?? Consts.defaultGeolocationLng,
                         ),
                       );
                     },

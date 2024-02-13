@@ -14,7 +14,7 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
-import 'package:hadar_program/src/views/secondary/filter/filter_results_page.dart';
+import 'package:hadar_program/src/views/secondary/filter/find_objects_page.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -105,7 +105,7 @@ class UsersScreenBody extends HookConsumerWidget {
                         IconButton(
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute<void>(
-                              builder: (ctx) => const FilterResultsPage.users(),
+                              builder: (ctx) => const FindObjectsPage.users(),
                               fullscreenDialog: true,
                             ),
                           ),

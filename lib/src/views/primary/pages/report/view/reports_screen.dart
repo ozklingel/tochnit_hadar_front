@@ -12,7 +12,7 @@ import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
-import 'package:hadar_program/src/views/secondary/filter/filter_results_page.dart';
+import 'package:hadar_program/src/views/secondary/filter/find_objects_page.dart';
 import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/report_card.dart';
@@ -127,7 +127,7 @@ class ReportsScreen extends HookConsumerWidget {
                                 onPressed: () => Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const FilterResultsPage.reports(),
+                                        const FindObjectsPage.reports(),
                                   ),
                                 ),
                                 icon: const Icon(

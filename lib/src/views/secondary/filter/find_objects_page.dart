@@ -60,20 +60,20 @@ enum _FilterType {
   reportGroup,
 }
 
-class FilterResultsPage extends HookConsumerWidget {
-  const FilterResultsPage.users({
+class FindObjectsPage extends HookConsumerWidget {
+  const FindObjectsPage.users({
     super.key,
   }) : filterType = _FilterType.users;
 
-  const FilterResultsPage.institutions({
+  const FindObjectsPage.institutions({
     super.key,
   }) : filterType = _FilterType.intitutions;
 
-  const FilterResultsPage.reports({
+  const FindObjectsPage.reports({
     super.key,
   }) : filterType = _FilterType.reports;
 
-  const FilterResultsPage.reportGroup({
+  const FindObjectsPage.reportGroup({
     super.key,
   }) : filterType = _FilterType.reportGroup;
 
@@ -92,6 +92,7 @@ class FilterResultsPage extends HookConsumerWidget {
     final hativaController = useTextEditingController();
     final selectedRegion = useState(<AddressRegion>[]);
     final selectedCities = useState(<String>[]);
+    final citySearchController = useTextEditingController();
     final selectedRamim = useState(<_RamimYear>[]);
     final selectedRecipients = useState(<({String id, String name})>[]);
 
@@ -1261,10 +1262,12 @@ class FilterResultsPage extends HookConsumerWidget {
                           child: CircularProgressIndicator.adaptive(),
                         ),
                         error: (error, stack) => _CityListWidget(
+                          citySearchController: citySearchController,
                           selectedCities: selectedCities,
                           citiesList: const [],
                         ),
                         data: (citiesList) => _CityListWidget(
+                          citySearchController: citySearchController,
                           selectedCities: selectedCities,
                           citiesList: citiesList,
                         ),
@@ -1333,10 +1336,12 @@ class _CityListWidget extends StatelessWidget {
     super.key,
     required this.citiesList,
     required this.selectedCities,
+    required this.citySearchController,
   });
 
   final List<String> citiesList;
   final ValueNotifier<List<String>> selectedCities;
+  final TextEditingController citySearchController;
 
   @override
   Widget build(BuildContext context) {
@@ -1360,6 +1365,32 @@ class _CityListWidget extends StatelessWidget {
           elevation: 0,
           padding: const EdgeInsets.only(right: 8),
         ),
+        dropdownSearchData: DropdownSearchData(
+          searchController: citySearchController,
+          searchInnerWidgetHeight: 50,
+          searchInnerWidget: TextField(
+            controller: citySearchController,
+            decoration: const InputDecoration(
+              focusedBorder: UnderlineInputBorder(),
+              enabledBorder: InputBorder.none,
+              prefixIcon: Icon(Icons.search),
+              hintText: 'חיפוש',
+              hintStyle: TextStyles.s14w400,
+            ),
+          ),
+          searchMatchFn: (item, searchValue) {
+            return item.value
+                .toString()
+                .toLowerCase()
+                .trim()
+                .contains(searchValue.toLowerCase().trim());
+          },
+        ),
+        onMenuStateChange: (isOpen) {
+          if (!isOpen) {
+            citySearchController.clear();
+          }
+        },
         onChanged: (value) {
           if (selectedCities.value.contains(value)) {
             selectedCities.value = [

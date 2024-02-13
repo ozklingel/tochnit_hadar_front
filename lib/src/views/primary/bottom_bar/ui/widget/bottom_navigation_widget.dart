@@ -49,24 +49,8 @@ class BottomNavigationWidget extends ConsumerWidget {
             color: AppColors.grey3,
           ),
           items: [
-            BottomNavigationBarItem(
-              activeIcon: const Icon(FluentIcons.clipboard_task_24_regular),
-              icon: ref.watch(tasksControllerProvider).when(
-                    loading: () => const UnreadCounterBadgeWidget(
-                      isLoading: true,
-                      child: Icon(FluentIcons.clipboard_task_24_regular),
-                    ),
-                    error: (error, stack) =>
-                        const Icon(FluentIcons.clipboard_task_24_regular),
-                    data: (tasks) => UnreadCounterBadgeWidget(
-                      count: tasks
-                          .where(
-                            (element) => element.status == TaskStatus.todo,
-                          )
-                          .length,
-                      child: const Icon(FluentIcons.clipboard_task_24_regular),
-                    ),
-                  ),
+            const BottomNavigationBarItem(
+              icon: _ClipboardTaskIconWidget(),
               label: 'משימות',
             ),
             const BottomNavigationBarItem(
@@ -79,22 +63,8 @@ class BottomNavigationWidget extends ConsumerWidget {
               icon: Icon(FluentIcons.home_24_regular),
               label: 'בית',
             ),
-            BottomNavigationBarItem(
-              activeIcon: const Icon(FluentIcons.mail_24_regular),
-              icon: ref.watch(messagesControllerProvider).when(
-                    loading: () => const UnreadCounterBadgeWidget(
-                      isLoading: true,
-                      child: Icon(FluentIcons.mail_24_regular),
-                    ),
-                    error: (error, stack) =>
-                        const Icon(FluentIcons.mail_24_regular),
-                    data: (messages) => UnreadCounterBadgeWidget(
-                      count: messages
-                          .where((element) => !element.allreadyRead)
-                          .length,
-                      child: const Icon(FluentIcons.mail_24_regular),
-                    ),
-                  ),
+            const BottomNavigationBarItem(
+              icon: _MailIconWidget(),
               label: 'הודעות',
             ),
             if (user.valueOrNull?.role == UserRole.melave)
@@ -113,5 +83,48 @@ class BottomNavigationWidget extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class _ClipboardTaskIconWidget extends ConsumerWidget {
+  const _ClipboardTaskIconWidget();
+
+  @override
+  Widget build(BuildContext context, ref) {
+    return ref.watch(tasksControllerProvider).when(
+          loading: () => const UnreadCounterBadgeWidget(
+            isLoading: true,
+            child: Icon(FluentIcons.clipboard_task_24_regular),
+          ),
+          error: (error, stack) =>
+              const Icon(FluentIcons.clipboard_task_24_regular),
+          data: (tasks) => UnreadCounterBadgeWidget(
+            count: tasks
+                .where(
+                  (element) => element.status == TaskStatus.todo,
+                )
+                .length,
+            child: const Icon(FluentIcons.clipboard_task_24_regular),
+          ),
+        );
+  }
+}
+
+class _MailIconWidget extends ConsumerWidget {
+  const _MailIconWidget();
+
+  @override
+  Widget build(BuildContext context, ref) {
+    return ref.watch(messagesControllerProvider).when(
+          loading: () => const UnreadCounterBadgeWidget(
+            isLoading: true,
+            child: Icon(FluentIcons.mail_24_regular),
+          ),
+          error: (error, stack) => const Icon(FluentIcons.mail_24_regular),
+          data: (messages) => UnreadCounterBadgeWidget(
+            count: messages.where((element) => !element.allreadyRead).length,
+            child: const Icon(FluentIcons.mail_24_regular),
+          ),
+        );
   }
 }
