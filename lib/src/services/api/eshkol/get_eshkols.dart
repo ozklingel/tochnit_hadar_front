@@ -12,13 +12,13 @@ part 'get_eshkols.g.dart';
 )
 class GetEshkolList extends _$GetEshkolList {
   @override
-  Future<List<Map<String, dynamic>>> build() async {
+  Future<List<String>> build() async {
     final result =
         await ref.watch(dioServiceProvider).get(Consts.getAllEshkols);
 
     final parsed = result.data as List<dynamic>;
 
-    final processed = parsed.map<Map<String, dynamic>>((e) => e).toList();
+    final processed = parsed.map((e) => e.toString()).toList();
 
     ref.keepAlive();
 

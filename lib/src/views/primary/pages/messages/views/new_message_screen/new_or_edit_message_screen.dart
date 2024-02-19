@@ -9,7 +9,7 @@ import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/new_message_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/widgets/find_users_page.dart';
-import 'package:hadar_program/src/views/secondary/filter/find_objects_page.dart';
+import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -118,7 +118,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                               onPressed: () => Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (val) {
-                                    return const FindObjectsPage.users();
+                                    return const FiltersScreen.users();
                                   },
                                 ),
                               ),

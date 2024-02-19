@@ -48,7 +48,7 @@ abstract class Consts {
   static const getAllSessions = 'hadar_plan_session/getAll';
 
   // hativot
-  static const getAllHativot = 'Hativot/getAll';
+  static const getAllHativot = 'Hativa/getAll';
 
   // madadim charts
   static const chartsMelave = 'madadim/melave';

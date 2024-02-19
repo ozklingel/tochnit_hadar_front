@@ -12,13 +12,13 @@ part 'get_hativot.g.dart';
 )
 class GetHativotList extends _$GetHativotList {
   @override
-  Future<List<Map<String, dynamic>>> build() async {
+  Future<List<String>> build() async {
     final result =
         await ref.watch(dioServiceProvider).get(Consts.getAllHativot);
 
     final parsed = result.data as List<dynamic>;
 
-    final processed = parsed.map<Map<String, dynamic>>((e) => e).toList();
+    final processed = parsed.map((e) => e.toString()).toList();
 
     ref.keepAlive();
 

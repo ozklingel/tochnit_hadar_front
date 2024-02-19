@@ -10,7 +10,9 @@ import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_but
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class FindUsersPage extends HookConsumerWidget {
-  const FindUsersPage({super.key});
+  const FindUsersPage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, ref) {

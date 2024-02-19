@@ -4,7 +4,6 @@ import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
-import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -12,7 +11,6 @@ part 'messages_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    Storage,
     DioService,
     GetMessages,
     GetApprentices,

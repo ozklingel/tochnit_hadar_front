@@ -1,7 +1,6 @@
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,7 +9,9 @@ part 'new_message_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    GetApprentices,
+    DioService,
+    Storage,
+    GetMessages,
   ],
 )
 class NewMessageController extends _$NewMessageController {
