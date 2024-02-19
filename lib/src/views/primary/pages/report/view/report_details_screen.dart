@@ -602,18 +602,23 @@ class ReportDetailsScreen extends HookConsumerWidget {
                       Expanded(
                         child: LargeFilledRoundedButton(
                           label: reportId.isEmpty ? 'דיווח' : 'שמירה',
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => const SuccessDialog(
-                                msg: 'הדיווח הושלם בהצלחה!',
-                              ),
-                            );
+                          onPressed: selectedEventType.value ==
+                                      ReportEventType.none ||
+                                  selectedDatetime.value == null ||
+                                  selectedApprentices.value.isEmpty
+                              ? null
+                              : () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => const SuccessDialog(
+                                      msg: 'הדיווח הושלם בהצלחה!',
+                                    ),
+                                  );
 
-                            // TODO(noga-dev): account for new or edit
+                                  // TODO(noga-dev): account for new or edit
 
-                            Toaster.unimplemented();
-                          },
+                                  Toaster.unimplemented();
+                                },
                         ),
                       ),
                       if (reportId.isNotEmpty) ...[
