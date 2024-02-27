@@ -17,18 +17,24 @@ class ReportDto with _$ReportDto {
       defaultValue: '',
     )
     String description,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'ent_group',
+    )
+    String group,
     @Default(ReportEventType.none)
     @JsonKey(
       name: 'title',
       fromJson: _extractType,
     )
     ReportEventType reportEventType,
-    @Default('')
+    @Default([])
     @JsonKey(
-      defaultValue: '',
-      name: 'from',
+      defaultValue: [],
+      name: 'reported_on',
     )
-    String apprenticeId,
+    List<String> recipients,
     @Default([])
     @JsonKey(
       defaultValue: [],
@@ -46,6 +52,12 @@ class ReportDto with _$ReportDto {
       name: 'date',
     )
     String dateTime,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'days_from_now',
+    )
+    String daysFromNow,
   }) = _ReportDto;
 
   factory ReportDto.fromJson(Map<String, dynamic> json) =>

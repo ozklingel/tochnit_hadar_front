@@ -97,8 +97,7 @@ final _reports = List.generate(
     return ReportDto(
       id: faker.guid.guid(),
       description: faker.lorem.sentence(),
-      apprenticeId:
-          _apprentices[faker.randomGenerator.integer(_apprentices.length)].id,
+      recipients: _apprentices.map((e) => e.id).toList(),
       reportEventType: ReportEventType.values[Random().nextInt(6)],
       attachments: List.generate(
         11,

@@ -172,6 +172,7 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                       if (!result.isResponseSuccess) {
                         // ignore: use_build_context_synchronously
                         showDialog(
+                          // ignore: use_build_context_synchronously
                           context: context,
                           builder: (context) {
                             return const AlertDialog.adaptive(

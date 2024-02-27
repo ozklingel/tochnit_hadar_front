@@ -35,9 +35,9 @@ Future<void> main() async {
       );
 
       return runApp(
-        const ProviderScope(
+        ProviderScope(
           child: SentryScreenshotWidget(
-            child: HadarProgram(),
+            child: const HadarProgram(),
           ),
         ),
       );

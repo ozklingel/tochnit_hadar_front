@@ -523,7 +523,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
     final reports = ref.watch(reportsControllerProvider).valueOrNull?.where(
-              (element) => element.apprenticeId == apprentice.id,
+              (element) => element.recipients.contains(apprentice.id),
             ) ??
         [];
     final institution =

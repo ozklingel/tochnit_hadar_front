@@ -179,10 +179,12 @@ class _SupportScreenState extends ConsumerState<SupportScreen>
 
                 if (result == "success") {
                   // print("in");
+                  // ignore: use_build_context_synchronously
                   showFancyCustomDialog(context);
                 } else {
                   // print("in");
 
+                  // ignore: use_build_context_synchronously
                   showAlertDialog(context);
                 }
               },

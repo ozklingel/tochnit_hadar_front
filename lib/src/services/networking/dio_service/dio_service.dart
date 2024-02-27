@@ -62,18 +62,24 @@ class DioService extends _$DioService {
           // Logger().i(response.data);
           return handler.next(response);
         },
-        onError: (error, handler) {
-          Logger().e(
-            error.requestOptions.uri,
-            error: error,
-            stackTrace: StackTrace.current,
-          );
-          Toaster.error(error.type.name);
-          return handler.next(error);
-        },
+        onError: _dioErrorHandler,
       ),
     );
 
     return dio;
+  }
+
+  void _dioErrorHandler(error, handler) {
+    Logger().e(
+      {
+        'response.data': error.response?.data ?? 'no response data',
+        'respone.headers': error.response?.headers ?? 'no response headers',
+      },
+      error: error,
+      stackTrace: StackTrace.current,
+    );
+    Toaster.error(error.type.name);
+
+    handler.next(error);
   }
 }

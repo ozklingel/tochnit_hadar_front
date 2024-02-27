@@ -1,7 +1,6 @@
 // ignore_for_file: unused_element
 
-import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:extended_text/extended_text.dart';
 import 'package:file_picker/file_picker.dart';
@@ -14,6 +13,7 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -55,13 +55,15 @@ class ReportDetailsScreen extends HookConsumerWidget {
     final reportApprentices = ref
             .watch(apprenticesControllerProvider)
             .valueOrNull
-            ?.where((element) => report.apprenticeId == element.id)
+            ?.where((element) => report.recipients.contains(element.id))
             .toList() ??
         [];
     final apprenticeSearchController = useTextEditingController();
     final selectedDatetime = useState<DateTime?>(report.dateTime.asDateTime);
     final selectedApprentices = useState(reportApprentices);
     final selectedEventType = useState(report.reportEventType);
+    final uploadedFiles = useState(<String>[]);
+    final isUploadInProgress = useState(<Key>[]);
 
     if (isReadOnly) {
       return Scaffold(
@@ -132,26 +134,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              SizedBox(
-                height: 140,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: List.generate(
-                    12,
-                    (index) => const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 4),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                        child: ColoredBox(
-                          color: Color(0xFFD9D9D9),
-                          child: SizedBox.square(
-                            dimension: 120,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              const _AttachmentsWidget(
+                attachments: [],
               ),
             ],
           ),
@@ -554,6 +538,23 @@ class ReportDetailsScreen extends HookConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
+                  Wrap(
+                    children: isUploadInProgress.value
+                        .map(
+                          (e) => const Padding(
+                            padding: EdgeInsets.all(4),
+                            child: SizedBox.square(
+                              dimension: 12,
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  if (uploadedFiles.value.isNotEmpty)
+                    _AttachmentsWidget(
+                      attachments: uploadedFiles.value,
+                    ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
@@ -565,17 +566,53 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         ),
                       ),
                       onPressed: () async {
-                        final result = await FilePicker.platform
-                            .pickFiles(allowMultiple: true);
+                        final newKey = UniqueKey();
 
-                        if (result == null) {
-                          return;
+                        isUploadInProgress.value = [
+                          ...isUploadInProgress.value,
+                          newKey,
+                        ];
+
+                        try {
+                          final result = await FilePicker.platform.pickFiles(
+                            allowMultiple: false,
+                            withData: true,
+                          );
+
+                          // if (result == null) {
+                          //   return;
+                          // }
+
+                          // if (result.paths.length > 1) {
+                          //   Toaster.error('too many');
+                          //   return;
+                          // }
+
+                          // TODO(noga-dev): upload files to backend storage then save the urls in the report
+                          // ignore: unused_local_variable
+                          // final files =
+                          //     result.paths.map((path) => File(path!)).toList();
+
+                          if (result != null) {
+                            final uploadFileLocation = await ref.read(
+                              uploadFileProvider(result.files.first).future,
+                            );
+
+                            uploadedFiles.value = [
+                              uploadFileLocation,
+                              ...uploadedFiles.value,
+                            ];
+                          }
+                        } catch (e) {
+                          Logger().e(e);
                         }
 
-                        // TODO(noga-dev): upload files to backend storage then save the urls in the report
-                        // ignore: unused_local_variable
-                        final files =
-                            result.paths.map((path) => File(path!)).toList();
+                        isUploadInProgress.value = [
+                          ...isUploadInProgress.value.where((element) {
+                            // Logger().d(element, error: newKey);
+                            return element != newKey;
+                          }),
+                        ];
                       },
                       icon: const Icon(FluentIcons.add_circle_24_regular),
                       label: const Text('העלאת תמונה'),
@@ -639,6 +676,44 @@ class ReportDetailsScreen extends HookConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _AttachmentsWidget extends StatelessWidget {
+  const _AttachmentsWidget({
+    super.key,
+    required this.attachments,
+  });
+
+  final List<String> attachments;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 140,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: attachments
+            .map(
+              (e) => CachedNetworkImage(
+                imageUrl: e,
+                placeholder: (context, url) => const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    child: ColoredBox(
+                      color: Color(0xFFD9D9D9),
+                      child: SizedBox.square(
+                        dimension: 120,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
   }

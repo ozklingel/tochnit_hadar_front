@@ -22,6 +22,8 @@ class UsersController extends _$UsersController {
     return apprentices;
   }
 
+  // Future<bool> addUser() {}
+
   FutureOr<bool> addEvent({
     required String apprenticeId,
     required EventDto event,
@@ -29,6 +31,8 @@ class UsersController extends _$UsersController {
     if (apprenticeId.isEmpty) {
       return false;
     }
+
+    // unnecessarily complex jsut
 
     final apprentice = state.valueOrNull?.singleWhere(
           (element) => element.id == apprenticeId,

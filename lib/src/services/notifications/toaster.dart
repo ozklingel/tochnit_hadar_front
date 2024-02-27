@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';

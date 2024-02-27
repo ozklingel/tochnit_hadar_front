@@ -1,6 +1,10 @@
 import 'package:collection/collection.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
+import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reports_controller.g.dart';
@@ -52,5 +56,41 @@ class ReportsController extends _$ReportsController {
         state = AsyncData(reversed);
         return;
     }
+  }
+
+  Future<bool> add(ReportDto report) async {
+    try {
+      await ref.read(dioServiceProvider).post(
+        Consts.addReport,
+        data: {
+          'userId': ref.read(storageProvider.notifier).getUserPhone(),
+          'List_of_apprentices': report.recipients,
+        },
+      );
+    } catch (e) {
+      Logger().e(e);
+      return false;
+    }
+
+    return false;
+  }
+
+  Future<bool> edit(ReportDto report) async {
+    try {
+      await ref.read(dioServiceProvider).put(
+        Consts.editReport,
+        queryParameters: {
+          'reportId': report.id,
+        },
+        data: {
+          'userId': ref.read(storageProvider.notifier).getUserPhone(),
+          'List_of_apprentices': report.recipients,
+        },
+      );
+    } catch (e) {
+      return false;
+    }
+
+    return false;
   }
 }

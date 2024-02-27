@@ -37,6 +37,8 @@ abstract class Consts {
 
   // reports
   static const getAllReports = 'reports_form/getAll';
+  static const addReport = 'reports_form/add';
+  static const editReport = 'reports_form/update';
 
   // base / compound
   static const getAllCompounds = 'base/getAll';
@@ -49,6 +51,9 @@ abstract class Consts {
 
   // hativot
   static const getAllHativot = 'Hativa/getAll';
+
+  // import / export
+  static const uploadFile = 'export_import/uploadfile';
 
   // madadim charts
   static const chartsMelave = 'madadim/melave';

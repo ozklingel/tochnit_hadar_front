@@ -24,7 +24,10 @@ class MessagesScreen extends HookConsumerWidget {
     final msgsController = ref.watch(messagesControllerProvider);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
+
     useListenable(searchController);
+
+    // Logger().d(msgsController.valueOrNull?.length);
 
     if (user.isLoading) {
       return const CircularProgressIndicator.adaptive();
