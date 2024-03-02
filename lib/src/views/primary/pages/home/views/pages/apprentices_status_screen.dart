@@ -299,7 +299,7 @@ class _TabView extends StatelessWidget {
                   (e) => ListTileWithTagsCard(
                     avatar: e.avatar,
                     name: e.fullName,
-                    onlineStatus: e.onlineStatus,
+                    onlineStatus: e.callStatus,
                     tags: const [
                       'עברו 78 ימים מהשיחה האחרונה',
                     ],

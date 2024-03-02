@@ -129,7 +129,7 @@ class PerformanceStatusScreen extends HookConsumerWidget {
                   'בני דוד עלי',
                   'מחזור ג',
                 ],
-                onlineStatus: apprentices[index].onlineStatus,
+                onlineStatus: apprentices[index].callStatus,
                 trailing: const Column(
                   children: [
                     Text(

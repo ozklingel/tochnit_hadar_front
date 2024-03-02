@@ -52,12 +52,12 @@ class ReportDto with _$ReportDto {
       name: 'date',
     )
     String dateTime,
-    @Default('')
+    @Default(0)
     @JsonKey(
-      defaultValue: '',
+      defaultValue: 0,
       name: 'days_from_now',
     )
-    String daysFromNow,
+    int daysFromNow,
   }) = _ReportDto;
 
   factory ReportDto.fromJson(Map<String, dynamic> json) =>
