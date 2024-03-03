@@ -15,7 +15,7 @@ class ListTileWithTagsCard extends StatelessWidget {
     this.isSelected = false,
     this.onLongPress,
     this.onTap,
-    this.onlineStatus = UserStatus.other,
+    this.onlineStatus = StatusColor.orange,
     this.trailing,
   });
 
@@ -25,7 +25,7 @@ class ListTileWithTagsCard extends StatelessWidget {
   final List<String> tags;
   final VoidCallback? onLongPress;
   final VoidCallback? onTap;
-  final UserStatus onlineStatus;
+  final StatusColor onlineStatus;
   final Widget? trailing;
 
   @override
@@ -80,9 +80,9 @@ class ListTileWithTagsCard extends StatelessWidget {
                           backgroundColor: Colors.white,
                           child: CircleAvatar(
                             radius: 4,
-                            backgroundColor: onlineStatus == UserStatus.online
+                            backgroundColor: onlineStatus == StatusColor.green
                                 ? Colors.green
-                                : onlineStatus == UserStatus.offline
+                                : onlineStatus == StatusColor.red
                                     ? Colors.red
                                     : Colors.purple,
                           ),

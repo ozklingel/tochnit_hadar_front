@@ -80,7 +80,7 @@ class MelaveForgottenApprenticesChartPage extends ConsumerWidget {
                       (e) => ListTileWithTagsCard(
                         avatar: e.avatar,
                         name: e.fullName,
-                        onlineStatus: e.onlineStatus,
+                        onlineStatus: e.callStatus,
                         tags: e.tags,
                       ),
                     )

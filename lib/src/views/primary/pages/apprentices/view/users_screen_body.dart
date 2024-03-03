@@ -190,6 +190,7 @@ class UsersScreenBody extends HookConsumerWidget {
                     vertical: 6,
                   ),
                   child: ListTileWithTagsCard(
+                    onlineStatus: usersList[idx].callStatus,
                     avatar: usersList[idx].avatar,
                     name: usersList[idx].fullName,
                     tags: [

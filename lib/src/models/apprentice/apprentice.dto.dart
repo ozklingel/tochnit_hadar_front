@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:logger/logger.dart';
@@ -7,13 +9,22 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 part 'apprentice.dto.f.dart';
 part 'apprentice.dto.g.dart';
 
-enum UserStatus {
-  online(100),
-  offline(200),
-  other(300);
+enum StatusColor {
+  grey(100),
+  green(200),
+  orange(300),
+  red(400);
 
-  const UserStatus(this.value);
+  const StatusColor(this.value);
   final int value;
+
+  Color toColor() {
+    return this == StatusColor.green
+        ? AppColors.green2
+        : this == StatusColor.red
+            ? AppColors.red2
+            : AppColors.yellow1;
+  }
 }
 
 @JsonSerializable()
@@ -303,9 +314,6 @@ class ApprenticeDto with _$ApprenticeDto {
       defaultValue: '',
     )
     String matsber,
-    @Default(UserStatus.offline)
-    @JsonKey(fromJson: _parseOnlineStatus)
-    UserStatus onlineStatus,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -321,46 +329,55 @@ class ApprenticeDto with _$ApprenticeDto {
       defaultValue: '',
     )
     String militaryCompoundId,
+    @Default(StatusColor.grey)
+    @JsonKey(
+      name: 'call_status',
+      fromJson: _parseStatus,
+    )
+    StatusColor callStatus,
+    @Default(StatusColor.grey)
+    @JsonKey(
+      name: 'personalMeet_status',
+      fromJson: _parseStatus,
+    )
+    StatusColor personalMeetStatus,
+    @Default(StatusColor.grey)
+    @JsonKey(
+      name: 'Horim_status',
+      fromJson: _parseStatus,
+    )
+    StatusColor parentsStatus,
   }) = _Apprentice;
 
   factory ApprenticeDto.fromJson(Map<String, dynamic> json) =>
       _$ApprenticeDtoFromJson(json);
 }
 
-UserStatus _parseOnlineStatus(dynamic onlineStatus) {
-  if (onlineStatus == null) {
-    Logger().w('user status null');
+StatusColor _parseStatus(dynamic val) {
+  if (val == null) {
+    Logger().w('status color null');
     Sentry.captureException(
-      Exception('failed to extract user status from string'),
+      Exception('failed to extract status color'),
     );
 
-    return UserStatus.other;
+    return StatusColor.grey;
   }
 
-  final onlineStatusIndex =
-      onlineStatus is num ? onlineStatus : int.tryParse(onlineStatus);
+  switch (val) {
+    case 'red':
+      return StatusColor.red;
+    case 'green':
+      return StatusColor.green;
+    case 'orange':
+      return StatusColor.orange;
+    default:
+      Logger().w('bad status color');
+      Sentry.captureException(
+        Exception('failed to extract status color'),
+      );
 
-  if (onlineStatusIndex == null) {
-    Logger().w('bad user status index');
-    Sentry.captureException(
-      Exception('failed to extract user status from index'),
-    );
-
-    return UserStatus.other;
+      return StatusColor.grey;
   }
-
-  if (onlineStatusIndex == UserStatus.offline.value) {
-    return UserStatus.offline;
-  } else if (onlineStatusIndex == UserStatus.online.value) {
-    return UserStatus.online;
-  }
-
-  Logger().w('user status index too high');
-  Sentry.captureException(
-    Exception('failed to extract user status index too high'),
-  );
-
-  return UserStatus.other;
 }
 
 extension ApprenticeX on ApprenticeDto {

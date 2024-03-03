@@ -52,12 +52,7 @@ class TaskCard extends ConsumerWidget {
                     padding: const EdgeInsets.all(2),
                     child: CircleAvatar(
                       radius: 4,
-                      backgroundColor:
-                          apprentice.onlineStatus == UserStatus.online
-                              ? AppColors.green2
-                              : apprentice.onlineStatus == UserStatus.offline
-                                  ? AppColors.red2
-                                  : AppColors.yellow1,
+                      backgroundColor: apprentice.callStatus.toColor(),
                     ),
                   ),
                 ),
