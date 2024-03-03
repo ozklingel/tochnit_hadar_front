@@ -75,13 +75,14 @@ class NotificationScreen extends HookConsumerWidget {
                   )
                 : null,
             body: RefreshIndicator.adaptive(
-              onRefresh: () => ref.refresh(notificationsControllerProvider.future),
+              onRefresh: () =>
+                  ref.refresh(notificationsControllerProvider.future),
               child: msgsController.when(
                 loading: () => ListView(
                   children: List.generate(
                     10,
-                    (index) => notificationWidget.collapsed(
-                      message: notificationDto(
+                    (index) => NotificationWidget.collapsed(
+                      message: NotificationDto(
                         title: 'titletitletitletitle',
                         content: 'contentcontentcontent',
                         dateTime: DateTime.now().toIso8601String(),
@@ -96,19 +97,19 @@ class NotificationScreen extends HookConsumerWidget {
                   final customerService = msgList
                       .where(
                         (element) =>
-                            element.type == notificationType.customerService,
+                            element.type == NotificationType.customerService,
                       )
                       .toList();
 
                   final sent = msgList
                       .where(
-                        (element) => element.type == notificationType.sent,
+                        (element) => element.type == NotificationType.sent,
                       )
                       .toList();
 
                   final draft = msgList
                       .where(
-                        (element) => element.type == notificationType.draft,
+                        (element) => element.type == NotificationType.draft,
                       )
                       .toList();
 
@@ -126,7 +127,7 @@ class NotificationScreen extends HookConsumerWidget {
                               .map(
                                 (e) => Skeletonizer(
                                   enabled: false,
-                                  child: notificationWidget.collapsed(
+                                  child: NotificationWidget.collapsed(
                                     message: e,
                                     hasIcon: true,
                                     backgroundColor: e.allreadyRead
@@ -147,12 +148,13 @@ class NotificationScreen extends HookConsumerWidget {
                         ListView(
                           children: msgList
                               .where(
-                                (element) => element.type == notificationType.sent,
+                                (element) =>
+                                    element.type == NotificationType.sent,
                               )
                               .map(
                                 (e) => Skeletonizer(
                                   enabled: false,
-                                  child: notificationWidget.collapsed(
+                                  child: NotificationWidget.collapsed(
                                     message: e,
                                     hasIcon: true,
                                     backgroundColor: e.allreadyRead
@@ -173,12 +175,13 @@ class NotificationScreen extends HookConsumerWidget {
                         ListView(
                           children: msgList
                               .where(
-                                (element) => element.type == notificationType.draft,
+                                (element) =>
+                                    element.type == NotificationType.draft,
                               )
                               .map(
                                 (e) => Skeletonizer(
                                   enabled: false,
-                                  child: notificationWidget.collapsed(
+                                  child: NotificationWidget.collapsed(
                                     message: e,
                                     hasIcon: true,
                                     backgroundColor: e.allreadyRead
@@ -212,7 +215,8 @@ class NotificationScreen extends HookConsumerWidget {
             ],
           ),
           body: RefreshIndicator.adaptive(
-            onRefresh: () => ref.refresh(notificationsControllerProvider.future),
+            onRefresh: () =>
+                ref.refresh(notificationsControllerProvider.future),
             child: msgsController.unwrapPrevious().when(
                   error: (error, s) => CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -228,7 +232,7 @@ class NotificationScreen extends HookConsumerWidget {
                     isLoading: true,
                     messages: List.generate(
                       10,
-                      (index) => notificationDto(
+                      (index) => NotificationDto(
                         title: 'titletitletitletitle',
                         content: 'contentcontentcontent',
                         dateTime: DateTime.now().toIso8601String(),
@@ -264,7 +268,7 @@ class _SearchResultsBody extends StatelessWidget {
     required this.isLoading,
   });
 
-  final List<notificationDto> messages;
+  final List<NotificationDto> messages;
   final bool isLoading;
 
   @override
@@ -282,7 +286,7 @@ class _SearchResultsBody extends StatelessWidget {
           .map(
             (e) => Skeletonizer(
               enabled: isLoading,
-              child: notificationWidget.collapsed(
+              child: NotificationWidget.collapsed(
                 message: e,
               ),
             ),

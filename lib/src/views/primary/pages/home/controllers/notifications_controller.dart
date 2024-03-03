@@ -1,4 +1,3 @@
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../../models/notification/notification.dto.dart';
@@ -13,7 +12,7 @@ part 'notifications_controller.g.dart';
 )
 class NotificationsController extends _$NotificationsController {
   @override
-  Future<List<notificationDto>> build() async {
+  Future<List<NotificationDto>> build() async {
     final notifications = await ref.watch(getNotificationsProvider.future);
 
     return notifications;

@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'notification.dto.f.dart';
 part 'notification.dto.g.dart';
 
-enum notificationType {
+enum NotificationType {
   draft,
   customerService,
   sent,
@@ -12,8 +12,8 @@ enum notificationType {
 
 @JsonSerializable()
 @Freezed(fromJson: false)
-class notificationDto with _$notificationDto {
-  const factory notificationDto({
+class NotificationDto with _$NotificationDto {
+  const factory NotificationDto({
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -24,11 +24,11 @@ class notificationDto with _$notificationDto {
       defaultValue: '',
     )
     String title,
-    @Default(notificationType.other)
+    @Default(NotificationType.other)
     @JsonKey(
       fromJson: _extractnotificationType,
     )
-    notificationType type,
+    NotificationType type,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -63,20 +63,20 @@ class notificationDto with _$notificationDto {
     String dateTime,
   }) = _notificationDto;
 
-  factory notificationDto.fromJson(Map<String, dynamic> json) =>
-      _$notificationDtoFromJson(json);
+  factory NotificationDto.fromJson(Map<String, dynamic> json) =>
+      _$NotificationDtoFromJson(json);
 }
 
-notificationType _extractnotificationType(String? data) {
+NotificationType _extractnotificationType(String? data) {
   switch (data) {
     case 'פניות_שירות':
-      return notificationType.customerService;
+      return NotificationType.customerService;
     case 'draft':
-      return notificationType.draft;
+      return NotificationType.draft;
     case 'sent':
-      return notificationType.sent;
+      return NotificationType.sent;
     default:
-      return notificationType.other;
+      return NotificationType.other;
   }
 }
 
