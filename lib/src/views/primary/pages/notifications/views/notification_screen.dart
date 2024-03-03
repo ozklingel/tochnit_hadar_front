@@ -37,165 +37,7 @@ class NotificationScreen extends HookConsumerWidget {
     }
 
     switch (user.valueOrNull?.role) {
-      case UserRole.ahraiTohnit:
-        return DefaultTabController(
-          length: 3,
-          initialIndex: 1,
-          child: Scaffold(
-            appBar: SearchAppBar(
-              controller: searchController,
-              isSearchOpen: isSearchOpen,
-              text: 'הודעות',
-              actions: const [
-                Icon(FluentIcons.search_24_regular),
-                SizedBox(width: 12),
-              ],
-              bottom: const TabBar(
-                labelStyle: TextStyles.s14w400,
-                tabs: [
-                  Tab(text: 'פניות שירות'),
-                  Tab(text: 'יוצאות'),
-                  Tab(text: 'טיוטות'),
-                ],
-              ),
-            ),
-            floatingActionButton: user.valueOrNull?.role == UserRole.ahraiTohnit
-                ? FloatingActionButton(
-                    onPressed: () => const NewMessageRouteData().push(context),
-                    heroTag: UniqueKey(),
-                    shape: const CircleBorder(),
-                    backgroundColor: AppColors.blue02,
-                    child: const Text(
-                      '+',
-                      style: TextStyle(
-                        fontSize: 32,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                : null,
-            body: RefreshIndicator.adaptive(
-              onRefresh: () => ref.refresh(notificationsControllerProvider.future),
-              child: msgsController.when(
-                loading: () => ListView(
-                  children: List.generate(
-                    10,
-                    (index) => notificationWidget.collapsed(
-                      message: notificationDto(
-                        title: 'titletitletitletitle',
-                        content: 'contentcontentcontent',
-                        dateTime: DateTime.now().toIso8601String(),
-                        attachments: ['549247615'],
-                        from: '549247615',
-                      ),
-                    ),
-                  ),
-                ),
-                error: (error, stack) => Text(error.toString()),
-                data: (msgList) {
-                  final customerService = msgList
-                      .where(
-                        (element) =>
-                            element.type == notificationType.customerService,
-                      )
-                      .toList();
-
-                  final sent = msgList
-                      .where(
-                        (element) => element.type == notificationType.sent,
-                      )
-                      .toList();
-
-                  final draft = msgList
-                      .where(
-                        (element) => element.type == notificationType.draft,
-                      )
-                      .toList();
-
-                  return TabBarView(
-                    children: [
-                      if (customerService.isEmpty)
-                        EmptyState(
-                          image: Assets.images.noMessages.svg(),
-                          topText: 'אין הודעות נכנסות',
-                          bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
-                        )
-                      else
-                        ListView(
-                          children: customerService
-                              .map(
-                                (e) => Skeletonizer(
-                                  enabled: false,
-                                  child: notificationWidget.collapsed(
-                                    message: e,
-                                    hasIcon: true,
-                                    backgroundColor: e.allreadyRead
-                                        ? Colors.white
-                                        : AppColors.blue08,
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      if (sent.isEmpty)
-                        EmptyState(
-                          image: Assets.images.noMessages.svg(),
-                          topText: 'אין הודעות נכנסות',
-                          bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
-                        )
-                      else
-                        ListView(
-                          children: msgList
-                              .where(
-                                (element) => element.type == notificationType.sent,
-                              )
-                              .map(
-                                (e) => Skeletonizer(
-                                  enabled: false,
-                                  child: notificationWidget.collapsed(
-                                    message: e,
-                                    hasIcon: true,
-                                    backgroundColor: e.allreadyRead
-                                        ? Colors.white
-                                        : AppColors.blue08,
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      if (draft.isEmpty)
-                        EmptyState(
-                          image: Assets.images.noMessages.svg(),
-                          topText: 'אין הודעות נכנסות',
-                          bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
-                        )
-                      else
-                        ListView(
-                          children: msgList
-                              .where(
-                                (element) => element.type == notificationType.draft,
-                              )
-                              .map(
-                                (e) => Skeletonizer(
-                                  enabled: false,
-                                  child: notificationWidget.collapsed(
-                                    message: e,
-                                    hasIcon: true,
-                                    backgroundColor: e.allreadyRead
-                                        ? Colors.white
-                                        : AppColors.blue08,
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-        );
+      
       case UserRole.melave:
       default:
         return Scaffold(
@@ -238,11 +80,9 @@ class NotificationScreen extends HookConsumerWidget {
                     messages: List.generate(
                       10,
                       (index) => notificationDto(
-                        title: 'titletitletitletitle',
-                        content: 'contentcontentcontent',
+                        event: 'titletitletitletitle',
                         dateTime: DateTime.now().toIso8601String(),
-                        attachments: ['attachment'],
-                        from: '549247615',
+                     
                       ),
                     ),
                   ),
@@ -251,10 +91,10 @@ class NotificationScreen extends HookConsumerWidget {
                     messages: messages
                         .where(
                           (element) =>
-                              element.content
+                              element.event
                                   .toLowerCase()
                                   .contains(searchController.text) ||
-                              element.title
+                              element.description
                                   .toLowerCase()
                                   .contains(searchController.text),
                         )
@@ -282,7 +122,7 @@ class _SearchResultsBody extends StatelessWidget {
       return EmptyState(
         image: Assets.images.noMessages.svg(),
         topText: 'אין  התראות',
-        bottomText: 'התראות נכנסות שיוצרו, יופיעו כאן',
+        bottomText: 'התראות  שיוצרו, יופיעו כאן',
       );
     }
 

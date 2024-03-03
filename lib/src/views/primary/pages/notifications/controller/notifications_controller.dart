@@ -21,7 +21,6 @@ class notificationsController extends _$notificationsController {
   @override
   Future<List<notificationDto>> build() async {
     final notifications = await ref.watch(getNotificationsProvider.future);
-
     return notifications;
   }
 

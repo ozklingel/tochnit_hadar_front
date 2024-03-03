@@ -35,7 +35,7 @@ class notificationWidget extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final fromApprentice =
         ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
-                  (element) => element.phone == message.from,
+                  (element) => element.phone == message.apprenticeId,
                   orElse: () => const ApprenticeDto(),
                 ) ??
             const ApprenticeDto();
@@ -54,8 +54,7 @@ class notificationWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (hasIcon && message.icon.isNotEmpty)
-                  const Icon(FluentIcons.mail_24_regular),
+              
                 SizedBox(
                   width: 232,
                   child: Column(
@@ -67,32 +66,17 @@ class notificationWidget extends ConsumerWidget {
                       ),
                       if (isExpanded) const SizedBox(height: 16),
                       Text(
-                        message.title,
+                        message.event,
                         style: TextStyles.s16w400cGrey2,
                       ),
                       if (isExpanded) const SizedBox(height: 16),
                       Text(
-                        message.content,
+                        message.description,
                         maxLines: isExpanded ? 2 : 1,
                         overflow: isExpanded ? null : TextOverflow.ellipsis,
                         style: TextStyles.s16w400cGrey2,
                       ),
-                      if (message.attachments.isNotEmpty) ...[
-                        if (isExpanded) const SizedBox(height: 16),
-                        Chip(
-                          padding: const EdgeInsets.all(4),
-                          avatar: const Padding(
-                            padding: EdgeInsets.only(
-                              right: 10,
-                              bottom: 16,
-                            ),
-                            child: Icon(
-                              FluentIcons.image_16_regular,
-                            ),
-                          ),
-                          label: Text(message.attachments.first),
-                        ),
-                      ],
+            
                     ],
                   ),
                 ),

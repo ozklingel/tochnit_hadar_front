@@ -3,12 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'notification.dto.f.dart';
 part 'notification.dto.g.dart';
 
-enum notificationType {
-  draft,
-  customerService,
-  sent,
-  other,
-}
 
 @JsonSerializable()
 @Freezed(fromJson: false)
@@ -19,79 +13,60 @@ class notificationDto with _$notificationDto {
       defaultValue: '',
     )
     String id,
+
     @Default('')
     @JsonKey(
       defaultValue: '',
     )
-    String title,
-    @Default(notificationType.other)
+    String event,
+    
+    @Default(2)
     @JsonKey(
-      fromJson: _extractnotificationType,
+      defaultValue: 2,
     )
-    notificationType type,
+    int numOfLinesDisplay,
+    
     @Default('')
     @JsonKey(
       defaultValue: '',
     )
-    String content,
+    String apprenticeId,
+
     @Default('')
     @JsonKey(
       defaultValue: '',
     )
-    String from,
-    @Default('')
+    String description,
+
+    @Default('never')
     @JsonKey(
       defaultValue: '',
     )
-    String icon,
+    String frequency,
+    
     @Default(false)
     @JsonKey(
       name: 'allreadyread',
-      fromJson: _extractIsAlreadyRead,
     )
     bool allreadyRead,
-    @Default([])
+
+    @Default(1)
     @JsonKey(
-      defaultValue: [],
+      defaultValue: 1,
     )
-    List<String> attachments,
+    int daysfromnow,
+
     @Default('')
     @JsonKey(
       defaultValue: '',
       name: 'date',
     )
     String dateTime,
+
   }) = _notificationDto;
 
   factory notificationDto.fromJson(Map<String, dynamic> json) =>
       _$notificationDtoFromJson(json);
 }
 
-notificationType _extractnotificationType(String? data) {
-  switch (data) {
-    case 'פניות_שירות':
-      return notificationType.customerService;
-    case 'draft':
-      return notificationType.draft;
-    case 'sent':
-      return notificationType.sent;
-    default:
-      return notificationType.other;
-  }
-}
 
-bool _extractIsAlreadyRead(String? data) {
-  if (data == null) {
-    return false;
-  }
-
-  if (data.toLowerCase() == 'true') {
-    return true;
-  }
-
-  if (data.toLowerCase() == 'false') {
-    return false;
-  }
-
-  return false;
-}

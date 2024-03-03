@@ -19,12 +19,13 @@ class GetNotifications extends _$GetNotifications {
 
 
     final request =
-        await ref.watch(dioServiceProvider).get(Consts.getAllMessages);
-
+        await ref.watch(dioServiceProvider).get(Consts.getAllNotifications);
+    print((request.data as List<dynamic>).toList()[0]);
     final parsed = (request.data as List<dynamic>)
         .map((e) => notificationDto.fromJson(e))
         .toList();
-
+    print("ozzzzzzzzz");
+    print(parsed);
     return parsed;
   }
 }
