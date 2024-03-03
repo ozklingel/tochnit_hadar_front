@@ -34,11 +34,15 @@ abstract class Consts {
 
   // tasks
   static const getAllTasks = 'tasks_form/getTasks';
+  static const deleteTask = 'tasks_form/delete';
+  static const editTask = 'tasks_form/update';
+  static const createTask = 'tasks_form/add';
 
   // reports
   static const getAllReports = 'reports_form/getAll';
   static const addReport = 'reports_form/add';
   static const editReport = 'reports_form/update';
+  static const deleteReport = 'reports_form/delete';
 
   // base / compound
   static const getAllCompounds = 'base/getAll';

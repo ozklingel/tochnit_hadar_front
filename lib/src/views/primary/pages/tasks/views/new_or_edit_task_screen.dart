@@ -150,8 +150,8 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                               ref.read(tasksControllerProvider.notifier);
 
                           final result = task.id.isEmpty
-                              ? await providerNotifier.createNewTask(task)
-                              : await providerNotifier.updateExistingTask(task);
+                              ? await providerNotifier.create(task)
+                              : await providerNotifier.edit(task);
 
                           if (!result) {
                             Toaster.error('error creating or updating task');

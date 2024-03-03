@@ -1,7 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
@@ -142,9 +141,8 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
                       child: CheckboxListTile(
                         controlAffinity: ListTileControlAffinity.leading,
                         value: true,
-                        onChanged: (value) => TaskDetailsRouteData(
-                          id: Consts.mockTasksGuids.first,
-                        ).push(context),
+                        onChanged: (value) =>
+                            TaskDetailsRouteData(id: e.id).push(context),
                         title: const Text(
                           'סבב מוסד',
                           style: TextStyles.s18w500cGray1,

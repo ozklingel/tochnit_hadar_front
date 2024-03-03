@@ -46,7 +46,7 @@ class NotificationsController extends _$NotificationsController {
     }
   }
 
-  Future<bool> deletenotification(String notificationId) async {
+  Future<bool> deleteNotification(String notificationId) async {
     try {
       final result = await ref.read(dioServiceProvider).delete(
         Consts.deleteMessage,

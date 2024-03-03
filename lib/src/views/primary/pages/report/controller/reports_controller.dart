@@ -3,9 +3,12 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'reports_controller.g.dart';
 
@@ -20,6 +23,7 @@ enum SortReportBy {
     GetReports,
     Storage,
     DioService,
+    GoRouterService,
   ],
 )
 class ReportsController extends _$ReportsController {
@@ -62,16 +66,25 @@ class ReportsController extends _$ReportsController {
 
   Future<bool> add(ReportDto report) async {
     try {
-      await ref.read(dioServiceProvider).post(
+      final result = await ref.read(dioServiceProvider).post(
         Consts.addReport,
         data: {
           'userId': ref.read(storageProvider.notifier).getUserPhone(),
           'List_of_apprentices': report.recipients,
         },
       );
+
+      if (result.data['result'] == 'success') {
+        ref.invalidate(getReportsProvider);
+
+        ref.read(goRouterServiceProvider).go('/reports');
+
+        return true;
+      }
     } catch (e) {
-      Logger().e(e);
-      return false;
+      Logger().e('failed to delete report', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
     }
 
     return false;
@@ -79,7 +92,7 @@ class ReportsController extends _$ReportsController {
 
   Future<bool> edit(ReportDto report) async {
     try {
-      await ref.read(dioServiceProvider).put(
+      final result = await ref.read(dioServiceProvider).put(
         Consts.editReport,
         queryParameters: {
           'reportId': report.id,
@@ -89,8 +102,43 @@ class ReportsController extends _$ReportsController {
           'List_of_apprentices': report.recipients,
         },
       );
+
+      if (result.data['result'] == 'success') {
+        ref.invalidate(getReportsProvider);
+
+        ref.read(goRouterServiceProvider).go('/reports');
+
+        return true;
+      }
     } catch (e) {
-      return false;
+      Logger().e('failed to edit report', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return false;
+  }
+
+  Future<bool> delete(ReportDto report) async {
+    try {
+      final result = await ref.read(dioServiceProvider).post(
+        Consts.editReport,
+        queryParameters: {
+          'reportId': report.id,
+        },
+      );
+
+      if (result.data['result'] == 'success') {
+        ref.invalidate(getReportsProvider);
+
+        ref.read(goRouterServiceProvider).go('/reports');
+
+        return true;
+      }
+    } catch (e) {
+      Logger().e('failed to delete report', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
     }
 
     return false;

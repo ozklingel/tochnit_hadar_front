@@ -69,7 +69,7 @@ class DioService extends _$DioService {
     return dio;
   }
 
-  void _dioErrorHandler(error, handler) {
+  void _dioErrorHandler(DioException error, handler) {
     Logger().e(
       {
         'response.data': error.response?.data ?? 'no response data',
@@ -78,6 +78,7 @@ class DioService extends _$DioService {
       error: error,
       stackTrace: StackTrace.current,
     );
+
     Toaster.error(error.type.name);
 
     handler.next(error);

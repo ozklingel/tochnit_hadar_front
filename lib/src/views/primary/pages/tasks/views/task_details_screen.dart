@@ -24,6 +24,8 @@ class TaskDetailsScreen extends ConsumerWidget {
             ) ??
         const TaskDto();
 
+    // Logger().d(task, error: id);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('משימה'),
@@ -31,15 +33,15 @@ class TaskDetailsScreen extends ConsumerWidget {
           PopupMenuButton(
             offset: const Offset(0, 32),
             itemBuilder: (context) => [
-              PopupMenuItem(
-                child: const Text('עריכה'),
-                onTap: () => EditTaskRouteData(id: task.id).push(context),
-              ),
+              if (task.status != TaskStatus.done)
+                PopupMenuItem(
+                  child: const Text('עריכה'),
+                  onTap: () => EditTaskRouteData(id: task.id).push(context),
+                ),
               PopupMenuItem(
                 child: const Text('מחיקה'),
-                onTap: () => ref
-                    .read(tasksControllerProvider.notifier)
-                    .deleteExistingTask(task),
+                onTap: () =>
+                    ref.read(tasksControllerProvider.notifier).delete(task),
               ),
             ],
             icon: const Icon(FluentIcons.more_vertical_24_regular),
