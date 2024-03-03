@@ -11,22 +11,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../../../models/notification/notification.dto.dart';
 
-class notificationWidget extends ConsumerWidget {
-  const notificationWidget.collapsed({
+class NotificationWidget extends ConsumerWidget {
+  const NotificationWidget.collapsed({
     super.key,
     required this.message,
     this.hasIcon = false,
     this.backgroundColor,
   }) : isExpanded = false;
 
-  const notificationWidget.expanded({
+  const NotificationWidget.expanded({
     super.key,
     required this.message,
     this.hasIcon = false,
     this.backgroundColor,
   }) : isExpanded = true;
 
-  final notificationDto message;
+  final NotificationDto message;
   final bool isExpanded;
   final bool hasIcon;
   final Color? backgroundColor;

@@ -7,7 +7,6 @@ import 'package:hadar_program/src/services/networking/dio_service/dio_service.da
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-
 part 'notifications_controller.g.dart';
 
 @Riverpod(
@@ -17,14 +16,14 @@ part 'notifications_controller.g.dart';
     GetApprentices,
   ],
 )
-class notificationsController extends _$notificationsController {
+class NotificationsController extends _$NotificationsController {
   @override
-  Future<List<notificationDto>> build() async {
+  Future<List<NotificationDto>> build() async {
     final notifications = await ref.watch(getNotificationsProvider.future);
     return notifications;
   }
 
-  Future<bool> setToReadStatus(notificationDto msg) async {
+  Future<bool> setToReadStatus(NotificationDto msg) async {
     if (msg.allreadyRead) {
       return true;
     }

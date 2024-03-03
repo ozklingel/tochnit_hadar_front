@@ -63,7 +63,8 @@ class NotificationScreen extends HookConsumerWidget {
       ),
           
           body: RefreshIndicator.adaptive(
-            onRefresh: () => ref.refresh(notificationsControllerProvider.future),
+            onRefresh: () =>
+                ref.refresh(notificationsControllerProvider.future),
             child: msgsController.unwrapPrevious().when(
                   error: (error, s) => CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -79,7 +80,7 @@ class NotificationScreen extends HookConsumerWidget {
                     isLoading: true,
                     messages: List.generate(
                       10,
-                      (index) => notificationDto(
+                      (index) => NotificationDto(
                         event: 'titletitletitletitle',
                         dateTime: DateTime.now().toIso8601String(),
                      
@@ -113,7 +114,7 @@ class _SearchResultsBody extends StatelessWidget {
     required this.isLoading,
   });
 
-  final List<notificationDto> messages;
+  final List<NotificationDto> messages;
   final bool isLoading;
 
   @override
@@ -131,7 +132,7 @@ class _SearchResultsBody extends StatelessWidget {
           .map(
             (e) => Skeletonizer(
               enabled: isLoading,
-              child: notificationWidget.collapsed(
+              child: NotificationWidget.collapsed(
                 message: e,
               ),
             ),

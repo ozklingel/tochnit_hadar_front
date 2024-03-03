@@ -6,8 +6,8 @@ part 'notification.dto.g.dart';
 
 @JsonSerializable()
 @Freezed(fromJson: false)
-class notificationDto with _$notificationDto {
-  const factory notificationDto({
+class NotificationDto with _$NotificationDto {
+  const factory NotificationDto({
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -65,8 +65,8 @@ class notificationDto with _$notificationDto {
 
   }) = _notificationDto;
 
-  factory notificationDto.fromJson(Map<String, dynamic> json) =>
-      _$notificationDtoFromJson(json);
+  factory NotificationDto.fromJson(Map<String, dynamic> json) =>
+      _$NotificationDtoFromJson(json);
 }
 
 
