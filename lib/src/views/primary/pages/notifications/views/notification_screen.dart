@@ -1,8 +1,5 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hadar_program/src/core/theming/colors.dart';
-import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/notification/notification.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
@@ -10,7 +7,6 @@ import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/views/widgets/notification_widget.dart';
-import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -25,7 +21,7 @@ class NotificationScreen extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
     final msgsController = ref.watch(notificationsControllerProvider);
-    final isSearchOpen = useState(false);
+    // final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
 
     useListenable(searchController);
@@ -37,31 +33,29 @@ class NotificationScreen extends HookConsumerWidget {
     }
 
     switch (user.valueOrNull?.role) {
-      
       case UserRole.melave:
       default:
         return Scaffold(
-       appBar: AppBar(
-        centerTitle: true,
-        actions: [
-          GestureDetector(
-          child: const Icon(
-            Icons.settings,
-            color: Colors.black,
+          appBar: AppBar(
+            centerTitle: true,
+            actions: [
+              GestureDetector(
+                child: const Icon(
+                  Icons.settings,
+                  color: Colors.black,
+                ),
+                onTap: () => const NotificationSettingRouteData().go(context),
+              ),
+            ],
+            leading: GestureDetector(
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              onTap: () => const HomeRouteData().go(context),
+            ),
+            title: const Text(" התראות"),
           ),
-          onTap: () => const NotificationSettingRouteData().go(context),
-        ),
-        ],
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onTap: () => const HomeRouteData().go(context),
-        ),
-        title: const Text(" התראות"),
-      ),
-          
           body: RefreshIndicator.adaptive(
             onRefresh: () =>
                 ref.refresh(notificationsControllerProvider.future),
@@ -83,7 +77,6 @@ class NotificationScreen extends HookConsumerWidget {
                       (index) => NotificationDto(
                         event: 'titletitletitletitle',
                         dateTime: DateTime.now().toIso8601String(),
-                     
                       ),
                     ),
                   ),
