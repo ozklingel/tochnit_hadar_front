@@ -64,13 +64,16 @@ class ReportsController extends _$ReportsController {
     }
   }
 
-  Future<bool> add(ReportDto report) async {
+  Future<bool> create(ReportDto report) async {
     try {
       final result = await ref.read(dioServiceProvider).post(
         Consts.addReport,
         data: {
-          'userId': ref.read(storageProvider.notifier).getUserPhone(),
-          'List_of_apprentices': report.recipients,
+          'List_of_repored': report.recipients,
+          'event_type': report.reportEventType.name,
+          'description': report.description,
+          'attachments': report.attachments,
+          'date': report.dateTime,
         },
       );
 
@@ -82,7 +85,7 @@ class ReportsController extends _$ReportsController {
         return true;
       }
     } catch (e) {
-      Logger().e('failed to delete report', error: e);
+      Logger().e('failed to add report', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
     }
@@ -98,8 +101,11 @@ class ReportsController extends _$ReportsController {
           'reportId': report.id,
         },
         data: {
-          'userId': ref.read(storageProvider.notifier).getUserPhone(),
-          'List_of_apprentices': report.recipients,
+          'List_of_repored': report.recipients,
+          'event_type': report.reportEventType.name,
+          'description': report.description,
+          'attachments': report.attachments,
+          'date': report.dateTime,
         },
       );
 

@@ -644,17 +644,35 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                   selectedDatetime.value == null ||
                                   selectedApprentices.value.isEmpty
                               ? null
-                              : () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => const SuccessDialog(
-                                      msg: 'הדיווח הושלם בהצלחה!',
-                                    ),
+                              : () async {
+                                  final controllerNotifier = ref
+                                      .read(reportsControllerProvider.notifier);
+
+                                  final processedReport = report.copyWith(
+                                    attachments: uploadedFiles.value,
+                                    dateTime: selectedDatetime.value
+                                            ?.toIso8601String() ??
+                                        DateTime.now().toIso8601String(),
+                                    recipients: selectedApprentices.value
+                                        .map((e) => e.id)
+                                        .toList(),
+                                    reportEventType: selectedEventType.value,
                                   );
 
-                                  // TODO(noga-dev): account for new or edit
+                                  final result = reportId.isEmpty
+                                      ? await controllerNotifier
+                                          .create(processedReport)
+                                      : await controllerNotifier
+                                          .edit(processedReport);
 
-                                  Toaster.unimplemented();
+                                  if (result && context.mounted) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => const SuccessDialog(
+                                        msg: 'הדיווח הושלם בהצלחה!',
+                                      ),
+                                    );
+                                  }
                                 },
                         ),
                       ),
