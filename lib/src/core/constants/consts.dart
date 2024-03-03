@@ -12,7 +12,7 @@ abstract class Consts {
 
   // START APIS
   static const baseUrl =
-      'https://mis11ka38j.execute-api.us-east-1.amazonaws.com/';
+      'http://127.0.0.1:5000/';
 
   // onboarding
   static const getAllCities = 'onboarding_form/get_CitiesDB';

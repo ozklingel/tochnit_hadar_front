@@ -199,18 +199,27 @@ class NotificationScreen extends HookConsumerWidget {
       case UserRole.melave:
       default:
         return Scaffold(
-          appBar: SearchAppBar(
-            controller: searchController,
-            isSearchOpen: isSearchOpen,
-            text: 'הודעות נכנסות',
-            actions: [
-              IconButton(
-                onPressed: () => isSearchOpen.value = true,
-                icon: const Icon(FluentIcons.search_24_regular),
-              ),
-              const SizedBox(width: 16),
-            ],
+       appBar: AppBar(
+        centerTitle: true,
+        actions: [
+          GestureDetector(
+          child: const Icon(
+            Icons.settings,
+            color: Colors.black,
           ),
+          onTap: () => const NotificationSettingRouteData().go(context),
+        ),
+        ],
+        leading: GestureDetector(
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onTap: () => const HomeRouteData().go(context),
+        ),
+        title: const Text(" התראות"),
+      ),
+          
           body: RefreshIndicator.adaptive(
             onRefresh: () => ref.refresh(notificationsControllerProvider.future),
             child: msgsController.unwrapPrevious().when(
@@ -272,8 +281,8 @@ class _SearchResultsBody extends StatelessWidget {
     if (messages.isEmpty) {
       return EmptyState(
         image: Assets.images.noMessages.svg(),
-        topText: 'אין הודעות נכנסות',
-        bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
+        topText: 'אין  התראות',
+        bottomText: 'התראות נכנסות שיוצרו, יופיעו כאן',
       );
     }
 
