@@ -4,16 +4,19 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/models/notification/notification.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/notifications/controller/messages_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/notifications/views/widgets/message_widget.dart';
+import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/notifications/views/widgets/notification_widget.dart';
 import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+//import '../../../../../models/message/message.dto.dart';
+//import '../../messages/controller/messages_controller.dart';
 
 class NotificationScreen extends HookConsumerWidget {
   const NotificationScreen({super.key});
@@ -21,7 +24,7 @@ class NotificationScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
-    final msgsController = ref.watch(messagesControllerProvider);
+    final msgsController = ref.watch(notificationsControllerProvider);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
 
@@ -72,13 +75,13 @@ class NotificationScreen extends HookConsumerWidget {
                   )
                 : null,
             body: RefreshIndicator.adaptive(
-              onRefresh: () => ref.refresh(messagesControllerProvider.future),
+              onRefresh: () => ref.refresh(notificationsControllerProvider.future),
               child: msgsController.when(
                 loading: () => ListView(
                   children: List.generate(
                     10,
-                    (index) => MessageWidget.collapsed(
-                      message: MessageDto(
+                    (index) => notificationWidget.collapsed(
+                      message: notificationDto(
                         title: 'titletitletitletitle',
                         content: 'contentcontentcontent',
                         dateTime: DateTime.now().toIso8601String(),
@@ -93,19 +96,19 @@ class NotificationScreen extends HookConsumerWidget {
                   final customerService = msgList
                       .where(
                         (element) =>
-                            element.type == MessageType.customerService,
+                            element.type == notificationType.customerService,
                       )
                       .toList();
 
                   final sent = msgList
                       .where(
-                        (element) => element.type == MessageType.sent,
+                        (element) => element.type == notificationType.sent,
                       )
                       .toList();
 
                   final draft = msgList
                       .where(
-                        (element) => element.type == MessageType.draft,
+                        (element) => element.type == notificationType.draft,
                       )
                       .toList();
 
@@ -123,7 +126,7 @@ class NotificationScreen extends HookConsumerWidget {
                               .map(
                                 (e) => Skeletonizer(
                                   enabled: false,
-                                  child: MessageWidget.collapsed(
+                                  child: notificationWidget.collapsed(
                                     message: e,
                                     hasIcon: true,
                                     backgroundColor: e.allreadyRead
@@ -144,12 +147,12 @@ class NotificationScreen extends HookConsumerWidget {
                         ListView(
                           children: msgList
                               .where(
-                                (element) => element.type == MessageType.sent,
+                                (element) => element.type == notificationType.sent,
                               )
                               .map(
                                 (e) => Skeletonizer(
                                   enabled: false,
-                                  child: MessageWidget.collapsed(
+                                  child: notificationWidget.collapsed(
                                     message: e,
                                     hasIcon: true,
                                     backgroundColor: e.allreadyRead
@@ -170,12 +173,12 @@ class NotificationScreen extends HookConsumerWidget {
                         ListView(
                           children: msgList
                               .where(
-                                (element) => element.type == MessageType.draft,
+                                (element) => element.type == notificationType.draft,
                               )
                               .map(
                                 (e) => Skeletonizer(
                                   enabled: false,
-                                  child: MessageWidget.collapsed(
+                                  child: notificationWidget.collapsed(
                                     message: e,
                                     hasIcon: true,
                                     backgroundColor: e.allreadyRead
@@ -209,7 +212,7 @@ class NotificationScreen extends HookConsumerWidget {
             ],
           ),
           body: RefreshIndicator.adaptive(
-            onRefresh: () => ref.refresh(messagesControllerProvider.future),
+            onRefresh: () => ref.refresh(notificationsControllerProvider.future),
             child: msgsController.unwrapPrevious().when(
                   error: (error, s) => CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -225,7 +228,7 @@ class NotificationScreen extends HookConsumerWidget {
                     isLoading: true,
                     messages: List.generate(
                       10,
-                      (index) => MessageDto(
+                      (index) => notificationDto(
                         title: 'titletitletitletitle',
                         content: 'contentcontentcontent',
                         dateTime: DateTime.now().toIso8601String(),
@@ -261,7 +264,7 @@ class _SearchResultsBody extends StatelessWidget {
     required this.isLoading,
   });
 
-  final List<MessageDto> messages;
+  final List<notificationDto> messages;
   final bool isLoading;
 
   @override
@@ -279,7 +282,7 @@ class _SearchResultsBody extends StatelessWidget {
           .map(
             (e) => Skeletonizer(
               enabled: isLoading,
-              child: MessageWidget.collapsed(
+              child: notificationWidget.collapsed(
                 message: e,
               ),
             ),

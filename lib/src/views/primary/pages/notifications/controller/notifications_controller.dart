@@ -1,30 +1,31 @@
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:hadar_program/src/models/message/message.dto.dart';
-import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart';
+import 'package:hadar_program/src/models/notification/notification.dto.dart';
+import 'package:hadar_program/src/services/api/notification/get_notifications.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-part 'messages_controller.g.dart';
+
+part 'notifications_controller.g.dart';
 
 @Riverpod(
   dependencies: [
     DioService,
-    GetMessages,
+    GetNotifications,
     GetApprentices,
   ],
 )
-class MessagesController extends _$MessagesController {
+class notificationsController extends _$notificationsController {
   @override
-  FutureOr<List<MessageDto>> build() async {
-    final messages = await ref.watch(getMessagesProvider.future);
+  Future<List<notificationDto>> build() async {
+    final notifications = await ref.watch(getNotificationsProvider.future);
 
-    return messages;
+    return notifications;
   }
 
-  Future<bool> setToReadStatus(MessageDto msg) async {
+  Future<bool> setToReadStatus(notificationDto msg) async {
     if (msg.allreadyRead) {
       return true;
     }
@@ -33,7 +34,7 @@ class MessagesController extends _$MessagesController {
       await ref.read(dioServiceProvider).post(
         Consts.setMessagesWasRead,
         data: {
-          'message_id': msg.id,
+          'notification_id': msg.id,
         },
       );
 
@@ -46,12 +47,12 @@ class MessagesController extends _$MessagesController {
     }
   }
 
-  Future<bool> deleteMessage(String messageId) async {
+  Future<bool> deletenotification(String notificationId) async {
     try {
       final result = await ref.read(dioServiceProvider).delete(
         Consts.deleteMessage,
         data: {
-          'entityId': messageId,
+          'entityId': notificationId,
         },
       );
 

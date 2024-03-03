@@ -3,6 +3,8 @@ import 'package:hadar_program/src/services/arch/flags_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../models/notification/notification.dto.dart';
+
 part 'get_notifications.g.dart';
 
 @Riverpod(
@@ -13,20 +15,16 @@ part 'get_notifications.g.dart';
 )
 class GetNotifications extends _$GetNotifications {
   @override
-  FutureOr<List<Map<String, dynamic>>> build() async {
-    final flags = ref.watch(flagsServiceProvider);
+  FutureOr<List<notificationDto>> build() async {
 
-    if (flags.isMock) {
-      return flags.notifications;
-    }
 
     final request =
-        await ref.watch(dioServiceProvider).get(Consts.getAllNotifications);
+        await ref.watch(dioServiceProvider).get(Consts.getAllMessages);
 
-    final result = (request.data as List<dynamic>)
-        .map<Map<String, dynamic>>((e) => e)
+    final parsed = (request.data as List<dynamic>)
+        .map((e) => notificationDto.fromJson(e))
         .toList();
 
-    return result;
+    return parsed;
   }
 }
