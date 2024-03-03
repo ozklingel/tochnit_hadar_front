@@ -61,7 +61,7 @@ class ReportsScreen extends HookConsumerWidget {
 
     final selectedIds = useState(<String>[]);
     final filters = useState(<String>[]);
-    final sortBy = useState(SortReportBy.fromA2Z);
+    final sortBy = useState(SortReportBy.abcAscending);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
     useListenable(searchController);
@@ -206,11 +206,11 @@ class ReportsScreen extends HookConsumerWidget {
                             );
 
                             switch (result) {
-                              case SortReportBy.fromA2Z:
-                                sortBy.value = SortReportBy.fromA2Z;
+                              case SortReportBy.abcAscending:
+                                sortBy.value = SortReportBy.abcAscending;
                                 ref
                                     .read(reportsControllerProvider.notifier)
-                                    .sortBy(SortReportBy.fromA2Z);
+                                    .sortBy(SortReportBy.abcAscending);
                                 break;
                               case SortReportBy.timeFromCloseToFar:
                                 sortBy.value = SortReportBy.timeFromCloseToFar;
@@ -462,10 +462,10 @@ class _SortByDialog extends HookWidget {
                 style: TextStyles.s16w400cGrey5,
               ),
               RadioListTile(
-                value: SortReportBy.fromA2Z,
+                value: SortReportBy.abcAscending,
                 groupValue: sortVal.value,
                 onChanged: (_) =>
-                    Navigator.of(context).pop(SortReportBy.fromA2Z),
+                    Navigator.of(context).pop(SortReportBy.abcAscending),
                 title: const Text('א-ב'),
               ),
               RadioListTile(

@@ -1041,6 +1041,8 @@ class FiltersScreen extends HookConsumerWidget {
                                             initiallySelected:
                                                 selectedRecipients.value,
                                           );
+                                        case _FilterType.reports:
+                                        // const ReportsScreen();
                                         default:
                                           Toaster.unimplemented();
                                           return ErrorWidget.withDetails(

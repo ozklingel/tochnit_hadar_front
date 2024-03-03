@@ -13,7 +13,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 part 'reports_controller.g.dart';
 
 enum SortReportBy {
-  fromA2Z,
+  abcAscending,
   timeFromCloseToFar,
   timeFromFarToClose,
 }
@@ -40,7 +40,7 @@ class ReportsController extends _$ReportsController {
 
   void sortBy(SortReportBy sortBy) {
     switch (sortBy) {
-      case SortReportBy.fromA2Z:
+      case SortReportBy.abcAscending:
         final result = state.value!;
         final sorted =
             result.sortedBy<String>((element) => element.description);
