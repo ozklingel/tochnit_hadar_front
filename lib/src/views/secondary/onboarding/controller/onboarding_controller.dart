@@ -127,5 +127,7 @@ class OnboardingController extends _$OnboardingController {
 }
 
 extension _FixPhoneX on String {
-  String get fixRawPhone => '972${substring(1, 10)}';
+  // new changes after deciding with oz to omit the country code 972
+  // String get fixRawPhone => '972${substring(1, 10)}';
+  String get fixRawPhone => substring(1, 10);
 }

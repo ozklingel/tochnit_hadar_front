@@ -15,21 +15,11 @@ part 'dio_service.g.dart';
 class DioService extends _$DioService {
   @override
   Dio build() {
-    final authToken = ref
-            .watch(storageProvider)
-            .requireValue
-            .getString(Consts.accessTokenKey) ??
-        '';
+    ref.watch(storageProvider);
 
-    final userPhone = ref
-            .watch(
-              storageProvider,
-            )
-            .requireValue
-            .getString(
-              Consts.userPhoneKey,
-            ) ??
-        '';
+    final authToken = ref.read(storageProvider.notifier).getAuthToken();
+
+    final userPhone = ref.read(storageProvider.notifier).getUserPhone();
 
     final dio = Dio(
       BaseOptions(

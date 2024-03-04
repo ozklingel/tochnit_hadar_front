@@ -18,9 +18,15 @@ class Storage extends _$Storage {
   }
 
   String getUserPhone() {
-    return state.requireValue.getString(
+    final result = state.requireValue.getString(
           Consts.userPhoneKey,
         ) ??
         '';
+
+    if (result.startsWith('972')) {
+      return result.replaceFirst('972', '');
+    }
+
+    return result;
   }
 }
