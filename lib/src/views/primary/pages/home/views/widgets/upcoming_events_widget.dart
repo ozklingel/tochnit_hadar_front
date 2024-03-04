@@ -5,6 +5,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class UpcomingEventsWidget extends ConsumerWidget {
@@ -14,23 +15,9 @@ class UpcomingEventsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    // final upcomingEvents =
-    //     ref.watch(eventsControllerProvider).valueOrNull ?? [];
-
-    final children = [
-      const _EventCard(
-        // event: apprentice.events.firstOrNull ?? const EventDto(),
-        event: EventDto(),
-      ),
-      const _EventCard(
-        // event: apprentice.events.firstOrNull ?? const EventDto(),
-        event: EventDto(),
-      ),
-      const _EventCard(
-        // event: apprentice.events.firstOrNull ?? const EventDto(),
-        event: EventDto(),
-      ),
-    ];
+    final upcomingEvents =
+        ref.watch(eventsControllerProvider).valueOrNull?.take(99).toList() ??
+            [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -43,17 +30,21 @@ class UpcomingEventsWidget extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        SizedBox(
-          height: 100,
-          child: ListView.separated(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            separatorBuilder: (_, __) => const SizedBox(width: 16),
-            itemCount: children.length,
-            itemBuilder: (context, index) => children[index],
+        if (upcomingEvents.isEmpty)
+          const Center(child: Text('אין'))
+        else
+          SizedBox(
+            height: 100,
+            child: ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              separatorBuilder: (_, __) => const SizedBox(width: 16),
+              itemCount: upcomingEvents.length,
+              itemBuilder: (context, index) =>
+                  _EventCard(event: upcomingEvents[index]),
+            ),
           ),
-        ),
       ],
     );
   }

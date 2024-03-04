@@ -85,6 +85,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                   children: calls
                       .map(
                         (e) => TaskCard(
+                          task: e,
                           isSelected: selectedCalls.value.contains(e),
                           onTap: () => e.apprenticeIds.isEmpty
                               ? null
@@ -100,7 +101,6 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                               selectedCalls.value = [...selectedCalls.value, e];
                             }
                           },
-                          task: e,
                         ),
                       )
                       .toList(),
@@ -123,6 +123,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                   children: meetings
                       .map(
                         (e) => TaskCard(
+                          task: e,
                           isSelected: selectedMeetings.value.contains(e),
                           onTap: () => e.apprenticeIds.isEmpty
                               ? null
@@ -141,7 +142,6 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                               ];
                             }
                           },
-                          task: e,
                         ),
                       )
                       .toList(),
@@ -164,6 +164,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                   children: parents
                       .map(
                         (e) => TaskCard(
+                          task: e,
                           isSelected: selectedParents.value.contains(e),
                           onTap: () => e.apprenticeIds.isEmpty
                               ? null
@@ -182,7 +183,6 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                               ];
                             }
                           },
-                          task: e,
                         ),
                       )
                       .toList(),

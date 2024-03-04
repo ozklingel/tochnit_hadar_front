@@ -12,7 +12,7 @@ abstract class Consts {
 
   // START APIS
   static const baseUrl =
-      'http://127.0.0.1:5000/';
+      'https://mis11ka38j.execute-api.us-east-1.amazonaws.com/';
 
   // onboarding
   static const getAllCities = 'onboarding_form/get_CitiesDB';
@@ -24,7 +24,8 @@ abstract class Consts {
   static const deleteMessage = 'messegaes_form/delete';
 
   // homepage
-  static const homePageInitMaster = '/homepage_form/initMaster';
+  static const getHomePageInitMaster = '/homepage_form/initMaster';
+  static const getClosestEvents = '/homepage_form/get_closest_Events';
 
   // master
   static const deleteApprentice = 'master_user/deleteEnt';

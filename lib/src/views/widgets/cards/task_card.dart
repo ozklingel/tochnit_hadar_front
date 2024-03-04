@@ -27,6 +27,7 @@ class TaskCard extends ConsumerWidget {
     final apprentice =
         ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
                   (element) => task.apprenticeIds.contains(element.id),
+                  orElse: () => const ApprenticeDto(),
                 ) ??
             const ApprenticeDto();
 

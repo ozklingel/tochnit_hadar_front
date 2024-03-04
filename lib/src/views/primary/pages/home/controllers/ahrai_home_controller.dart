@@ -14,7 +14,7 @@ class AhraiHomeController extends _$AhraiHomeController {
   @override
   Future<AhraiHomeDto> build() async {
     final request =
-        await ref.watch(dioServiceProvider).get(Consts.homePageInitMaster);
+        await ref.watch(dioServiceProvider).get(Consts.getHomePageInitMaster);
 
     final result = AhraiHomeDto.fromJson(request.data);
 
