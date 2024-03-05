@@ -37,7 +37,7 @@ class MessagesController extends _$MessagesController {
         },
       );
 
-      ref.invalidateSelf();
+      ref.invalidate(getMessagesProvider);
 
       return true;
     } catch (e) {

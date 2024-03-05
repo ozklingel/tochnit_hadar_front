@@ -19,6 +19,8 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider).valueOrNull ?? const UserDto();
+
     final message = ref.watch(
       messagesControllerProvider.select(
         (val) {
@@ -53,17 +55,20 @@ class MessageDetailsScreen extends HookConsumerWidget {
             child: const Icon(Icons.more_vert),
             itemBuilder: (context) {
               return [
-                if (message.type == MessageType.draft ||
-                    message.dateTime.asDateTime.isAfter(DateTime.now()))
+                if (user.role != UserRole.melave)
+                  if (message.type == MessageType.draft ||
+                      message.dateTime.asDateTime.isAfter(DateTime.now()))
+                    PopupMenuItem(
+                      child: const Text('עריכה'),
+                      onTap: () => Toaster.unimplemented(),
+                    ),
+                if (user.role != UserRole.melave)
                   PopupMenuItem(
-                    child: const Text('עריכה'),
+                    child: const Text('שכפול'),
                     onTap: () => Toaster.unimplemented(),
                   ),
-                PopupMenuItem(
-                  child: const Text('שכפול'),
-                  onTap: () async {},
-                ),
-                if (message.type == MessageType.draft ||
+                if (user.role == UserRole.melave ||
+                    message.type == MessageType.draft ||
                     message.dateTime.asDateTime.isAfter(DateTime.now()))
                   PopupMenuItem(
                     value: 'delete',

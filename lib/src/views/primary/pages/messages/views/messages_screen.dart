@@ -210,45 +210,45 @@ class MessagesScreen extends HookConsumerWidget {
           ),
           body: RefreshIndicator.adaptive(
             onRefresh: () => ref.refresh(messagesControllerProvider.future),
-            child: msgsController.unwrapPrevious().when(
-                  error: (error, s) => CustomScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    slivers: [
-                      SliverFillRemaining(
-                        child: Center(
-                          child: Text(error.toString()),
-                        ),
-                      ),
-                    ],
-                  ),
-                  loading: () => _SearchResultsBody(
-                    isLoading: true,
-                    messages: List.generate(
-                      10,
-                      (index) => MessageDto(
-                        title: 'titletitletitletitle',
-                        content: 'contentcontentcontent',
-                        dateTime: DateTime.now().toIso8601String(),
-                        attachments: ['attachment'],
-                        from: '549247615',
-                      ),
+            child: msgsController.when(
+              error: (error, s) => CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: [
+                  SliverFillRemaining(
+                    child: Center(
+                      child: Text(error.toString()),
                     ),
                   ),
-                  data: (messages) => _SearchResultsBody(
-                    isLoading: false,
-                    messages: messages
-                        .where(
-                          (element) =>
-                              element.content
-                                  .toLowerCase()
-                                  .contains(searchController.text) ||
-                              element.title
-                                  .toLowerCase()
-                                  .contains(searchController.text),
-                        )
-                        .toList(),
+                ],
+              ),
+              loading: () => _SearchResultsBody(
+                isLoading: true,
+                messages: List.generate(
+                  10,
+                  (index) => MessageDto(
+                    title: 'titletitletitletitle',
+                    content: 'contentcontentcontent',
+                    dateTime: DateTime.now().toIso8601String(),
+                    attachments: ['attachment'],
+                    from: '549247615',
                   ),
                 ),
+              ),
+              data: (messages) => _SearchResultsBody(
+                isLoading: false,
+                messages: messages
+                    .where(
+                      (element) =>
+                          element.content
+                              .toLowerCase()
+                              .contains(searchController.text) ||
+                          element.title
+                              .toLowerCase()
+                              .contains(searchController.text),
+                    )
+                    .toList(),
+              ),
+            ),
           ),
         );
     }
@@ -281,6 +281,8 @@ class _SearchResultsBody extends StatelessWidget {
               enabled: isLoading,
               child: MessageWidget.collapsed(
                 message: e,
+                backgroundColor:
+                    e.allreadyRead ? Colors.white : AppColors.blue08,
               ),
             ),
           )
