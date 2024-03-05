@@ -5,7 +5,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'events_controller.g.dart';
 
 @Riverpod(
-  dependencies: [],
+  dependencies: [
+    GetClosestEvents,
+  ],
 )
 class EventsController extends _$EventsController {
   @override

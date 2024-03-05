@@ -30,6 +30,11 @@ class CompoundDto with _$CompoundDto {
       fromJson: _extractLng,
     )
     double lng,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String address,
   }) = _CompoundDto;
 
   factory CompoundDto.fromJson(Map<String, dynamic> json) =>

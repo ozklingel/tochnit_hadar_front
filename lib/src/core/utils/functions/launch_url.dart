@@ -7,27 +7,53 @@ import 'dart:io';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+void launchWaze({
+  required String lat,
+  required String lng,
+}) async {
+  final url = 'https://www.waze.com/ul?ll=$lat%2C-$lng&navigate=yes&zoom=17';
+
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url));
+  } else {
+    Toaster.error('Some waze occurred. Please try again!');
+  }
+}
+
+void launchGoogleMaps({
+  required String lat,
+  required String lng,
+}) async {
+  final url = 'https://www.google.com/maps?q=$lat,$lng';
+
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url));
+  } else {
+    Toaster.error('Some google maps occurred. Please try again!');
+  }
+}
+
 void launchWhatsapp({
   required String phone,
   String text = '',
 }) async {
-  var whatsapp = phone; //+92xx enter like this
-  var whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=$text";
-  var whatsappURLIos = "https://wa.me/$whatsapp?text=${Uri.tryParse(text)}";
+  final whatsapp = phone; //+92xx enter like this
+  final whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=$text";
+  final whatsappURLIos = "https://wa.me/$whatsapp?text=${Uri.tryParse(text)}";
 
   if (Platform.isIOS) {
     // for iOS phone only
     if (await canLaunchUrl(Uri.parse(whatsappURLIos))) {
       await launchUrl(Uri.parse(whatsappURLIos));
     } else {
-      Toaster.error('Some whatsapp occurred. Please try again!');
+      Toaster.error('Some whatsapp error occurred. Please try again!');
     }
   } else {
     // android , web
     if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
       await launchUrl(Uri.parse(whatsappURlAndroid));
     } else {
-      Toaster.error('Some whatsapp occurred. Please try again!');
+      Toaster.error('Some whatsapp error occurred. Please try again!');
     }
   }
 }
@@ -65,7 +91,7 @@ void launchEmail({
   if (await canLaunchUrl(url)) {
     launchUrl(url);
   } else {
-    Toaster.error('Some error email occurred. Please try again!');
+    Toaster.error('Some email error occurred. Please try again!');
   }
 }
 
@@ -76,6 +102,6 @@ void launchPhone({
   if (await canLaunchUrl(url)) {
     launchUrl(url);
   } else {
-    Toaster.error('Some error phone occurred. Please try again!');
+    Toaster.error('Some phone error occurred. Please try again!');
   }
 }

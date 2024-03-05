@@ -93,12 +93,13 @@ abstract class Consts {
 
   // geolocation
   static const defaultCameraPosition = CameraPosition(
+    zoom: defaultGeolocationZoom,
     target: LatLng(
       defaultGeolocationLat,
       defaultGeolocationLng,
     ),
   );
-  static const defaultGeolocationZoom = 12.0;
+  static const defaultGeolocationZoom = 9.0;
   static const defaultGeolocationLat = 32.06834658255528;
   static const defaultGeolocationLng = 34.78350443313145;
 

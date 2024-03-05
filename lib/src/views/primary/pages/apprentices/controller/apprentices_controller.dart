@@ -21,6 +21,8 @@ class ApprenticesController extends _$ApprenticesController {
   FutureOr<List<ApprenticeDto>> build() async {
     final apprentices = await ref.watch(getApprenticesProvider.future);
 
+    ref.keepAlive();
+
     return apprentices;
   }
 

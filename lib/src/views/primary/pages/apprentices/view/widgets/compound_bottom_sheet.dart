@@ -44,10 +44,10 @@ List<PopupMenuItem<dynamic>> getApprenticeCardPopupItems({
 class CompoundBottomSheet extends HookConsumerWidget {
   const CompoundBottomSheet({
     super.key,
-    required this.e,
+    required this.compound,
   });
 
-  final CompoundDto e;
+  final CompoundDto compound;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -55,7 +55,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
             .watch(apprenticesControllerProvider)
             .valueOrNull
             ?.where(
-              (element) => element.militaryCompoundId == e.id,
+              (element) => element.militaryCompoundId == compound.id,
             )
             .toList() ??
         [];
@@ -108,12 +108,12 @@ class CompoundBottomSheet extends HookConsumerWidget {
                     const SizedBox(height: 12),
                     DetailsRowItem(
                       label: 'שם הבסיס',
-                      data: e.name,
+                      data: compound.name,
                     ),
                     const SizedBox(height: 12),
                     DetailsRowItem(
                       label: 'כתובת',
-                      data: e.latLng.toString(),
+                      data: compound.address,
                     ),
                     const SizedBox(height: 24),
                     SizedBox(
@@ -166,19 +166,19 @@ class CompoundBottomSheet extends HookConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) => ListTileWithTagsCard(
-                    name: e.name,
-                    isSelected: selectedIds.value.contains(e.id),
+                    name: apprentices[index].fullName,
+                    isSelected: selectedIds.value.contains(compound.id),
                     onLongPress: () {
-                      if (selectedIds.value.contains(e.id)) {
+                      if (selectedIds.value.contains(compound.id)) {
                         final newList = selectedIds;
-                        newList.value.remove(e.id);
+                        newList.value.remove(compound.id);
                         selectedIds.value = [
                           ...newList.value,
                         ];
                       } else {
                         selectedIds.value = [
                           ...selectedIds.value,
-                          e.id,
+                          compound.id,
                         ];
                       }
                     },
@@ -221,12 +221,12 @@ class CompoundBottomSheet extends HookConsumerWidget {
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(height: 16),
-                                const Text.rich(
+                                Text.rich(
                                   TextSpan(
                                     children: [
-                                      TextSpan(text: 'ניווט אל הכתובת:'),
-                                      TextSpan(text: ' '),
-                                      TextSpan(text: ''),
+                                      const TextSpan(text: 'ניווט אל הכתובת:'),
+                                      const TextSpan(text: ' '),
+                                      TextSpan(text: compound.address),
                                     ],
                                   ),
                                   style: TextStyles.s16w400cGrey2,
@@ -248,15 +248,19 @@ class CompoundBottomSheet extends HookConsumerWidget {
                                       LargeFilledRoundedButton(
                                         label: 'Google Maps',
                                         textStyle: TextStyles.s16w500cGrey2,
-                                        onPressed: () =>
-                                            Toaster.unimplemented(),
+                                        onPressed: () => launchGoogleMaps(
+                                          lat: compound.lat.toString(),
+                                          lng: compound.lng.toString(),
+                                        ),
                                       ),
                                       const SizedBox(width: 12),
                                       LargeFilledRoundedButton(
                                         label: 'Waze',
                                         textStyle: TextStyles.s16w500cGrey2,
-                                        onPressed: () =>
-                                            Toaster.unimplemented(),
+                                        onPressed: () => launchWaze(
+                                          lat: compound.lat.toString(),
+                                          lng: compound.lng.toString(),
+                                        ),
                                       ),
                                     ],
                                   ),

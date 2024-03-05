@@ -12,6 +12,7 @@ import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/geolocation/geolocation_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/address_controller.dart';
@@ -67,25 +68,29 @@ class ApprenticesScreenBody extends HookConsumerWidget {
               selectedIds: selectedIds,
               mapCameraPosition: mapCameraPosition,
             )
-          : isMapShown.value
-              ? ref.watch(geoLocationServiceProvider).when(
-                    loading: () => const LoadingWidget(),
-                    error: (error, stack) => _MapWidget(
-                      onListTypePressed: () => isMapShown.value = false,
-                      cameraPostion: mapCameraPosition.value ??
-                          Consts.defaultCameraPosition,
+          : _FadeIndexedStack(
+              index: isMapShown.value ? 0 : 1,
+              children: [
+                ref.watch(geoLocationServiceProvider).when(
+                      loading: () => const LoadingWidget(),
+                      error: (error, stack) => _MapWidget(
+                        onListTypePressed: () => isMapShown.value = false,
+                        cameraPostion: mapCameraPosition.value ??
+                            Consts.defaultCameraPosition,
+                      ),
+                      data: (currentPosition) => _MapWidget(
+                        onListTypePressed: () => isMapShown.value = false,
+                        cameraPostion: mapCameraPosition.value ??
+                            Consts.defaultCameraPosition,
+                      ),
                     ),
-                    data: (currentPosition) => _MapWidget(
-                      onListTypePressed: () => isMapShown.value = false,
-                      cameraPostion: mapCameraPosition.value ??
-                          Consts.defaultCameraPosition,
-                    ),
-                  )
-              : _ApprenticeList(
+                _ApprenticeList(
                   searchController: searchController,
                   selectedIds: selectedIds,
                   isMapShownPressed: () => isMapShown.value = true,
                 ),
+              ],
+            ),
     );
   }
 }
@@ -101,30 +106,36 @@ class _MapWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final compoundController =
-        ref.watch(compoundControllerProvider).valueOrNull ?? [];
+    final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
     final apprentices =
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
     final mapController = useRef(Completer<GoogleMapController>());
-    final markers = useState<Set<Marker>>({});
+    final markers = useState(<Marker>{});
 
     useEffect(
       () {
         void init() async {
           final localMarkers = <Marker>{};
 
-          for (final e in compoundController) {
+          for (final c in compounds) {
+            final totalApprentices = apprentices
+                .where(
+                  (element) => element.militaryCompoundId == c.id,
+                )
+                .length
+                .toString();
+
             localMarkers.add(
               Marker(
-                markerId: MarkerId(e.id),
+                markerId: MarkerId(c.id),
                 position: LatLng(
-                  e.lat,
-                  e.lng,
+                  c.lat,
+                  c.lng,
                 ),
                 onTap: () => showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  builder: (context) => CompoundBottomSheet(e: e),
+                  builder: (context) => CompoundBottomSheet(compound: c),
                 ),
                 icon: await Padding(
                   padding: const EdgeInsets.all(12),
@@ -161,16 +172,10 @@ class _MapWidget extends HookConsumerWidget {
                         TextSpan(
                           style: TextStyles.s16w500cGrey2,
                           children: [
-                            TextSpan(text: e.name),
+                            TextSpan(text: c.name),
                             const TextSpan(text: '\n'),
                             TextSpan(
-                              text: apprentices
-                                  .where(
-                                    (element) =>
-                                        element.militaryCompoundId == e.id,
-                                  )
-                                  .length
-                                  .toString(),
+                              text: totalApprentices,
                               style: const TextStyle(color: AppColors.blue04),
                             ),
                           ],
@@ -193,7 +198,7 @@ class _MapWidget extends HookConsumerWidget {
 
         return null;
       },
-      [compoundController],
+      [compounds, apprentices],
     );
 
     return Stack(
@@ -299,12 +304,8 @@ class _ApprenticeList extends ConsumerWidget {
           ),
           Expanded(
             child: RefreshIndicator.adaptive(
-              onRefresh: () =>
-                  ref.refresh(apprenticesControllerProvider.future),
-              child: ref
-                  .watch(apprenticesControllerProvider)
-                  .unwrapPrevious()
-                  .when(
+              onRefresh: () => ref.refresh(getApprenticesProvider.future),
+              child: ref.watch(apprenticesControllerProvider).when(
                     error: (error, stack) => CustomScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       slivers: [
@@ -360,22 +361,21 @@ class _ListBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final compounds = ref.watch(compoundControllerProvider).valueOrNull;
-    final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
+    final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
+    final institutions =
+        ref.watch(institutionsControllerProvider).valueOrNull ?? [];
 
     final children = apprentices.map(
       (e) {
-        final compound = compounds?.singleWhere(
-              (element) => element.id == e.militaryCompoundId,
-              orElse: () => const CompoundDto(),
-            ) ??
-            const CompoundDto();
+        final compound = compounds.singleWhere(
+          (element) => element.id == e.militaryCompoundId,
+          orElse: () => const CompoundDto(),
+        );
 
-        final institution = institutions?.singleWhere(
-              (element) => element.id == e.institutionId,
-              orElse: () => const InstitutionDto(),
-            ) ??
-            const InstitutionDto();
+        final institution = institutions.singleWhere(
+          (element) => element.id == e.institutionId,
+          orElse: () => const InstitutionDto(),
+        );
 
         return Skeletonizer(
           enabled: isLoading,
@@ -551,7 +551,7 @@ class _SearchResults extends ConsumerWidget {
                   },
                   onTap: () {
                     mapCameraPosition.value = CameraPosition(
-                      zoom: 8,
+                      zoom: Consts.defaultGeolocationZoom,
                       target: LatLng(
                         apprenticesList[Random().nextInt(cityList.length)]
                             .address
@@ -611,7 +611,7 @@ class _SearchResults extends ConsumerWidget {
                     address: e.address.fullAddress,
                     onTap: () {
                       mapCameraPosition.value = CameraPosition(
-                        zoom: 8,
+                        zoom: Consts.defaultGeolocationZoom,
                         target: LatLng(
                           cityList[Random().nextInt(cityList.length)].lat,
                           cityList[Random().nextInt(cityList.length)].lng,
@@ -673,5 +673,63 @@ class _SearchResults extends ConsumerWidget {
             );
           },
         );
+  }
+}
+
+// https://gist.github.com/diegoveloper/1cd23e79a31d0c18a67424f0cbdfd7ad
+class _FadeIndexedStack extends StatefulWidget {
+  final int index;
+  final List<Widget> children;
+
+  const _FadeIndexedStack({
+    required this.index,
+    required this.children,
+  });
+
+  @override
+  _FadeIndexedStackState createState() => _FadeIndexedStackState();
+}
+
+class _FadeIndexedStackState extends State<_FadeIndexedStack>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void didUpdateWidget(_FadeIndexedStack oldWidget) {
+    if (!mounted) return super.didUpdateWidget(oldWidget);
+
+    if (widget.index != oldWidget.index) {
+      _controller.forward(from: 0.0);
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void initState() {
+    _controller =
+        AnimationController(vsync: this, duration: Consts.defaultDurationXL);
+    _controller.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _controller,
+      // required for errors not to occur during rapid switching between tabs
+      child: RepaintBoundary(
+        child: IndexedStack(
+          index: widget.index,
+          children: widget.children,
+        ),
+      ),
+    );
   }
 }

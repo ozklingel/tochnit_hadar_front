@@ -30,6 +30,8 @@ class GetApprentices extends _$GetApprentices {
         )
         .toList();
 
+    ref.keepAlive();
+
     return result;
   }
 }
