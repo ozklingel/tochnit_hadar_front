@@ -115,17 +115,21 @@ class _MapWidget extends HookConsumerWidget {
     useEffect(
       () {
         void init() async {
-          final localMarkers = <Marker>{};
+          markers.value = {};
 
           for (final c in compounds) {
-            final totalApprentices = apprentices
-                .where(
-                  (element) => element.militaryCompoundId == c.id,
-                )
-                .length
-                .toString();
+            final totalApprentices = apprentices.where(
+              (element) => element.militaryCompoundId == c.id,
+            );
 
-            localMarkers.add(
+            // NOTE(nogadev): without this the widget is painted twice but
+            // gets overriden with a 0 as total apprentices count
+            if (totalApprentices.isEmpty) {
+              continue;
+            }
+
+            markers.value = {
+              ...markers.value,
               Marker(
                 markerId: MarkerId(c.id),
                 position: LatLng(
@@ -175,7 +179,7 @@ class _MapWidget extends HookConsumerWidget {
                             TextSpan(text: c.name),
                             const TextSpan(text: '\n'),
                             TextSpan(
-                              text: totalApprentices,
+                              text: totalApprentices.length.toString(),
                               style: const TextStyle(color: AppColors.blue04),
                             ),
                           ],
@@ -188,10 +192,8 @@ class _MapWidget extends HookConsumerWidget {
                   waitToRender: Duration.zero,
                 ),
               ),
-            );
+            };
           }
-
-          markers.value = {...localMarkers};
         }
 
         init();
