@@ -29,10 +29,11 @@ class NotificationsController extends _$NotificationsController {
     }
 
     try {
+      print(msg.id);
       await ref.read(dioServiceProvider).post(
-        Consts.setMessagesWasRead,
+        Consts.setNotificationWasRead,
         data: {
-          'notification_id': msg.id,
+          'noti_id': msg.id,
         },
       );
 

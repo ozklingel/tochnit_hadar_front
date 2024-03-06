@@ -17,4 +17,6 @@ class NotificationsController extends _$NotificationsController {
 
     return notifications;
   }
+
+
 }

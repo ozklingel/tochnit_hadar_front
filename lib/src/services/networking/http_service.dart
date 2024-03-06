@@ -27,18 +27,7 @@ class HttpService {
   static const token = "11"; //await Candidate().getToken();
   static final httpClient = HttpClient();
 
-  static getUserNotiSetting(userid) async {
-    userid = "972$userid";
-    final response = await http.get(
-      Uri.parse("$_getNotifSettingUrl?userId=$userid"),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-    return response;
-  }
+ 
 
   static Future<Future<ui.Image>> downloadFile(
     String url,
@@ -62,51 +51,37 @@ class HttpService {
     return frame.image;
   }
 
-  static getUserNoti(userid, context) async {
-    // print(userid);
-    userid = "972$userid";
-
-    debugPrint("$_getNoriUrl?userId=$userid");
+  
+ static getUserNotiSetting(userid) async {
     final response = await http.get(
-      Uri.parse("$_getNoriUrl?userId=$userid"),
+      Uri.parse("$_getNotifSettingUrl?userId=$userid"),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
-    debugPrint(response.toString());
     return response;
   }
-
   static setSetting(
     userId,
     bool notifyStartWeek,
     bool notifyDayBefore,
     bool notifyMorning,
   ) async {
-    userId = "972$userId";
+  return http.post(
+    Uri.parse(_setSettingUrl.toString()),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+            'userId': userId,
+      'notifyStartWeek': notifyStartWeek.toString(),
+            'notifyDayBefore': notifyDayBefore.toString(),
+      'notifyMorning': notifyMorning.toString()
 
-    var request = http.MultipartRequest(
-      'POST',
-      _setSettingUrl,
-    );
-    debugPrint(
-      "$notifyStartWeek$notifyDayBefore$notifyMorning $_setSettingUrl",
-    );
-    Map<String, String> headers = {"Content-type": "multipart/form-data"};
-
-    request.fields['userId'] = userId;
-    request.fields['notifyMorning'] = (notifyMorning).toString();
-    request.fields['notifyDayBefore'] = (notifyDayBefore).toString();
-    request.fields['notifyStartWeek'] = (notifyStartWeek).toString();
-    // print(notifyStartWeek);
-    request.headers.addAll(headers);
-    debugPrint("ozzzz$request");
-
-    var res = await request.send();
-    debugPrint("ozzzz$res");
-    return res;
+    }),
+  );
   }
 
   static uploadPhoto(File selectedImage, userid) async {
