@@ -48,6 +48,7 @@ class ListTileWithTagsCard extends StatelessWidget {
           color: isSelected ? AppColors.blue08 : Colors.white,
         ),
         child: Material(
+          color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: onTap,
