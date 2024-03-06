@@ -100,6 +100,7 @@ abstract class Consts {
       defaultGeolocationLng,
     ),
   );
+  static const goToObjectGeolocationZoom = 16.0;
   static const defaultGeolocationZoom = 9.0;
   static const defaultGeolocationLat = 32.06834658255528;
   static const defaultGeolocationLng = 34.78350443313145;

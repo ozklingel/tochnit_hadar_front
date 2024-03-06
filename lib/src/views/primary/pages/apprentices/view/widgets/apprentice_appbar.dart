@@ -2,26 +2,28 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/compound_bottom_sheet.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ApprenticeAppBar extends StatelessWidget {
+class ApprenticeAppBar extends ConsumerWidget {
   const ApprenticeAppBar({
     super.key,
     required this.isSearchOpen,
     required this.searchController,
     required this.selectedIds,
-    required this.apprentices,
   });
 
   final ValueNotifier<bool> isSearchOpen;
   final TextEditingController searchController;
   final ValueNotifier<List<String>> selectedIds;
-  final List<ApprenticeDto> apprentices;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final apprentices =
+        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+
     return AppBar(
       centerTitle: true,
       title: AnimatedSwitcher(
