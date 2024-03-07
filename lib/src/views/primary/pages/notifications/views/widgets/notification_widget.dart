@@ -53,48 +53,55 @@ class NotificationWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              
                 SizedBox(
                   width: 232,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        if(message.numOfLinesDisplay==3) Text(
-                        "אירוע",
-                        style: TextStyles.s18w600cShade09,
-                      ),
-                      if(message.numOfLinesDisplay==3) const SizedBox(height: 12),
-
-                            if(message.numOfLinesDisplay==3) Text(
-                        " בתאריך "+message.dateTime.substring(0,10),
-                        style: TextStyles.s16w400cGrey2,
-                      ),
-                      if(message.numOfLinesDisplay==3) const SizedBox(height: 12),
-
-                        if(message.numOfLinesDisplay==3) Text(
-                        message.event +" ל" +fromApprentice.fullName,
-                        style: TextStyles.s16w400cGrey2,
-                      ),
-                 
-                      if(message.numOfLinesDisplay==2) Text(
-                        "הגיע הזמן ל" +message.event,
-                        style: TextStyles.s18w600cShade09,
-                      ),
-                      if(message.numOfLinesDisplay==2) const SizedBox(height: 12),
-
-                           if(message.numOfLinesDisplay==2&&message.event=="מפגש") Text(
-                        " עברו " +message.daysfromnow.toString() +" ימים מה"+message.event + "  האחרון של "+fromApprentice.fullName,
-                        style: TextStyles.s16w400cGrey2,
-                      ),
-                              if(message.numOfLinesDisplay==2&&message.event=="מפגש קבוצתי") Text(
-                        " עברו " +message.daysfromnow.toString() +" ימים מה"+message.event + "  האחרון  "+fromApprentice.fullName,
-                        style: TextStyles.s16w400cGrey2,
-                      ),
-                      
-                if(message.numOfLinesDisplay==2&&message.event=="שיחה") Text(
-                        " עברו " +message.daysfromnow.toString() +" ימים מה"+message.event+ "  האחרונה ל"+fromApprentice.fullName,
-                        style: TextStyles.s16w400cGrey2,
-                      ),
+                      if (message.numOfLinesDisplay == 3)
+                        const Text(
+                          "אירוע",
+                          style: TextStyles.s18w600cShade09,
+                        ),
+                      if (message.numOfLinesDisplay == 3)
+                        const SizedBox(height: 12),
+                      if (message.numOfLinesDisplay == 3)
+                        Text(
+                          " בתאריך ${message.dateTime.substring(0, 10)}",
+                          style: TextStyles.s16w400cGrey2,
+                        ),
+                      if (message.numOfLinesDisplay == 3)
+                        const SizedBox(height: 12),
+                      if (message.numOfLinesDisplay == 3)
+                        Text(
+                          "${message.event} ל${fromApprentice.fullName}",
+                          style: TextStyles.s16w400cGrey2,
+                        ),
+                      if (message.numOfLinesDisplay == 2)
+                        Text(
+                          "הגיע הזמן ל${message.event}",
+                          style: TextStyles.s18w600cShade09,
+                        ),
+                      if (message.numOfLinesDisplay == 2)
+                        const SizedBox(height: 12),
+                      if (message.numOfLinesDisplay == 2 &&
+                          message.event == "מפגש")
+                        Text(
+                          " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון של ${fromApprentice.fullName}",
+                          style: TextStyles.s16w400cGrey2,
+                        ),
+                      if (message.numOfLinesDisplay == 2 &&
+                          message.event == "מפגש קבוצתי")
+                        Text(
+                          " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון  ${fromApprentice.fullName}",
+                          style: TextStyles.s16w400cGrey2,
+                        ),
+                      if (message.numOfLinesDisplay == 2 &&
+                          message.event == "שיחה")
+                        Text(
+                          " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה ל${fromApprentice.fullName}",
+                          style: TextStyles.s16w400cGrey2,
+                        ),
                     ],
                   ),
                 ),

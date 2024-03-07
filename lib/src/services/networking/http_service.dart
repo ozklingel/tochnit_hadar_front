@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 class HttpService {
   static const _chatBoxUrl = '${Consts.baseUrl}messegaes_form/add';
-  static const _getNoriUrl = '${Consts.baseUrl}notification_form/getAll';
+  // static const _getNoriUrl = '${Consts.baseUrl}notification_form/getAll';
   static const _getUserDetailUrl =
       '${Consts.baseUrl}userProfile_form/getProfileAtributes';
   static final _setUserImageUrl = Uri.parse(
@@ -26,8 +26,6 @@ class HttpService {
       '${Consts.baseUrl}notification_form/getAllSetting';
   static const token = "11"; //await Candidate().getToken();
   static final httpClient = HttpClient();
-
- 
 
   static Future<Future<ui.Image>> downloadFile(
     String url,
@@ -51,8 +49,7 @@ class HttpService {
     return frame.image;
   }
 
-  
- static getUserNotiSetting(userid) async {
+  static getUserNotiSetting(userid) async {
     final response = await http.get(
       Uri.parse("$_getNotifSettingUrl?userId=$userid"),
       headers: {
@@ -63,25 +60,25 @@ class HttpService {
     );
     return response;
   }
+
   static setSetting(
     userId,
     bool notifyStartWeek,
     bool notifyDayBefore,
     bool notifyMorning,
   ) async {
-  return http.post(
-    Uri.parse(_setSettingUrl.toString()),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-            'userId': userId,
-      'notifyStartWeek': notifyStartWeek.toString(),
-            'notifyDayBefore': notifyDayBefore.toString(),
-      'notifyMorning': notifyMorning.toString()
-
-    }),
-  );
+    return http.post(
+      Uri.parse(_setSettingUrl.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'userId': userId,
+        'notifyStartWeek': notifyStartWeek.toString(),
+        'notifyDayBefore': notifyDayBefore.toString(),
+        'notifyMorning': notifyMorning.toString(),
+      }),
+    );
   }
 
   static uploadPhoto(File selectedImage, userid) async {

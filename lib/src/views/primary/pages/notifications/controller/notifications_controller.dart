@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/notification/notification.dto.dart';
@@ -29,7 +30,7 @@ class NotificationsController extends _$NotificationsController {
     }
 
     try {
-      print(msg.id);
+      debugPrint(msg.id);
       await ref.read(dioServiceProvider).post(
         Consts.setNotificationWasRead,
         data: {
