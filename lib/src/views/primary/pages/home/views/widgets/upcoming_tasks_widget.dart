@@ -30,7 +30,11 @@ class UpcomingTasksWidget extends HookConsumerWidget {
 
     final meetings = tasksScreenController
         .where(
-          (element) => element.reportEventType == TaskType.meeting,
+          (element) => [
+            TaskType.meeting,
+            TaskType.groupMeeting,
+            TaskType.parentsMeeting,
+          ].contains(element.reportEventType),
         )
         .take(3)
         .toList();
