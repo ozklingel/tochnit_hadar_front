@@ -39,15 +39,14 @@ class NotificationWidget extends ConsumerWidget {
                   orElse: () => const ApprenticeDto(),
                 ) ??
             const ApprenticeDto();
-
     return ColoredBox(
-      color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue08),
+      color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: isExpanded
               ? null
-              : () => MessageDetailsRouteData(id: message.id).go(context),
+              : () => NotificationDetailsRouteData(id: message.id).go(context),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -60,23 +59,42 @@ class NotificationWidget extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        fromApprentice.fullName,
+                        if(message.numOfLinesDisplay==3) Text(
+                        "אירוע",
                         style: TextStyles.s18w600cShade09,
                       ),
-                      if (isExpanded) const SizedBox(height: 16),
-                      Text(
-                        message.event,
+                      if(message.numOfLinesDisplay==3) const SizedBox(height: 12),
+
+                            if(message.numOfLinesDisplay==3) Text(
+                        " בתאריך "+message.dateTime.substring(0,10),
                         style: TextStyles.s16w400cGrey2,
                       ),
-                      if (isExpanded) const SizedBox(height: 16),
-                      Text(
-                        message.description,
-                        maxLines: isExpanded ? 2 : 1,
-                        overflow: isExpanded ? null : TextOverflow.ellipsis,
+                      if(message.numOfLinesDisplay==3) const SizedBox(height: 12),
+
+                        if(message.numOfLinesDisplay==3) Text(
+                        message.event +" ל" +fromApprentice.fullName,
                         style: TextStyles.s16w400cGrey2,
                       ),
-            
+                 
+                      if(message.numOfLinesDisplay==2) Text(
+                        "הגיע הזמן ל" +message.event,
+                        style: TextStyles.s18w600cShade09,
+                      ),
+                      if(message.numOfLinesDisplay==2) const SizedBox(height: 12),
+
+                           if(message.numOfLinesDisplay==2&&message.event=="מפגש") Text(
+                        " עברו " +message.daysfromnow.toString() +" ימים מה"+message.event + "  האחרון של "+fromApprentice.fullName,
+                        style: TextStyles.s16w400cGrey2,
+                      ),
+                              if(message.numOfLinesDisplay==2&&message.event=="מפגש קבוצתי") Text(
+                        " עברו " +message.daysfromnow.toString() +" ימים מה"+message.event + "  האחרון  "+fromApprentice.fullName,
+                        style: TextStyles.s16w400cGrey2,
+                      ),
+                      
+                if(message.numOfLinesDisplay==2&&message.event=="שיחה") Text(
+                        " עברו " +message.daysfromnow.toString() +" ימים מה"+message.event+ "  האחרונה ל"+fromApprentice.fullName,
+                        style: TextStyles.s16w400cGrey2,
+                      ),
                     ],
                   ),
                 ),

@@ -39,7 +39,7 @@ class MessageWidget extends ConsumerWidget {
             const ApprenticeDto();
 
     return ColoredBox(
-      color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue08),
+      color: backgroundColor ?? (isExpanded ? Colors.red : AppColors.blue07),
       child: Material(
         color: Colors.transparent,
         child: InkWell(

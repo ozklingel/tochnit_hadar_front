@@ -29,6 +29,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../views/primary/pages/chat_box/support_screen.dart';
+import '../../views/primary/pages/notifications/views/Notification_details_screen.dart';
 import '../../views/primary/pages/notifications/views/notification_screen.dart';
 import '../../views/primary/pages/notifications/views/setting_page.dart';
 import '../../views/primary/pages/profile/edit_profile.dart';
@@ -320,6 +321,21 @@ class MessageDetailsRouteData extends GoRouteData {
     );
   }
 }
+class NotificationDetailsRouteData extends GoRouteData {
+  const NotificationDetailsRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return NotificationDetailsScreen(
+      messageId: id,
+    );
+  }
+
+}
 
 class NewMessageRouteData extends GoRouteData {
   const NewMessageRouteData();
@@ -497,6 +513,10 @@ class EditUserProfileRouteData extends GoRouteData {
 
 @TypedGoRoute<NotificationRouteData>(
   path: '/notifications',
+      routes: [
+                       TypedGoRoute<NotificationDetailsRouteData>(path: 'id/:id'),
+
+          ],
 )
 class NotificationRouteData extends GoRouteData {
   const NotificationRouteData();
