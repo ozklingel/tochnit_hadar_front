@@ -195,7 +195,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
                   Icon(FluentIcons.arrow_upload_24_regular),
                   SizedBox(height: 12),
                   Text(
-                    'הוסף קובץ',
+                    'הוסף קובץ לוגו',
                     style: TextStyles.s14w500,
                   ),
                 ],

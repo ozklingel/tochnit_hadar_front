@@ -8,7 +8,7 @@ abstract class Consts {
   // storage
   static const accessTokenKey = 'accessTokenKey';
   static const userPhoneKey = 'userPhoneKey';
-  static const firstOnboardingKey = 'firstOnboarding';
+  static const isFirstOnboardingKey = 'firstOnboarding';
 
   // START APIS
   static const baseUrl =

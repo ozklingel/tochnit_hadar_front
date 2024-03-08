@@ -131,7 +131,7 @@ class HadarProgram extends ConsumerWidget {
               );
 
           await ref.read(storageProvider).requireValue.setBool(
-                Consts.firstOnboardingKey,
+                Consts.isFirstOnboardingKey,
                 false,
               );
           Logger().d('RESET sharedPrefs values');
@@ -154,7 +154,7 @@ class HadarProgram extends ConsumerWidget {
               );
 
           await ref.read(storageProvider).requireValue.remove(
-                Consts.firstOnboardingKey,
+                Consts.isFirstOnboardingKey,
               );
           Logger().d('RESET sharedPrefs values');
         }

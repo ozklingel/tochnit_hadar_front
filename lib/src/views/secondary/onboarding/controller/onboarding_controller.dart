@@ -67,7 +67,7 @@ class OnboardingController extends _$OnboardingController {
             );
 
         await ref.read(storageProvider).requireValue.setBool(
-              Consts.firstOnboardingKey,
+              Consts.isFirstOnboardingKey,
               firstOnboarding,
             );
 
@@ -115,7 +115,7 @@ class OnboardingController extends _$OnboardingController {
       );
 
       await ref.read(storageProvider).requireValue.setBool(
-            Consts.firstOnboardingKey,
+            Consts.isFirstOnboardingKey,
             false,
           );
 

@@ -822,7 +822,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
 
   Future getImage(ImageSource img, user) async {
     final pickedFile = await picker.pickImage(source: img);
+
     XFile? xfilePick = pickedFile;
+
     setState(
       () {
         if (xfilePick != null) {

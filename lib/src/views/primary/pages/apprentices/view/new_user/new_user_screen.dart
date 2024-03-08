@@ -20,8 +20,9 @@ enum _DataFillType {
 
 enum _UserType {
   hanih,
-  rakaz,
   melave,
+  rakaz,
+  rakazEshkol,
 }
 
 class NewUserScreen extends HookWidget {
@@ -420,6 +421,10 @@ class _SelectUserTypePage extends StatelessWidget {
               DropdownMenuItem(
                 value: _UserType.melave,
                 child: Text('מלווה'),
+              ),
+              DropdownMenuItem(
+                value: _UserType.rakazEshkol,
+                child: Text('רכז אשכול'),
               ),
             ],
           ),

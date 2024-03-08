@@ -68,6 +68,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     if (isReadOnly) {
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
           title: const Text('פרטי דיווח'),
           actions: [
@@ -146,6 +147,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        automaticallyImplyLeading: false,
         title: Text(reportId.isEmpty ? 'הוספת דיווח' : 'עריכת דיווח'),
       ),
       body: Stack(

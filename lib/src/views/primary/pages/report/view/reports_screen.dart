@@ -69,6 +69,7 @@ class ReportsScreen extends HookConsumerWidget {
     if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text('דיווחים'),
         ),
         floatingActionButton: FloatingActionButton(
@@ -88,6 +89,7 @@ class ReportsScreen extends HookConsumerWidget {
               SliverAppBar(
                 expandedHeight: filters.value.isEmpty ? 82 : 132,
                 collapsedHeight: filters.value.isEmpty ? 82 : 132,
+                automaticallyImplyLeading: false,
                 pinned: true,
                 flexibleSpace: Column(
                   children: [
@@ -512,12 +514,13 @@ class _ReporsListBody extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Assets.images.noMessages.svg(),
+                Assets.illustrations.pointDown.svg(),
                 const Text(
-                  'אין הודעות נכנסות',
+                  'אין דיווחים',
                   textAlign: TextAlign.center,
                   style: TextStyles.s20w500,
                 ),
+                const SizedBox(height: 8),
                 const Text(
                   'הודעות נכנסות שישלחו, יופיעו כאן',
                   textAlign: TextAlign.center,

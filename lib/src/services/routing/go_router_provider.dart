@@ -83,7 +83,7 @@ class GoRouterService extends _$GoRouterService {
         }
 
         final firstOnboarding = ref.read(storageProvider).requireValue.getBool(
-                  Consts.firstOnboardingKey,
+                  Consts.isFirstOnboardingKey,
                 ) ??
             false;
 

@@ -49,7 +49,7 @@ class UserService extends _$UserService {
     await ref
         .read(storageProvider)
         .requireValue
-        .remove(Consts.firstOnboardingKey);
+        .remove(Consts.isFirstOnboardingKey);
 
     const HomeRouteData().go(
       ref

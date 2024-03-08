@@ -11,6 +11,7 @@ class LargeFilledRoundedButton extends StatelessWidget {
     this.foregroundColor = Colors.white,
     this.textStyle = TextStyles.s24w500cGrey2,
     this.fontSize,
+    this.height,
   });
 
   const LargeFilledRoundedButton.cancel({
@@ -21,6 +22,7 @@ class LargeFilledRoundedButton extends StatelessWidget {
     this.foregroundColor = AppColors.blue02,
     this.textStyle = TextStyles.s24w500cGrey2,
     this.fontSize,
+    this.height,
   });
 
   final String label;
@@ -29,28 +31,32 @@ class LargeFilledRoundedButton extends StatelessWidget {
   final Color foregroundColor;
   final TextStyle textStyle;
   final double? fontSize;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: onPressed,
-      style: FilledButton.styleFrom(
-        fixedSize: const Size(double.infinity, 60),
-        side: const BorderSide(
-          color: AppColors.blue03,
-          width: 1,
+    return SizedBox(
+      height: height,
+      child: FilledButton(
+        onPressed: onPressed,
+        style: FilledButton.styleFrom(
+          fixedSize: const Size(double.infinity, 60),
+          side: const BorderSide(
+            color: AppColors.blue03,
+            width: 1,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          backgroundColor: backgroundColor,
+          disabledBackgroundColor: AppColors.blue07,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        backgroundColor: backgroundColor,
-        disabledBackgroundColor: AppColors.blue07,
-      ),
-      child: Text(
-        label,
-        style: textStyle.copyWith(
-          color: foregroundColor,
-          fontSize: 16,
+        child: Text(
+          label,
+          style: textStyle.copyWith(
+            color: foregroundColor,
+            fontSize: 16,
+          ),
         ),
       ),
     );

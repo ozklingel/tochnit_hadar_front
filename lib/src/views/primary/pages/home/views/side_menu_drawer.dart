@@ -1,9 +1,11 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SideMenuDrawer extends ConsumerWidget {
@@ -109,11 +111,63 @@ class SideMenuDrawer extends ConsumerWidget {
                 dense: true,
                 leading: const Icon(FluentIcons.arrow_exit_20_regular),
                 title: const Text('התנתקות'),
-                onTap: () => ref.read(userServiceProvider.notifier).logOff(),
+                onTap: () async => await showDialog(
+                  context: context,
+                  builder: (context) => const _ConfirmSignoutDialog(),
+                ),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ConfirmSignoutDialog extends ConsumerWidget {
+  const _ConfirmSignoutDialog();
+
+  @override
+  Widget build(BuildContext context, ref) {
+    return Dialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),
+      child: SizedBox(
+        height: 340,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: CloseButton(),
+              ),
+              const Text(
+                'התנתקות',
+                style: TextStyles.s24w400,
+              ),
+              const Text(
+                'האם אתה בטוח שברצונך להתנתק מהמערכת?',
+                style: TextStyles.s16w400cGrey3,
+              ),
+              const SizedBox(height: 12),
+              LargeFilledRoundedButton(
+                label: 'הישאר מחובר',
+                onPressed: () => Navigator.of(context).pop(),
+                height: 46,
+              ),
+              LargeFilledRoundedButton.cancel(
+                label: 'התנתק',
+                onPressed: () =>
+                    ref.read(userServiceProvider.notifier).logOff(),
+                height: 46,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

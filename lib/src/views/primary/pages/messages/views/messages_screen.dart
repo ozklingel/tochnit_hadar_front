@@ -27,6 +27,7 @@ class MessagesScreen extends HookConsumerWidget {
     final tabController = useTabController(initialLength: 3);
 
     useListenable(searchController);
+    useListenable(tabController);
 
     switch (user.valueOrNull?.role) {
       case UserRole.ahraiTohnit:
@@ -49,21 +50,24 @@ class MessagesScreen extends HookConsumerWidget {
               ],
             ),
           ),
-          floatingActionButton: user.valueOrNull?.role == UserRole.ahraiTohnit
-              ? FloatingActionButton(
-                  onPressed: () => const NewMessageRouteData().push(context),
-                  heroTag: UniqueKey(),
-                  shape: const CircleBorder(),
-                  backgroundColor: AppColors.blue02,
-                  child: const Text(
-                    '+',
-                    style: TextStyle(
-                      fontSize: 32,
-                      color: Colors.white,
-                    ),
-                  ),
-                )
-              : null,
+          floatingActionButton: (tabController.animation?.value ?? 0) < .5
+              ? null
+              : user.valueOrNull?.role == UserRole.ahraiTohnit
+                  ? FloatingActionButton(
+                      onPressed: () =>
+                          const NewMessageRouteData().push(context),
+                      heroTag: UniqueKey(),
+                      shape: const CircleBorder(),
+                      backgroundColor: AppColors.blue02,
+                      child: const Text(
+                        '+',
+                        style: TextStyle(
+                          fontSize: 32,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : null,
           body: RefreshIndicator.adaptive(
             onRefresh: () => ref.refresh(messagesControllerProvider.future),
             child: msgsController.when(
@@ -106,7 +110,7 @@ class MessagesScreen extends HookConsumerWidget {
                   children: [
                     if (customerService.isEmpty)
                       EmptyState(
-                        image: Assets.images.noMessages.svg(),
+                        image: Assets.illustrations.pointDown.svg(),
                         topText: 'אין הודעות נכנסות',
                         bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
                       )
