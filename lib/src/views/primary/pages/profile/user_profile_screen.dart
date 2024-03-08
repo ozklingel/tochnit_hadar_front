@@ -38,20 +38,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
 
   Future<Map<String, dynamic>> _getUserDetail(String phone) async {
     var data = await HttpService.getUserDetail(phone);
-    debugPrint(data.body);
     setState(() {
       myUser = jsonDecode(data.body);
     });
-    //Map<String, dynamic> userMap2 = userMap["attributes"];
-    //debugPrint("myUser:$myUser");
-    // debugPrint(
-    //   myUser["apprentices"][1]["first_name"] +
-    //       " " +
-    //       myUser["apprentices"][1]["last_name"],
-    // );
-    // print("ozzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-    //
-    // print(myUser["apprentices"]);
 
     return myUser;
   }
@@ -74,9 +63,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
-    String imageUrl = user.valueOrNull!.avatar;
 
-    debugPrint(user.valueOrNull!.avatar);
     final userDetails = useFuture(
       useMemoized(
         () => _getUserDetail(
@@ -280,7 +267,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                               ),
                             ),
                             SliverToBoxAdapter(
-                              child: _GeneralTab(myUser: myUser),
+                              child: _GeneralTab(),
                             ),
                           ],
                         );
@@ -309,7 +296,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                               ),
                             ),
                             SliverToBoxAdapter(
-                              child: _PersonalDetailsTab(myUser: myUser),
+                              child: _PersonalDetailsTab(),
                             ),
                           ],
                         );
@@ -340,10 +327,10 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                           ),
                         ),
                         SliverToBoxAdapter(
-                          child: _GeneralTab(myUser: myUser),
+                          child: _GeneralTab(),
                         ),
                         SliverToBoxAdapter(
-                          child: _PersonalDetailsTab(myUser: myUser),
+                          child: _PersonalDetailsTab(),
                         ),
                       ],
                     );
@@ -412,12 +399,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
 }
 
 class _PersonalDetailsTab extends  ConsumerWidget {
-  const _PersonalDetailsTab({
-    required this.myUser,
-  });
+  const _PersonalDetailsTab();
 
 
-  final Map<String, dynamic> myUser;
 
   @override
   Widget build(BuildContext context,ref) {
@@ -654,7 +638,7 @@ class _PersonalDetailsTab extends  ConsumerWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            myUser["email"] ?? 'NOEMAIL',
+                            user.valueOrNull!.email,
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -667,7 +651,7 @@ class _PersonalDetailsTab extends  ConsumerWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            "0${myUser["id"] ?? 'NOPHONE'}",
+                            user.valueOrNull!.phone,
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -680,8 +664,7 @@ class _PersonalDetailsTab extends  ConsumerWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            (myUser["dateOfBirthInMsSinceEpoch"] ??
-                                'NODATEOFBIRTH'),
+                            user.valueOrNull!.dateOfBirth.substring(0,10),
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -694,7 +677,7 @@ class _PersonalDetailsTab extends  ConsumerWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            myUser["city"] ?? 'NOCITY',
+                            user.valueOrNull!.city,
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -707,7 +690,7 @@ class _PersonalDetailsTab extends  ConsumerWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            myUser["region"] ?? 'NOREGION',
+                            user.valueOrNull!.region,
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -725,11 +708,8 @@ class _PersonalDetailsTab extends  ConsumerWidget {
 }
 
 class _GeneralTab extends ConsumerWidget {
-  const _GeneralTab({
-    required this.myUser,
-  });
+  const _GeneralTab();
 
-  final Map<String, dynamic> myUser;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -740,6 +720,11 @@ class _GeneralTab extends ConsumerWidget {
                   orElse: () => const InstitutionDto(),
                 ) ??
             const InstitutionDto();
+    //print(user.valueOrNull?.institution);
+    //print(institution);
+  print("cluster"+user.valueOrNull!.cluster);
+  print("region"+user.valueOrNull!.region);
+
 
     return Column(
       children: [
@@ -829,7 +814,7 @@ class _GeneralTab extends ConsumerWidget {
                                 left: 1.0,
                               ),
                               child: Text(
-                                  user.valueOrNull?.role=="0"?"מלווה":"אין תפקיד",
+                                  user.valueOrNull?.role==UserRole.melave?"מלווה":"אין תפקיד",
                                   textAlign: TextAlign.right,
                                 ),
                             ),
@@ -874,7 +859,6 @@ class _GeneralTab extends ConsumerWidget {
         if (user.valueOrNull?.role == UserRole.melave)
           Builder(
             builder: (context) {
-              // print(scrolength);
               return Column(
                 children: <Widget>[
                   const Align(
@@ -898,7 +882,6 @@ class _GeneralTab extends ConsumerWidget {
                       BuildContext context,
                       int index,
                     ) {
-                      print(user.valueOrNull!.apprentices.toString());
            final apprentice = ref.watch(
           apprenticesControllerProvider.select(
             (value) => value.value?.singleWhere(
