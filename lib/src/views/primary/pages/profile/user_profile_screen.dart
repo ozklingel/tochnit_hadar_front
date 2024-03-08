@@ -12,8 +12,12 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../models/apprentice/apprentice.dto.dart';
+import '../../../../models/institution/institution.dto.dart';
 import '../../../../services/networking/http_service.dart';
 import '../../../../services/routing/go_router_provider.dart';
+import '../../../secondary/institutions/controllers/institutions_controller.dart';
+import '../apprentices/controller/apprentices_controller.dart';
 
 class UserProfileScreen extends StatefulHookConsumerWidget {
   const UserProfileScreen({super.key});
@@ -156,7 +160,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                             CircleAvatar(
                                               radius: 75,
                                               backgroundImage:
-                                                  NetworkImage(imageUrl),
+                                                  NetworkImage(user.valueOrNull!.avatar),
                                               backgroundColor:
                                                   Colors.grey.shade200,
                                             ),
@@ -201,11 +205,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                       const SizedBox(height: 5),
                                       Center(
                                         child: Text(
-                                          (myUser["firstName"] ??
-                                                  'NOFIRSTNAME') +
-                                              " " +
-                                              (myUser["lastName"] ??
-                                                  'NOLASTNAME'),
+                                          user.valueOrNull!.fullName,
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
@@ -215,7 +215,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                       ),
                                       Center(
                                         child: Text(
-                                          "0${myUser["id"] ?? 'NOPHONE'}",
+                                          user.valueOrNull!.phone,
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 15,
@@ -411,15 +411,18 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   }
 }
 
-class _PersonalDetailsTab extends StatelessWidget {
+class _PersonalDetailsTab extends  ConsumerWidget {
   const _PersonalDetailsTab({
     required this.myUser,
   });
 
+
   final Map<String, dynamic> myUser;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,ref) {
+        final user = ref.watch(userServiceProvider);
+
     return Column(
       children: [
         Container(
@@ -625,7 +628,7 @@ class _PersonalDetailsTab extends StatelessWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            myUser["firstName"] ?? 'NOFIRSTNAME',
+                            user.valueOrNull!.firstName,
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -638,7 +641,7 @@ class _PersonalDetailsTab extends StatelessWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            myUser["lastName"] ?? 'NOLASTNAME',
+                           user.valueOrNull!.lastName,
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -731,6 +734,13 @@ class _GeneralTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
+      final institution =
+        ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
+                  (element) => element.id == user.valueOrNull?.institution,
+                  orElse: () => const InstitutionDto(),
+                ) ??
+            const InstitutionDto();
+
     return Column(
       children: [
         Padding(
@@ -819,9 +829,9 @@ class _GeneralTab extends ConsumerWidget {
                                 left: 1.0,
                               ),
                               child: Text(
-                                myUser["role"] ?? 'EMPTY ROLE',
-                                textAlign: TextAlign.right,
-                              ),
+                                  user.valueOrNull?.role=="0"?"מלווה":"אין תפקיד",
+                                  textAlign: TextAlign.right,
+                                ),
                             ),
                           ),
                           if (user.valueOrNull?.role == UserRole.melave) ...[
@@ -833,7 +843,7 @@ class _GeneralTab extends ConsumerWidget {
                                   left: 1.0,
                                 ),
                                 child: Text(
-                                  (myUser["institution"] ?? 'NOINSTITUTION'),
+                                  institution.name,
                                   textAlign: TextAlign.right,
                                 ),
                               ),
@@ -846,7 +856,7 @@ class _GeneralTab extends ConsumerWidget {
                                   left: 1.0,
                                 ),
                                 child: Text(
-                                  myUser["cluster"] ?? 'NOCLUSTER',
+                                  user.valueOrNull!.cluster.toString(),
                                   textAlign: TextAlign.right,
                                 ),
                               ),
@@ -883,11 +893,20 @@ class _GeneralTab extends ConsumerWidget {
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
-                    itemCount: myUser["apprentices"].length,
+                    itemCount: user.valueOrNull!.apprentices.length,
                     itemBuilder: (
                       BuildContext context,
                       int index,
                     ) {
+                      print(user.valueOrNull!.apprentices.toString());
+           final apprentice = ref.watch(
+          apprenticesControllerProvider.select(
+            (value) => value.value?.singleWhere(
+              (element) => element.id == user.valueOrNull!.apprentices[index],
+              orElse: () => const ApprenticeDto(),
+            ),
+          ),
+        ) ??const ApprenticeDto();
                       return ListTile(
                         leading: const CircleAvatar(
                           backgroundColor: Colors.blue,
@@ -896,9 +915,7 @@ class _GeneralTab extends ConsumerWidget {
                           ),
                         ),
                         title: Text(
-                          myUser["apprentices"][index]["name"] +
-                              " " +
-                              myUser["apprentices"][index]["last_name"],
+                         apprentice.fullName,
                           textAlign: TextAlign.right,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
