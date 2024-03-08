@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 import '../../../../../services/auth/user_service.dart';
 import '../../../../../services/networking/http_service.dart';
@@ -25,11 +26,12 @@ class _SettingPageState extends ConsumerState<SettingPage> {
     super.didChangeDependencies();
     final user = ref.watch(userServiceProvider);
 
-    var jsonData =
+    final jsonData =
         await HttpService.getUserNotiSetting(user.valueOrNull!.phone);
-    var u = jsonDecode(jsonData.body);
-    //print("starttttt");
-    debugPrint(u);
+    final u = jsonDecode(jsonData.body);
+
+    Logger().d(u);
+
     super.setState(() {
       t1 = !u["notifyStartWeek"];
       t2 = !u["notifyDayBefore"];
@@ -104,7 +106,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                             ? Colors.blue.shade700
                             : CupertinoColors.inactiveGray,
                         onChanged: (v) => setState(() {
-                          debugPrint(t1.toString());
+                          Logger().d(t1.toString());
                           t1 = v;
                         }),
                       ),

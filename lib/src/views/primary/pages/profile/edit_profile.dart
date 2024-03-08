@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 
 import '../../../../services/auth/user_service.dart';
 import '../../../../services/networking/http_service.dart';
@@ -930,8 +931,10 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage>
                         "${birthDayController.text}-birthday",
                         "${emailController.text}-email",
                       ];
-                      debugPrint(listOfcontrolerText.toString());
-                      var result = await HttpService.setUserDetail(
+
+                      Logger().d(listOfcontrolerText.toString());
+
+                      final result = await HttpService.setUserDetail(
                         "userProfile",
                         user.valueOrNull!.phone,
                         listOfcontrolerText,

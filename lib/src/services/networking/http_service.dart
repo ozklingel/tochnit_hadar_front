@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 
 class HttpService {
   static const _chatBoxUrl = '${Consts.baseUrl}messegaes_form/add';
@@ -103,7 +104,7 @@ class HttpService {
 
     request.headers.addAll(headers);
 
-    debugPrint("request image: $request");
+    Logger().d("request image: $request");
 
     // ignore: unused_local_variable
     final res = await request.send();
@@ -112,7 +113,7 @@ class HttpService {
   }
 
   static sendAllreadyread(notiId) async {
-    debugPrint(_sendAllreadyreadUrl.toString());
+    Logger().d(_sendAllreadyreadUrl.toString());
     var request = http.MultipartRequest(
       'POST',
       _sendAllreadyreadUrl,
@@ -130,7 +131,7 @@ class HttpService {
   static Future<http.Response> getUserDetail(userid) async {
     // print(userid);
     userid = "972$userid";
-    debugPrint("$_getUserDetailUrl?userId=$userid");
+    Logger().d("$_getUserDetailUrl?userId=$userid");
     final response = await http.get(
       Uri.parse("$_getUserDetailUrl?userId=$userid"),
       headers: {
@@ -160,7 +161,7 @@ class HttpService {
     atrrToBeSetString =
         atrrToBeSetString.substring(0, atrrToBeSetString.length - 1);
     atrrToBeSetString += "}";
-    debugPrint("ozzzzzzzzzzz$atrrToBeSetString");
+    Logger().d("ozzzzzzzzzzz$atrrToBeSetString");
     Map<String, dynamic> request = {
       "typeOfSet": typeOfSet,
       "entityId": entityId,
@@ -197,7 +198,7 @@ class HttpService {
       body: json.encode(request),
     );
     Map<String, dynamic> responsePayload = json.decode(response.body);
-    debugPrint(responsePayload.toString());
+    Logger().d(responsePayload.toString());
     return responsePayload['result'];
   }
 }

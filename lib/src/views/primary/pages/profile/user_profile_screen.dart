@@ -11,6 +11,7 @@ import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 
 import '../../../../models/apprentice/apprentice.dto.dart';
 import '../../../../models/institution/institution.dto.dart';
@@ -146,8 +147,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                           children: [
                                             CircleAvatar(
                                               radius: 75,
-                                              backgroundImage:
-                                                  NetworkImage(user.valueOrNull!.avatar),
+                                              backgroundImage: NetworkImage(
+                                                user.valueOrNull!.avatar,
+                                              ),
                                               backgroundColor:
                                                   Colors.grey.shade200,
                                             ),
@@ -266,7 +268,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                 context,
                               ),
                             ),
-                            SliverToBoxAdapter(
+                            const SliverToBoxAdapter(
                               child: _GeneralTab(),
                             ),
                           ],
@@ -295,7 +297,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                                 context,
                               ),
                             ),
-                            SliverToBoxAdapter(
+                            const SliverToBoxAdapter(
                               child: _PersonalDetailsTab(),
                             ),
                           ],
@@ -326,10 +328,10 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                             context,
                           ),
                         ),
-                        SliverToBoxAdapter(
+                        const SliverToBoxAdapter(
                           child: _GeneralTab(),
                         ),
-                        SliverToBoxAdapter(
+                        const SliverToBoxAdapter(
                           child: _PersonalDetailsTab(),
                         ),
                       ],
@@ -398,14 +400,12 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   }
 }
 
-class _PersonalDetailsTab extends  ConsumerWidget {
+class _PersonalDetailsTab extends ConsumerWidget {
   const _PersonalDetailsTab();
 
-
-
   @override
-  Widget build(BuildContext context,ref) {
-        final user = ref.watch(userServiceProvider);
+  Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
 
     return Column(
       children: [
@@ -625,7 +625,7 @@ class _PersonalDetailsTab extends  ConsumerWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                           user.valueOrNull!.lastName,
+                            user.valueOrNull!.lastName,
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -664,7 +664,7 @@ class _PersonalDetailsTab extends  ConsumerWidget {
                             left: 1.0,
                           ),
                           child: Text(
-                            user.valueOrNull!.dateOfBirth.substring(0,10),
+                            user.valueOrNull!.dateOfBirth.substring(0, 10),
                             textAlign: TextAlign.right,
                           ),
                         ),
@@ -710,11 +710,10 @@ class _PersonalDetailsTab extends  ConsumerWidget {
 class _GeneralTab extends ConsumerWidget {
   const _GeneralTab();
 
-
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
-      final institution =
+    final institution =
         ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
                   (element) => element.id == user.valueOrNull?.institution,
                   orElse: () => const InstitutionDto(),
@@ -722,9 +721,9 @@ class _GeneralTab extends ConsumerWidget {
             const InstitutionDto();
     //print(user.valueOrNull?.institution);
     //print(institution);
-  print("cluster"+user.valueOrNull!.cluster);
-  print("region"+user.valueOrNull!.region);
 
+    Logger().d("cluster${user.valueOrNull!.cluster}");
+    Logger().d("region${user.valueOrNull!.region}");
 
     return Column(
       children: [
@@ -814,9 +813,11 @@ class _GeneralTab extends ConsumerWidget {
                                 left: 1.0,
                               ),
                               child: Text(
-                                  user.valueOrNull?.role==UserRole.melave?"מלווה":"אין תפקיד",
-                                  textAlign: TextAlign.right,
-                                ),
+                                user.valueOrNull?.role == UserRole.melave
+                                    ? "מלווה"
+                                    : "אין תפקיד",
+                                textAlign: TextAlign.right,
+                              ),
                             ),
                           ),
                           if (user.valueOrNull?.role == UserRole.melave) ...[
@@ -882,14 +883,17 @@ class _GeneralTab extends ConsumerWidget {
                       BuildContext context,
                       int index,
                     ) {
-           final apprentice = ref.watch(
-          apprenticesControllerProvider.select(
-            (value) => value.value?.singleWhere(
-              (element) => element.id == user.valueOrNull!.apprentices[index],
-              orElse: () => const ApprenticeDto(),
-            ),
-          ),
-        ) ??const ApprenticeDto();
+                      final apprentice = ref.watch(
+                            apprenticesControllerProvider.select(
+                              (value) => value.value?.singleWhere(
+                                (element) =>
+                                    element.id ==
+                                    user.valueOrNull!.apprentices[index],
+                                orElse: () => const ApprenticeDto(),
+                              ),
+                            ),
+                          ) ??
+                          const ApprenticeDto();
                       return ListTile(
                         leading: const CircleAvatar(
                           backgroundColor: Colors.blue,
@@ -898,7 +902,7 @@ class _GeneralTab extends ConsumerWidget {
                           ),
                         ),
                         title: Text(
-                         apprentice.fullName,
+                          apprentice.fullName,
                           textAlign: TextAlign.right,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,

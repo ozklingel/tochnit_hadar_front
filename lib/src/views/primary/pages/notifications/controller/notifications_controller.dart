@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/notification/notification.dto.dart';
 import 'package:hadar_program/src/services/api/notification/get_notifications.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -29,8 +29,9 @@ class NotificationsController extends _$NotificationsController {
       return true;
     }
 
+    Logger().d(msg.id);
+
     try {
-      debugPrint(msg.id);
       await ref.read(dioServiceProvider).post(
         Consts.setNotificationWasRead,
         data: {
@@ -38,7 +39,7 @@ class NotificationsController extends _$NotificationsController {
         },
       );
 
-      ref.invalidateSelf();
+      ref.invalidate(getNotificationsProvider);
 
       return true;
     } catch (e) {
