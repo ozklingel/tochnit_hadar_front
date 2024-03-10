@@ -42,10 +42,10 @@ class UserProfileScreen extends StatefulHookConsumerWidget {
 
   @override
   ConsumerState<UserProfileScreen> createState() =>
-      _ApprenticeDetailsScreenState();
+      _userDetailsScreenState();
 }
 
-class _ApprenticeDetailsScreenState
+class _userDetailsScreenState
     extends ConsumerState<UserProfileScreen> {
   final scrollControllers = <SubordinateScrollController?>[
     null,
@@ -400,14 +400,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
        
         DetailsCard(
           title: 'תוכנית הדר',
-          trailing: TextButton.icon(
-            onPressed: null,
-            style: TextButton.styleFrom(
-              disabledForegroundColor: AppColors.success600,
-            ),
-            icon: const Icon(Icons.check),
-            label: const Text('משלם'),
-          ),
+    
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -472,134 +465,11 @@ class _PersonalInfoTabView extends ConsumerWidget {
   }
 }
 
-class _ContactRow extends StatelessWidget {
-  const _ContactRow({
-    required this.relationship,
-    required this.phone,
-    required this.fullName,
-    required this.email,
-  });
 
-  final String relationship;
-  final String phone;
-  final String fullName;
-  final String email;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text.rich(
-          TextSpan(
-            style: TextStyles.s14w400,
-            children: [
-              TextSpan(
-                text: relationship,
-                style: const TextStyle(
-                  color: AppColors.gray5,
-                ),
-              ),
-              const TextSpan(text: '\t'),
-              TextSpan(text: fullName),
-            ],
-          ),
-        ),
-        _ContactButtons(
-          phone: phone,
-          email: email,
-        ),
-      ],
-    );
-  }
-}
 
-class _ContactButtons extends ConsumerWidget {
-  const _ContactButtons({
-    required this.phone,
-    required this.email,
-  });
 
-  final String phone;
-  final String email;
 
-  @override
-  Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
-
-    return Row(
-      children: [
-        SizedBox(
-          width: 140,
-          child: Text(
-            phone,
-            style: TextStyles.s14w400.copyWith(
-              color: AppColors.gray2,
-            ),
-          ),
-        ),
-        const Spacer(),
-        if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
-          _RowIconButton(
-            onPressed: () => Toaster.unimplemented(),
-            icon: const Icon(FluentIcons.edit_24_regular),
-          ),
-          _RowIconButton(
-            onPressed: () => Toaster.unimplemented(),
-            icon: const Icon(FluentIcons.delete_24_regular),
-          ),
-        ] else ...[
-          _RowIconButton(
-            onPressed: () => launchSms(phone: phone),
-            icon: const Icon(FluentIcons.chat_24_regular),
-          ),
-          const SizedBox(width: 4),
-          _RowIconButton(
-            icon: Assets.icons.whatsapp.svg(
-              height: 20,
-            ),
-            onPressed: () => launchWhatsapp(phone: phone),
-          ),
-          const SizedBox(width: 4),
-          _RowIconButton(
-            onPressed: () => launchPhone(phone: phone),
-            icon: const Icon(FluentIcons.call_24_regular),
-          ),
-          const SizedBox(width: 4),
-          _RowIconButton(
-            onPressed: () => launchEmail(email: email),
-            icon: const Icon(FluentIcons.mail_24_regular),
-          ),
-        ],
-      ],
-    );
-  }
-}
-
-class _RowIconButton extends StatelessWidget {
-  const _RowIconButton({
-    required this.onPressed,
-    required this.icon,
-  });
-
-  final VoidCallback onPressed;
-  final Widget icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      borderRadius: BorderRadius.circular(36),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(36),
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: icon,
-        ),
-      ),
-    );
-  }
-}
 
 class _MissingInformationDialog extends StatelessWidget {
   const _MissingInformationDialog();
@@ -657,39 +527,4 @@ class _MissingInformationDialog extends StatelessWidget {
   }
 }
 
-class _ActionButton extends StatelessWidget {
-  const _ActionButton({
-    required this.icon,
-    required this.text,
-    required this.onPressed,
-  });
 
-  final Widget icon;
-  final String text;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        IconButton(
-          style: IconButton.styleFrom(
-            side: const BorderSide(
-              color: AppColors.gray7,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          onPressed: onPressed,
-          icon: icon,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          text,
-          style: TextStyles.s12w300cGray2,
-        ),
-      ],
-    );
-  }
-}
