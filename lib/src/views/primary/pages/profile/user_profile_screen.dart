@@ -1,407 +1,537 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
+import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/models/address/address.dto.dart';
+import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/event/event.dto.dart';
+import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
+import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
+import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
+import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
+import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
+import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
-
-import '../../../../models/apprentice/apprentice.dto.dart';
-import '../../../../models/institution/institution.dto.dart';
-import '../../../../services/networking/http_service.dart';
-import '../../../../services/routing/go_router_provider.dart';
-import '../../../secondary/institutions/controllers/institutions_controller.dart';
-import '../apprentices/controller/apprentices_controller.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserProfileScreen extends StatefulHookConsumerWidget {
-  const UserProfileScreen({super.key});
+  const UserProfileScreen({
+    super.key,
+    required this.apprenticeId,
+  });
+
+  final String apprenticeId;
 
   @override
-  ConsumerState<UserProfileScreen> createState() => _UserProfileScreenState();
+  ConsumerState<UserProfileScreen> createState() =>
+      _ApprenticeDetailsScreenState();
 }
 
-class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
-    with SingleTickerProviderStateMixin {
-  File? galleryFile;
-  final picker = ImagePicker();
-  final emailController = TextEditingController();
-  final phoneController = TextEditingController();
-  final scrollControllers = <SubordinateScrollController?>[null, null];
-  bool isLoading = true;
-  Map<String, dynamic> myUser = {};
-
-  Future<Map<String, dynamic>> _getUserDetail(String phone) async {
-    var data = await HttpService.getUserDetail(phone);
-    setState(() {
-      myUser = jsonDecode(data.body);
-    });
-
-    return myUser;
-  }
+class _ApprenticeDetailsScreenState
+    extends ConsumerState<UserProfileScreen> {
+  final scrollControllers = <SubordinateScrollController?>[
+    null,
+    null,
+    null,
+  ];
 
   @override
   void dispose() {
-    emailController.dispose();
-    phoneController.dispose();
+    super.dispose();
     for (final scrollController in scrollControllers) {
       scrollController?.dispose();
     }
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
 
-    final userDetails = useFuture(
-      useMemoized(
-        () => _getUserDetail(
-          user.valueOrNull!.phone,
-        ),
-        [],
-      ),
+    final apprentice = ref.watch(
+          apprenticesControllerProvider.select(
+            (value) => value.value?.singleWhere(
+              (element) => element.id == widget.apprenticeId,
+              orElse: () => const ApprenticeDto(),
+            ),
+          ),
+        ) ??
+        const ApprenticeDto();
+
+    final tabController = useTabController(
+      initialLength: 3,
     );
+
+    final views = [
+      _TohnitHadarTabView(apprentice: apprentice),
+      _MilitaryServiceTabView(apprentice: apprentice),
+      _PersonalInfoTabView(apprentice: apprentice),
+    ];
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text(
-          'פרופיל אישי',
-          style: TextStyle(
-            fontWeight: FontWeight.w100,
-            color: Colors.black,
-          ),
-        ),
+        centerTitle: true,
+        title: const Text('פרופיל אישי '),
+        actions: [
+     
+        ],
       ),
-      body: DefaultTabController(
-        length: 2,
-        child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              SliverOverlapAbsorber(
-                // This widget takes the overlapping behavior of the SliverAppBar,
-                // and redirects it to the SliverOverlapInjector below. If it is
-                // missing, then it is possible for the nested "inner" scroll view
-                // below to end up under the SliverAppBar even when the inner
-                // scroll view thinks it has not been scrolled.
-                // This is not necessary if the "headerSliverBuilder" only builds
-                // widgets that do not overlap the next sliver.
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                  context,
-                ),
+      // https://api.flutter.dev/flutter/widgets/NestedScrollView-class.html
+      body: NestedScrollView(
+        floatHeaderSlivers: true,
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverPadding(
+                padding: const EdgeInsets.all(24),
                 sliver: SliverAppBar(
-                  pinned: true,
-                  expandedHeight: 260,
                   automaticallyImplyLeading: false,
-                  // The "forceElevated" property causes the SliverAppBar to show
-                  // a shadow. The "innerBoxIsScrolled" parameter is true when the
-                  // inner scroll view is scrolled beyond its "zero" point, i.e.
-                  // when it appears to be scrolled below the SliverAppBar.
-                  // Without this, there are cases where the shadow would appear
-                  // or not appear inappropriately, because the SliverAppBar is
-                  // not actually aware of the precise position of the inner
-                  // scroll views.
-                  forceElevated: innerBoxIsScrolled,
-                  bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(260),
-                    child: Column(
-                      children: [
-                        Builder(
-                          builder: (context) {
-                            if (userDetails.hasData) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromRGBO(244, 248, 251, 1),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 200,
-                                        child: Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 75,
-                                              backgroundImage: NetworkImage(
-                                                user.valueOrNull!.avatar,
-                                              ),
-                                              backgroundColor:
-                                                  Colors.grey.shade200,
-                                            ),
-                                            Align(
-                                              alignment:
-                                                  const Alignment(-0.34, 0.56),
-                                              child: DecoratedBox(
-                                                decoration: const BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(50),
-                                                  ),
-                                                  color: AppColors.blue08,
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(24),
-                                                  child: Material(
-                                                    color: Colors.transparent,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        _showPicker(
-                                                          context: context,
-                                                        );
-                                                      },
-                                                      child: const Padding(
-                                                        padding:
-                                                            EdgeInsets.all(6),
-                                                        child: Icon(
-                                                          FluentIcons
-                                                              .edit_24_regular,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Center(
-                                        child: Text(
-                                          user.valueOrNull!.fullName,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Text(
-                                          user.valueOrNull!.phone,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-
-                            if (userDetails.hasError) {
-                              return const Center(
-                                child: Text('An error has occurred!'),
-                              );
-                            }
-
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                        ),
-                        if (user.valueOrNull?.role == UserRole.melave)
-                          const TabBar(
-                            tabs: [
-                              Tab(text: 'תוכנית הדר'),
-                              Tab(text: 'פרטים אישיים'),
+                  expandedHeight: 380,
+                  collapsedHeight: 60,
+                  forceElevated: false,
+                  floating: false,
+                  snap: false,
+                  pinned: false,
+                  flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    background: DetailsPageHeader(
+                      avatar: apprentice.avatar,
+                      name: '${apprentice.firstName} ${apprentice.lastName}',
+                      phone: apprentice.phone,
+                      onTapEditAvatar: () => Toaster.unimplemented(),
+                      bottom: Column(
+                        children: [
+                          const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                         
                             ],
                           ),
-                      ],
+                        ],
+                      ),
                     ),
+                  ),
+                  bottom: TabBar(
+                    controller: tabController,
+                    tabs: const [
+                      Tab(text: 'תוכנית הדר'),
+                      Tab(text: 'פרטים אישיים'),
+
+                      Tab(text: 'שירות צבאי'),
+                    ],
                   ),
                 ),
               ),
-            ];
-          },
-          body: user.valueOrNull?.role == UserRole.melave
-              ? TabBarView(
-                  children: [
-                    Builder(
-                      builder: (context) {
-                        final parentController =
-                            PrimaryScrollController.of(context);
-                        if (scrollControllers[0]?.parent != parentController) {
-                          scrollControllers[0]?.dispose();
-                          scrollControllers[0] =
-                              SubordinateScrollController(parentController);
-                        }
+            ),
+          ];
+        },
+        body: TabBarView(
+          controller: tabController,
+          children: List.generate(
+            views.length,
+            (index) => Builder(
+              builder: (context) {
+                final parentController = PrimaryScrollController.of(context);
+                if (scrollControllers[index]?.parent != parentController) {
+                  scrollControllers[index]?.dispose();
+                  scrollControllers[index] =
+                      SubordinateScrollController(parentController);
+                }
 
-                        return CustomScrollView(
-                          key: const PageStorageKey<String>('tabs-first'),
-                          controller: scrollControllers[0],
-                          slivers: [
-                            SliverOverlapInjector(
-                              // This is the flip side of the SliverOverlapAbsorber
-                              // above.
-                              handle: NestedScrollView
-                                  .sliverOverlapAbsorberHandleFor(
-                                context,
-                              ),
-                            ),
-                            const SliverToBoxAdapter(
-                              child: _GeneralTab(),
-                            ),
-                          ],
-                        );
-                      },
+                return CustomScrollView(
+                  key: PageStorageKey<String>(
+                    'apprentice-${views[index].key}${views[index].toString()}',
+                  ),
+                  controller: scrollControllers[index],
+                  slivers: [
+                    SliverOverlapInjector(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context,
+                      ),
                     ),
-                    Builder(
-                      builder: (context) {
-                        final parentController =
-                            PrimaryScrollController.of(context);
-                        if (scrollControllers[1]?.parent != parentController) {
-                          scrollControllers[1]?.dispose();
-                          scrollControllers[1] =
-                              SubordinateScrollController(parentController);
-                        }
-
-                        return CustomScrollView(
-                          key: const PageStorageKey<String>('tab-second'),
-                          controller: scrollControllers[1],
-                          slivers: [
-                            SliverOverlapInjector(
-                              // This is the flip side of the SliverOverlapAbsorber
-                              // above.
-                              handle: NestedScrollView
-                                  .sliverOverlapAbsorberHandleFor(
-                                context,
-                              ),
-                            ),
-                            const SliverToBoxAdapter(
-                              child: _PersonalDetailsTab(),
-                            ),
-                          ],
-                        );
-                      },
+                    SliverToBoxAdapter(
+                      child: views[index],
+                    ),
+                    const SliverPadding(
+                      padding: EdgeInsets.only(bottom: 20),
                     ),
                   ],
-                )
-              : Builder(
-                  builder: (context) {
-                    final parentController =
-                        PrimaryScrollController.of(context);
-                    if (scrollControllers[1]?.parent != parentController) {
-                      scrollControllers[1]?.dispose();
-                      scrollControllers[1] =
-                          SubordinateScrollController(parentController);
-                    }
-
-                    return CustomScrollView(
-                      key: const PageStorageKey<String>('tab-ahraitohnit'),
-                      controller: scrollControllers[1],
-                      slivers: [
-                        SliverOverlapInjector(
-                          // This is the flip side of the SliverOverlapAbsorber
-                          // above.
-                          handle:
-                              NestedScrollView.sliverOverlapAbsorberHandleFor(
-                            context,
-                          ),
-                        ),
-                        const SliverToBoxAdapter(
-                          child: _GeneralTab(),
-                        ),
-                        const SliverToBoxAdapter(
-                          child: _PersonalDetailsTab(),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                );
+              },
+            ),
+          ),
         ),
       ),
-    );
-  }
-
-  void _showPicker({
-    required BuildContext context,
-  }) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Photo Library'),
-                onTap: () {
-                  getImage(ImageSource.gallery);
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.camera),
-                title: const Text('Camera'),
-                onTap: () {
-                  getImage(ImageSource.camera);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Future getImage(
-    ImageSource img,
-  ) async {
-    final user = ref.watch(userServiceProvider);
-
-    final pickedFile = await picker.pickImage(source: img);
-    XFile? xfilePick = pickedFile;
-    setState(
-      () {
-        if (xfilePick != null) {
-          galleryFile = File(pickedFile!.path);
-
-          HttpService.uploadPhoto(galleryFile!, user.valueOrNull!.phone);
-          setState(() {});
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            // is this context <<<
-            const SnackBar(content: Text('Nothing is selected')),
-          );
-        }
-      },
     );
   }
 }
 
-class _PersonalDetailsTab extends ConsumerWidget {
-  const _PersonalDetailsTab();
+
+
+class _MilitaryServiceTabView extends HookConsumerWidget {
+  const _MilitaryServiceTabView({
+    required this.apprentice,
+  });
+
+  final ApprenticeDto apprentice;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final compound =
+        ref.watch(compoundControllerProvider).valueOrNull?.singleWhere(
+                  (element) => element.id == apprentice.militaryCompoundId,
+                  orElse: () => const CompoundDto(),
+                ) ??
+            const CompoundDto();
+    final isEditMode = useState(false);
+    final baseController = useTextEditingController(
+      text: compound.name,
+      keys: [apprentice],
+    );
+    final unitController = useTextEditingController(
+      text: apprentice.militaryUnit,
+      keys: [apprentice],
+    );
+    final positionNewController = useTextEditingController(
+      text: apprentice.militaryPositionNew,
+      keys: [apprentice],
+    );
+    final positionOldController = useTextEditingController(
+      text: apprentice.militaryPositionOld,
+      keys: [apprentice],
+    );
+
+    return AnimatedSwitcher(
+      duration: Consts.defaultDurationM,
+      transitionBuilder: (child, animation) => FadeTransition(
+        opacity: animation,
+        child: SizeTransition(
+          sizeFactor: animation,
+          axis: Axis.horizontal,
+          child: ScaleTransition(
+            scale: animation,
+            child: child,
+          ),
+        ),
+      ),
+      child: isEditMode.value
+          ? Padding(
+              padding: const EdgeInsets.all(24),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    inputDecorationTheme: const InputDecorationTheme(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(36)),
+                        borderSide: BorderSide(
+                          color: AppColors.gray5,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'צבא',
+                        style: TextStyles.s20w400.copyWith(
+                          color: AppColors.gray1,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      InputFieldContainer(
+                        label: 'שם הבסיס',
+                        isRequired: true,
+                        child: TextField(
+                          controller: baseController,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      InputFieldContainer(
+                        label: 'שיוך יחידתי',
+                        isRequired: true,
+                        child: TextField(
+                          controller: unitController,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      InputFieldContainer(
+                        label: 'תפקיד נוכחי',
+                        isRequired: true,
+                        child: TextField(
+                          controller: positionNewController,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      InputFieldContainer(
+                        label: 'תפקיד קודם',
+                        isRequired: true,
+                        child: TextField(
+                          controller: positionOldController,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: LargeFilledRoundedButton(
+                              label: 'שמירה',
+                              onPressed: () async {
+                                final result = await ref
+                                    .read(
+                                      apprenticesControllerProvider.notifier,
+                                    )
+                                    .editApprentice(
+                                      apprentice: apprentice.copyWith(
+                                        militaryCompoundId:
+                                            apprentice.militaryCompoundId,
+                                        militaryUnit: unitController.text,
+                                        militaryPositionNew:
+                                            positionNewController.text,
+                                        militaryPositionOld:
+                                            positionOldController.text,
+                                      ),
+                                    );
+
+                                if (result) {
+                                  isEditMode.value = false;
+                                } else {
+                                  Toaster.show(
+                                    'שגיאה בעת שמירת השינויים',
+                                  );
+                                }
+                              },
+                              textStyle: TextStyles.s14w500,
+                            ),
+                          ),
+                          const SizedBox(width: 24),
+                          Expanded(
+                            child: LargeFilledRoundedButton(
+                              label: 'ביטול',
+                              onPressed: () => isEditMode.value = false,
+                              backgroundColor: Colors.white,
+                              foregroundColor: AppColors.blue02,
+                              textStyle: TextStyles.s14w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : Column(
+              children: [
+                DetailsCard(
+                  title: 'פרטים אישיים',
+                  trailing: IconButton(
+                    onPressed: () => isEditMode.value = true,
+                    icon: const Icon(FluentIcons.edit_24_regular),
+                  ),
+                  child: Column(
+                    children: [
+                      DetailsRowItem(
+                        label: 'בסיס',
+                        data: compound.name,
+                      ),
+                      const SizedBox(height: 12),
+                      DetailsRowItem(
+                        label: 'שיוך יחידתי',
+                        data: apprentice.militaryUnit,
+                      ),
+                      const SizedBox(height: 12),
+                      DetailsRowItem(
+                        label: 'תפקיד קודם',
+                        data: apprentice.militaryPositionOld,
+                      ),
+                      const SizedBox(height: 12),
+                      DetailsRowItem(
+                        label: 'תפקיד נוכחי',
+                        data: apprentice.militaryPositionNew,
+                      ),
+                      const SizedBox(height: 12),
+                      DetailsRowItem(
+                        label: 'תאריך גיוס',
+                        data: apprentice.militaryDateOfEnlistment.asDateTime
+                            .asDayMonthYearShortDot,
+                      ),
+                      const SizedBox(height: 12),
+                      DetailsRowItem(
+                        label: 'תאריך שחרור',
+                        data: apprentice.militaryDateOfDischarge.asDateTime
+                            .asDayMonthYearShortDot,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+}
+
+class _TohnitHadarTabView extends ConsumerWidget {
+  const _TohnitHadarTabView({
+    required this.apprentice,
+  });
+
+  final ApprenticeDto apprentice;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+    final reports = ref.watch(reportsControllerProvider).valueOrNull?.where(
+              (element) => element.recipients.contains(apprentice.id),
+            ) ??
+        [];
+    final institution =
+        ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
+                  (element) => element.id == apprentice.institutionId,
+                  orElse: () => const InstitutionDto(),
+                ) ??
+            const InstitutionDto();
+
+    final events = ref
+            .watch(eventsControllerProvider)
+            .valueOrNull
+            ?.where(
+              (element) => apprentice.events
+                  .where((e2) => e2.id == element.id)
+                  .isNotEmpty,
+            )
+            .toList() ??
+        const [];
+
+    return Column(
+      children: [
+       
+        DetailsCard(
+          title: 'תוכנית הדר',
+          trailing: TextButton.icon(
+            onPressed: null,
+            style: TextButton.styleFrom(
+              disabledForegroundColor: AppColors.success600,
+            ),
+            icon: const Icon(Icons.check),
+            label: const Text('משלם'),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DetailsRowItem(
+                label: 'מקום לימודים',
+                data: institution.name,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'מחזור',
+                data: apprentice.thPeriod,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'ר”מ שנה א',
+                data: '',
+                contactName: apprentice.thRavMelamedYearAName,
+                contactPhone: apprentice.thRavMelamedYearAPhone,
+                onTapPhone: () async {
+                  final phoneCallAction =
+                      Uri.parse('tel:${apprentice.thRavMelamedYearAPhone}');
+                  if (await canLaunchUrl(phoneCallAction)) {
+                    await launchUrl(phoneCallAction);
+                  }
+                },
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'ר”מ שנה ב',
+                data: '',
+                contactName: apprentice.thRavMelamedYearBName,
+                contactPhone: apprentice.thRavMelamedYearBPhone,
+                onTapPhone: () async {
+                  final phoneCallAction =
+                      Uri.parse('tel:${apprentice.thRavMelamedYearBPhone}');
+                  if (await canLaunchUrl(phoneCallAction)) {
+                    await launchUrl(phoneCallAction);
+                  }
+                },
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'מלווה',
+                data: apprentice.thMentor,
+              ),
+            ],
+          ),
+        ),
+        if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+          DetailsCard(
+            title: 'מצב”ר',
+            trailing: Row(
+              children: [
+                CircleAvatar(
+                  radius: 4,
+                  backgroundColor: apprentice.matsber == 'אדוק'
+                      ? AppColors.green1
+                      : apprentice.matsber == 'מחובר'
+                          ? AppColors.green1
+                          : apprentice.matsber == 'מחובר חלקית'
+                              ? AppColors.yellow1
+                              : apprentice.matsber == 'בשלבי ניתוק'
+                                  ? AppColors.yellow1
+                                  : apprentice.matsber == 'מנותק'
+                                      ? AppColors.red1
+                                      : AppColors.grey1,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  apprentice.matsber,
+                  style: TextStyles.s12w400cGrey2,
+                ),
+              ],
+            ),
+            child: const SizedBox.shrink(),
+          ),
+      
+        ],
+      
+      ],
+    );
+  }
+}
+
+
+
+
+
+class _PersonalInfoTabView extends ConsumerWidget {
+  const _PersonalInfoTabView({
+    required this.apprentice,
+  });
+
+  final ApprenticeDto apprentice;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -409,514 +539,263 @@ class _PersonalDetailsTab extends ConsumerWidget {
 
     return Column(
       children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.all(15.0),
-          padding: const EdgeInsets.all(24.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(
-                  0,
-                  3,
-                ),
-              ),
-            ],
-          ),
+        DetailsCard(
+          title: 'כללי',
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Row(
-                    children: [
-                      //empty for spacing
-                      Text(
-                        ' פרטים אישיים',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 19,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Row(
-                    children: [
-                      Text(
-                        ' ',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 19,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      FluentIcons.edit_24_regular,
-                      color: AppColors.blue02,
-                    ),
-                    onPressed: () =>
-                        const EditUserProfileRouteData().push(context),
-                  ),
-                ],
+              DetailsRowItem(
+                label: 'תעודת זהות',
+                data: apprentice.teudatZehut,
               ),
-              const SizedBox(
-                height: 20,
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'אימייל',
+                data: apprentice.email,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            'שם',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            'שם משפחה',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            ' מייל',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            'טלפון',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            'תאריך יום הולדת',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            'עיר',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            'אזור',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            user.valueOrNull!.firstName,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            user.valueOrNull!.lastName,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            user.valueOrNull!.email,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            user.valueOrNull!.phone,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            user.valueOrNull!.dateOfBirth.substring(0, 10),
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            user.valueOrNull!.city,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 1.0,
-                          ),
-                          child: Text(
-                            user.valueOrNull!.region,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'כתובת',
+                data: apprentice.address.fullAddress,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'אזור',
+                data: apprentice.address.region,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'מצב משפחתי',
+                data: apprentice.maritalStatus,
               ),
             ],
           ),
+        ),
+      
+   
+    
+    
+      ],
+    );
+  }
+}
+
+class _ContactRow extends StatelessWidget {
+  const _ContactRow({
+    required this.relationship,
+    required this.phone,
+    required this.fullName,
+    required this.email,
+  });
+
+  final String relationship;
+  final String phone;
+  final String fullName;
+  final String email;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text.rich(
+          TextSpan(
+            style: TextStyles.s14w400,
+            children: [
+              TextSpan(
+                text: relationship,
+                style: const TextStyle(
+                  color: AppColors.gray5,
+                ),
+              ),
+              const TextSpan(text: '\t'),
+              TextSpan(text: fullName),
+            ],
+          ),
+        ),
+        _ContactButtons(
+          phone: phone,
+          email: email,
         ),
       ],
     );
   }
 }
 
-class _GeneralTab extends ConsumerWidget {
-  const _GeneralTab();
+class _ContactButtons extends ConsumerWidget {
+  const _ContactButtons({
+    required this.phone,
+    required this.email,
+  });
+
+  final String phone;
+  final String email;
 
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
-    final institution =
-        ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == user.valueOrNull?.institution,
-                  orElse: () => const InstitutionDto(),
-                ) ??
-            const InstitutionDto();
-    //print(user.valueOrNull?.institution);
-    //print(institution);
 
-    Logger().d("cluster${user.valueOrNull!.cluster}");
-    Logger().d("region${user.valueOrNull!.region}");
-
-    return Column(
+    return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(15),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'כללי',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'סיווג משתמש',
-                            textAlign: TextAlign.right,
-                          ),
-                          if (user.valueOrNull?.role == UserRole.melave) ...[
-                            const SizedBox(height: 10),
-                            const Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 1.0,
-                                ),
-                                child: Text(
-                                  'שיוך מוסדי',
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            const Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 1.0,
-                                ),
-                                child: Text(
-                                  'אשכול',
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 1.0,
-                              ),
-                              child: Text(
-                                user.valueOrNull?.role == UserRole.melave
-                                    ? "מלווה"
-                                    : "אין תפקיד",
-                                textAlign: TextAlign.right,
-                              ),
-                            ),
-                          ),
-                          if (user.valueOrNull?.role == UserRole.melave) ...[
-                            const SizedBox(height: 10),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 1.0,
-                                ),
-                                child: Text(
-                                  institution.name,
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 1.0,
-                                ),
-                                child: Text(
-                                  user.valueOrNull!.cluster.toString(),
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+        SizedBox(
+          width: 140,
+          child: Text(
+            phone,
+            style: TextStyles.s14w400.copyWith(
+              color: AppColors.gray2,
             ),
           ),
         ),
-        if (user.valueOrNull?.role == UserRole.melave)
-          Builder(
-            builder: (context) {
-              return Column(
-                children: <Widget>[
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        right: 24.0,
-                      ),
-                      child: Text(
-                        'רשימת חניכים',
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                  ),
-                  ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: user.valueOrNull!.apprentices.length,
-                    itemBuilder: (
-                      BuildContext context,
-                      int index,
-                    ) {
-                      final apprentice = ref.watch(
-                            apprenticesControllerProvider.select(
-                              (value) => value.value?.singleWhere(
-                                (element) =>
-                                    element.id ==
-                                    user.valueOrNull!.apprentices[index],
-                                orElse: () => const ApprenticeDto(),
-                              ),
-                            ),
-                          ) ??
-                          const ApprenticeDto();
-                      return ListTile(
-                        leading: const CircleAvatar(
-                          backgroundColor: Colors.blue,
-                          backgroundImage: AssetImage(
-                            'assets/images/person.png',
-                          ),
-                        ),
-                        title: Text(
-                          apprentice.fullName,
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        onTap: () => Toaster.unimplemented(),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                ],
-              );
-            },
+        const Spacer(),
+        if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+          _RowIconButton(
+            onPressed: () => Toaster.unimplemented(),
+            icon: const Icon(FluentIcons.edit_24_regular),
           ),
+          _RowIconButton(
+            onPressed: () => Toaster.unimplemented(),
+            icon: const Icon(FluentIcons.delete_24_regular),
+          ),
+        ] else ...[
+          _RowIconButton(
+            onPressed: () => launchSms(phone: phone),
+            icon: const Icon(FluentIcons.chat_24_regular),
+          ),
+          const SizedBox(width: 4),
+          _RowIconButton(
+            icon: Assets.icons.whatsapp.svg(
+              height: 20,
+            ),
+            onPressed: () => launchWhatsapp(phone: phone),
+          ),
+          const SizedBox(width: 4),
+          _RowIconButton(
+            onPressed: () => launchPhone(phone: phone),
+            icon: const Icon(FluentIcons.call_24_regular),
+          ),
+          const SizedBox(width: 4),
+          _RowIconButton(
+            onPressed: () => launchEmail(email: email),
+            icon: const Icon(FluentIcons.mail_24_regular),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _RowIconButton extends StatelessWidget {
+  const _RowIconButton({
+    required this.onPressed,
+    required this.icon,
+  });
+
+  final VoidCallback onPressed;
+  final Widget icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      borderRadius: BorderRadius.circular(36),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(36),
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: icon,
+        ),
+      ),
+    );
+  }
+}
+
+class _MissingInformationDialog extends StatelessWidget {
+  const _MissingInformationDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: SizedBox(
+        height: 320,
+        child: ColoredBox(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.topEnd,
+                  child: IconButton(
+                    onPressed: () => Navigator.of(context).maybePop(),
+                    icon: const Icon(Icons.close),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'חסרים פרטים',
+                        style: TextStyles.s24w400,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'מספר הטלפון לא מוזן במערכת,'
+                        '\n'
+                        'ולכן אין אפשרות להתקשר.',
+                        style: TextStyles.s16w400cGrey2,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 48),
+                LargeFilledRoundedButton(
+                  label: 'אישור',
+                  onPressed: () => Navigator.of(context).maybePop(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+  });
+
+  final Widget icon;
+  final String text;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        IconButton(
+          style: IconButton.styleFrom(
+            side: const BorderSide(
+              color: AppColors.gray7,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          onPressed: onPressed,
+          icon: icon,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          text,
+          style: TextStyles.s12w300cGray2,
+        ),
       ],
     );
   }
