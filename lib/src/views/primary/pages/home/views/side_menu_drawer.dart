@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
@@ -35,15 +36,17 @@ class SideMenuDrawer extends ConsumerWidget {
                     ],
                   ),
                   CircleAvatar(
-                    radius: 40, // Image radius
-                    backgroundImage: NetworkImage(user.valueOrNull!.avatar),
+                    radius: 40,
+                    backgroundImage: (user.valueOrNull?.avatar.isEmpty ?? true)
+                        ? null
+                        : CachedNetworkImageProvider(user.valueOrNull!.avatar),
                   ),
                   Text(
-                    user.valueOrNull!.fullName,
+                    user.valueOrNull?.fullName ?? '',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    user.valueOrNull!.email,
+                    user.valueOrNull?.email ?? '',
                     style: const TextStyle(fontSize: 11),
                   ),
                   TextButton(

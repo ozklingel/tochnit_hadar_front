@@ -133,7 +133,7 @@ class MessagesScreen extends HookConsumerWidget {
                       ),
                     if (sent.isEmpty)
                       EmptyState(
-                        image: Assets.images.noMessages.svg(),
+                        image: Assets.illustrations.pointDown.svg(),
                         topText: 'אין הודעות נכנסות',
                         bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
                       )
@@ -159,7 +159,7 @@ class MessagesScreen extends HookConsumerWidget {
                       ),
                     if (draft.isEmpty)
                       EmptyState(
-                        image: Assets.images.noMessages.svg(),
+                        image: Assets.illustrations.pointDown.svg(),
                         topText: 'אין הודעות נכנסות',
                         bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
                       )
@@ -264,7 +264,7 @@ class _SearchResultsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (messages.isEmpty) {
       return EmptyState(
-        image: Assets.images.noMessages.svg(),
+        image: Assets.illustrations.pointDown.svg(),
         topText: 'אין הודעות נכנסות',
         bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
       );

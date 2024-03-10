@@ -424,7 +424,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
               Text('לא נמצאו תוצאות עבור ${searchController.text}')
             else if (calls.isEmpty)
               EmptyState(
-                image: Assets.images.noTasks.svg(),
+                image: Assets.illustrations.clap.svg(),
                 topText: 'איזה יופי!',
                 bottomText: 'אין שיחות לבצע',
               )
@@ -440,7 +440,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
               Text('לא נמצאו תוצאות עבור ${searchController.text}')
             else if (meetings.isEmpty)
               EmptyState(
-                image: Assets.images.noTasks.svg(),
+                image: Assets.illustrations.clap.svg(),
                 topText: 'איזה יופי!',
                 bottomText: 'אין מפגשים לבצע',
               )
@@ -457,7 +457,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
               Text('לא נמצאו תוצאות עבור ${searchController.text}')
             else if (parents.isEmpty)
               EmptyState(
-                image: Assets.images.noTasks.svg(),
+                image: Assets.illustrations.clap.svg(),
                 topText: 'איזה יופי!',
                 bottomText: 'אין שיחות לבצע',
               )

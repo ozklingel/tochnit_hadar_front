@@ -148,7 +148,7 @@ class InstitutionsScreen extends HookConsumerWidget {
                                   .push(context),
                               tags: [
                                 '${e.melavim.length} מלווים',
-                                '${e.hanihim.length} חניכים',
+                                '${e.apprentices.length} חניכים',
                                 '${e.score.toInt()} ציון',
                               ],
                             ),

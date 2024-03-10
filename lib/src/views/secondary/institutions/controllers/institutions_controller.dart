@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,11 +20,14 @@ enum SortInstitutionBy {
 class InstitutionsController extends _$InstitutionsController {
   @override
   FutureOr<List<InstitutionDto>> build() async {
-    // ignore: unused_local_variable
-    final request =
-        ref.watch(dioServiceProvider).get('userProfile_form/myApprentices');
+    final institutions =
+        await ref.watch(dioServiceProvider).get(Consts.getAllInstitutions);
 
-    return [];
+    final parsed = (institutions.data as List<dynamic>)
+        .map((e) => InstitutionDto.fromJson(e))
+        .toList();
+
+    return parsed;
   }
 
   void sortBy(SortInstitutionBy sortBy) {

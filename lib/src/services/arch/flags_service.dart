@@ -77,7 +77,7 @@ final _institutions = List.generate(
     roshMehinaPhoneNumber: faker.phoneNumber.us(),
     menahelAdministrativiName: faker.person.name(),
     menahelAdministrativiPhoneNumber: faker.phoneNumber.de(),
-    hanihim: Consts.mockApprenticeGuids
+    apprentices: Consts.mockApprenticeGuids
         .take(
           faker.randomGenerator.integer(Consts.mockApprenticeGuids.length),
         )

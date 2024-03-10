@@ -49,6 +49,9 @@ abstract class Consts {
   // base / compound
   static const getAllCompounds = 'base/getAll';
 
+  // institutions
+  static const getAllInstitutions = 'institutionProfile_form/getAll';
+
   // eshkol
   static const getAllEshkols = 'eshkol/getAll';
 

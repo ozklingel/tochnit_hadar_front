@@ -66,8 +66,9 @@ class InstitutionDto with _$InstitutionDto {
     @Default([])
     @JsonKey(
       defaultValue: [],
+      name: 'hanihim',
     )
-    List<String> hanihim,
+    List<String> apprentices,
     @Default(0)
     @JsonKey(
       defaultValue: 0,
