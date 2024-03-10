@@ -493,7 +493,7 @@ class UserProfileRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const UserProfileScreen(apprenticeId: '',);
+    return const UserProfileScreen();
   }
 }
 

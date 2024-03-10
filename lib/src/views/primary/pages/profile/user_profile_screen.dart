@@ -21,6 +21,7 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
@@ -36,10 +37,8 @@ import 'package:url_launcher/url_launcher.dart';
 class UserProfileScreen extends StatefulHookConsumerWidget {
   const UserProfileScreen({
     super.key,
-    required this.apprenticeId,
   });
 
-  final String apprenticeId;
 
   @override
   ConsumerState<UserProfileScreen> createState() =>
@@ -66,24 +65,16 @@ class _ApprenticeDetailsScreenState
   Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
 
-    final apprentice = ref.watch(
-          apprenticesControllerProvider.select(
-            (value) => value.value?.singleWhere(
-              (element) => element.id == widget.apprenticeId,
-              orElse: () => const ApprenticeDto(),
-            ),
-          ),
-        ) ??
-        const ApprenticeDto();
+  
 
     final tabController = useTabController(
       initialLength: 3,
     );
 
     final views = [
-      _TohnitHadarTabView(apprentice: apprentice),
-      _MilitaryServiceTabView(apprentice: apprentice),
-      _PersonalInfoTabView(apprentice: apprentice),
+      _TohnitHadarTabView(),
+      _MilitaryServiceTabView(),
+      _PersonalInfoTabView(),
     ];
 
     return Scaffold(
@@ -114,9 +105,9 @@ class _ApprenticeDetailsScreenState
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.pin,
                     background: DetailsPageHeader(
-                      avatar: apprentice.avatar,
-                      name: '${apprentice.firstName} ${apprentice.lastName}',
-                      phone: apprentice.phone,
+                      avatar: user.valueOrNull!.avatar,
+                      name: user.valueOrNull!.fullName,
+                      phone: user.valueOrNull!.phone,
                       onTapEditAvatar: () => Toaster.unimplemented(),
                       bottom: Column(
                         children: [
@@ -189,36 +180,29 @@ class _ApprenticeDetailsScreenState
 
 
 class _MilitaryServiceTabView extends HookConsumerWidget {
-  const _MilitaryServiceTabView({
-    required this.apprentice,
-  });
+  const _MilitaryServiceTabView();
 
-  final ApprenticeDto apprentice;
 
   @override
   Widget build(BuildContext context, ref) {
-    final compound =
-        ref.watch(compoundControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == apprentice.militaryCompoundId,
-                  orElse: () => const CompoundDto(),
-                ) ??
-            const CompoundDto();
+     final user = ref.watch(userServiceProvider);
+
     final isEditMode = useState(false);
     final baseController = useTextEditingController(
-      text: compound.name,
-      keys: [apprentice],
+      text: user.valueOrNull!.avatar,
+      keys: [user],
     );
     final unitController = useTextEditingController(
-      text: apprentice.militaryUnit,
-      keys: [apprentice],
+ text: user.valueOrNull!.avatar,
+      keys: [user],
     );
     final positionNewController = useTextEditingController(
-      text: apprentice.militaryPositionNew,
-      keys: [apprentice],
+       text: user.valueOrNull!.avatar,
+      keys: [user],
     );
     final positionOldController = useTextEditingController(
-      text: apprentice.militaryPositionOld,
-      keys: [apprentice],
+       text: user.valueOrNull!.avatar,
+      keys: [user],
     );
 
     return AnimatedSwitcher(
@@ -299,29 +283,29 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                             child: LargeFilledRoundedButton(
                               label: 'שמירה',
                               onPressed: () async {
-                                final result = await ref
-                                    .read(
-                                      apprenticesControllerProvider.notifier,
-                                    )
-                                    .editApprentice(
-                                      apprentice: apprentice.copyWith(
-                                        militaryCompoundId:
-                                            apprentice.militaryCompoundId,
-                                        militaryUnit: unitController.text,
-                                        militaryPositionNew:
-                                            positionNewController.text,
-                                        militaryPositionOld:
-                                            positionOldController.text,
-                                      ),
-                                    );
+                                // final result = await ref
+                                //     .read(
+                                //       usersControllerProvider.notifier,
+                                //     )
+                                //     .editApprentice(
+                                //       user: apprentice.copyWith(
+                                //         militaryCompoundId:
+                                //             apprentice.militaryCompoundId,
+                                //         militaryUnit: unitController.text,
+                                //         militaryPositionNew:
+                                //             positionNewController.text,
+                                //         militaryPositionOld:
+                                //             positionOldController.text,
+                                //       ),
+                                //     );
 
-                                if (result) {
-                                  isEditMode.value = false;
-                                } else {
-                                  Toaster.show(
-                                    'שגיאה בעת שמירת השינויים',
-                                  );
-                                }
+                                // if (result) {
+                                //   isEditMode.value = false;
+                                // } else {
+                                //   Toaster.show(
+                                //     'שגיאה בעת שמירת השינויים',
+                                //   );
+                                // }
                               },
                               textStyle: TextStyles.s14w500,
                             ),
@@ -354,35 +338,33 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                   child: Column(
                     children: [
                       DetailsRowItem(
-                        label: 'בסיס',
-                        data: compound.name,
+                        label: 'שם פרטי',
+                        data:  user.valueOrNull!.avatar,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
-                        label: 'שיוך יחידתי',
-                        data: apprentice.militaryUnit,
+                        label: ' שם משפחה',
+                        data: user.valueOrNull!.avatar,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
-                        label: 'תפקיד קודם',
-                        data: apprentice.militaryPositionOld,
+                        label: ' כתובת מייל',
+                        data: user.valueOrNull!.avatar,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
-                        label: 'תפקיד נוכחי',
-                        data: apprentice.militaryPositionNew,
+                        label: ' תאריך יומהולדת',
+                        data: user.valueOrNull!.avatar,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: 'תאריך גיוס',
-                        data: apprentice.militaryDateOfEnlistment.asDateTime
-                            .asDayMonthYearShortDot,
+                        data: user.valueOrNull!.avatar,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: 'תאריך שחרור',
-                        data: apprentice.militaryDateOfDischarge.asDateTime
-                            .asDayMonthYearShortDot,
+                        data: user.valueOrNull!.avatar,
                       ),
                     ],
                   ),
@@ -394,36 +376,24 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
 }
 
 class _TohnitHadarTabView extends ConsumerWidget {
-  const _TohnitHadarTabView({
-    required this.apprentice,
-  });
+  const _TohnitHadarTabView();
 
-  final ApprenticeDto apprentice;
 
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
     final reports = ref.watch(reportsControllerProvider).valueOrNull?.where(
-              (element) => element.recipients.contains(apprentice.id),
+              (element) => element.recipients.contains(user.valueOrNull!.id),
             ) ??
         [];
     final institution =
         ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == apprentice.institutionId,
+                  (element) => element.id == user.valueOrNull!.institution,
                   orElse: () => const InstitutionDto(),
                 ) ??
             const InstitutionDto();
 
-    final events = ref
-            .watch(eventsControllerProvider)
-            .valueOrNull
-            ?.where(
-              (element) => apprentice.events
-                  .where((e2) => e2.id == element.id)
-                  .isNotEmpty,
-            )
-            .toList() ??
-        const [];
+
 
     return Column(
       children: [
@@ -446,74 +416,18 @@ class _TohnitHadarTabView extends ConsumerWidget {
                 data: institution.name,
               ),
               const SizedBox(height: 12),
-              DetailsRowItem(
-                label: 'מחזור',
-                data: apprentice.thPeriod,
-              ),
+             
               const SizedBox(height: 12),
-              DetailsRowItem(
-                label: 'ר”מ שנה א',
-                data: '',
-                contactName: apprentice.thRavMelamedYearAName,
-                contactPhone: apprentice.thRavMelamedYearAPhone,
-                onTapPhone: () async {
-                  final phoneCallAction =
-                      Uri.parse('tel:${apprentice.thRavMelamedYearAPhone}');
-                  if (await canLaunchUrl(phoneCallAction)) {
-                    await launchUrl(phoneCallAction);
-                  }
-                },
-              ),
+         
               const SizedBox(height: 12),
-              DetailsRowItem(
-                label: 'ר”מ שנה ב',
-                data: '',
-                contactName: apprentice.thRavMelamedYearBName,
-                contactPhone: apprentice.thRavMelamedYearBPhone,
-                onTapPhone: () async {
-                  final phoneCallAction =
-                      Uri.parse('tel:${apprentice.thRavMelamedYearBPhone}');
-                  if (await canLaunchUrl(phoneCallAction)) {
-                    await launchUrl(phoneCallAction);
-                  }
-                },
-              ),
+          
               const SizedBox(height: 12),
-              DetailsRowItem(
-                label: 'מלווה',
-                data: apprentice.thMentor,
-              ),
+            
             ],
           ),
         ),
         if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
-          DetailsCard(
-            title: 'מצב”ר',
-            trailing: Row(
-              children: [
-                CircleAvatar(
-                  radius: 4,
-                  backgroundColor: apprentice.matsber == 'אדוק'
-                      ? AppColors.green1
-                      : apprentice.matsber == 'מחובר'
-                          ? AppColors.green1
-                          : apprentice.matsber == 'מחובר חלקית'
-                              ? AppColors.yellow1
-                              : apprentice.matsber == 'בשלבי ניתוק'
-                                  ? AppColors.yellow1
-                                  : apprentice.matsber == 'מנותק'
-                                      ? AppColors.red1
-                                      : AppColors.grey1,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  apprentice.matsber,
-                  style: TextStyles.s12w400cGrey2,
-                ),
-              ],
-            ),
-            child: const SizedBox.shrink(),
-          ),
+        
       
         ],
       
@@ -527,11 +441,8 @@ class _TohnitHadarTabView extends ConsumerWidget {
 
 
 class _PersonalInfoTabView extends ConsumerWidget {
-  const _PersonalInfoTabView({
-    required this.apprentice,
-  });
+  const _PersonalInfoTabView();
 
-  final ApprenticeDto apprentice;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -543,30 +454,12 @@ class _PersonalInfoTabView extends ConsumerWidget {
           title: 'כללי',
           child: Column(
             children: [
-              DetailsRowItem(
-                label: 'תעודת זהות',
-                data: apprentice.teudatZehut,
-              ),
+             
               const SizedBox(height: 12),
-              DetailsRowItem(
-                label: 'אימייל',
-                data: apprentice.email,
-              ),
+            
+           
               const SizedBox(height: 12),
-              DetailsRowItem(
-                label: 'כתובת',
-                data: apprentice.address.fullAddress,
-              ),
-              const SizedBox(height: 12),
-              DetailsRowItem(
-                label: 'אזור',
-                data: apprentice.address.region,
-              ),
-              const SizedBox(height: 12),
-              DetailsRowItem(
-                label: 'מצב משפחתי',
-                data: apprentice.maritalStatus,
-              ),
+             
             ],
           ),
         ),
