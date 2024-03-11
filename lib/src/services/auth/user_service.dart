@@ -1,3 +1,4 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/arch/flags_service.dart';
@@ -25,20 +26,22 @@ class UserService extends _$UserService {
       return flags.user;
     }
 
-    final request = await ref
-        .watch(dioServiceProvider)
-        .get('userProfile_form/getProfileAtributes');
+    final request = await ref.watch(dioServiceProvider).get(Consts.getAuthUser);
 
     final user = UserDto.fromJson(request.data);
 
     ref.keepAlive();
 
-    // NOTE(noga-dev): this is for my debugging purposes
-    if (user.id == '523301800') {
-      return user.copyWith(role: UserRole.ahraiTohnit);
-    }
-
     return user;
+  }
+
+  @internal
+  void overrideRole(UserRole role) {
+    state = AsyncData(
+      state.requireValue.copyWith(
+        role: role,
+      ),
+    );
   }
 
   Future<void> logOff() async {

@@ -71,6 +71,7 @@ abstract class Consts {
 
   // user profile / apprentices
   static const getAllApprentices = 'userProfile_form/myApprentices';
+  static const getAuthUser = 'userProfile_form/getProfileAtributes';
 
   // END APIS
 

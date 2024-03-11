@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/themes.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -87,6 +89,29 @@ class HadarProgram extends ConsumerWidget {
         .currentContext!;
 
     return {
+      const SingleActivator(
+        LogicalKeyboardKey.numpad1,
+        alt: true,
+      ): () async =>
+          ref.read(userServiceProvider.notifier).overrideRole(UserRole.melave),
+      const SingleActivator(
+        LogicalKeyboardKey.numpad2,
+        alt: true,
+      ): () async => ref
+          .read(userServiceProvider.notifier)
+          .overrideRole(UserRole.rakazMosad),
+      const SingleActivator(
+        LogicalKeyboardKey.numpad3,
+        alt: true,
+      ): () async => ref
+          .read(userServiceProvider.notifier)
+          .overrideRole(UserRole.rakazEshkol),
+      const SingleActivator(
+        LogicalKeyboardKey.numpad4,
+        alt: true,
+      ): () async => ref
+          .read(userServiceProvider.notifier)
+          .overrideRole(UserRole.ahraiTohnit),
       const SingleActivator(
         LogicalKeyboardKey.keyA,
         alt: true,

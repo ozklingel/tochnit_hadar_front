@@ -85,7 +85,7 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                     background: DetailsPageHeader(
                       avatar: user.valueOrNull!.avatar,
                       name: user.valueOrNull!.fullName,
-                      phone: "0"+user.valueOrNull!.phone,
+                      phone: "0${user.valueOrNull!.phone}",
                       onTapEditAvatar: () => Toaster.unimplemented(),
                       bottom: const Column(
                         children: [
@@ -172,14 +172,14 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
       keys: [user],
     );
     final datOfBirthController = useTextEditingController(
-      text: user.valueOrNull!.dateOfBirth.substring(0,10),
+      text: user.valueOrNull!.dateOfBirth.substring(0, 10),
       keys: [user],
     );
-      final cityController = useTextEditingController(
+    final cityController = useTextEditingController(
       text: user.valueOrNull!.city,
       keys: [user],
     );
-      final regionController = useTextEditingController(
+    final regionController = useTextEditingController(
       text: user.valueOrNull!.region,
       keys: [user],
     );
@@ -256,7 +256,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 32),
-                           InputFieldContainer(
+                      InputFieldContainer(
                         label: '  עיר',
                         isRequired: true,
                         child: TextField(
@@ -264,7 +264,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 32),
-                          InputFieldContainer(
+                      InputFieldContainer(
                         label: '  אזור',
                         isRequired: true,
                         child: TextField(
@@ -349,7 +349,8 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: ' תאריך יומהולדת',
-                        data: user.valueOrNull?.dateOfBirth.substring(0,10) ?? "אין",
+                        data: user.valueOrNull?.dateOfBirth.substring(0, 10) ??
+                            "אין",
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
@@ -361,13 +362,12 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         label: ' מוסד',
                         data: user.valueOrNull!.institution,
                       ),
-                           const SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       DetailsRowItem(
                         label: ' אזור',
                         data: user.valueOrNull!.region,
                       ),
-                           const SizedBox(height: 12),
-                    
+                      const SizedBox(height: 12),
                     ],
                   ),
                 ),
@@ -399,31 +399,28 @@ class _TohnitHadarTabView extends ConsumerWidget {
             children: [
               DetailsRowItem(
                 label: 'סיווג משתמש',
-                data: user.valueOrNull?.role==0? "מלווה":"אין תפקיד",
+                data: user.valueOrNull?.role.index == 0 ? "מלווה" : "אין תפקיד",
               ),
               const SizedBox(height: 12),
-                DetailsRowItem(
+              DetailsRowItem(
                 label: ' שיוך מוסדי',
-                data: institution.name ,
+                data: institution.name,
               ),
               const SizedBox(height: 12),
-                DetailsRowItem(
+              DetailsRowItem(
                 label: ' אשכול',
                 data: user.valueOrNull?.cluster ?? "לא משוייך",
               ),
               const SizedBox(height: 12),
-                
             ],
           ),
         ),
-           
-         DetailsCard(
+        DetailsCard(
           title: ' רשימת חניכים',
           child: Builder(
             builder: (context) {
               return Column(
                 children: <Widget>[
-              
                   ListView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
@@ -458,9 +455,9 @@ class _TohnitHadarTabView extends ConsumerWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
-            onTap: () => ApprenticeDetailsRouteData(id: apprentice.id).go(context),
-
+                        onTap: () =>
+                            ApprenticeDetailsRouteData(id: apprentice.id)
+                                .go(context),
                       );
                     },
                   ),
@@ -468,13 +465,10 @@ class _TohnitHadarTabView extends ConsumerWidget {
                 ],
               );
             },
-      ),
-         ),
+          ),
+        ),
         if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[],
       ],
     );
   }
 }
-
-
-
