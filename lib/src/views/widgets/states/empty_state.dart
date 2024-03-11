@@ -30,6 +30,7 @@ class EmptyState extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyles.s20w500,
               ),
+              const SizedBox(height: 8),
               Text(
                 bottomText,
                 textAlign: TextAlign.center,

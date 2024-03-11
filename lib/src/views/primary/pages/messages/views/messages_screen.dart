@@ -111,8 +111,8 @@ class MessagesScreen extends HookConsumerWidget {
                     if (customerService.isEmpty)
                       EmptyState(
                         image: Assets.illustrations.pointDown.svg(),
-                        topText: 'אין הודעות נכנסות',
-                        bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
+                        topText: 'אין פניות שירות',
+                        bottomText: 'פניות שירות מכלל המשתמשים, יופיעו כאן',
                       )
                     else
                       ListView(
@@ -134,8 +134,8 @@ class MessagesScreen extends HookConsumerWidget {
                     if (sent.isEmpty)
                       EmptyState(
                         image: Assets.illustrations.pointDown.svg(),
-                        topText: 'אין הודעות נכנסות',
-                        bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
+                        topText: 'אין הודעות יוצאות',
+                        bottomText: 'הודעות יוצאות שישלחו, יופיעו כאן',
                       )
                     else
                       ListView(
@@ -160,8 +160,8 @@ class MessagesScreen extends HookConsumerWidget {
                     if (draft.isEmpty)
                       EmptyState(
                         image: Assets.illustrations.pointDown.svg(),
-                        topText: 'אין הודעות נכנסות',
-                        bottomText: 'הודעות נכנסות שישלחו, יופיעו כאן',
+                        topText: 'אין טיוטות',
+                        bottomText: 'הודעות יוצאות שלא ישלחו , יופיעו כאן',
                       )
                     else
                       ListView(
