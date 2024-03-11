@@ -72,10 +72,12 @@ class HadarProgram extends ConsumerWidget {
         ],
         builder: (context, child) => BotToastInit()(
           context,
-          CallbackShortcuts(
-            bindings: _shortcuts(ref),
-            child: child!,
-          ),
+          kDebugMode
+              ? CallbackShortcuts(
+                  bindings: _shortcuts(ref),
+                  child: child!,
+                )
+              : child,
         ),
       ),
     );
