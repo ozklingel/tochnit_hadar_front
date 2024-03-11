@@ -147,7 +147,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text(reportId.isEmpty ? 'הוספת דיווח' : 'עריכת דיווח'),
       ),
       body: Stack(
