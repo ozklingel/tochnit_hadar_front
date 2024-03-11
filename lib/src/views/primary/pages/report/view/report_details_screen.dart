@@ -164,21 +164,16 @@ class ReportDetailsScreen extends HookConsumerWidget {
                       isRequired: true,
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton2<ApprenticeDto>(
-                          value: (apprentices
-                                  .singleWhere(
-                                    (element) => selectedApprentices.value
-                                        .contains(element),
-                                    orElse: () => const ApprenticeDto(),
-                                  )
-                                  .id
-                                  .isEmpty)
-                              ? null
-                              : apprentices.singleWhere(
-                                  (element) => selectedApprentices.value
-                                      .contains(element),
-                                  orElse: () => const ApprenticeDto(),
+                          hint: selectedApprentices.value.isEmpty
+                              ? const Text('בחירת חניכים')
+                              : SizedBox(
+                                  width: 260,
+                                  child: Text(
+                                    selectedApprentices.value
+                                        .map((e) => e.fullName)
+                                        .join(','),
+                                  ),
                                 ),
-                          hint: const Text('בחירת חניכים'),
                           selectedItemBuilder: (context) {
                             return (user.valueOrNull?.apprentices ?? [])
                                 .map(

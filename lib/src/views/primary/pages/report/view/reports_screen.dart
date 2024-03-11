@@ -17,6 +17,7 @@ import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/report_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ReportsScreen extends HookConsumerWidget {
@@ -532,6 +533,8 @@ class _ReporsListBody extends ConsumerWidget {
         ],
       );
     }
+
+    Logger().d(selectedIds.value);
 
     final children = reports
         .map(
