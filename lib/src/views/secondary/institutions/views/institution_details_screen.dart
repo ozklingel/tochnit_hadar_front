@@ -92,7 +92,7 @@ class _InstitutionDetailsScreenState
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: DetailsPageHeader(
                       name: institution.name,
-                      phone: institution.phoneNumber,
+                      phone: institution.adminPhoneNumber,
                       onTapEditAvatar: () => Toaster.unimplemented(),
                     ),
                   ),
@@ -280,7 +280,7 @@ class _GeneralTab extends StatelessWidget {
           const SizedBox(height: 12),
           DetailsRowItem(
             label: 'רכז מוסד',
-            data: institution.rakaz,
+            data: institution.rakazId,
           ),
           const SizedBox(height: 12),
           DetailsRowItem(
@@ -300,7 +300,7 @@ class _GeneralTab extends StatelessWidget {
           const SizedBox(height: 12),
           DetailsRowItem(
             label: 'טלפון',
-            data: institution.phoneNumber,
+            data: institution.adminPhoneNumber,
           ),
           const SizedBox(height: 12),
           DetailsRowItem(
@@ -315,12 +315,12 @@ class _GeneralTab extends StatelessWidget {
           const SizedBox(height: 12),
           DetailsRowItem(
             label: 'שם מנהל אדמינסטרטיבי',
-            data: institution.menahelAdministrativiName,
+            data: institution.adminName,
           ),
           const SizedBox(height: 12),
           DetailsRowItem(
             label: 'טלפון מנהל אדמינסטרטיבי',
-            data: institution.menahelAdministrativiPhoneNumber,
+            data: institution.adminPhoneNumber,
           ),
         ],
       ),

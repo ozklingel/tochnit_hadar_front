@@ -59,7 +59,7 @@ final _institutions = List.generate(
   (index) => InstitutionDto(
     id: Consts.mockInstitutionsGuids[index],
     name: faker.company.name(),
-    rakaz: faker.person.name(),
+    rakazId: faker.person.name(),
     rakazPhoneNumber: faker.phoneNumber.de(),
     address: AddressDto(
       city: faker.address.city(),
@@ -71,12 +71,10 @@ final _institutions = List.generate(
       entrance: faker.lorem.word()[0],
       region: faker.address.state(),
     ),
-    shluha: faker.lorem.word(),
-    phoneNumber: faker.phoneNumber.de(),
+    adminPhoneNumber: faker.phoneNumber.de(),
     roshMehinaName: faker.person.name(),
     roshMehinaPhoneNumber: faker.phoneNumber.us(),
-    menahelAdministrativiName: faker.person.name(),
-    menahelAdministrativiPhoneNumber: faker.phoneNumber.de(),
+    adminName: faker.person.name(),
     apprentices: Consts.mockApprenticeGuids
         .take(
           faker.randomGenerator.integer(Consts.mockApprenticeGuids.length),

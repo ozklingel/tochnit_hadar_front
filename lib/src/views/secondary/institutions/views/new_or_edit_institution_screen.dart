@@ -27,16 +27,16 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final institution =
-        ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == id,
-                  orElse: () => const InstitutionDto(),
-                ) ??
-            const InstitutionDto();
+        (ref.watch(institutionsControllerProvider).valueOrNull ?? [])
+            .singleWhere(
+      (element) => element.id == id,
+      orElse: () => const InstitutionDto(),
+    );
     final name = useTextEditingController(text: institution.name);
-    final phone = useTextEditingController(text: institution.phoneNumber);
+    final phone = useTextEditingController(text: institution.adminPhoneNumber);
     final address =
         useTextEditingController(text: institution.address.fullAddress.trim());
-    final rakaz = useTextEditingController(text: institution.rakaz);
+    final rakazName = useTextEditingController(text: institution.rakazId);
     final rakazPhone =
         useTextEditingController(text: institution.rakazPhoneNumber);
     final roshMehina =
@@ -44,9 +44,9 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
     final roshPhoneNumber =
         useTextEditingController(text: institution.roshMehinaPhoneNumber);
     final menahelAdministrativi =
-        useTextEditingController(text: institution.menahelAdministrativiName);
+        useTextEditingController(text: institution.adminName);
     final menahelAdministrativiPhone = useTextEditingController(
-      text: institution.menahelAdministrativiPhoneNumber,
+      text: institution.adminPhoneNumber,
     );
     final files = useState(<File>[]);
 
@@ -87,7 +87,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
         label: 'שם רכז מוסד',
         isRequired: true,
         child: TextField(
-          controller: rakaz,
+          controller: rakazName,
           decoration: const InputDecoration(
             hintText: 'הזן את שם המשפחה של המשתמש',
             hintStyle: TextStyles.s16w400cGrey5,

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'ahrai_home.dto.f.dart';
 part 'ahrai_home.dto.g.dart';
@@ -40,7 +41,9 @@ class AhraiHomeDto with _$AhraiHomeDto {
 }
 
 List<(double, double)> _extractScore(List<dynamic>? data) {
-  if (data == null || data.isEmpty || data.first!.isEmpty) {
+  if (data == null || data.isEmpty || data.first!.isEmpty || data.length == 1) {
+    Sentry.captureException('bad backend _extractScore data');
+
     return [(0, 0), (0, 0)];
   }
 
