@@ -48,6 +48,17 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: AppColors.gray2,
                   ),
                 ),
+                trailing: controller.text.isEmpty
+                    ? null
+                    : [
+                        IconButton(
+                          onPressed: () => controller.clear(),
+                          icon: const Icon(
+                            Icons.close,
+                            color: AppColors.gray2,
+                          ),
+                        ),
+                      ],
               )
             : Text(
                 text,
