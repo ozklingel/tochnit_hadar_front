@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
@@ -181,10 +181,8 @@ class _MelaveTasksBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final tasksScreenController =
-        ref.watch(tasksControllerProvider).valueOrNull ?? [];
-    final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+    final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
+    final apprentices = ref.watch(getApprenticesProvider).valueOrNull ?? [];
     final tabController = useTabController(initialLength: 3);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
@@ -194,7 +192,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
     useListenable(searchController);
     useListenable(tabController);
 
-    final filteredList = tasksScreenController.where(
+    final filteredList = tasks.where(
       (element) => apprentices
           .singleWhere(
             (e) => element.apprenticeIds.contains(e.id),
@@ -296,62 +294,180 @@ class _MelaveTasksBody extends HookConsumerWidget {
               icon: const Icon(FluentIcons.search_24_regular),
             ),
           if (tabController.index == 2 && selectedParents.value.length == 1)
-            PopupMenuButton(
-              icon: const Icon(FluentIcons.more_vertical_24_regular),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  child: const Text('להתקשר לאמא'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                PopupMenuItem(
-                  child: const Text('להתקשר לאבא'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                PopupMenuItem(
-                  child: const Text('דיווח'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                PopupMenuItem(
-                  child: const Text('פרופיל אישי'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-              ],
+            Builder(
+              builder: (context) {
+                final selectedApprentice = apprentices.singleWhere(
+                  (element) => selectedParents.value.first.apprenticeIds
+                      .contains(element.id),
+                );
+
+                final isEnabledMother = [
+                  selectedApprentice.contact1Relationship,
+                  selectedApprentice.contact2Relationship,
+                  selectedApprentice.contact3Relationship,
+                ].contains(Relationship.mother);
+
+                final isEnabledFather = [
+                  selectedApprentice.contact1Relationship,
+                  selectedApprentice.contact2Relationship,
+                  selectedApprentice.contact3Relationship,
+                ].contains(Relationship.father);
+
+                return PopupMenuButton(
+                  icon: const Icon(FluentIcons.more_vertical_24_regular),
+                  itemBuilder: (context) => [
+                    if (isEnabledMother)
+                      PopupMenuItem(
+                        onTap: () {
+                          if (selectedApprentice.contact1Relationship ==
+                              Relationship.mother) {
+                            launchPhone(
+                              phone: selectedApprentice.contact1Phone,
+                            );
+                          } else if (selectedApprentice.contact2Relationship ==
+                              Relationship.mother) {
+                            launchPhone(
+                              phone: selectedApprentice.contact2Phone,
+                            );
+                          } else if (selectedApprentice.contact3Relationship ==
+                              Relationship.mother) {
+                            launchPhone(
+                              phone: selectedApprentice.contact3Phone,
+                            );
+                          } else {
+                            throw ArgumentError(
+                              'none of the contacts fit mother',
+                            );
+                          }
+                        },
+                        enabled: isEnabledMother,
+                        child: const Text('להתקשר לאמא'),
+                      ),
+                    if (isEnabledFather)
+                      PopupMenuItem(
+                        onTap: () {
+                          if (selectedApprentice.contact1Relationship ==
+                              Relationship.father) {
+                            launchPhone(
+                              phone: selectedApprentice.contact1Phone,
+                            );
+                          } else if (selectedApprentice.contact2Relationship ==
+                              Relationship.father) {
+                            launchPhone(
+                              phone: selectedApprentice.contact2Phone,
+                            );
+                          } else if (selectedApprentice.contact3Relationship ==
+                              Relationship.father) {
+                            launchPhone(
+                              phone: selectedApprentice.contact3Phone,
+                            );
+                          } else {
+                            throw ArgumentError(
+                              'none of the contacts fit father',
+                            );
+                          }
+                        },
+                        enabled: isEnabledFather,
+                        child: const Text('להתקשר לאבא'),
+                      ),
+                    PopupMenuItem(
+                      child: const Text('דיווח'),
+                      onTap: () => ReportNewRouteData(
+                        initRecipients: [selectedApprentice.id],
+                      ).push(context),
+                    ),
+                    PopupMenuItem(
+                      child: const Text('פרופיל אישי'),
+                      onTap: () => ApprenticeDetailsRouteData(
+                        id: selectedApprentice.id,
+                      ).go(context),
+                    ),
+                  ],
+                );
+              },
             ),
           if (tabController.index == 0 && selectedCalls.value.length == 1)
-            PopupMenuButton(
-              icon: const Icon(FluentIcons.more_vertical_24_regular),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  child: const Text('להתקשר'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                PopupMenuItem(
-                  child: const Text('שליחת וואטסאפ'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                PopupMenuItem(
-                  child: const Text('שליחת SMS'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                PopupMenuItem(
-                  child: const Text('דיווח'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                PopupMenuItem(
-                  child: const Text('פרופיל אישי'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-              ],
+            Builder(
+              builder: (context) {
+                final selectedApprentice = apprentices.singleWhere(
+                  (element) => selectedCalls.value.first.apprenticeIds
+                      .contains(element.id),
+                );
+
+                return PopupMenuButton(
+                  icon: const Icon(FluentIcons.more_vertical_24_regular),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: const Text('להתקשר'),
+                      onTap: () => launchPhone(phone: selectedApprentice.phone),
+                    ),
+                    PopupMenuItem(
+                      child: const Text('שליחת וואטסאפ'),
+                      onTap: () =>
+                          launchWhatsapp(phone: selectedApprentice.phone),
+                    ),
+                    PopupMenuItem(
+                      child: const Text('שליחת SMS'),
+                      onTap: () => launchSms(phone: selectedApprentice.phone),
+                    ),
+                    PopupMenuItem(
+                      child: const Text('דיווח'),
+                      onTap: () => ReportNewRouteData(
+                        initRecipients: [selectedApprentice.id],
+                      ).push(context),
+                    ),
+                    PopupMenuItem(
+                      child: const Text('פרופיל אישי'),
+                      onTap: () => ApprenticeDetailsRouteData(
+                        id: selectedApprentice.id,
+                      ).go(context),
+                    ),
+                  ],
+                );
+              },
             )
           else if ((tabController.index == 0 &&
                   selectedCalls.value.length > 1) ||
               (tabController.index == 1 && selectedMeetings.value.length > 1) ||
               (tabController.index == 2 && selectedParents.value.length > 1))
-            IconButton(
-              onPressed: () => Toaster.unimplemented(),
-              icon: const Icon(
-                FluentIcons.clipboard_24_regular,
-              ),
+            Builder(
+              builder: (context) {
+                final selectedApprentices = apprentices.where(
+                  (element) {
+                    return tabController.index == 0
+                        ? selectedCalls.value
+                            .map((e) => e.apprenticeIds)
+                            .expand((element) => element)
+                            .contains(element.id)
+                        : tabController.index == 1
+                            ? selectedMeetings.value
+                                .map((e) => e.apprenticeIds)
+                                .expand((element) => element)
+                                .contains(element.id)
+                            : selectedParents.value
+                                .map((e) => e.apprenticeIds)
+                                .expand((element) => element)
+                                .contains(element.id);
+                  },
+                );
+
+                // Logger().d(
+                //   selectedMeetings.value
+                //       .map((e) => e.apprenticeIds)
+                //       .expand((element) => element),
+                //   error: apprentices.length,
+                // );
+
+                return IconButton(
+                  onPressed: () => ReportNewRouteData(
+                    initRecipients:
+                        selectedApprentices.map((e) => e.id).toList(),
+                  ).push(context),
+                  icon: const Icon(
+                    FluentIcons.clipboard_24_regular,
+                  ),
+                );
+              },
             ),
           const SizedBox(width: 8),
         ],

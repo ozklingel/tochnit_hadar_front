@@ -371,15 +371,20 @@ class ReportsRouteData extends GoRouteData {
 }
 
 class ReportNewRouteData extends GoRouteData {
-  const ReportNewRouteData();
+  const ReportNewRouteData({
+    this.initRecipients = const [],
+  });
+
+  final List<String> initRecipients;
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const ReportDetailsScreen(
+    return ReportDetailsScreen(
       reportId: '',
       isReadOnly: false,
+      initRecipients: initRecipients,
     );
   }
 }
@@ -398,6 +403,7 @@ class ReportEditRouteData extends GoRouteData {
     return ReportDetailsScreen(
       reportId: id,
       isReadOnly: false,
+      initRecipients: const [],
     );
   }
 }
@@ -414,6 +420,7 @@ class ReportDetailsRouteData extends GoRouteData {
     return ReportDetailsScreen(
       reportId: id,
       isReadOnly: true,
+      initRecipients: const [],
     );
   }
 }

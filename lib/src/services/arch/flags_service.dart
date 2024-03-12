@@ -227,17 +227,20 @@ final _apprentices = List.generate(
     contact1LastName: faker.person.lastName(),
     contact1Email: faker.internet.email(),
     contact1Phone: faker.phoneNumber.us(),
-    contact1Relationship: faker.lorem.word(),
+    contact1Relationship: Relationship
+        .values[faker.randomGenerator.integer(Relationship.values.length)],
     contact2FirstName: faker.person.firstName(),
     contact2LastName: faker.person.lastName(),
     contact2Email: faker.internet.email(),
     contact2Phone: faker.phoneNumber.us(),
-    contact2Relationship: faker.lorem.word(),
+    contact2Relationship: Relationship
+        .values[faker.randomGenerator.integer(Relationship.values.length)],
     contact3FirstName: faker.person.firstName(),
     contact3LastName: faker.person.lastName(),
     contact3Email: faker.internet.email(),
     contact3Phone: faker.phoneNumber.us(),
-    contact3Relationship: faker.lorem.word(),
+    contact3Relationship: Relationship
+        .values[faker.randomGenerator.integer(Relationship.values.length)],
     militaryCompoundId: Consts.mockCompoundGuids[
         faker.randomGenerator.integer(Consts.mockCompoundGuids.length)],
     militaryDateOfDischarge:

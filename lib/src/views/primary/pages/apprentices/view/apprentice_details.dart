@@ -1255,7 +1255,7 @@ class _ContactRow extends StatelessWidget {
     required this.email,
   });
 
-  final String relationship;
+  final Relationship relationship;
   final String phone;
   final String fullName;
   final String email;
@@ -1270,7 +1270,7 @@ class _ContactRow extends StatelessWidget {
             style: TextStyles.s14w400,
             children: [
               TextSpan(
-                text: relationship,
+                text: relationship.name,
                 style: const TextStyle(
                   color: AppColors.gray5,
                 ),

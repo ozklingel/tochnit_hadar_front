@@ -74,7 +74,8 @@ class ReportsScreen extends HookConsumerWidget {
           title: const Text('דיווחים'),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => const ReportNewRouteData().push(context),
+          onPressed: () =>
+              const ReportNewRouteData(initRecipients: []).push(context),
           heroTag: UniqueKey(),
           shape: const CircleBorder(),
           backgroundColor: AppColors.blue02,
@@ -393,7 +394,8 @@ class ReportsScreen extends HookConsumerWidget {
         backgroundColor: AppColors.blue02,
         foregroundColor: AppColors.blue06,
         child: const Icon(FluentIcons.add_32_filled),
-        onPressed: () => const ReportNewRouteData().go(context),
+        onPressed: () =>
+            const ReportNewRouteData(initRecipients: []).go(context),
       ),
       body: RefreshIndicator.adaptive(
         onRefresh: () => ref.refresh(reportsControllerProvider.future),

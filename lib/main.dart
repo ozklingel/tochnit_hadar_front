@@ -125,7 +125,9 @@ class HadarProgram extends ConsumerWidget {
       const SingleActivator(
         LogicalKeyboardKey.keyE,
         alt: true,
-      ): () async => await const ReportNewRouteData().push(context),
+      ): () async => await const ReportNewRouteData(
+            initRecipients: [],
+          ).push(context),
       const SingleActivator(
         LogicalKeyboardKey.keyC,
         alt: true,

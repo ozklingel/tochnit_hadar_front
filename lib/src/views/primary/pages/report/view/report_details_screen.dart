@@ -36,10 +36,12 @@ class ReportDetailsScreen extends HookConsumerWidget {
     super.key,
     required this.reportId,
     required this.isReadOnly,
+    required this.initRecipients,
   });
 
   final String reportId;
   final bool isReadOnly;
+  final List<String> initRecipients;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -47,20 +49,24 @@ class ReportDetailsScreen extends HookConsumerWidget {
     final apprentices =
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
     final report =
-        ref.watch(reportsControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == reportId,
-                  orElse: () => const ReportDto(),
-                ) ??
-            const ReportDto();
-    final reportApprentices = ref
-            .watch(apprenticesControllerProvider)
-            .valueOrNull
-            ?.where((element) => report.recipients.contains(element.id))
-            .toList() ??
-        [];
+        (ref.watch(reportsControllerProvider).valueOrNull?.singleWhere(
+                      (element) => element.id == reportId,
+                      orElse: () => const ReportDto(),
+                    ) ??
+                const ReportDto())
+            .copyWith(
+      recipients: initRecipients,
+    );
+
+    // Logger().d(initRecipients, error: report.recipients);
+
     final apprenticeSearchController = useTextEditingController();
     final selectedDatetime = useState<DateTime?>(report.dateTime.asDateTime);
-    final selectedApprentices = useState(reportApprentices);
+    final selectedApprentices = useState(
+      apprentices
+          .where((element) => report.recipients.contains(element.id))
+          .toList(),
+    );
     final selectedEventType = useState(report.reportEventType);
     final uploadedFiles = useState(<String>[]);
     final isUploadInProgress = useState(<Key>[]);
@@ -118,9 +124,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'משתתפים',
-                data: reportApprentices
-                    .map((e) => '${e.firstName} ${e.lastName}')
-                    .join(', '),
+                data:
+                    selectedApprentices.value.map((e) => e.fullName).join(', '),
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
@@ -171,7 +176,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                   child: Text(
                                     selectedApprentices.value
                                         .map((e) => e.fullName)
-                                        .join(','),
+                                        .join(', '),
                                   ),
                                 ),
                           selectedItemBuilder: (context) {

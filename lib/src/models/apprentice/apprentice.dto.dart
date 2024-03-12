@@ -27,6 +27,17 @@ enum StatusColor {
   }
 }
 
+enum Relationship {
+  mother,
+  father,
+  sister,
+  brother,
+  wife,
+  husband,
+  other,
+  none,
+}
+
 @JsonSerializable()
 @Freezed(fromJson: false)
 class ApprenticeDto with _$ApprenticeDto {
@@ -68,12 +79,12 @@ class ApprenticeDto with _$ApprenticeDto {
       name: 'contact1_phone',
     )
     String contact1Phone,
-    @Default('')
+    @Default(Relationship.none)
     @JsonKey(
-      defaultValue: '',
       name: 'contact1_relation',
+      fromJson: _extractRelationship,
     )
-    String contact1Relationship,
+    Relationship contact1Relationship,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -98,12 +109,12 @@ class ApprenticeDto with _$ApprenticeDto {
       name: 'contact2_phone',
     )
     String contact2Phone,
-    @Default('')
+    @Default(Relationship.none)
     @JsonKey(
-      defaultValue: '',
       name: 'contact2_relation',
+      fromJson: _extractRelationship,
     )
-    String contact2Relationship,
+    Relationship contact2Relationship,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -128,12 +139,12 @@ class ApprenticeDto with _$ApprenticeDto {
       name: 'contact3_phone',
     )
     String contact3Phone,
-    @Default('')
+    @Default(Relationship.none)
     @JsonKey(
-      defaultValue: '',
       name: 'contact3_relation',
+      fromJson: _extractRelationship,
     )
-    String contact3Relationship,
+    Relationship contact3Relationship,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -377,6 +388,14 @@ StatusColor _parseStatus(dynamic val) {
       );
 
       return StatusColor.grey;
+  }
+}
+
+Relationship _extractRelationship(String? val) {
+  switch (val) {
+    case '':
+    default:
+      return Relationship.other;
   }
 }
 
