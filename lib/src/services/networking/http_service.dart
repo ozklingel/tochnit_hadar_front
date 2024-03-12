@@ -182,12 +182,11 @@ class HttpService {
   }
 
   static chatBoxUrl(createdById, subject, contant, context) async {
-    createdById = "972$createdById";
     Map<String, dynamic> request = {
       "content": contant,
       "subject": subject,
       "created_by_id": createdById,
-      "created_for_id": "972523301800",
+      "created_for_ids": [""],
       "attachments": [""],
     };
 

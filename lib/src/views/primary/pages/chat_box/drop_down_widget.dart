@@ -52,7 +52,7 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
                   decoration: const BoxDecoration(
                     border: Border(
                       top: BorderSide(
-                        color: Color.fromRGBO(236, 242, 245, 1),
+                        color: Colors.white,
                         width: 4,
                       ),
                     ),
