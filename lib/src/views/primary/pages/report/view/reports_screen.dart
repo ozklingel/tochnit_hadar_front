@@ -6,8 +6,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -17,7 +19,6 @@ import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/report_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ReportsScreen extends HookConsumerWidget {
@@ -31,36 +32,9 @@ class ReportsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
-    final controller = ref.watch<AsyncValue<List<ReportDto>>>(
-      reportsControllerProvider.select(
-        (value) {
-          if (value.isLoading) {
-            return const AsyncValue.loading();
-          }
-
-          if (value.hasError) {
-            return AsyncValue.error(
-              value.error.toString(),
-              value.stackTrace ?? StackTrace.current,
-            );
-          }
-
-          if (apprenticeId.isEmpty) {
-            return AsyncValue.data(value.value!);
-          }
-
-          return AsyncData(
-            value.value!
-                .where(
-                  (element) => element.recipients.contains(apprenticeId),
-                )
-                .toList(),
-          );
-        },
-      ),
-    );
-
-    final selectedIds = useState(<String>[]);
+    final apprentices = ref.watch(getApprenticesProvider).valueOrNull ?? [];
+    final reportsScreenController = ref.watch(reportsControllerProvider);
+    final selectedReportIds = useState(<String>[]);
     final filters = useState(<String>[]);
     final sortBy = useState(SortReportBy.abcAscending);
     final isSearchOpen = useState(false);
@@ -242,10 +216,10 @@ class ReportsScreen extends HookConsumerWidget {
                   ],
                 ),
               ),
-              controller.when(
+              reportsScreenController.when(
                 error: (error, stack) => SliverFillRemaining(
                   child: Center(
-                    child: Text(controller.error.toString()),
+                    child: Text(reportsScreenController.error.toString()),
                   ),
                 ),
                 loading: () => SliverFillRemaining(
@@ -255,14 +229,14 @@ class ReportsScreen extends HookConsumerWidget {
                       (index) => const ReportDto(),
                     ),
                     isLoading: true,
-                    selectedIds: selectedIds,
+                    selectedReportIds: selectedReportIds,
                   ),
                 ),
-                data: (reports) => SliverFillRemaining(
+                data: (reportsList) => SliverFillRemaining(
                   child: _ReporsListBody(
-                    reports: reports,
+                    reports: reportsList,
                     isLoading: false,
-                    selectedIds: selectedIds,
+                    selectedReportIds: selectedReportIds,
                   ),
                 ),
               ),
@@ -278,110 +252,99 @@ class ReportsScreen extends HookConsumerWidget {
         isSearchOpen: isSearchOpen,
         controller: searchController,
         actions: [
-          if (selectedIds.value.isEmpty)
+          if (selectedReportIds.value.isEmpty)
             IconButton(
               onPressed: () => isSearchOpen.value = true,
               icon: const Icon(FluentIcons.search_24_regular),
             )
-          else if (selectedIds.value.length == 1) ...[
+          else if (selectedReportIds.value.length == 1) ...[
             IconButton(
               onPressed: () =>
-                  ReportEditRouteData(id: selectedIds.value.first).go(context),
+                  ReportEditRouteData(id: selectedReportIds.value.first)
+                      .go(context),
               icon: const Icon(
                 FluentIcons.edit_24_regular,
                 size: 16,
               ),
             ),
-            PopupMenuButton(
-              icon: const Icon(FluentIcons.more_vertical_24_regular),
-              surfaceTintColor: Colors.white,
-              offset: const Offset(0, 32),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  child: const Text('שכפול'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                PopupMenuItem(
-                  child: const Text('עריכה'),
-                  onTap: () => ReportEditRouteData(id: selectedIds.value.first)
-                      .go(context),
-                ),
-                PopupMenuItem(
-                  child: const Text('מחיקה'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                PopupMenuItem(
-                  child: const Text('פרופיל אישי'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-              ],
+            Builder(
+              builder: (context) {
+                final report = reportsScreenController.valueOrNull?.singleWhere(
+                      (element) => element.id == selectedReportIds.value.first,
+                      orElse: () => const ReportDto(),
+                    ) ??
+                    const ReportDto();
+                final apprentice = apprentices.singleWhere(
+                  (element) => report.recipients.contains(element.id),
+                  orElse: () => const ApprenticeDto(),
+                );
+
+                return PopupMenuButton(
+                  icon: const Icon(FluentIcons.more_vertical_24_regular),
+                  surfaceTintColor: Colors.white,
+                  offset: const Offset(0, 32),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: const Text('שכפול'),
+                      onTap: () => Toaster.unimplemented(),
+                    ),
+                    PopupMenuItem(
+                      child: const Text('עריכה'),
+                      onTap: () =>
+                          ReportEditRouteData(id: selectedReportIds.value.first)
+                              .go(context),
+                    ),
+                    PopupMenuItem(
+                      child: const Text('מחיקה'),
+                      onTap: () async {
+                        final isConfirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => _DeleteConfirmationDialog(
+                                count: selectedReportIds.value.length,
+                              ),
+                            ) ??
+                            false;
+
+                        if (isConfirm) {
+                          final isSuccess = await ref
+                              .read(reportsControllerProvider.notifier)
+                              .delete([selectedReportIds.value.first]);
+
+                          if (isSuccess) {
+                            selectedReportIds.value = [];
+                          }
+                        }
+                      },
+                    ),
+                    PopupMenuItem(
+                      child: const Text('פרופיל אישי'),
+                      onTap: () => ApprenticeDetailsRouteData(id: apprentice.id)
+                          .push(context),
+                    ),
+                  ],
+                );
+              },
             ),
           ] else
             IconButton(
               onPressed: () async {
-                final result = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => Dialog(
-                    child: SizedBox(
-                      height: 360,
-                      child: ColoredBox(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional.topEnd,
-                                child: IconButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  icon: const Icon(Icons.close),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              const Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'מחיקת 2 דיווחים',
-                                      style: TextStyles.s24w400,
-                                    ),
-                                    TextSpan(text: '\n'),
-                                    TextSpan(
-                                      text:
-                                          'האם אתה מעוניין למחוק את הדיווחים שנבחרו? ',
-                                      style: TextStyles.s16w400cGrey2,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
-                              LargeFilledRoundedButton(
-                                label: 'לא, השאר',
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
-                              ),
-                              const SizedBox(height: 16),
-                              LargeFilledRoundedButton(
-                                label: 'כן, מחק',
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                                backgroundColor: Colors.white,
-                                foregroundColor: AppColors.blue03,
-                              ),
-                            ],
-                          ),
-                        ),
+                final isConfirm = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => _DeleteConfirmationDialog(
+                        count: selectedReportIds.value.length,
                       ),
-                    ),
-                  ),
-                );
+                    ) ??
+                    false;
 
-                if (result == null || !result) {
-                  return;
+                if (isConfirm) {
+                  final isSuccess = await ref
+                      .read(reportsControllerProvider.notifier)
+                      .delete(selectedReportIds.value);
+
+                  if (isSuccess) {
+                    selectedReportIds.value = [];
+                  }
                 }
-
-                Toaster.unimplemented();
               },
               icon: const Icon(FluentIcons.delete_24_regular),
             ),
@@ -399,13 +362,13 @@ class ReportsScreen extends HookConsumerWidget {
       ),
       body: RefreshIndicator.adaptive(
         onRefresh: () => ref.refresh(reportsControllerProvider.future),
-        child: controller.when(
+        child: reportsScreenController.when(
           error: (error, stack) => CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverFillRemaining(
                 child: Center(
-                  child: Text(controller.error.toString()),
+                  child: Text(reportsScreenController.error.toString()),
                 ),
               ),
             ],
@@ -418,7 +381,7 @@ class ReportsScreen extends HookConsumerWidget {
               ),
             ),
             isLoading: true,
-            selectedIds: selectedIds,
+            selectedReportIds: selectedReportIds,
           ),
           data: (reports) {
             final filteredList = [...reports];
@@ -432,9 +395,74 @@ class ReportsScreen extends HookConsumerWidget {
                   )
                   .toList(),
               isLoading: false,
-              selectedIds: selectedIds,
+              selectedReportIds: selectedReportIds,
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _DeleteConfirmationDialog extends StatelessWidget {
+  const _DeleteConfirmationDialog({
+    super.key,
+    required this.count,
+  });
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: SizedBox(
+        height: 360,
+        child: ColoredBox(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.topEnd,
+                  child: IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'מחיקת $count דיווחים',
+                        style: TextStyles.s24w400,
+                      ),
+                      const TextSpan(text: '\n'),
+                      const TextSpan(text: '\n'),
+                      const TextSpan(
+                        text: 'האם אתה מעוניין למחוק את הדיווחים שנבחרו? ',
+                        style: TextStyles.s16w400cGrey2,
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                LargeFilledRoundedButton(
+                  label: 'לא, השאר',
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+                const SizedBox(height: 16),
+                LargeFilledRoundedButton(
+                  label: 'כן, מחק',
+                  onPressed: () => Navigator.of(context).pop(true),
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.blue03,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -499,11 +527,11 @@ class _ReporsListBody extends ConsumerWidget {
   const _ReporsListBody({
     required this.reports,
     required this.isLoading,
-    required this.selectedIds,
+    required this.selectedReportIds,
   });
 
   final List<ReportDto> reports;
-  final ValueNotifier<List<String>> selectedIds;
+  final ValueNotifier<List<String>> selectedReportIds;
   final bool isLoading;
 
   @override
@@ -536,7 +564,7 @@ class _ReporsListBody extends ConsumerWidget {
       );
     }
 
-    Logger().d(selectedIds.value);
+    // Logger().d(selectedIds.value);
 
     final children = reports
         .map(
@@ -544,16 +572,17 @@ class _ReporsListBody extends ConsumerWidget {
             enabled: isLoading,
             child: ReportCard(
               report: e,
-              isSelected: selectedIds.value.contains(e.id),
+              isSelected: selectedReportIds.value.contains(e.id),
               onTap: () => ReportDetailsRouteData(id: e.id).push(context),
               onLongPress: () {
-                if (selectedIds.value.contains(e.id)) {
-                  final newList = selectedIds;
-                  newList.value.remove(e.id);
-                  selectedIds.value = [...newList.value];
+                if (selectedReportIds.value.contains(e.id)) {
+                  selectedReportIds.value = [
+                    ...selectedReportIds.value
+                        .where((element) => element != e.id),
+                  ];
                 } else {
-                  selectedIds.value = [
-                    ...selectedIds.value,
+                  selectedReportIds.value = [
+                    ...selectedReportIds.value,
                     e.id,
                   ];
                 }

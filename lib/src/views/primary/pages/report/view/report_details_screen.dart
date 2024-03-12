@@ -49,13 +49,11 @@ class ReportDetailsScreen extends HookConsumerWidget {
     final apprentices =
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
     final report =
-        (ref.watch(reportsControllerProvider).valueOrNull?.singleWhere(
-                      (element) => element.id == reportId,
-                      orElse: () => const ReportDto(),
-                    ) ??
-                const ReportDto())
-            .copyWith(
-      recipients: initRecipients,
+        (ref.watch(reportsControllerProvider).valueOrNull ?? []).singleWhere(
+      (element) => element.id == reportId,
+      orElse: () => ReportDto(
+        recipients: initRecipients,
+      ),
     );
 
     // Logger().d(initRecipients, error: report.recipients);
@@ -74,7 +72,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     if (isReadOnly) {
       return Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
           centerTitle: true,
           title: const Text('פרטי דיווח'),
           actions: [

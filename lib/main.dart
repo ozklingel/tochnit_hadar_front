@@ -84,13 +84,13 @@ class HadarProgram extends ConsumerWidget {
   }
 
   Map<ShortcutActivator, VoidCallback> _shortcuts(WidgetRef ref) {
-    late final context = ref
-        .read(goRouterServiceProvider)
-        .configuration
-        .navigatorKey
-        .currentContext!;
+    final router = ref.read(goRouterServiceProvider);
+    late final context = router.configuration.navigatorKey.currentContext!;
 
     return {
+      const SingleActivator(
+        LogicalKeyboardKey.escape,
+      ): () async => router.pop(),
       const SingleActivator(
         LogicalKeyboardKey.numpad1,
         alt: true,
@@ -132,13 +132,6 @@ class HadarProgram extends ConsumerWidget {
         LogicalKeyboardKey.keyC,
         alt: true,
       ): () async => await const ChartsRouteData().push(context),
-      const SingleActivator(
-        LogicalKeyboardKey.escape,
-      ): () {
-        if (ref.read(goRouterServiceProvider).canPop()) {
-          ref.read(goRouterServiceProvider).pop();
-        }
-      },
       const SingleActivator(
         LogicalKeyboardKey.keyI,
         alt: true,

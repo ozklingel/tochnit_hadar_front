@@ -5,6 +5,7 @@ import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -22,6 +23,7 @@ enum SortReportBy {
     GetReports,
     DioService,
     GoRouterService,
+    Storage,
   ],
 )
 class ReportsController extends _$ReportsController {
@@ -67,11 +69,12 @@ class ReportsController extends _$ReportsController {
       final result = await ref.read(dioServiceProvider).post(
         Consts.addReport,
         data: {
+          'userId': ref.read(storageProvider.notifier).getUserPhone(),
           'List_of_repored': report.recipients,
+          'date': report.dateTime,
           'event_type': report.reportEventType.name,
           'description': report.description,
           'attachments': report.attachments,
-          'date': report.dateTime,
         },
       );
 
@@ -99,11 +102,13 @@ class ReportsController extends _$ReportsController {
           'reportId': report.id,
         },
         data: {
-          'List_of_repored': report.recipients,
+          'reported_on': report.recipients,
+          "allreadyread": false,
+          'attachments': report.attachments,
+          'visit_date': report.dateTime,
           'event_type': report.reportEventType.name,
           'description': report.description,
-          'attachments': report.attachments,
-          'date': report.dateTime,
+          'title': report.reportEventType.name,
         },
       );
 
@@ -123,12 +128,16 @@ class ReportsController extends _$ReportsController {
     return false;
   }
 
-  Future<bool> delete(ReportDto report) async {
+  Future<bool> delete(List<String> ids) async {
+    if (ids.isEmpty) {
+      throw ArgumentError('bad report id delete');
+    }
+
     try {
       final result = await ref.read(dioServiceProvider).post(
-        Consts.editReport,
-        queryParameters: {
-          'reportId': report.id,
+        Consts.deleteReport,
+        data: {
+          'reportId': ids,
         },
       );
 
