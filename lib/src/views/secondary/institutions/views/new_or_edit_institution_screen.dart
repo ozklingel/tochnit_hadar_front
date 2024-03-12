@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -9,12 +8,12 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 class NewOrEditInstitutionScreen extends HookConsumerWidget {
   const NewOrEditInstitutionScreen({
@@ -48,7 +47,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
     final menahelAdministrativiPhone = useTextEditingController(
       text: institution.adminPhoneNumber,
     );
-    final files = useState(<File>[]);
+    final uploadedFile = useState('');
 
     final children = [
       InputFieldContainer(
@@ -166,47 +165,59 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () async {
-          final result =
-              await FilePicker.platform.pickFiles(allowMultiple: true);
+          final result = await FilePicker.platform.pickFiles(
+            allowMultiple: true,
+            withData: true,
+          );
 
           if (result == null) {
             return;
           }
 
-          // TODO(noga-dev): upload files to backend storage then save the urls in the report
-          try {
-            files.value = [
-              ...result.paths.map((path) => File(path!)).toList(),
-            ];
-          } catch (e) {
-            Logger().e('file upload error', error: e);
-          }
+          final uploadFileLocation = await ref.read(
+            uploadFileProvider(result.files.first).future,
+          );
+
+          uploadedFile.value = uploadFileLocation;
         },
         child: DottedBorder(
           borderType: BorderType.RRect,
           radius: const Radius.circular(12),
           color: AppColors.gray5,
-          child: const SizedBox(
+          child: SizedBox(
             height: 200,
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(FluentIcons.arrow_upload_24_regular),
-                  SizedBox(height: 12),
-                  Text(
-                    'הוסף קובץ לוגו',
-                    style: TextStyles.s14w500,
-                  ),
-                ],
-              ),
+              child: uploadedFile.value.isEmpty
+                  ? const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(FluentIcons.arrow_upload_24_regular),
+                        SizedBox(height: 12),
+                        Text(
+                          'הוסף קובץ לוגו',
+                          style: TextStyles.s14w500,
+                        ),
+                      ],
+                    )
+                  : CachedNetworkImage(imageUrl: uploadedFile.value),
             ),
           ),
         ),
       ),
       LargeFilledRoundedButton(
         label: 'שמירה',
-        onPressed: () => Toaster.unimplemented(),
+        onPressed: () async {
+          final navContext = Navigator.of(context);
+
+          final result = await ref
+              .read(institutionsControllerProvider.notifier)
+              .create(institution);
+
+          if (result) {
+            Toaster.show('Success');
+            navContext.pop();
+          }
+        },
       ),
     ];
 

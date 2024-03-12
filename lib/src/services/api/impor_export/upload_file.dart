@@ -19,7 +19,7 @@ class UploadFile extends _$UploadFile {
     final fileName = file.path;
 
     if (file.bytes == null) {
-      throw ArgumentError();
+      throw ArgumentError('missing param bytes');
     }
 
     final formData = FormData.fromMap({

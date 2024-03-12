@@ -17,11 +17,11 @@ class AddressDto with _$AddressDto {
       defaultValue: '',
     )
     String city,
-    @Default(0)
+    @Default('')
     @JsonKey(
-      defaultValue: 0,
+      defaultValue: '',
     )
-    int cityId,
+    String cityId,
     @Default('')
     @JsonKey(
       name: 'country',

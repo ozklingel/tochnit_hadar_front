@@ -44,7 +44,10 @@ List<(double, double)> _extractScore(List<dynamic>? data) {
   if (data == null || data.isEmpty || data.first!.isEmpty || data.length == 1) {
     Sentry.captureException('bad backend _extractScore data');
 
-    return [(0, 0), (0, 0)];
+    return [
+      (0, 0),
+      (0, 0),
+    ];
   }
 
   return data

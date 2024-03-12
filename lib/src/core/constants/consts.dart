@@ -49,7 +49,7 @@ abstract class Consts {
   // base / compound
   static const getAllCompounds = 'base/getAll';
 
-  // institutions
+  // institutions / mosad / mosdot
   static const getAllInstitutions = 'institutionProfile_form/getAll';
   static const addInstitution = 'institutionProfile_form/add_mosad';
 
