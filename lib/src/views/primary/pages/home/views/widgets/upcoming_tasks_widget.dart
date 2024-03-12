@@ -2,10 +2,12 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -199,7 +201,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
   }
 }
 
-class _ActionsRow extends StatelessWidget {
+class _ActionsRow extends ConsumerWidget {
   const _ActionsRow({
     required this.label,
     required this.selectedTasks,
@@ -209,7 +211,18 @@ class _ActionsRow extends StatelessWidget {
   final List<TaskDto> selectedTasks;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final apprentices =
+        ref.watch(apprenticesControllerProvider).valueOrNull?.where(
+                  (element) => selectedTasks
+                      .map(
+                        (e) => e.apprenticeIds,
+                      )
+                      .expand((element) => element)
+                      .contains(element.id),
+                ) ??
+            [];
+
     return SizedBox(
       height: 40,
       child: Row(
@@ -219,38 +232,66 @@ class _ActionsRow extends StatelessWidget {
             style: TextStyles.s18w400cGray1,
           ),
           const Spacer(),
-          if (selectedTasks.length == 1) ...[
+          if (selectedTasks.length == 1)
+            Builder(
+              builder: (context) {
+                final apprentice = apprentices.singleWhere(
+                  (element) => selectedTasks
+                      .map((e) => e.apprenticeIds)
+                      .expand((element) => element)
+                      .contains(element.id),
+                  orElse: () => const ApprenticeDto(),
+                );
+
+                return Row(
+                  children: [
+                    IconButton(
+                      onPressed: () => launchCall(phone: apprentice.phone),
+                      icon: const Icon(FluentIcons.call_24_regular),
+                    ),
+                    IconButton(
+                      onPressed: () => launchWhatsapp(phone: apprentice.phone),
+                      icon: Assets.icons.whatsapp.svg(
+                        height: 20,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => ReportNewRouteData(
+                        initRecipients: selectedTasks
+                            .map((e) => e.apprenticeIds)
+                            .expand((element) => element)
+                            .toList(),
+                      ).push(context),
+                      icon: const Icon(FluentIcons.clipboard_task_24_regular),
+                    ),
+                    PopupMenuButton(
+                      offset: const Offset(0, 32),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          onTap: () => launchSms(phone: apprentice.phone),
+                          child: const Text('שליחת SMS'),
+                        ),
+                        PopupMenuItem(
+                          onTap: () =>
+                              ApprenticeDetailsRouteData(id: apprentice.id)
+                                  .push(context),
+                          child: const Text('פרופיל אישי'),
+                        ),
+                      ],
+                      icon: const Icon(FluentIcons.more_vertical_24_regular),
+                    ),
+                  ],
+                );
+              },
+            )
+          else if (selectedTasks.length > 1)
             IconButton(
-              onPressed: () => Toaster.unimplemented(),
-              icon: const Icon(FluentIcons.call_24_regular),
-            ),
-            IconButton(
-              onPressed: () => Toaster.unimplemented(),
-              icon: Assets.icons.whatsapp.svg(
-                height: 20,
-              ),
-            ),
-            IconButton(
-              onPressed: () => Toaster.unimplemented(),
-              icon: const Icon(FluentIcons.clipboard_task_24_regular),
-            ),
-            PopupMenuButton(
-              offset: const Offset(0, 32),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  onTap: () => Toaster.unimplemented(),
-                  child: const Text('שליחת SMS'),
-                ),
-                PopupMenuItem(
-                  onTap: () => Toaster.unimplemented(),
-                  child: const Text('פרופיל אישי'),
-                ),
-              ],
-              icon: const Icon(FluentIcons.more_vertical_24_regular),
-            ),
-          ] else if (selectedTasks.length > 1)
-            IconButton(
-              onPressed: () => Toaster.unimplemented(),
+              onPressed: () => ReportNewRouteData(
+                initRecipients: selectedTasks
+                    .map((e) => e.apprenticeIds)
+                    .expand((element) => element)
+                    .toList(),
+              ).push(context),
               icon: const Icon(FluentIcons.clipboard_task_24_regular),
             ),
         ],

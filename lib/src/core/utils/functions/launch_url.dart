@@ -95,7 +95,7 @@ void launchEmail({
   }
 }
 
-void launchPhone({
+void launchCall({
   required phone,
 }) async {
   final url = Uri.parse('tel:$phone');

@@ -1337,7 +1337,7 @@ class _ContactButtons extends ConsumerWidget {
           ),
           const SizedBox(width: 4),
           _RowIconButton(
-            onPressed: () => launchPhone(phone: phone),
+            onPressed: () => launchCall(phone: phone),
             icon: const Icon(FluentIcons.call_24_regular),
           ),
           const SizedBox(width: 4),

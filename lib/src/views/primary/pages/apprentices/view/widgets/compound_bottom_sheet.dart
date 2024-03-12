@@ -20,7 +20,7 @@ List<PopupMenuItem<dynamic>> getApprenticeCardPopupItems({
   return [
     PopupMenuItem(
       child: const Text('להתקשר'),
-      onTap: () => launchPhone(phone: apprentice.phone),
+      onTap: () => launchCall(phone: apprentice.phone),
     ),
     PopupMenuItem(
       child: const Text('שליחת וואטסאפ'),

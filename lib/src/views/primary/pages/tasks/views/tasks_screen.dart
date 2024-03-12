@@ -213,7 +213,8 @@ class _MelaveTasksBody extends HookConsumerWidget {
             isSelected: selectedCalls.value.contains(e),
             onTap: () => e.apprenticeIds.isEmpty
                 ? null
-                : ApprenticeDetailsRouteData(id: e.apprenticeIds.first),
+                : ApprenticeDetailsRouteData(id: e.apprenticeIds.first)
+                    .push(context),
             onLongPress: () {
               if (selectedCalls.value.contains(e)) {
                 final newList = selectedCalls.value;
@@ -321,17 +322,17 @@ class _MelaveTasksBody extends HookConsumerWidget {
                         onTap: () {
                           if (selectedApprentice.contact1Relationship ==
                               Relationship.mother) {
-                            launchPhone(
+                            launchCall(
                               phone: selectedApprentice.contact1Phone,
                             );
                           } else if (selectedApprentice.contact2Relationship ==
                               Relationship.mother) {
-                            launchPhone(
+                            launchCall(
                               phone: selectedApprentice.contact2Phone,
                             );
                           } else if (selectedApprentice.contact3Relationship ==
                               Relationship.mother) {
-                            launchPhone(
+                            launchCall(
                               phone: selectedApprentice.contact3Phone,
                             );
                           } else {
@@ -348,17 +349,17 @@ class _MelaveTasksBody extends HookConsumerWidget {
                         onTap: () {
                           if (selectedApprentice.contact1Relationship ==
                               Relationship.father) {
-                            launchPhone(
+                            launchCall(
                               phone: selectedApprentice.contact1Phone,
                             );
                           } else if (selectedApprentice.contact2Relationship ==
                               Relationship.father) {
-                            launchPhone(
+                            launchCall(
                               phone: selectedApprentice.contact2Phone,
                             );
                           } else if (selectedApprentice.contact3Relationship ==
                               Relationship.father) {
-                            launchPhone(
+                            launchCall(
                               phone: selectedApprentice.contact3Phone,
                             );
                           } else {
@@ -380,7 +381,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                       child: const Text('פרופיל אישי'),
                       onTap: () => ApprenticeDetailsRouteData(
                         id: selectedApprentice.id,
-                      ).go(context),
+                      ).push(context),
                     ),
                   ],
                 );
@@ -399,7 +400,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       child: const Text('להתקשר'),
-                      onTap: () => launchPhone(phone: selectedApprentice.phone),
+                      onTap: () => launchCall(phone: selectedApprentice.phone),
                     ),
                     PopupMenuItem(
                       child: const Text('שליחת וואטסאפ'),
@@ -420,7 +421,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                       child: const Text('פרופיל אישי'),
                       onTap: () => ApprenticeDetailsRouteData(
                         id: selectedApprentice.id,
-                      ).go(context),
+                      ).push(context),
                     ),
                   ],
                 );
