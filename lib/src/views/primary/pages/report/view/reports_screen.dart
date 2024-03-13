@@ -13,6 +13,7 @@ import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
@@ -35,7 +36,7 @@ class ReportsScreen extends HookConsumerWidget {
     final apprentices = ref.watch(getApprenticesProvider).valueOrNull ?? [];
     final reportsScreenController = ref.watch(reportsControllerProvider);
     final selectedReportIds = useState(<String>[]);
-    final filters = useState(<String>[]);
+    final filters = useState(const FilterDto());
     final sortBy = useState(SortReportBy.abcAscending);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
@@ -102,12 +103,28 @@ class ReportsScreen extends HookConsumerWidget {
                           Stack(
                             children: [
                               IconButton(
-                                onPressed: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const FiltersScreen.reports(),
-                                  ),
-                                ),
+                                onPressed: () async {
+                                  final result =
+                                      await Navigator.of(context).push(
+                                            MaterialPageRoute<FilterDto>(
+                                              builder: (context) =>
+                                                  FiltersScreen.reports(
+                                                initFilters: filters.value,
+                                              ),
+                                            ),
+                                          ) ??
+                                          const FilterDto();
+
+                                  final request = await ref
+                                      .read(
+                                        reportsControllerProvider.notifier,
+                                      )
+                                      .filterReports(result);
+
+                                  if (request) {
+                                    filters.value = result;
+                                  }
+                                },
                                 icon: const Icon(
                                   FluentIcons.filter_add_20_regular,
                                 ),
@@ -139,32 +156,80 @@ class ReportsScreen extends HookConsumerWidget {
                           child: ListView(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             scrollDirection: Axis.horizontal,
-                            children: filters.value
+                            children: [
+                              ...filters.value.roles.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.years.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.institutions.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.periods.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.eshkols.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.statuses.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.bases.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.hativot.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.regions.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.regions.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                              ...filters.value.cities.map(
+                                (e) => FilterChip(
+                                  label: Text(e),
+                                  onSelected: (val) => Toaster.unimplemented(),
+                                ),
+                              ),
+                            ]
                                 .map(
-                                  (e) => ChoiceChip(
-                                    showCheckmark: false,
-                                    selectedColor: AppColors.blue06,
-                                    color: MaterialStateColor.resolveWith(
-                                      (states) => AppColors.blue06,
+                                  (e) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 4,
                                     ),
-                                    selected: true,
-                                    onSelected: (val) =>
-                                        Toaster.unimplemented(),
-                                    label: Row(
-                                      children: [
-                                        Text(e),
-                                        const SizedBox(width: 8),
-                                        const Icon(
-                                          Icons.close,
-                                          color: AppColors.blue02,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    ),
-                                    labelStyle: TextStyles.s14w400cBlue2,
-                                    side: const BorderSide(
-                                      color: AppColors.blue06,
-                                    ),
+                                    child: e,
                                   ),
                                 )
                                 .toList(),
@@ -398,6 +463,46 @@ class ReportsScreen extends HookConsumerWidget {
               selectedReportIds: selectedReportIds,
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    super.key,
+    required this.label,
+  });
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: ChoiceChip(
+        showCheckmark: false,
+        selectedColor: AppColors.blue06,
+        color: MaterialStateColor.resolveWith(
+          (states) => AppColors.blue06,
+        ),
+        selected: true,
+        onSelected: (val) => Toaster.unimplemented(),
+        label: Row(
+          children: [
+            Text(label),
+            const SizedBox(width: 8),
+            const Icon(
+              Icons.close,
+              color: AppColors.blue02,
+              size: 16,
+            ),
+          ],
+        ),
+        labelStyle: TextStyles.s14w400cBlue2,
+        side: const BorderSide(
+          color: AppColors.blue06,
         ),
       ),
     );

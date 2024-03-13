@@ -11,6 +11,7 @@ import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -162,6 +163,7 @@ class _UsersTab extends ConsumerWidget {
             [];
     final compounds = ref.watch(compoundControllerProvider).valueOrNull;
     final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
+    final filters = useState(const FilterDto());
 
     final children = List.generate(
       7,
@@ -198,7 +200,9 @@ class _UsersTab extends ConsumerWidget {
               IconButton(
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const FiltersScreen.institutions(),
+                    builder: (context) => FiltersScreen.institutions(
+                      initFilters: filters.value,
+                    ),
                   ),
                 ),
                 icon: const Icon(

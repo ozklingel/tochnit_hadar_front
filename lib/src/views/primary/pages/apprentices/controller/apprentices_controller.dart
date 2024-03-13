@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
+import 'package:hadar_program/src/services/api/search_bar/get_filtered_users.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -14,9 +18,12 @@ part 'apprentices_controller.g.dart';
   dependencies: [
     GetApprentices,
     DioService,
+    GetFilteredUsers,
   ],
 )
 class ApprenticesController extends _$ApprenticesController {
+  var _filters = const FilterDto();
+
   @override
   FutureOr<List<ApprenticeDto>> build() async {
     final apprentices = await ref.watch(getApprenticesProvider.future);
@@ -213,5 +220,33 @@ class ApprenticesController extends _$ApprenticesController {
 
       return false;
     });
+  }
+
+  FutureOr<bool> filterUsers(FilterDto filter) async {
+    _filters = filter;
+
+    if (_filters.isEmpty) {
+      ref.invalidateSelf();
+
+      return true;
+    }
+
+    try {
+      final request = await ref.read(getFilteredUsersProvider(_filters).future);
+
+      state = AsyncData(
+        state.requireValue
+            .where((element) => request.contains(element.id))
+            .toList(),
+      );
+
+      return true;
+    } catch (e) {
+      Logger().e('failed to filter users', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return false;
   }
 }

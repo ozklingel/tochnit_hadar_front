@@ -18,6 +18,7 @@ import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -68,6 +69,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     final selectedEventType = useState(report.reportEventType);
     final uploadedFiles = useState(<String>[]);
     final isUploadInProgress = useState(<Key>[]);
+    final filters = useState(const FilterDto());
 
     if (isReadOnly) {
       return Scaffold(
@@ -366,12 +368,19 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             label: const Text('הוספת קבוצת נמענים'),
                             labelStyle: TextStyles.s14w400cBlue2,
                             backgroundColor: Colors.white,
-                            onPressed: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const FiltersScreen.addRecipients(),
-                              ),
-                            ),
+                            onPressed: () async {
+                              final result = await Navigator.of(context).push(
+                                    MaterialPageRoute<FilterDto>(
+                                      builder: (context) =>
+                                          FiltersScreen.addRecipients(
+                                        initFilters: filters.value,
+                                      ),
+                                    ),
+                                  ) ??
+                                  const FilterDto();
+
+                              if (result.isNotEmpty) {}
+                            },
                           ),
                           if (selectedApprentices.value.isNotEmpty)
                             FilterChip(

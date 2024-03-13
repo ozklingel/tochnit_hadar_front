@@ -2,7 +2,6 @@ import 'package:faker/faker.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/models/user_filter.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'users_controller.g.dart';
@@ -13,8 +12,6 @@ part 'users_controller.g.dart';
   ],
 )
 class UsersController extends _$UsersController {
-  final _filters = const UserFilterDto();
-
   @override
   FutureOr<List<ApprenticeDto>> build() async {
     final apprentices = await ref.watch(getApprenticesProvider.future);

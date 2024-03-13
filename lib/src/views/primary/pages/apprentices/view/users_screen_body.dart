@@ -12,8 +12,10 @@ import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
@@ -25,7 +27,7 @@ class UsersScreenBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final users = ref.watch(usersControllerProvider);
-    final filters = useState<List<String>>([]);
+    final filters = useState(const FilterDto());
     final selectedApprenticeIds = useState<List<String>>([]);
     final compounds = ref.watch(compoundControllerProvider).valueOrNull;
     final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
@@ -102,30 +104,136 @@ class UsersScreenBody extends HookConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        IconButton(
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute<void>(
-                              builder: (ctx) => const FiltersScreen.users(),
-                              fullscreenDialog: true,
+                        Stack(
+                          children: [
+                            IconButton(
+                              onPressed: () async {
+                                final result = await Navigator.of(context).push(
+                                      MaterialPageRoute<FilterDto>(
+                                        builder: (ctx) => FiltersScreen.users(
+                                          initFilters: filters.value,
+                                        ),
+                                        fullscreenDialog: true,
+                                      ),
+                                    ) ??
+                                    const FilterDto();
+
+                                final request = await ref
+                                    .read(
+                                      apprenticesControllerProvider.notifier,
+                                    )
+                                    .filterUsers(result);
+
+                                if (request) {
+                                  filters.value = result;
+                                }
+                              },
+                              icon:
+                                  const Icon(FluentIcons.filter_add_20_regular),
                             ),
-                          ),
-                          icon: const Icon(FluentIcons.filter_add_20_regular),
+                            Positioned(
+                              right: 8,
+                              top: 8,
+                              child: IgnorePointer(
+                                child: CircleAvatar(
+                                  backgroundColor: AppColors.red1,
+                                  radius: 7,
+                                  child: Text(
+                                    filters.value.length.toString(),
+                                    style: TextStyles.s11w500fRoboto,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
                   if (filters.value.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: filters.value
-                          .map(
+                    SizedBox(
+                      height: 32,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          ...filters.value.roles.map(
                             (e) => FilterChip(
                               label: Text(e),
                               onSelected: (val) => Toaster.unimplemented(),
                             ),
-                          )
-                          .toList(),
+                          ),
+                          ...filters.value.years.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                          ...filters.value.institutions.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                          ...filters.value.periods.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                          ...filters.value.eshkols.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                          ...filters.value.statuses.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                          ...filters.value.bases.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                          ...filters.value.hativot.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                          ...filters.value.regions.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                          ...filters.value.regions.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                          ...filters.value.cities.map(
+                            (e) => FilterChip(
+                              label: Text(e),
+                              onSelected: (val) => Toaster.unimplemented(),
+                            ),
+                          ),
+                        ]
+                            .map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                                child: e,
+                              ),
+                            )
+                            .toList(),
+                      ),
                     ),
                   ],
                   const SizedBox(height: 8),

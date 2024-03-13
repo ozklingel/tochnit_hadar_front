@@ -89,7 +89,7 @@ class InstitutionsController extends _$InstitutionsController {
         return true;
       }
     } catch (e) {
-      Logger().e('failed to create instution', error: e);
+      Logger().e('failed to create institution', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
     }

@@ -73,7 +73,7 @@ class BottomNavigationWidget extends ConsumerWidget {
                 icon: Icon(FluentIcons.person_24_regular),
                 label: 'חניכים',
               )
-            else if (user.valueOrNull?.role == UserRole.ahraiTohnit)
+            else
               const BottomNavigationBarItem(
                 activeIcon: Icon(FluentIcons.people_24_regular),
                 icon: Icon(FluentIcons.people_24_regular),

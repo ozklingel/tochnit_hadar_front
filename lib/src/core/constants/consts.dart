@@ -45,6 +45,8 @@ abstract class Consts {
   static const addReport = 'reports_form/add';
   static const editReport = 'reports_form/update';
   static const deleteReport = 'reports_form/delete';
+  static const filterReports = 'reports_form/filter_report';
+  static const filterRecipients = 'reports_form/filter_to';
 
   // base / compound
   static const getAllCompounds = 'base/getAll';
@@ -73,6 +75,9 @@ abstract class Consts {
   // user profile / apprentices
   static const getAllApprentices = 'userProfile_form/myApprentices';
   static const getAuthUser = 'userProfile_form/getProfileAtributes';
+
+  // search bar / filter
+  static const getAllFiltered = 'search_bar/search_entities';
 
   // END APIS
 

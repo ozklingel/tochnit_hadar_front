@@ -7,6 +7,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/new_message_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/widgets/find_users_page.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
@@ -33,6 +34,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
     final title = useTextEditingController();
     final body = useTextEditingController();
     final isAddUserInMsg = useState(false);
+    final filters = useState(const FilterDto());
 
     useListenable(title);
 
@@ -118,7 +120,9 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                               onPressed: () => Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (val) {
-                                    return const FiltersScreen.users();
+                                    return FiltersScreen.users(
+                                      initFilters: filters.value,
+                                    );
                                   },
                                 ),
                               ),

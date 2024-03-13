@@ -1,11 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
+import 'package:hadar_program/src/services/api/reports_form/filter_recipients.dart';
+import 'package:hadar_program/src/services/api/reports_form/filter_reports.dart';
 import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -24,9 +27,13 @@ enum SortReportBy {
     DioService,
     GoRouterService,
     StorageService,
+    FilterReports,
+    FilterRecipients,
   ],
 )
 class ReportsController extends _$ReportsController {
+  var _filters = const FilterDto();
+
   @override
   FutureOr<List<ReportDto>> build() async {
     final reports = await ref.watch(getReportsProvider.future);
@@ -155,5 +162,49 @@ class ReportsController extends _$ReportsController {
     }
 
     return false;
+  }
+
+  FutureOr<bool> filterReports(FilterDto filter) async {
+    _filters = filter;
+
+    if (_filters.isEmpty) {
+      ref.invalidateSelf();
+
+      return true;
+    }
+
+    try {
+      final request = await ref.read(filterReportsProvider(_filters).future);
+
+      state = AsyncData(
+        state.requireValue
+            .where((element) => request.contains(element.id))
+            .toList(),
+      );
+
+      return true;
+    } catch (e) {
+      Logger().e('failed to filter reports', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return false;
+  }
+
+  Future<List<String>> filterRecipients(FilterDto filter) async {
+    try {
+      final request = await ref.read(filterRecipientsProvider(_filters).future);
+
+      if (request.isNotEmpty) {
+        return request;
+      }
+    } catch (e) {
+      Logger().e('failed to filter reports', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return [];
   }
 }
