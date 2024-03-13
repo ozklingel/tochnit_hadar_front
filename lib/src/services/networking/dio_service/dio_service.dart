@@ -9,17 +9,17 @@ part 'dio_service.g.dart';
 
 @Riverpod(
   dependencies: [
-    Storage,
+    StorageService,
   ],
 )
 class DioService extends _$DioService {
   @override
   Dio build() {
-    ref.watch(storageProvider);
+    ref.watch(storageServiceProvider);
 
-    final authToken = ref.read(storageProvider.notifier).getAuthToken();
+    final authToken = ref.read(storageServiceProvider.notifier).getAuthToken();
 
-    final userPhone = ref.read(storageProvider.notifier).getUserPhone();
+    final userPhone = ref.read(storageServiceProvider.notifier).getUserPhone();
 
     final dio = Dio(
       BaseOptions(

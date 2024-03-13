@@ -125,11 +125,13 @@ class _SearchResultsBody extends StatelessWidget {
           .map(
             (e) => Skeletonizer(
               enabled: isLoading,
-              child: e.allreadyRead?NotificationWidget.expanded(
-                message: e,
-              ): NotificationWidget.collapsed(
-                message: e,
-              ),
+              child: e.allreadyRead
+                  ? NotificationWidget.expanded(
+                      message: e,
+                    )
+                  : NotificationWidget.collapsed(
+                      message: e,
+                    ),
             ),
           )
           .toList(),

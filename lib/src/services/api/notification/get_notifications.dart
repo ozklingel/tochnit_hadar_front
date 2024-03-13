@@ -16,9 +16,11 @@ class GetNotifications extends _$GetNotifications {
   FutureOr<List<NotificationDto>> build() async {
     final request =
         await ref.watch(dioServiceProvider).get(Consts.getAllNotifications);
+
     final parsed = (request.data as List<dynamic>)
         .map((e) => NotificationDto.fromJson(e))
         .toList();
+
     return parsed;
   }
 }

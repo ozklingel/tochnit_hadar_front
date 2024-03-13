@@ -46,7 +46,7 @@ final _apprenticesNavKey = GlobalKey<NavigatorState>(debugLabel: 'apprentices');
 
 @Riverpod(
   dependencies: [
-    Storage,
+    StorageService,
   ],
 )
 class GoRouterService extends _$GoRouterService {
@@ -66,13 +66,13 @@ class GoRouterService extends _$GoRouterService {
       routes: $appRoutes,
       redirect: (context, state) {
         final userPhone = ref
-                .read(storageProvider)
+                .read(storageServiceProvider)
                 .requireValue
                 .getString(Consts.userPhoneKey) ??
             '';
 
         final accessToken = ref
-                .read(storageProvider)
+                .read(storageServiceProvider)
                 .requireValue
                 .getString(Consts.accessTokenKey) ??
             '';
@@ -82,10 +82,11 @@ class GoRouterService extends _$GoRouterService {
           return const OnboardingRouteData().location;
         }
 
-        final firstOnboarding = ref.read(storageProvider).requireValue.getBool(
-                  Consts.isFirstOnboardingKey,
-                ) ??
-            false;
+        final firstOnboarding =
+            ref.read(storageServiceProvider).requireValue.getBool(
+                      Consts.isFirstOnboardingKey,
+                    ) ??
+                false;
 
         if (firstOnboarding) {
           Logger().w('empty firstOnboarding');

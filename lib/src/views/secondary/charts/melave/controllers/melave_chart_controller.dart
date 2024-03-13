@@ -8,14 +8,14 @@ part 'melave_chart_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    Storage,
+    StorageService,
     DioService,
   ],
 )
 class MelaveChartController extends _$MelaveChartController {
   @override
   Future<MelaveChartDto> build() async {
-    final phone = ref.watch(storageProvider.notifier).getUserPhone();
+    final phone = ref.watch(storageServiceProvider.notifier).getUserPhone();
 
     final result = await ref.watch(dioServiceProvider).get(
       Consts.chartsMelave,

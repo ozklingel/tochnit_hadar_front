@@ -7,7 +7,7 @@ part 'storage_service.g.dart';
 @Riverpod(
   dependencies: [],
 )
-class Storage extends _$Storage {
+class StorageService extends _$StorageService {
   @override
   Future<SharedPreferences> build() async {
     return await SharedPreferences.getInstance();

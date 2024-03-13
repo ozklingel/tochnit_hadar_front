@@ -21,6 +21,7 @@ class NotificationsController extends _$NotificationsController {
   @override
   Future<List<NotificationDto>> build() async {
     final notifications = await ref.watch(getNotificationsProvider.future);
+
     return notifications;
   }
 
@@ -44,6 +45,7 @@ class NotificationsController extends _$NotificationsController {
       return true;
     } catch (e) {
       Sentry.captureException(e);
+
       return false;
     }
   }

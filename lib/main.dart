@@ -142,17 +142,17 @@ class HadarProgram extends ConsumerWidget {
       ): () async {
         // only needed for now on 23/12/27
         if (kDebugMode) {
-          await ref.read(storageProvider).requireValue.setString(
+          await ref.read(storageServiceProvider).requireValue.setString(
                 Consts.userPhoneKey,
                 'kDebugPhone',
               );
 
-          await ref.read(storageProvider).requireValue.setString(
+          await ref.read(storageServiceProvider).requireValue.setString(
                 Consts.accessTokenKey,
                 'kDebugAccessToken',
               );
 
-          await ref.read(storageProvider).requireValue.setBool(
+          await ref.read(storageServiceProvider).requireValue.setBool(
                 Consts.isFirstOnboardingKey,
                 false,
               );
@@ -165,17 +165,17 @@ class HadarProgram extends ConsumerWidget {
       ): () async {
         // only needed for now on 23/12/27
         if (kDebugMode) {
-          await ref.read(storageProvider).requireValue.setString(
+          await ref.read(storageServiceProvider).requireValue.setString(
                 Consts.userPhoneKey,
                 '',
               );
 
-          await ref.read(storageProvider).requireValue.setString(
+          await ref.read(storageServiceProvider).requireValue.setString(
                 Consts.accessTokenKey,
                 '',
               );
 
-          await ref.read(storageProvider).requireValue.remove(
+          await ref.read(storageServiceProvider).requireValue.remove(
                 Consts.isFirstOnboardingKey,
               );
           Logger().d('RESET sharedPrefs values');
@@ -202,7 +202,7 @@ class _EagerInitialization extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final result = ref.watch(storageProvider);
+    final result = ref.watch(storageServiceProvider);
 
     if (result.isLoading) {
       return const CircularProgressIndicator();

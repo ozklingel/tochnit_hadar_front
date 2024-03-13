@@ -4,7 +4,6 @@ import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -20,22 +19,17 @@ enum SortInstitutionBy {
 
 @Riverpod(
   dependencies: [
-    DioService,
-    GoRouterService,
     GetInstitutions,
+    DioService,
+    StorageService,
   ],
 )
 class InstitutionsController extends _$InstitutionsController {
   @override
   FutureOr<List<InstitutionDto>> build() async {
-    final institutions =
-        await ref.watch(dioServiceProvider).get(Consts.getAllInstitutions);
+    final institutions = await ref.watch(getInstitutionsProvider.future);
 
-    final parsed = (institutions.data as List<dynamic>)
-        .map((e) => InstitutionDto.fromJson(e))
-        .toList();
-
-    return parsed;
+    return institutions;
   }
 
   void sortBy(SortInstitutionBy sortBy) {
@@ -64,7 +58,7 @@ class InstitutionsController extends _$InstitutionsController {
   }
 
   Future<bool> create(InstitutionDto obj) async {
-    final phone = ref.read(storageProvider.notifier).getUserPhone();
+    final phone = ref.read(storageServiceProvider.notifier).getUserPhone();
 
     try {
       final result = await ref.read(dioServiceProvider).post(

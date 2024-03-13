@@ -10,7 +10,7 @@ part 'new_message_controller.g.dart';
 @Riverpod(
   dependencies: [
     DioService,
-    Storage,
+    StorageService,
     GetMessages,
   ],
 )
@@ -34,8 +34,10 @@ class NewMessageController extends _$NewMessageController {
       await ref.read(dioServiceProvider).post(
         Consts.addMessage,
         data: {
-          'created_by_id': ref.read(storageProvider.notifier).getUserPhone(),
-          'created_for_id': ref.read(storageProvider.notifier).getUserPhone(),
+          'created_by_id':
+              ref.read(storageServiceProvider.notifier).getUserPhone(),
+          'created_for_id':
+              ref.read(storageServiceProvider.notifier).getUserPhone(),
           'subject': msg.title,
           'content': msg.content,
           'attachments': msg.attachments,

@@ -23,7 +23,7 @@ enum SortReportBy {
     GetReports,
     DioService,
     GoRouterService,
-    Storage,
+    StorageService,
   ],
 )
 class ReportsController extends _$ReportsController {
@@ -69,7 +69,7 @@ class ReportsController extends _$ReportsController {
       final result = await ref.read(dioServiceProvider).post(
         Consts.addReport,
         data: {
-          'userId': ref.read(storageProvider.notifier).getUserPhone(),
+          'userId': ref.read(storageServiceProvider.notifier).getUserPhone(),
           'List_of_repored': report.recipients,
           'date': report.dateTime,
           'event_type': report.reportEventType.name,

@@ -13,7 +13,7 @@ part 'user_service.g.dart';
   dependencies: [
     FlagsService,
     DioService,
-    Storage,
+    StorageService,
     GoRouterService,
   ],
 )
@@ -45,12 +45,18 @@ class UserService extends _$UserService {
   }
 
   Future<void> logOff() async {
-    await ref.read(storageProvider).requireValue.remove(Consts.userPhoneKey);
-
-    await ref.read(storageProvider).requireValue.remove(Consts.accessTokenKey);
+    await ref
+        .read(storageServiceProvider)
+        .requireValue
+        .remove(Consts.userPhoneKey);
 
     await ref
-        .read(storageProvider)
+        .read(storageServiceProvider)
+        .requireValue
+        .remove(Consts.accessTokenKey);
+
+    await ref
+        .read(storageServiceProvider)
         .requireValue
         .remove(Consts.isFirstOnboardingKey);
 

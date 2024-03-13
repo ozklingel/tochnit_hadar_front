@@ -8,14 +8,14 @@ part 'rakaz_mosad_chart_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    Storage,
+    StorageService,
     DioService,
   ],
 )
 class RakazMosadChartController extends _$RakazMosadChartController {
   @override
   Future<RakazMosadChartDto> build() async {
-    final phone = ref.watch(storageProvider.notifier).getUserPhone();
+    final phone = ref.watch(storageServiceProvider.notifier).getUserPhone();
 
     final result = await ref.watch(dioServiceProvider).get(
       Consts.chartsMosad,

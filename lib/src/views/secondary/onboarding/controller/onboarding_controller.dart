@@ -8,7 +8,7 @@ part 'onboarding_controller.g.dart';
 @Riverpod(
   dependencies: [
     DioService,
-    Storage,
+    StorageService,
   ],
 )
 class OnboardingController extends _$OnboardingController {
@@ -56,17 +56,17 @@ class OnboardingController extends _$OnboardingController {
         final accessToken = result.data['result'].toString();
         final firstOnboarding = result.data['firsOnboarding'] as bool;
 
-        await ref.read(storageProvider).requireValue.setString(
+        await ref.read(storageServiceProvider).requireValue.setString(
               Consts.userPhoneKey,
               phone.fixRawPhone,
             );
 
-        await ref.read(storageProvider).requireValue.setString(
+        await ref.read(storageServiceProvider).requireValue.setString(
               Consts.accessTokenKey,
               accessToken,
             );
 
-        await ref.read(storageProvider).requireValue.setBool(
+        await ref.read(storageServiceProvider).requireValue.setBool(
               Consts.isFirstOnboardingKey,
               firstOnboarding,
             );
@@ -93,7 +93,7 @@ class OnboardingController extends _$OnboardingController {
   }) async {
     final userPhone = ref
         .read(
-          storageProvider,
+          storageServiceProvider,
         )
         .requireValue
         .getString(
@@ -114,7 +114,7 @@ class OnboardingController extends _$OnboardingController {
         },
       );
 
-      await ref.read(storageProvider).requireValue.setBool(
+      await ref.read(storageServiceProvider).requireValue.setBool(
             Consts.isFirstOnboardingKey,
             false,
           );
