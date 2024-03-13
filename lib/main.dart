@@ -90,7 +90,11 @@ class HadarProgram extends ConsumerWidget {
     return {
       const SingleActivator(
         LogicalKeyboardKey.escape,
-      ): () async => router.pop(),
+      ): () async {
+        if (router.canPop()) {
+          router.pop();
+        }
+      },
       const SingleActivator(
         LogicalKeyboardKey.numpad1,
         alt: true,
