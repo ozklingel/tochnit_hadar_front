@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
@@ -81,83 +82,87 @@ class InstitutionsScreen extends HookConsumerWidget {
           color: Colors.white,
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                TextButton.icon(
-                  icon: const Icon(
-                    FluentIcons.arrow_sort_down_lines_24_regular,
-                    color: AppColors.grey2,
-                  ),
-                  label: Text(
-                    '${filtered.length} מוסדות',
-                    style: TextStyles.s14w400cGrey5,
-                  ),
-                  onPressed: () async {
-                    final result = await showDialog<SortInstitutionBy?>(
-                      context: context,
-                      builder: (context) => _SortByDialog(
-                        initialVal: sortBy.value,
-                      ),
-                    );
+      body: RefreshIndicator(
+        onRefresh: () => ref.refresh(getInstitutionsProvider.future),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  TextButton.icon(
+                    icon: const Icon(
+                      FluentIcons.arrow_sort_down_lines_24_regular,
+                      color: AppColors.grey2,
+                    ),
+                    label: Text(
+                      '${filtered.length} מוסדות',
+                      style: TextStyles.s14w400cGrey5,
+                    ),
+                    onPressed: () async {
+                      final result = await showDialog<SortInstitutionBy?>(
+                        context: context,
+                        builder: (context) => _SortByDialog(
+                          initialVal: sortBy.value,
+                        ),
+                      );
 
-                    switch (result) {
-                      case SortInstitutionBy.fromA2Z:
-                        sortBy.value = SortInstitutionBy.fromA2Z;
-                        ref
-                            .read(institutionsControllerProvider.notifier)
-                            .sortBy(SortInstitutionBy.fromA2Z);
-                        break;
-                      case SortInstitutionBy.scoreLow2High:
-                        sortBy.value = SortInstitutionBy.scoreLow2High;
-                        ref
-                            .read(institutionsControllerProvider.notifier)
-                            .sortBy(SortInstitutionBy.scoreLow2High);
-                        break;
-                      case SortInstitutionBy.scoreHigh2Low:
-                        sortBy.value = SortInstitutionBy.scoreHigh2Low;
-                        ref
-                            .read(institutionsControllerProvider.notifier)
-                            .sortBy(SortInstitutionBy.scoreHigh2Low);
-                        break;
-                      case null:
-                        return;
-                    }
-                  },
-                ),
-                const SizedBox(width: 4),
-              ],
-            ),
-          ),
-          Expanded(
-            child: institutionsController.isLoading
-                ? const CircularProgressIndicator()
-                : ListView(
-                    padding: const EdgeInsets.all(24),
-                    children: filtered
-                        .map(
-                          (e) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: ListTileWithTagsCard(
-                              name: e.name,
-                              onTap: () => InstitutionDetailsRouteData(id: e.id)
-                                  .push(context),
-                              tags: [
-                                '${e.melavim.length} מלווים',
-                                '${e.apprentices.length} חניכים',
-                                '${e.score.toInt()} ציון',
-                              ],
-                            ),
-                          ),
-                        )
-                        .toList(),
+                      switch (result) {
+                        case SortInstitutionBy.fromA2Z:
+                          sortBy.value = SortInstitutionBy.fromA2Z;
+                          ref
+                              .read(institutionsControllerProvider.notifier)
+                              .sortBy(SortInstitutionBy.fromA2Z);
+                          break;
+                        case SortInstitutionBy.scoreLow2High:
+                          sortBy.value = SortInstitutionBy.scoreLow2High;
+                          ref
+                              .read(institutionsControllerProvider.notifier)
+                              .sortBy(SortInstitutionBy.scoreLow2High);
+                          break;
+                        case SortInstitutionBy.scoreHigh2Low:
+                          sortBy.value = SortInstitutionBy.scoreHigh2Low;
+                          ref
+                              .read(institutionsControllerProvider.notifier)
+                              .sortBy(SortInstitutionBy.scoreHigh2Low);
+                          break;
+                        case null:
+                          return;
+                      }
+                    },
                   ),
-          ),
-        ],
+                  const SizedBox(width: 4),
+                ],
+              ),
+            ),
+            Expanded(
+              child: institutionsController.isLoading
+                  ? const CircularProgressIndicator()
+                  : ListView(
+                      padding: const EdgeInsets.all(24),
+                      children: filtered
+                          .map(
+                            (e) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: ListTileWithTagsCard(
+                                name: e.name,
+                                onTap: () =>
+                                    InstitutionDetailsRouteData(id: e.id)
+                                        .push(context),
+                                tags: [
+                                  '${e.melavim.length} מלווים',
+                                  '${e.apprentices.length} חניכים',
+                                  '${e.score.toInt()} ציון',
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

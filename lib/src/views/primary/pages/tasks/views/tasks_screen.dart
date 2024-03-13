@@ -393,6 +393,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                 final selectedApprentice = apprentices.singleWhere(
                   (element) => selectedCalls.value.first.apprenticeIds
                       .contains(element.id),
+                  orElse: () => const ApprenticeDto(),
                 );
 
                 return PopupMenuButton(

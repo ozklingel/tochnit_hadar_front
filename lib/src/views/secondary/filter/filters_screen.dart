@@ -1839,7 +1839,7 @@ class _SelectedUsersPage extends HookWidget {
                       .map(
                         (e) => CheckboxListTile(
                           value: selected.value.contains(e),
-                          title: const Text('name'),
+                          title: Text(e.name),
                           controlAffinity: ListTileControlAffinity.leading,
                           checkColor: Colors.white,
                           fillColor:

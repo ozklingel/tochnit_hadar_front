@@ -4,6 +4,7 @@ import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,6 +23,7 @@ enum SortInstitutionBy {
     GetInstitutions,
     DioService,
     StorageService,
+    GoRouterService,
   ],
 )
 class InstitutionsController extends _$InstitutionsController {
@@ -80,9 +82,9 @@ class InstitutionsController extends _$InstitutionsController {
       );
 
       if (result.data['result'] == 'success') {
-        ref.invalidate(getInstitutionsProvider);
+        ref.read(goRouterServiceProvider).pop();
 
-        // ref.read(goRouterServiceProvider).pop();
+        ref.invalidate(getInstitutionsProvider);
 
         return true;
       }
