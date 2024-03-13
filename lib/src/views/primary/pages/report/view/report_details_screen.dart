@@ -379,7 +379,17 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                   ) ??
                                   const FilterDto();
 
-                              if (result.isNotEmpty) {}
+                              final request = await ref
+                                  .read(reportsControllerProvider.notifier)
+                                  .filterRecipients(result);
+
+                              if (request.isNotEmpty) {
+                                selectedApprentices.value = apprentices
+                                    .where(
+                                      (element) => request.contains(element.id),
+                                    )
+                                    .toList();
+                              }
                             },
                           ),
                           if (selectedApprentices.value.isNotEmpty)
