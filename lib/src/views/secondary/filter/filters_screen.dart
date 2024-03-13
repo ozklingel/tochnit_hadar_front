@@ -1018,8 +1018,8 @@ class FiltersScreen extends HookConsumerWidget {
                             loading: () => const Center(
                               child: CircularProgressIndicator.adaptive(),
                             ),
-                            error: (error, stack) => const Center(
-                              child: Text('failed to get apprentices'),
+                            error: (error, stack) => Center(
+                              child: Text(error.toString()),
                             ),
                             data: (apprentices) => LargeFilledRoundedButton(
                               label: 'הבא',

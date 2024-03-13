@@ -54,7 +54,7 @@ abstract class Consts {
   static const addInstitution = 'institutionProfile_form/add_mosad';
 
   // eshkol
-  static const getAllEshkols = 'eshkol/getAll';
+  static const getAllEshkols = 'eshcol/getAll';
 
   // sessions / tohnit hadar plan
   static const getAllSessions = 'hadar_plan_session/getAll';
