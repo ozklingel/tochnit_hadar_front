@@ -17,3 +17,7 @@ $ installation:
 3.start your emulator
 
 4.flutter run
+
+
+
+you can try this   dart run build_runner watch --delete-conflicting-outputs
