@@ -61,6 +61,11 @@ class MessageDto with _$MessageDto {
       name: 'date',
     )
     String dateTime,
+    @Default([])
+    @JsonKey(
+      defaultValue: [],
+    )
+    List<String> to,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>

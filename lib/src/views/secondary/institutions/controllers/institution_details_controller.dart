@@ -1,11 +1,7 @@
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/api/search_bar/get_filtered_users.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
-import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

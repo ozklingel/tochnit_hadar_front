@@ -6,6 +6,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
@@ -36,9 +37,12 @@ class MessagesScreen extends HookConsumerWidget {
             controller: searchController,
             isSearchOpen: isSearchOpen,
             text: 'הודעות',
-            actions: const [
-              Icon(FluentIcons.search_24_regular),
-              SizedBox(width: 12),
+            actions: [
+              IconButton(
+                onPressed: () => isSearchOpen.value = true,
+                icon: const Icon(FluentIcons.search_24_regular),
+              ),
+              const SizedBox(width: 12),
             ],
             bottom: TabBar(
               controller: tabController,
@@ -205,7 +209,7 @@ class MessagesScreen extends HookConsumerWidget {
             ],
           ),
           body: RefreshIndicator.adaptive(
-            onRefresh: () => ref.refresh(messagesControllerProvider.future),
+            onRefresh: () => ref.refresh(getMessagesProvider.future),
             child: msgsController.when(
               error: (error, s) => CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),

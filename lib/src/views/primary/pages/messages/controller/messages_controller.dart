@@ -56,7 +56,7 @@ class MessagesController extends _$MessagesController {
       );
 
       if (result.data['result'] == 'success') {
-        ref.invalidateSelf();
+        ref.invalidate(getMessagesProvider);
 
         return true;
       }

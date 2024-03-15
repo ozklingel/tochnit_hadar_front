@@ -175,7 +175,12 @@ class GoRouterService extends _$GoRouterService {
           path: '/messages',
           routes: [
             TypedGoRoute<MessageDetailsRouteData>(path: 'id/:id'),
-            TypedGoRoute<NewMessageRouteData>(path: 'new'),
+            TypedGoRoute<NewMessageRouteData>(
+              path: 'new',
+              routes: [
+                TypedGoRoute<DupeMessageRouteData>(path: ':id'),
+              ],
+            ),
           ],
         ),
       ],
@@ -321,7 +326,7 @@ class MessageDetailsRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return MessageDetailsScreen(
-      messageId: id,
+      id: id,
     );
   }
 }
@@ -347,6 +352,22 @@ class NewMessageRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const NewOrEditMessageScreen();
+  }
+}
+
+class DupeMessageRouteData extends GoRouteData {
+  const DupeMessageRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return NewOrEditMessageScreen(
+      id: id,
+      isDupe: true,
+    );
   }
 }
 

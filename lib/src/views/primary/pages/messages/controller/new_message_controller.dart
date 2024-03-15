@@ -34,14 +34,14 @@ class NewMessageController extends _$NewMessageController {
       await ref.read(dioServiceProvider).post(
         Consts.addMessage,
         data: {
+          'subject': msg.title,
+          'content': msg.content,
           'created_by_id':
               ref.read(storageServiceProvider.notifier).getUserPhone(),
           'created_for_id':
               ref.read(storageServiceProvider.notifier).getUserPhone(),
-          'subject': msg.title,
-          'content': msg.content,
-          'attachments': msg.attachments,
           'type': msg.type,
+          'attachments': msg.attachments,
           'icon': msg.icon,
         },
       );

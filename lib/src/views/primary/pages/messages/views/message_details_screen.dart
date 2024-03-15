@@ -12,30 +12,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class MessageDetailsScreen extends HookConsumerWidget {
   const MessageDetailsScreen({
     super.key,
-    required this.messageId,
+    required this.id,
   });
 
-  final String messageId;
+  final String id;
 
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider).valueOrNull ?? const UserDto();
-
-    final message = ref.watch(
-      messagesControllerProvider.select(
-        (val) {
-          return val.value!.firstWhere(
-            (element) => element.id == messageId,
-            orElse: () => const MessageDto(),
-          );
-        },
-      ),
+    final messages = ref.watch(messagesControllerProvider).valueOrNull ?? [];
+    final message = messages.firstWhere(
+      (element) => element.id == id,
+      orElse: () => const MessageDto(),
     );
 
     useEffect(
       () {
-        if (ref.read(userServiceProvider).valueOrNull?.role ==
-            UserRole.melave) {
+        if (user.role == UserRole.melave) {
           ref
               .read(messagesControllerProvider.notifier)
               .setToReadStatus(message);
@@ -43,7 +36,7 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
         return null;
       },
-      [],
+      [user],
     );
 
     return Scaffold(
@@ -78,7 +71,7 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
                       final result = await ref
                           .read(messagesControllerProvider.notifier)
-                          .deleteMessage(messageId);
+                          .deleteMessage(id);
 
                       if (result) {
                         navContext.pop();

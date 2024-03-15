@@ -21,9 +21,11 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
   const NewOrEditMessageScreen({
     super.key,
     this.id = '',
+    this.isDupe = false,
   });
 
   final String id;
+  final bool isDupe;
 
   @override
   Widget build(BuildContext context, ref) {
