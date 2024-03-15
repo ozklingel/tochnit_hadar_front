@@ -138,7 +138,7 @@ class FiltersScreen extends HookConsumerWidget {
     required this.initFilters,
   }) : filterType = _FilterType.users;
 
-  const FiltersScreen.institutions({
+  const FiltersScreen.institutionUsers({
     super.key,
     required this.initFilters,
   }) : filterType = _FilterType.intitutions;

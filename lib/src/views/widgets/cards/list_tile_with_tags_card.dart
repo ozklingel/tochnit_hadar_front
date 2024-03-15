@@ -106,7 +106,9 @@ class ListTileWithTagsCard extends StatelessWidget {
                       SizedBox(
                         width: 240,
                         child: Text(
-                          tags.join(' • '),
+                          tags
+                              .where((element) => element.isNotEmpty)
+                              .join(' • '),
                           style: TextStyles.s12w500.copyWith(
                             color: AppColors.blue03,
                           ),

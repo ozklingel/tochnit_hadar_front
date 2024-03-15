@@ -371,8 +371,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             onPressed: () async {
                               final result = await Navigator.of(context).push(
                                     MaterialPageRoute<FilterDto>(
-                                      builder: (context) =>
-                                          FiltersScreen.addRecipients(
+                                      builder: (context) => FiltersScreen.users(
                                         initFilters: filters.value,
                                       ),
                                     ),

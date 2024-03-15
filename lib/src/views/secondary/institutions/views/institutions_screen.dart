@@ -17,13 +17,14 @@ class InstitutionsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final institutionsController = ref.watch(institutionsControllerProvider);
+    final institutions =
+        ref.watch(institutionsControllerProvider).valueOrNull ?? [];
     final sortBy = useState(SortInstitutionBy.fromA2Z);
     final isSearchActive = useState(false);
     final searchTextEditingController = useTextEditingController();
     useListenable(searchTextEditingController);
 
-    var filtered = (institutionsController.valueOrNull ?? []).where(
+    var filtered = institutions.where(
       (element) => element.name
           .toLowerCase()
           .contains(searchTextEditingController.text.toLowerCase()),
@@ -137,29 +138,26 @@ class InstitutionsScreen extends HookConsumerWidget {
               ),
             ),
             Expanded(
-              child: institutionsController.isLoading
-                  ? const CircularProgressIndicator()
-                  : ListView(
-                      padding: const EdgeInsets.all(24),
-                      children: filtered
-                          .map(
-                            (e) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: ListTileWithTagsCard(
-                                name: e.name,
-                                onTap: () =>
-                                    InstitutionDetailsRouteData(id: e.id)
-                                        .push(context),
-                                tags: [
-                                  '${e.melavim.length} מלווים',
-                                  '${e.apprentices.length} חניכים',
-                                  '${e.score.toInt()} ציון',
-                                ],
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
+              child: ListView(
+                padding: const EdgeInsets.all(24),
+                children: filtered
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: ListTileWithTagsCard(
+                          name: e.name,
+                          onTap: () => InstitutionDetailsRouteData(id: e.id)
+                              .push(context),
+                          tags: [
+                            '${e.melavim.length} מלווים',
+                            '${e.apprentices.length} חניכים',
+                            '${e.score.toInt()} ציון',
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           ],
         ),

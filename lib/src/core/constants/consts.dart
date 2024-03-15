@@ -54,6 +54,7 @@ abstract class Consts {
   // institutions / mosad / mosdot
   static const getAllInstitutions = 'institutionProfile_form/getAll';
   static const addInstitution = 'institutionProfile_form/add_mosad';
+  static const updateInstitution = 'institutionProfile_form/update';
 
   // eshkol
   static const getAllEshkols = 'eshcol/getAll';

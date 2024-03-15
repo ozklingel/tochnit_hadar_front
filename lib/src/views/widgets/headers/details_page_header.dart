@@ -2,7 +2,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/widgets/images/avatar_widget.dart';
 
 class DetailsPageHeader extends StatelessWidget {
@@ -60,7 +59,7 @@ class DetailsPageHeader extends StatelessWidget {
                           style: IconButton.styleFrom(
                             backgroundColor: AppColors.blue08,
                           ),
-                          onPressed: () => Toaster.unimplemented(),
+                          onPressed: onTapEditAvatar,
                           icon: const Icon(FluentIcons.edit_24_regular),
                         ),
                       ),

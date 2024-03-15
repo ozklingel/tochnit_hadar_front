@@ -47,7 +47,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
     final menahelAdministrativiPhone = useTextEditingController(
       text: institution.adminPhoneNumber,
     );
-    final uploadedFile = useState('');
+    final logo = useState(institution.logo);
 
     final children = [
       InputFieldContainer(
@@ -178,7 +178,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
             uploadFileProvider(result.files.first).future,
           );
 
-          uploadedFile.value = uploadFileLocation;
+          logo.value = uploadFileLocation;
         },
         child: DottedBorder(
           borderType: BorderType.RRect,
@@ -187,7 +187,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
           child: SizedBox(
             height: 200,
             child: Center(
-              child: uploadedFile.value.isEmpty
+              child: logo.value.isEmpty
                   ? const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -199,7 +199,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
                         ),
                       ],
                     )
-                  : CachedNetworkImage(imageUrl: uploadedFile.value),
+                  : CachedNetworkImage(imageUrl: logo.value),
             ),
           ),
         ),

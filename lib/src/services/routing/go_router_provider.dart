@@ -160,6 +160,9 @@ class GoRouterService extends _$GoRouterService {
                 TypedGoRoute<NewInstitutionRouteData>(
                   path: 'new',
                 ),
+                TypedGoRoute<EditInstitutionRouteData>(
+                  path: 'edit/:id',
+                ),
               ],
             ),
           ],
@@ -609,6 +612,21 @@ class InstitutionDetailsRouteData extends GoRouteData {
 
 class NewInstitutionRouteData extends GoRouteData {
   const NewInstitutionRouteData({
+    this.id = '',
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return NewOrEditInstitutionScreen(
+      id: id,
+    );
+  }
+}
+
+class EditInstitutionRouteData extends GoRouteData {
+  const EditInstitutionRouteData({
     this.id = '',
   });
 

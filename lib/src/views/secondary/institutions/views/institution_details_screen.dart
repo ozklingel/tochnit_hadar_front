@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,17 +9,22 @@ import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
+import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
+import 'package:hadar_program/src/views/secondary/institutions/controllers/institution_details_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
+import 'package:hadar_program/src/views/secondary/institutions/controllers/new_or_edit_institution_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 class InstitutionDetailsScreen extends StatefulHookConsumerWidget {
   const InstitutionDetailsScreen({
@@ -42,9 +48,8 @@ class _InstitutionDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final institution =
-        (ref.watch(institutionsControllerProvider).valueOrNull ?? [])
-            .singleWhere(
+    final institutions = ref.watch(getInstitutionsProvider).valueOrNull ?? [];
+    final institution = institutions.singleWhere(
       (element) => element.id == widget.id,
       orElse: () => const InstitutionDto(),
     );
@@ -52,8 +57,10 @@ class _InstitutionDetailsScreenState
 
     final views = [
       _GeneralTab(institution: institution),
-      _UsersTab(id: institution.id),
+      _UsersTab(institutionId: institution.id),
     ];
+
+    Logger().d(institution.logo);
 
     return Scaffold(
       appBar: AppBar(
@@ -94,7 +101,30 @@ class _InstitutionDetailsScreenState
                     child: DetailsPageHeader(
                       name: institution.name,
                       phone: institution.adminPhoneNumber,
-                      onTapEditAvatar: () => Toaster.unimplemented(),
+                      avatar: institution.logo,
+                      onTapEditAvatar: () async {
+                        final result = await FilePicker.platform.pickFiles(
+                          allowMultiple: true,
+                          withData: true,
+                        );
+
+                        if (result == null) {
+                          return;
+                        }
+
+                        final uploadFileLocation = await ref.read(
+                          uploadFileProvider(result.files.first).future,
+                        );
+
+                        final request = await ref
+                            .read(
+                              newOrEditInstitutionControllerProvider(widget.id)
+                                  .notifier,
+                            )
+                            .updateLogo(uploadFileLocation);
+
+                        if (request) {}
+                      },
                     ),
                   ),
                 ),
@@ -149,22 +179,30 @@ class _InstitutionDetailsScreenState
 
 class _UsersTab extends HookConsumerWidget {
   const _UsersTab({
-    required this.id,
+    required this.institutionId,
   });
 
-  final String id;
+  final String institutionId;
 
   @override
   Widget build(BuildContext context, ref) {
+    final controller = ref.watch(institutionDetailsControllerProvider.notifier);
     final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull?.where(
-                  (element) => element.institutionId == id,
+        ref.watch(institutionDetailsControllerProvider).valueOrNull?.where(
+                  (element) => element.institutionId == institutionId,
                 ) ??
             [];
     final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
     final institutions =
         ref.watch(institutionsControllerProvider).valueOrNull ?? [];
-    final filters = useState(const FilterDto());
+    final institution = institutions.singleWhere(
+      (element) => element.id == institutionId,
+      orElse: () => const InstitutionDto(),
+    );
+    final filters = useState(controller.filters);
+
+    // Logger().d(apprentices.length, error: institutionId);
+    // Logger().d(institution.apprentices.length, error: institutionId);
 
     final children = [
       ...filters.value.roles.map(
@@ -176,7 +214,20 @@ class _UsersTab extends HookConsumerWidget {
       ...filters.value.years.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) async {
+            final newFilter = filters.value.copyWith(
+              years:
+                  filters.value.years.where((element) => element != e).toList(),
+            );
+
+            final request = await ref
+                .read(institutionDetailsControllerProvider.notifier)
+                .filterUsers(newFilter);
+
+            if (request) {
+              filters.value = newFilter;
+            }
+          },
         ),
       ),
       ...filters.value.institutions.map(
@@ -246,13 +297,26 @@ class _UsersTab extends HookConsumerWidget {
               Stack(
                 children: [
                   IconButton(
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => FiltersScreen.institutions(
-                          initFilters: filters.value,
-                        ),
-                      ),
-                    ),
+                    onPressed: () async {
+                      final result = await Navigator.of(context).push(
+                            MaterialPageRoute<FilterDto>(
+                              builder: (context) {
+                                return FiltersScreen.institutionUsers(
+                                  initFilters: filters.value,
+                                );
+                              },
+                            ),
+                          ) ??
+                          const FilterDto();
+
+                      final request = await ref
+                          .read(institutionDetailsControllerProvider.notifier)
+                          .filterUsers(result);
+
+                      if (request) {
+                        filters.value = result;
+                      }
+                    },
                     icon: const Icon(
                       FluentIcons.filter_add_20_regular,
                     ),
@@ -288,35 +352,33 @@ class _UsersTab extends HookConsumerWidget {
             ],
           ),
         ),
-        SizedBox(
-          child: ListView(
-            shrinkWrap: true,
-            children: apprentices.map(
-              (e) {
-                final compound = compounds.singleWhere(
-                  (element) => element.id == e.militaryCompoundId,
-                  orElse: () => const CompoundDto(),
-                );
+        apprentices.isEmpty
+            ? const Padding(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                child: Text('ריק'),
+              )
+            : ListView(
+                shrinkWrap: true,
+                children: apprentices.map(
+                  (e) {
+                    final compound = compounds.singleWhere(
+                      (element) => element.id == e.militaryCompoundId,
+                      orElse: () => const CompoundDto(),
+                    );
 
-                final institution = institutions.singleWhere(
-                  (element) => element.id == e.institutionId,
-                  orElse: () => const InstitutionDto(),
-                );
-
-                return ListTileWithTagsCard(
-                  avatar: e.avatar,
-                  name: e.fullName,
-                  onlineStatus: e.callStatus,
-                  tags: [
-                    ...e.tags,
-                    institution.name,
-                    compound.name,
-                  ],
-                );
-              },
-            ).toList(),
-          ),
-        ),
+                    return ListTileWithTagsCard(
+                      avatar: e.avatar,
+                      name: e.fullName,
+                      onlineStatus: e.callStatus,
+                      tags: [
+                        ...e.tags,
+                        institution.name,
+                        compound.name,
+                      ],
+                    );
+                  },
+                ).toList(),
+              ),
       ],
     );
   }
@@ -334,7 +396,8 @@ class _GeneralTab extends StatelessWidget {
     return DetailsCard(
       title: 'פרטי מוסד',
       trailing: IconButton(
-        onPressed: () => Toaster.unimplemented(),
+        onPressed: () =>
+            EditInstitutionRouteData(id: institution.id).push(context),
         icon: const Icon(FluentIcons.edit_24_regular),
       ),
       child: Column(
