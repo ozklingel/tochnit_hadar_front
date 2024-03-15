@@ -57,25 +57,36 @@ class InstitutionDto with _$InstitutionDto {
     @Default([])
     @JsonKey(
       defaultValue: [],
+      name: 'apprenticeList',
     )
-    List<String> melavim,
+    List<String> apprentices,
     @Default([])
     @JsonKey(
       defaultValue: [],
-      name: 'hanihim',
+      name: 'melave_List',
     )
-    List<String> apprentices,
+    List<String> melavim,
     @Default(0)
     @JsonKey(
       defaultValue: 0,
     )
     double score,
-    @Default(AddressDto()) @JsonKey() AddressDto address,
+    @Default(AddressDto())
+    @JsonKey(
+      name: 'address',
+    )
+    AddressDto address,
     @Default('')
     @JsonKey(
       defaultValue: '',
     )
     String shluha,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'logo_path',
+    )
+    String logo,
   }) = _InstitutionDto;
 
   factory InstitutionDto.fromJson(Map<String, dynamic> json) =>

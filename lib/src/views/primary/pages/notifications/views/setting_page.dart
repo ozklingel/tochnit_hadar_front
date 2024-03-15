@@ -83,323 +83,323 @@ class _SettingPageState extends ConsumerState<SettingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
+                if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "בתחילת השבוע של האירוע ",
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: !t3
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                        ),
+                        child: CupertinoSwitch(
+                          value: t1,
+                          activeColor: CupertinoColors.white,
+                          trackColor: CupertinoColors.white,
+                          thumbColor: !t1
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                          onChanged: (v) => setState(() {
+                            Logger().d(t1.toString());
+                            t1 = v;
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "יום לפני האירוע",
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: !t2
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                        ),
+                        child: CupertinoSwitch(
+                          value: t2,
+                          activeColor: CupertinoColors.white,
+                          trackColor: CupertinoColors.white,
+                          thumbColor: !t2
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                          onChanged: (v) => setState(() {
+                            t2 = v;
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          " ביום האירוע",
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: !t3
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                        ),
+                        child: CupertinoSwitch(
+                          value: t3,
+                          activeColor: CupertinoColors.white,
+                          trackColor: CupertinoColors.white,
+                          thumbColor: !t3
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                          onChanged: (v) => setState(() {
+                            t3 = v;
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ] else if (user.valueOrNull?.role == UserRole.melave) ...[
+                  Container(
+                    height: 60,
+                    alignment: Alignment.centerRight,
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 20, left: 20, right: 0),
                       child: Text(
-                        "בתחילת השבוע של האירוע ",
+                        'משימות מתוזמנות',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: !t3
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "בתחילת השבוע של משימה ",
+                        ),
                       ),
-                      child: CupertinoSwitch(
-                        value: t1,
-                        activeColor: CupertinoColors.white,
-                        trackColor: CupertinoColors.white,
-                        thumbColor: !t1
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                        onChanged: (v) => setState(() {
-                          Logger().d(t1.toString());
-                          t1 = v;
-                        }),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: !t3
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                        ),
+                        child: CupertinoSwitch(
+                          value: t1,
+                          activeColor: CupertinoColors.white,
+                          trackColor: CupertinoColors.white,
+                          thumbColor: !t1
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                          onChanged: (v) => setState(() {
+                            Logger().d(t1.toString());
+                            t1 = v;
+                          }),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "יום לפני משימה",
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: !t2
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                        ),
+                        child: CupertinoSwitch(
+                          value: t2,
+                          activeColor: CupertinoColors.white,
+                          trackColor: CupertinoColors.white,
+                          thumbColor: !t2
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                          onChanged: (v) => setState(() {
+                            t2 = v;
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          " ביום משימה",
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: !t3
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                        ),
+                        child: CupertinoSwitch(
+                          value: t3,
+                          activeColor: CupertinoColors.white,
+                          trackColor: CupertinoColors.white,
+                          thumbColor: !t3
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                          onChanged: (v) => setState(() {
+                            t3 = v;
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    height: 60,
+                    alignment: Alignment.centerRight,
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 20, left: 20, right: 0),
                       child: Text(
-                        "יום לפני האירוע",
+                        'תזכורת סבב מוסד',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: !t2
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "בתחילת השבוע של האירוע ",
+                        ),
                       ),
-                      child: CupertinoSwitch(
-                        value: t2,
-                        activeColor: CupertinoColors.white,
-                        trackColor: CupertinoColors.white,
-                        thumbColor: !t2
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                        onChanged: (v) => setState(() {
-                          t2 = v;
-                        }),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: !t3
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                        ),
+                        child: CupertinoSwitch(
+                          value: t1,
+                          activeColor: CupertinoColors.white,
+                          trackColor: CupertinoColors.white,
+                          thumbColor: !t1
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                          onChanged: (v) => setState(() {
+                            Logger().d(t1.toString());
+                            t1 = v;
+                          }),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        " ביום האירוע",
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "יום לפני האירוע",
+                        ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: !t3
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: !t2
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                        ),
+                        child: CupertinoSwitch(
+                          value: t2,
+                          activeColor: CupertinoColors.white,
+                          trackColor: CupertinoColors.white,
+                          thumbColor: !t2
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                          onChanged: (v) => setState(() {
+                            t2 = v;
+                          }),
+                        ),
                       ),
-                      child: CupertinoSwitch(
-                        value: t3,
-                        activeColor: CupertinoColors.white,
-                        trackColor: CupertinoColors.white,
-                        thumbColor: !t3
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                        onChanged: (v) => setState(() {
-                          t3 = v;
-                        }),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          " ביום האירוע",
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-               ] 
-                  else if (user.valueOrNull?.role == UserRole.melave) ...[
-                         Container(
-            height: 60,
-            alignment: Alignment.centerRight,
-            child: const Padding(
-              padding: EdgeInsets.only(top: 20, left: 20, right: 0),
-              child: Text(
-                'משימות מתוזמנות',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "בתחילת השבוע של משימה ",
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: !t3
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                        ),
+                        child: CupertinoSwitch(
+                          value: t3,
+                          activeColor: CupertinoColors.white,
+                          trackColor: CupertinoColors.white,
+                          thumbColor: !t3
+                              ? Colors.blue.shade700
+                              : CupertinoColors.inactiveGray,
+                          onChanged: (v) => setState(() {
+                            t3 = v;
+                          }),
+                        ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: !t3
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                      ),
-                      child: CupertinoSwitch(
-                        value: t1,
-                        activeColor: CupertinoColors.white,
-                        trackColor: CupertinoColors.white,
-                        thumbColor: !t1
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                        onChanged: (v) => setState(() {
-                          Logger().d(t1.toString());
-                          t1 = v;
-                        }),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "יום לפני משימה",
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: !t2
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                      ),
-                      child: CupertinoSwitch(
-                        value: t2,
-                        activeColor: CupertinoColors.white,
-                        trackColor: CupertinoColors.white,
-                        thumbColor: !t2
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                        onChanged: (v) => setState(() {
-                          t2 = v;
-                        }),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        " ביום משימה",
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: !t3
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                      ),
-                      child: CupertinoSwitch(
-                        value: t3,
-                        activeColor: CupertinoColors.white,
-                        trackColor: CupertinoColors.white,
-                        thumbColor: !t3
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                        onChanged: (v) => setState(() {
-                          t3 = v;
-                        }),
-                      ),
-                    ),
-                  ],
-                ),
-                                 Container(
-            height: 60,
-            alignment: Alignment.centerRight,
-            child: const Padding(
-              padding: EdgeInsets.only(top: 20, left: 20, right: 0),
-              child: Text(
-                'תזכורת סבב מוסד',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "בתחילת השבוע של האירוע ",
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: !t3
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                      ),
-                      child: CupertinoSwitch(
-                        value: t1,
-                        activeColor: CupertinoColors.white,
-                        trackColor: CupertinoColors.white,
-                        thumbColor: !t1
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                        onChanged: (v) => setState(() {
-                          Logger().d(t1.toString());
-                          t1 = v;
-                        }),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "יום לפני האירוע",
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: !t2
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                      ),
-                      child: CupertinoSwitch(
-                        value: t2,
-                        activeColor: CupertinoColors.white,
-                        trackColor: CupertinoColors.white,
-                        thumbColor: !t2
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                        onChanged: (v) => setState(() {
-                          t2 = v;
-                        }),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        " ביום האירוע",
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: !t3
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                      ),
-                      child: CupertinoSwitch(
-                        value: t3,
-                        activeColor: CupertinoColors.white,
-                        trackColor: CupertinoColors.white,
-                        thumbColor: !t3
-                            ? Colors.blue.shade700
-                            : CupertinoColors.inactiveGray,
-                        onChanged: (v) => setState(() {
-                          t3 = v;
-                        }),
-                      ),
-                    ),
-                  ],
-                ),
-               ]],
+                    ],
+                  ),
+                ],
+              ],
             ),
           ),
         ],

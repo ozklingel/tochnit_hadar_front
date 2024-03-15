@@ -43,11 +43,11 @@ class _InstitutionDetailsScreenState
   @override
   Widget build(BuildContext context) {
     final institution =
-        ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == widget.id,
-                  orElse: () => const InstitutionDto(),
-                ) ??
-            const InstitutionDto();
+        (ref.watch(institutionsControllerProvider).valueOrNull ?? [])
+            .singleWhere(
+      (element) => element.id == widget.id,
+      orElse: () => const InstitutionDto(),
+    );
     final tabController = useTabController(initialLength: 2);
 
     final views = [
@@ -147,7 +147,7 @@ class _InstitutionDetailsScreenState
   }
 }
 
-class _UsersTab extends ConsumerWidget {
+class _UsersTab extends HookConsumerWidget {
   const _UsersTab({
     required this.id,
   });
@@ -161,33 +161,79 @@ class _UsersTab extends ConsumerWidget {
                   (element) => element.institutionId == id,
                 ) ??
             [];
-    final compounds = ref.watch(compoundControllerProvider).valueOrNull;
-    final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
+    final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
+    final institutions =
+        ref.watch(institutionsControllerProvider).valueOrNull ?? [];
     final filters = useState(const FilterDto());
 
-    final children = List.generate(
-      7,
-      (index) => FilterChip(
-        label: const Row(
-          children: [
-            Text('TEST'),
-            SizedBox(width: 6),
-            Icon(
-              Icons.close,
-              size: 16,
-              color: AppColors.blue02,
-            ),
-          ],
+    final children = [
+      ...filters.value.roles.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
         ),
-        padding: EdgeInsets.zero,
-        labelPadding: const EdgeInsets.symmetric(horizontal: 12),
-        selectedColor: AppColors.blue06,
-        labelStyle: TextStyles.s14w400cBlue2,
-        selected: true,
-        onSelected: (val) => Toaster.unimplemented(),
-        showCheckmark: false,
       ),
-    );
+      ...filters.value.years.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+      ...filters.value.institutions.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+      ...filters.value.periods.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+      ...filters.value.eshkols.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+      ...filters.value.statuses.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+      ...filters.value.bases.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+      ...filters.value.hativot.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+      ...filters.value.regions.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+      ...filters.value.regions.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+      ...filters.value.cities.map(
+        (e) => FilterChip(
+          label: Text(e),
+          onSelected: (val) => Toaster.unimplemented(),
+        ),
+      ),
+    ];
 
     return Column(
       children: [
@@ -197,17 +243,35 @@ class _UsersTab extends ConsumerWidget {
           child: Row(
             children: [
               const SizedBox(width: 8),
-              IconButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => FiltersScreen.institutions(
-                      initFilters: filters.value,
+              Stack(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => FiltersScreen.institutions(
+                          initFilters: filters.value,
+                        ),
+                      ),
+                    ),
+                    icon: const Icon(
+                      FluentIcons.filter_add_20_regular,
                     ),
                   ),
-                ),
-                icon: const Icon(
-                  FluentIcons.filter_add_20_regular,
-                ),
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: IgnorePointer(
+                      child: CircleAvatar(
+                        backgroundColor: AppColors.red1,
+                        radius: 7,
+                        child: Text(
+                          filters.value.length.toString(),
+                          style: TextStyles.s11w500fRoboto,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Expanded(
                 child: ListView.separated(
@@ -229,17 +293,15 @@ class _UsersTab extends ConsumerWidget {
             shrinkWrap: true,
             children: apprentices.map(
               (e) {
-                final compound = compounds?.singleWhere(
-                      (element) => element.id == e.militaryCompoundId,
-                      orElse: () => const CompoundDto(),
-                    ) ??
-                    const CompoundDto();
+                final compound = compounds.singleWhere(
+                  (element) => element.id == e.militaryCompoundId,
+                  orElse: () => const CompoundDto(),
+                );
 
-                final institution = institutions?.singleWhere(
-                      (element) => element.id == e.institutionId,
-                      orElse: () => const InstitutionDto(),
-                    ) ??
-                    const InstitutionDto();
+                final institution = institutions.singleWhere(
+                  (element) => element.id == e.institutionId,
+                  orElse: () => const InstitutionDto(),
+                );
 
                 return ListTileWithTagsCard(
                   avatar: e.avatar,

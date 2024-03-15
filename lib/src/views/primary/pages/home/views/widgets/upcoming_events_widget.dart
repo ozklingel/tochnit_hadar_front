@@ -19,6 +19,8 @@ class UpcomingEventsWidget extends ConsumerWidget {
         ref.watch(eventsControllerProvider).valueOrNull?.take(99).toList() ??
             [];
 
+    if (upcomingEvents.isEmpty) return const SizedBox.shrink();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -30,21 +32,19 @@ class UpcomingEventsWidget extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        if (upcomingEvents.isEmpty)
-          const Center(child: Text('אין'))
-        else
-          SizedBox(
-            height: 100,
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              separatorBuilder: (_, __) => const SizedBox(width: 16),
-              itemCount: upcomingEvents.length,
-              itemBuilder: (context, index) =>
-                  _EventCard(event: upcomingEvents[index]),
-            ),
+        SizedBox(
+          height: 100,
+          child: ListView.separated(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            separatorBuilder: (_, __) => const SizedBox(width: 16),
+            itemCount: upcomingEvents.length,
+            itemBuilder: (context, index) =>
+                _EventCard(event: upcomingEvents[index]),
           ),
+        ),
+        const SizedBox(height: 24),
       ],
     );
   }

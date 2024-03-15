@@ -92,7 +92,6 @@ class _MelaveBody extends StatelessWidget {
     return const Column(
       children: [
         UpcomingEventsWidget(),
-        SizedBox(height: 24),
         UpcomingTasksWidget(),
         SizedBox(height: 14),
       ],

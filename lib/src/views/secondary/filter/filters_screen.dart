@@ -88,13 +88,13 @@ enum _RoleInProgram {
   String get name {
     switch (this) {
       case rakazMosad:
-        return 'רכז מוסד';
+        return 'רכזי אשכול';
       case melavim:
-        return 'מלווה';
+        return 'מלוים';
       case hanihim:
-        return 'חניך';
+        return 'חניכים';
       case roshMosad:
-        return 'ראש מוסד';
+        return 'רכזי מוסד';
     }
   }
 }

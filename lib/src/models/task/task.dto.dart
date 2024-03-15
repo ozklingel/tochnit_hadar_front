@@ -6,9 +6,10 @@ part 'task.dto.g.dart';
 enum TaskType {
   none,
   meeting,
-  parentsMeeting,
-  groupMeeting,
+  meetingParents,
+  meetingGroup,
   call,
+  callParents,
 }
 
 enum TaskStatus {
@@ -42,6 +43,11 @@ class TaskDto with _$TaskDto {
       name: 'description',
     )
     String details,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String title,
     @Default(TaskFrequency.unknown)
     @JsonKey(fromJson: _extractFrequency)
     TaskFrequency frequency,
@@ -50,7 +56,7 @@ class TaskDto with _$TaskDto {
     TaskStatus status,
     @Default(TaskType.none)
     @JsonKey(
-      name: 'title',
+      name: 'event',
       fromJson: _extractTaskType,
     )
     TaskType reportEventType,
@@ -74,14 +80,19 @@ class TaskDto with _$TaskDto {
 
 TaskType _extractTaskType(String? data) {
   switch (data) {
+    case 'מפגש קבוצתי':
     case 'מפגש_קבוצתי':
-      return TaskType.groupMeeting;
+      return TaskType.meetingGroup;
     case 'שיחה':
       return TaskType.call;
+    case 'שיחת הורים':
+    case 'שיחת_הורים':
+      return TaskType.callParents;
     case 'מפגש':
       return TaskType.meeting;
     case 'מפגש הורים':
-      return TaskType.parentsMeeting;
+    case 'מפגש_הורים':
+      return TaskType.meetingParents;
     default:
       return TaskType.none;
   }

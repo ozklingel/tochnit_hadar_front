@@ -232,8 +232,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
         .where(
           (element) => [
             TaskType.meeting,
-            TaskType.groupMeeting,
-            TaskType.parentsMeeting,
+            TaskType.meetingGroup,
           ].contains(element.reportEventType),
         )
         .map<Widget>(
@@ -260,7 +259,10 @@ class _MelaveTasksBody extends HookConsumerWidget {
         .toList();
 
     final parents = filteredList
-        .where((element) => element.reportEventType == TaskType.parentsMeeting)
+        .where(
+          (element) => [TaskType.meetingParents, TaskType.callParents]
+              .contains(element.reportEventType),
+        )
         .map<Widget>(
           (e) => TaskCard(
             task: e,
