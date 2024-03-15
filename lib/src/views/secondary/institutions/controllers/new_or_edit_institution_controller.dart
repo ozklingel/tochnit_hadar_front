@@ -18,10 +18,7 @@ enum SortInstitutionBy {
 
 @Riverpod(
   dependencies: [
-    GetInstitutions,
     DioService,
-    StorageService,
-    GoRouterService,
   ],
 )
 class NewOrEditInstitutionController extends _$NewOrEditInstitutionController {

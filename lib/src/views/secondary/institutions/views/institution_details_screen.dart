@@ -24,7 +24,6 @@ import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.d
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 class InstitutionDetailsScreen extends StatefulHookConsumerWidget {
   const InstitutionDetailsScreen({
@@ -59,8 +58,6 @@ class _InstitutionDetailsScreenState
       _GeneralTab(institution: institution),
       _UsersTab(institutionId: institution.id),
     ];
-
-    Logger().d(institution.logo);
 
     return Scaffold(
       appBar: AppBar(
@@ -186,7 +183,7 @@ class _UsersTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final controller = ref.watch(institutionDetailsControllerProvider.notifier);
+    useAutomaticKeepAlive();
     final apprentices =
         ref.watch(institutionDetailsControllerProvider).valueOrNull?.where(
                   (element) => element.institutionId == institutionId,
@@ -199,7 +196,7 @@ class _UsersTab extends HookConsumerWidget {
       (element) => element.id == institutionId,
       orElse: () => const InstitutionDto(),
     );
-    final filters = useState(controller.filters);
+    final filters = useState(const FilterDto());
 
     // Logger().d(apprentices.length, error: institutionId);
     // Logger().d(institution.apprentices.length, error: institutionId);

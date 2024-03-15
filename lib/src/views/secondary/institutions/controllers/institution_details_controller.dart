@@ -21,10 +21,8 @@ enum SortInstitutionBy {
 
 @Riverpod(
   dependencies: [
-    GetInstitutions,
-    DioService,
-    StorageService,
-    GoRouterService,
+    GetApprentices,
+    GetFilteredUsers,
   ],
 )
 class InstitutionDetailsController extends _$InstitutionDetailsController {
@@ -66,6 +64,4 @@ class InstitutionDetailsController extends _$InstitutionDetailsController {
 
     return false;
   }
-
-  FilterDto get filters => _filters;
 }
