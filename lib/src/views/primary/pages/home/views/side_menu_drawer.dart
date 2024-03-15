@@ -65,7 +65,23 @@ class SideMenuDrawer extends ConsumerWidget {
           ListView(
             shrinkWrap: true,
             children: [
-              ListTile(
+            
+              if (user.valueOrNull?.role == UserRole.melave) ...[
+                ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.mail_24_regular),
+                  title: const Text('הודעות מערכת'),
+                  onTap: () => const MessagesRouteData().go(context),
+                ),
+                ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.call_24_regular),
+                  title: const Text('פניות שירות'),
+                  onTap: () => const SupportRouteData().go(context),
+                ),     
+                
+              ] else if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+                  ListTile(
                 dense: true,
                 leading: const Icon(FluentIcons.data_pie_24_regular),
                 title: const Text('מדדי תוכנית'),
@@ -77,20 +93,6 @@ class SideMenuDrawer extends ConsumerWidget {
                 title: const Text('מפת מיקומים'),
                 onTap: () => Toaster.unimplemented(),
               ),
-              if (user.valueOrNull?.role == UserRole.melave) ...[
-                ListTile(
-                  dense: true,
-                  leading: const Icon(FluentIcons.mail_24_regular),
-                  title: const Text('הודעות מערכת'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-                ListTile(
-                  dense: true,
-                  leading: const Icon(FluentIcons.call_24_regular),
-                  title: const Text('פניות שירות'),
-                  onTap: () => Toaster.unimplemented(),
-                ),
-              ] else if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                 ListTile(
                   dense: true,
                   leading: const Icon(FluentIcons.person_24_regular),
@@ -108,7 +110,12 @@ class SideMenuDrawer extends ConsumerWidget {
                 dense: true,
                 leading: const Icon(FluentIcons.settings_24_regular),
                 title: const Text('הגדרות והתראות'),
-                onTap: () => const SupportRouteData().go(context),
+                onTap: () => const NotificationSettingRouteData().go(context),
+              ),     ListTile(
+                dense: true,
+                leading: const Icon(FluentIcons.clock_alarm_16_filled),
+                title: const Text(' התראות'),
+                onTap: () => const NotificationRouteData().go(context),
               ),
               ListTile(
                 dense: true,
