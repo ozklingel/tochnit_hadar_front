@@ -105,6 +105,18 @@ class SideMenuDrawer extends ConsumerWidget {
                   title: const Text('מוסדות לימוד'),
                   onTap: () => const InstitutionsRouteData().push(context),
                 ),
+                    ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.book_open_24_regular),
+                  title: const Text(' ניהול קודי מתנה'),
+                  onTap: () => const InstitutionsRouteData().push(context),
+                ),
+                     ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.book_open_24_regular),
+                  title: const Text('   הגדרות מדדים'),
+                  onTap: () => const InstitutionsRouteData().push(context),
+                ),
               ],
               ListTile(
                 dense: true,

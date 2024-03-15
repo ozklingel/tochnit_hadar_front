@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
+import '../../../../../models/user/user.dto.dart';
 import '../../../../../services/auth/user_service.dart';
 import '../../../../../services/networking/http_service.dart';
 import '../../../../../services/routing/go_router_provider.dart';
@@ -69,7 +70,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w800,
                   fontSize: 15,
                   color: Colors.black,
                 ),
@@ -82,6 +83,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                 if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -175,7 +177,229 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                     ),
                   ],
                 ),
-              ],
+               ] 
+                  else if (user.valueOrNull?.role == UserRole.melave) ...[
+                         Container(
+            height: 60,
+            alignment: Alignment.centerRight,
+            child: const Padding(
+              padding: EdgeInsets.only(top: 20, left: 20, right: 0),
+              child: Text(
+                'משימות מתוזמנות',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "בתחילת השבוע של משימה ",
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: !t3
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                      ),
+                      child: CupertinoSwitch(
+                        value: t1,
+                        activeColor: CupertinoColors.white,
+                        trackColor: CupertinoColors.white,
+                        thumbColor: !t1
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                        onChanged: (v) => setState(() {
+                          Logger().d(t1.toString());
+                          t1 = v;
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "יום לפני משימה",
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: !t2
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                      ),
+                      child: CupertinoSwitch(
+                        value: t2,
+                        activeColor: CupertinoColors.white,
+                        trackColor: CupertinoColors.white,
+                        thumbColor: !t2
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                        onChanged: (v) => setState(() {
+                          t2 = v;
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        " ביום משימה",
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: !t3
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                      ),
+                      child: CupertinoSwitch(
+                        value: t3,
+                        activeColor: CupertinoColors.white,
+                        trackColor: CupertinoColors.white,
+                        thumbColor: !t3
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                        onChanged: (v) => setState(() {
+                          t3 = v;
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+                                 Container(
+            height: 60,
+            alignment: Alignment.centerRight,
+            child: const Padding(
+              padding: EdgeInsets.only(top: 20, left: 20, right: 0),
+              child: Text(
+                'תזכורת סבב מוסד',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "בתחילת השבוע של האירוע ",
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: !t3
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                      ),
+                      child: CupertinoSwitch(
+                        value: t1,
+                        activeColor: CupertinoColors.white,
+                        trackColor: CupertinoColors.white,
+                        thumbColor: !t1
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                        onChanged: (v) => setState(() {
+                          Logger().d(t1.toString());
+                          t1 = v;
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "יום לפני האירוע",
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: !t2
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                      ),
+                      child: CupertinoSwitch(
+                        value: t2,
+                        activeColor: CupertinoColors.white,
+                        trackColor: CupertinoColors.white,
+                        thumbColor: !t2
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                        onChanged: (v) => setState(() {
+                          t2 = v;
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        " ביום האירוע",
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: !t3
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                      ),
+                      child: CupertinoSwitch(
+                        value: t3,
+                        activeColor: CupertinoColors.white,
+                        trackColor: CupertinoColors.white,
+                        thumbColor: !t3
+                            ? Colors.blue.shade700
+                            : CupertinoColors.inactiveGray,
+                        onChanged: (v) => setState(() {
+                          t3 = v;
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+               ]],
             ),
           ),
         ],
