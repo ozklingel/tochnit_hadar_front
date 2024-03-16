@@ -18,11 +18,11 @@ class TaskDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final task = ref.watch(tasksControllerProvider).valueOrNull?.singleWhere(
-              (element) => element.id == id,
-              orElse: () => const TaskDto(),
-            ) ??
-        const TaskDto();
+    final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
+    final task = tasks.singleWhere(
+      (element) => element.id == id,
+      orElse: () => const TaskDto(),
+    );
 
     // Logger().d(task, error: id);
 

@@ -8,11 +8,13 @@ import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/new_message_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/widgets/find_users_page.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
+import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -293,12 +295,21 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                             type.value == null ||
                             title.text.isEmpty
                         ? null
-                        : () {
-                            ref
-                                .read(
-                                  newMessageControllerProvider(id: '').notifier,
-                                )
-                                .sendMessage(msg);
+                        : () async {
+                            final controllerNotifier =
+                                ref.read(messagesControllerProvider.notifier);
+                            final result = id.isEmpty || isDupe
+                                ? await controllerNotifier.create(msg)
+                                : await controllerNotifier.edit(msg);
+
+                            if (result && context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => const SuccessDialog(
+                                  msg: 'הודעה נשלחה בהצלחה!',
+                                ),
+                              );
+                            }
                           },
                   ),
                 ),

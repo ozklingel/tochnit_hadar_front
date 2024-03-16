@@ -72,6 +72,8 @@ class ReportsController extends _$ReportsController {
   }
 
   Future<bool> create(ReportDto report) async {
+    Logger().d('start creating report', error: report);
+
     try {
       final result = await ref.read(dioServiceProvider).post(
         Consts.addReport,
@@ -102,6 +104,8 @@ class ReportsController extends _$ReportsController {
   }
 
   Future<bool> edit(ReportDto report) async {
+    Logger().d('start editing report', error: report);
+
     try {
       final result = await ref.read(dioServiceProvider).put(
         Consts.editReport,

@@ -15,7 +15,6 @@ import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
@@ -38,11 +37,13 @@ class ReportDetailsScreen extends HookConsumerWidget {
     required this.reportId,
     required this.isReadOnly,
     required this.initRecipients,
+    required this.isDupe,
   });
 
   final String reportId;
   final bool isReadOnly;
   final List<String> initRecipients;
+  final bool isDupe;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -89,11 +90,14 @@ class ReportDetailsScreen extends HookConsumerWidget {
                 return [
                   PopupMenuItem(
                     child: const Text('שכפול'),
-                    onTap: () => Toaster.unimplemented(),
+                    onTap: () =>
+                        ReportDupeRouteData(id: reportId).push(context),
                   ),
                   PopupMenuItem(
                     child: const Text('מחיקה'),
-                    onTap: () => Toaster.unimplemented(),
+                    onTap: () => ref
+                        .read(reportsControllerProvider.notifier)
+                        .delete([reportId]),
                   ),
                 ];
               },
@@ -677,7 +681,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                     reportEventType: selectedEventType.value,
                                   );
 
-                                  final result = reportId.isEmpty
+                                  final result = reportId.isEmpty || isDupe
                                       ? await controllerNotifier
                                           .create(processedReport)
                                       : await controllerNotifier

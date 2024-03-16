@@ -126,6 +126,11 @@ class GoRouterService extends _$GoRouterService {
           routes: [
             TypedGoRoute<ReportNewRouteData>(
               path: 'new',
+              routes: [
+                TypedGoRoute<ReportDupeRouteData>(
+                  path: ':id',
+                ),
+              ],
             ),
             TypedGoRoute<ReportEditRouteData>(
               path: 'edit/:id',
@@ -410,6 +415,7 @@ class ReportNewRouteData extends GoRouteData {
       reportId: '',
       isReadOnly: false,
       initRecipients: initRecipients,
+      isDupe: false,
     );
   }
 }
@@ -429,6 +435,27 @@ class ReportEditRouteData extends GoRouteData {
       reportId: id,
       isReadOnly: false,
       initRecipients: const [],
+      isDupe: false,
+    );
+  }
+}
+
+class ReportDupeRouteData extends GoRouteData {
+  const ReportDupeRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return ReportDetailsScreen(
+      reportId: id,
+      isReadOnly: false,
+      initRecipients: const [],
+      isDupe: true,
     );
   }
 }
@@ -446,6 +473,7 @@ class ReportDetailsRouteData extends GoRouteData {
       reportId: id,
       isReadOnly: true,
       initRecipients: const [],
+      isDupe: false,
     );
   }
 }
