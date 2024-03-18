@@ -16,7 +16,15 @@ import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:timeago/timeago.dart';
 
+import 'src/services/notifications/local_notification_service .dart';
+
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalNotifications.init();
+      LocalNotifications.showSimpleNotification(
+        title: "Simple Notification",
+        body: "This is a simple notification",
+        payload: "This is simple data");
   await SentryFlutter.init(
     (options) {
       options.debug = kDebugMode;

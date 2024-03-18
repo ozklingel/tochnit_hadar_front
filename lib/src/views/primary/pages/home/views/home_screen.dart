@@ -43,7 +43,7 @@ class HomeScreen extends ConsumerWidget {
                 loading: () => UnreadCounterBadgeWidget(
                   isLoading: true,
                   child: IconButton(
-                    onPressed: () => const NotificationRouteData().go(context),
+                    onPressed: () => {const NotificationRouteData().go(context)},
                     icon: const Icon(Icons.notifications_none),
                   ),
                 ),
