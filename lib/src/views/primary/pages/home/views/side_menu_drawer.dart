@@ -9,7 +9,6 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../../services/notifications/local_notification_service .dart';
 
 
 class SideMenuDrawer extends ConsumerWidget {
@@ -74,10 +73,8 @@ class SideMenuDrawer extends ConsumerWidget {
                   dense: true,
                   leading: const Icon(FluentIcons.mail_24_regular),
                   title: const Text('הודעות מערכת'),
-                  onTap: () => (){
-
-               
-      },
+                  onTap: () => () =>const MessagesRouteData().go(context),           
+      
                 ),
                 ListTile(
                   dense: true,
