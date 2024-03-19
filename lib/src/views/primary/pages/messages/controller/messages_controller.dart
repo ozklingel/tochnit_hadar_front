@@ -103,7 +103,8 @@ class MessagesController extends _$MessagesController {
         },
       );
 
-      if (result.data['result'] == 'success') {
+      // apparently misspelling is intentional
+      if (result.data['result'] == 'sucess') {
         ref.invalidate(getMessagesProvider);
 
         return true;

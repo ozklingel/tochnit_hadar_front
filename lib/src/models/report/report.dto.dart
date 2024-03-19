@@ -71,10 +71,14 @@ class ReportDto with _$ReportDto {
 enum ReportEventType {
   none,
   offlineMeeting, // מפגש
+  offlineGroupMeeting, // מפגש קבוצתי
+  periodInput, // הזנת מחזור
+  mosadMeetings, // ישיבה מוסדית
   onlineMeeting,
   recurringMeeting, // מפגש מחזור
   matsbarGathering, // ישיבת מצב”ר
-  phoneCall, // שיחה
+  call, // שיחה
+  callParents, // שיחה להורים
   baseVisit, // ביקור בבסיס
   recurringSabath, // שבת מחזור
   fiveMessages,
@@ -93,8 +97,10 @@ enum ReportEventType {
         return 'פגישה פיזית';
       case ReportEventType.onlineMeeting:
         return 'פגישה מקוונת';
-      case ReportEventType.phoneCall:
+      case ReportEventType.call:
         return 'שיחה טלפונית';
+      case ReportEventType.callParents:
+        return 'שיחה להורים';
       case ReportEventType.fiveMessages:
         return '5 הודעות';
       case ReportEventType.failedAttempt:
@@ -115,6 +121,12 @@ enum ReportEventType {
         return 'עשיה לבוגרים';
       case ReportEventType.adminsGathering:
         return 'ישיבת רכזי תוכנית';
+      case ReportEventType.offlineGroupMeeting:
+        return 'מפגש קבוצתי';
+      case ReportEventType.periodInput:
+        return 'הזנת מחזור';
+      case ReportEventType.mosadMeetings:
+        return 'ישיבה מוסדית';
       case ReportEventType.other:
         return 'UNKNOWN TYPE';
     }
@@ -122,35 +134,43 @@ enum ReportEventType {
 }
 
 ReportEventType _extractType(String? val) {
-  if (val == ReportEventType.adminsGathering.name) {
-    return ReportEventType.adminsGathering;
-  } else if (val == ReportEventType.annualConference.name) {
-    return ReportEventType.annualConference;
-  } else if (val == ReportEventType.baseVisit.name) {
-    return ReportEventType.baseVisit;
-  } else if (val == ReportEventType.doingForAlumni.name) {
-    return ReportEventType.doingForAlumni;
-  } else if (val == ReportEventType.failedAttempt.name) {
-    return ReportEventType.failedAttempt;
-  } else if (val == ReportEventType.fiveMessages.name) {
-    return ReportEventType.fiveMessages;
-  } else if (val == ReportEventType.matsbarGathering.name) {
-    return ReportEventType.matsbarGathering;
-  } else if (val == ReportEventType.monthlyProfessionalConference.name) {
-    return ReportEventType.monthlyProfessionalConference;
-  } else if (val == ReportEventType.offlineMeeting.name) {
-    return ReportEventType.offlineMeeting;
-  } else if (val == ReportEventType.onlineMeeting.name) {
-    return ReportEventType.onlineMeeting;
-  } else if (val == ReportEventType.phoneCall.name) {
-    return ReportEventType.phoneCall;
-  } else if (val == ReportEventType.recurringMeeting.name) {
-    return ReportEventType.recurringMeeting;
-  } else if (val == ReportEventType.recurringSabath.name) {
-    return ReportEventType.recurringSabath;
-  } else if (val == ReportEventType.other.name) {
-    return ReportEventType.other;
+  if (val == null) {
+    return ReportEventType.none;
   }
 
-  return ReportEventType.none;
+  if (val.replaceAll('_', ' ') == ReportEventType.adminsGathering.name) {
+    return ReportEventType.adminsGathering;
+  } else if (val.replaceAll('_', ' ') ==
+      ReportEventType.annualConference.name) {
+    return ReportEventType.annualConference;
+  } else if (val.replaceAll('_', ' ') == ReportEventType.baseVisit.name) {
+    return ReportEventType.baseVisit;
+  } else if (val.replaceAll('_', ' ') == ReportEventType.doingForAlumni.name) {
+    return ReportEventType.doingForAlumni;
+  } else if (val.replaceAll('_', ' ') == ReportEventType.failedAttempt.name) {
+    return ReportEventType.failedAttempt;
+  } else if (val.replaceAll('_', ' ') == ReportEventType.fiveMessages.name) {
+    return ReportEventType.fiveMessages;
+  } else if (val.replaceAll('_', ' ') ==
+      ReportEventType.matsbarGathering.name) {
+    return ReportEventType.matsbarGathering;
+  } else if (val.replaceAll('_', ' ') ==
+      ReportEventType.monthlyProfessionalConference.name) {
+    return ReportEventType.monthlyProfessionalConference;
+  } else if (val.replaceAll('_', ' ') == ReportEventType.offlineMeeting.name) {
+    return ReportEventType.offlineMeeting;
+  } else if (val.replaceAll('_', ' ') == ReportEventType.onlineMeeting.name) {
+    return ReportEventType.onlineMeeting;
+  } else if (val.replaceAll('_', ' ') == ReportEventType.call.name) {
+    return ReportEventType.call;
+  } else if (val.replaceAll('_', ' ') ==
+      ReportEventType.recurringMeeting.name) {
+    return ReportEventType.recurringMeeting;
+  } else if (val.replaceAll('_', ' ') == ReportEventType.recurringSabath.name) {
+    return ReportEventType.recurringSabath;
+  } else if (val == 'שיחה') {
+    return ReportEventType.call;
+  } else {
+    return ReportEventType.other;
+  }
 }

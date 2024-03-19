@@ -734,19 +734,18 @@ class FiltersScreen extends HookConsumerWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected:
-            filter.value.reportEventTypes.contains(ReportEventType.phoneCall),
+        selected: filter.value.reportEventTypes.contains(ReportEventType.call),
         onSelected: (val) => filter.value = filter.value.copyWith(
           reportEventTypes:
-              filter.value.reportEventTypes.contains(ReportEventType.phoneCall)
+              filter.value.reportEventTypes.contains(ReportEventType.call)
                   ? [
                       ...filter.value.reportEventTypes.where(
-                        (element) => element != ReportEventType.phoneCall,
+                        (element) => element != ReportEventType.call,
                       ),
                     ]
                   : [
                       ...filter.value.reportEventTypes,
-                      ReportEventType.phoneCall,
+                      ReportEventType.call,
                     ],
         ),
         label: const Text('שיחה'),
@@ -819,23 +818,22 @@ class FiltersScreen extends HookConsumerWidget {
                                   (states) => AppColors.blue06,
                                 ),
                                 selected: filter.value.reportEventTypes
-                                    .contains(ReportEventType.phoneCall),
+                                    .contains(ReportEventType.call),
                                 onSelected: (val) =>
                                     filter.value = filter.value.copyWith(
                                   reportEventTypes: filter
                                           .value.reportEventTypes
-                                          .contains(ReportEventType.phoneCall)
+                                          .contains(ReportEventType.call)
                                       ? [
                                           ...filter.value.reportEventTypes
                                               .where(
                                             (element) =>
-                                                element !=
-                                                ReportEventType.phoneCall,
+                                                element != ReportEventType.call,
                                           ),
                                         ]
                                       : [
                                           ...filter.value.reportEventTypes,
-                                          ReportEventType.phoneCall,
+                                          ReportEventType.call,
                                         ],
                                 ),
                                 label: Row(

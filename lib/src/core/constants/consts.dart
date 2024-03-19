@@ -55,6 +55,8 @@ abstract class Consts {
   static const getAllInstitutions = 'institutionProfile_form/getAll';
   static const addInstitution = 'institutionProfile_form/add_mosad';
   static const updateInstitution = 'institutionProfile_form/update';
+  static const getAllInstitutionApprenticesAndMelavim =
+      'institutionProfile_form/apprentice_and_melave';
 
   // eshkol
   static const getAllEshkols = 'eshcol/getAll';

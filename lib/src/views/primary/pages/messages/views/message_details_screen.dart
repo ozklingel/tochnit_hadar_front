@@ -8,6 +8,7 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 class MessageDetailsScreen extends HookConsumerWidget {
   const MessageDetailsScreen({
@@ -75,6 +76,8 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
                       if (result) {
                         navContext.pop();
+                      } else {
+                        Logger().w('failed to pop on deleted msg');
                       }
                     },
                   ),

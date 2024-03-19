@@ -9,6 +9,7 @@ import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -40,6 +41,7 @@ class ReportsScreen extends HookConsumerWidget {
     final sortBy = useState(SortReportBy.abcAscending);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
+    final scrollController = useScrollController();
     useListenable(searchController);
 
     if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
@@ -60,7 +62,10 @@ class ReportsScreen extends HookConsumerWidget {
           ),
         ),
         body: RefreshIndicator.adaptive(
-          onRefresh: () => ref.refresh(reportsControllerProvider.future),
+          onRefresh: () {
+            selectedReportIds.value = [];
+            return ref.refresh(getReportsProvider.future);
+          },
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
@@ -289,6 +294,7 @@ class ReportsScreen extends HookConsumerWidget {
                 ),
                 loading: () => SliverFillRemaining(
                   child: _ReporsListBody(
+                    scrollController: scrollController,
                     reports: List.generate(
                       10,
                       (index) => const ReportDto(),
@@ -299,7 +305,20 @@ class ReportsScreen extends HookConsumerWidget {
                 ),
                 data: (reportsList) => SliverFillRemaining(
                   child: _ReporsListBody(
-                    reports: reportsList,
+                    scrollController: scrollController,
+                    reports: reportsList
+                        .where(
+                          (element) =>
+                              element.description.toLowerCase().contains(
+                                    searchController.text.toLowerCase(),
+                                  ) ||
+                              element.reportEventType.name
+                                  .toLowerCase()
+                                  .contains(
+                                    searchController.text.toLowerCase(),
+                                  ),
+                        )
+                        .toList(),
                     isLoading: false,
                     selectedReportIds: selectedReportIds,
                   ),
@@ -339,7 +358,7 @@ class ReportsScreen extends HookConsumerWidget {
                       orElse: () => const ReportDto(),
                     ) ??
                     const ReportDto();
-                final apprentice = apprentices.singleWhere(
+                final recipients = apprentices.singleWhere(
                   (element) => report.recipients.contains(element.id),
                   orElse: () => const ApprenticeDto(),
                 );
@@ -351,7 +370,9 @@ class ReportsScreen extends HookConsumerWidget {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       child: const Text('שכפול'),
-                      onTap: () => Toaster.unimplemented(),
+                      onTap: () =>
+                          ReportDupeRouteData(id: selectedReportIds.value.first)
+                              .push(context),
                     ),
                     PopupMenuItem(
                       child: const Text('עריכה'),
@@ -383,7 +404,7 @@ class ReportsScreen extends HookConsumerWidget {
                     ),
                     PopupMenuItem(
                       child: const Text('פרופיל אישי'),
-                      onTap: () => ApprenticeDetailsRouteData(id: apprentice.id)
+                      onTap: () => ApprenticeDetailsRouteData(id: recipients.id)
                           .push(context),
                     ),
                   ],
@@ -426,9 +447,13 @@ class ReportsScreen extends HookConsumerWidget {
             const ReportNewRouteData(initRecipients: []).go(context),
       ),
       body: RefreshIndicator.adaptive(
-        onRefresh: () => ref.refresh(reportsControllerProvider.future),
+        onRefresh: () {
+          selectedReportIds.value = [];
+          return ref.refresh(getReportsProvider.future);
+        },
         child: reportsScreenController.when(
           error: (error, stack) => CustomScrollView(
+            controller: scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverFillRemaining(
@@ -439,6 +464,7 @@ class ReportsScreen extends HookConsumerWidget {
             ],
           ),
           loading: () => _ReporsListBody(
+            scrollController: scrollController,
             reports: List.generate(
               10,
               (index) => ReportDto(
@@ -449,14 +475,17 @@ class ReportsScreen extends HookConsumerWidget {
             selectedReportIds: selectedReportIds,
           ),
           data: (reports) {
-            final filteredList = [...reports];
-
             return _ReporsListBody(
-              reports: filteredList
+              scrollController: scrollController,
+              reports: reports
                   .where(
-                    (element) => element.description
-                        .toLowerCase()
-                        .contains(searchController.text),
+                    (element) =>
+                        element.description
+                            .toLowerCase()
+                            .contains(searchController.text.toLowerCase()) ||
+                        element.reportEventType.name
+                            .toLowerCase()
+                            .contains(searchController.text.toLowerCase()),
                   )
                   .toList(),
               isLoading: false,
@@ -633,16 +662,19 @@ class _ReporsListBody extends ConsumerWidget {
     required this.reports,
     required this.isLoading,
     required this.selectedReportIds,
+    required this.scrollController,
   });
 
   final List<ReportDto> reports;
   final ValueNotifier<List<String>> selectedReportIds;
   final bool isLoading;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context, ref) {
     if (reports.isEmpty && !isLoading) {
       return CustomScrollView(
+        controller: scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverFillRemaining(
@@ -698,6 +730,7 @@ class _ReporsListBody extends ConsumerWidget {
         .toList();
 
     return ListView.separated(
+      controller: scrollController,
       padding: const EdgeInsets.all(16),
       itemCount: children.length,
       separatorBuilder: (context, index) => const SizedBox(height: 8),

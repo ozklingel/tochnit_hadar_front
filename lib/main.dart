@@ -1,16 +1,15 @@
-import 'dart:ui';
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bot_toast/bot_toast.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/themes.dart';
@@ -21,15 +20,19 @@ import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart';
 
 import 'src/services/notifications/local_notification_service.dart';
 
-
-
 Future<void> main() async {
-WidgetsFlutterBinding.ensureInitialized();
-  await initializeService();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isAndroid || Platform.isIOS) {
+    // TODO(noga-dev): budget permitting this should have an init loader
+    await initializeNotificationsService();
+  }
+
   await SentryFlutter.init(
     (options) {
       options.debug = kDebugMode;
@@ -230,7 +233,8 @@ class _EagerInitialization extends ConsumerWidget {
     return child;
   }
 }
-Future<void> initializeService() async {
+
+Future<void> initializeNotificationsService() async {
   final service = FlutterBackgroundService();
 
   /// OPTIONAL, using custom notification channel id
@@ -360,11 +364,12 @@ void onStart(ServiceInstance service) async {
       }
     }
 
-  await LocalNotifications.init();
-      LocalNotifications.showSimpleNotification(
-        title: "Oz Notification",
-        body: "This is a Oz notification",
-        payload: "This is Oz data");
+    await LocalNotifications.init();
+    LocalNotifications.showSimpleNotification(
+      title: "Oz Notification",
+      body: "This is a Oz notification",
+      payload: "This is Oz data",
+    );
 
     // test using external plugin
     final deviceInfo = DeviceInfoPlugin();

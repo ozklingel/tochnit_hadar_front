@@ -6,7 +6,6 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
-import 'package:hadar_program/src/views/widgets/loading_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timeago/timeago.dart';
 
@@ -26,6 +25,17 @@ class ReportCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final apprentices = (ref
+                .watch(
+                  apprenticesControllerProvider,
+                )
+                .valueOrNull ??
+            [])
+        .where(
+          (element) => report.recipients.contains(element.id),
+        )
+        .toList();
+
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -68,33 +78,16 @@ class ReportCard extends ConsumerWidget {
                       const SizedBox(width: 8),
                       SizedBox(
                         width: 264,
-                        child: ref
-                            .watch(
-                              apprenticesControllerProvider,
-                            )
-                            .when(
-                              loading: () => const LoadingWidget(),
-                              error: (error, stack) => const SizedBox(),
-                              data: (reportApprentices) {
-                                final apprentices = reportApprentices
-                                    .where(
-                                      (element) => report.recipients
-                                          .contains(element.id),
-                                    )
-                                    .toList();
-
-                                return Text(
-                                  apprentices
-                                      .map(
-                                        (a) => '${a.firstName} ${a.lastName}',
-                                      )
-                                      .join(', '),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyles.s18w500cGray1,
-                                );
-                              },
-                            ),
+                        child: Text(
+                          apprentices
+                              .map(
+                                (a) => '${a.firstName} ${a.lastName}',
+                              )
+                              .join(', '),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyles.s18w500cGray1,
+                        ),
                       ),
                     ],
                   ),

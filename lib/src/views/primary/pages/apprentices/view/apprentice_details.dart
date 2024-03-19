@@ -699,10 +699,9 @@ class _TohnitHadarTabView extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Row(
                         children: [
-                          if (e.reportEventType == ReportEventType.phoneCall)
+                          if (e.reportEventType == ReportEventType.call)
                             const Icon(FluentIcons.people_24_regular)
-                          else if (e.reportEventType ==
-                              ReportEventType.phoneCall)
+                          else if (e.reportEventType == ReportEventType.call)
                             const Icon(FluentIcons.phone_24_regular)
                           else if (e.reportEventType ==
                               ReportEventType.fiveMessages)

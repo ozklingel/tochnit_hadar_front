@@ -73,7 +73,7 @@ class MessagesScreen extends HookConsumerWidget {
                     )
                   : null,
           body: RefreshIndicator.adaptive(
-            onRefresh: () => ref.refresh(messagesControllerProvider.future),
+            onRefresh: () => ref.refresh(getMessagesProvider.future),
             child: msgsController.when(
               loading: () => ListView(
                 children: List.generate(

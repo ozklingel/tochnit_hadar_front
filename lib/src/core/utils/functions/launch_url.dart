@@ -37,7 +37,7 @@ void launchWhatsapp({
   required String phone,
   String text = '',
 }) async {
-  final whatsapp = phone; //+92xx enter like this
+  final whatsapp = '972$phone'; //+92xx enter like this
   final whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=$text";
   final whatsappURLIos = "https://wa.me/$whatsapp?text=${Uri.tryParse(text)}";
 
@@ -98,7 +98,7 @@ void launchEmail({
 void launchCall({
   required phone,
 }) async {
-  final url = Uri.parse('tel:$phone');
+  final url = Uri.parse('tel:972$phone');
   if (await canLaunchUrl(url)) {
     launchUrl(url);
   } else {

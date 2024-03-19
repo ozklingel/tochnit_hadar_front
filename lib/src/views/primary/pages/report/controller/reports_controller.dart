@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
@@ -76,16 +78,17 @@ class ReportsController extends _$ReportsController {
 
     try {
       final result = await ref.read(dioServiceProvider).post(
-        Consts.addReport,
-        data: {
-          'userId': ref.read(storageServiceProvider.notifier).getUserPhone(),
-          'List_of_repored': report.recipients,
-          'date': report.dateTime,
-          'event_type': report.reportEventType.name,
-          'description': report.description,
-          'attachments': report.attachments,
-        },
-      );
+            Consts.addReport,
+            data: jsonEncode({
+              'userId':
+                  ref.read(storageServiceProvider.notifier).getUserPhone(),
+              'List_of_repored': report.recipients,
+              'date': report.dateTime,
+              'event_type': report.reportEventType.name,
+              'description': report.description,
+              'attachments': report.attachments,
+            }),
+          );
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getReportsProvider);

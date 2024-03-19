@@ -17,8 +17,8 @@ class InstitutionsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final institutions =
-        ref.watch(institutionsControllerProvider).valueOrNull ?? [];
+    final institutionsController = ref.watch(institutionsControllerProvider);
+    final institutions = institutionsController.valueOrNull ?? [];
     final sortBy = useState(SortInstitutionBy.fromA2Z);
     final isSearchActive = useState(false);
     final searchTextEditingController = useTextEditingController();
@@ -29,6 +29,12 @@ class InstitutionsScreen extends HookConsumerWidget {
           .toLowerCase()
           .contains(searchTextEditingController.text.toLowerCase()),
     );
+
+    if (institutionsController.isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator.adaptive()),
+      );
+    }
 
     return Scaffold(
       appBar: PreferredSize(

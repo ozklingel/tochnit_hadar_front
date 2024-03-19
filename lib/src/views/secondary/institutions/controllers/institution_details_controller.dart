@@ -1,4 +1,5 @@
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/services/api/institutions/get_apprentice_and_melave.dart';
 import 'package:hadar_program/src/services/api/search_bar/get_filtered_users.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -25,8 +26,9 @@ class InstitutionDetailsController extends _$InstitutionDetailsController {
   var _filters = const FilterDto();
 
   @override
-  FutureOr<List<ApprenticeDto>> build() async {
-    final apprentices = await ref.watch(getApprenticesProvider.future);
+  FutureOr<List<ApprenticeDto>> build({required String id}) async {
+    final apprentices =
+        await ref.watch(getApprenticesAndMelavimProvider(id: id).future);
 
     ref.keepAlive();
 

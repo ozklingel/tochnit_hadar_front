@@ -47,7 +47,8 @@ class _InstitutionDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final institutions = ref.watch(getInstitutionsProvider).valueOrNull ?? [];
+    final screenController = ref.watch(getInstitutionsProvider);
+    final institutions = screenController.valueOrNull ?? [];
     final institution = institutions.singleWhere(
       (element) => element.id == widget.id,
       orElse: () => const InstitutionDto(),
@@ -58,6 +59,12 @@ class _InstitutionDetailsScreenState
       _GeneralTab(institution: institution),
       _UsersTab(institutionId: institution.id),
     ];
+
+    if (screenController.isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator.adaptive()),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -184,11 +191,14 @@ class _UsersTab extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     useAutomaticKeepAlive();
-    final apprentices =
-        ref.watch(institutionDetailsControllerProvider).valueOrNull?.where(
-                  (element) => element.institutionId == institutionId,
-                ) ??
-            [];
+
+    final users = ref
+            .watch(institutionDetailsControllerProvider(id: institutionId))
+            .valueOrNull
+            ?.where(
+              (element) => element.institutionId == institutionId,
+            ) ??
+        [];
     final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
     final institutions =
         ref.watch(institutionsControllerProvider).valueOrNull ?? [];
@@ -218,7 +228,10 @@ class _UsersTab extends HookConsumerWidget {
             );
 
             final request = await ref
-                .read(institutionDetailsControllerProvider.notifier)
+                .read(
+                  institutionDetailsControllerProvider(id: institutionId)
+                      .notifier,
+                )
                 .filterUsers(newFilter);
 
             if (request) {
@@ -307,7 +320,11 @@ class _UsersTab extends HookConsumerWidget {
                           const FilterDto();
 
                       final request = await ref
-                          .read(institutionDetailsControllerProvider.notifier)
+                          .read(
+                            institutionDetailsControllerProvider(
+                              id: institutionId,
+                            ).notifier,
+                          )
                           .filterUsers(result);
 
                       if (request) {
@@ -349,14 +366,14 @@ class _UsersTab extends HookConsumerWidget {
             ],
           ),
         ),
-        apprentices.isEmpty
+        users.isEmpty
             ? const Padding(
                 padding: EdgeInsets.symmetric(vertical: 24),
                 child: Text('ריק'),
               )
             : ListView(
                 shrinkWrap: true,
-                children: apprentices.map(
+                children: users.map(
                   (e) {
                     final compound = compounds.singleWhere(
                       (element) => element.id == e.militaryCompoundId,
