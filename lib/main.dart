@@ -23,7 +23,8 @@ import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:timeago/timeago.dart';
 
-import 'src/services/notifications/local_notification_service .dart';
+import 'src/services/notifications/local_notification_service.dart';
+
 
 
 Future<void> main() async {
@@ -332,7 +333,7 @@ void onStart(ServiceInstance service) async {
   });
 
   // bring to foreground
-  Timer.periodic(const Duration(seconds: 20), (timer) async {
+  Timer.periodic(const Duration(seconds: 86400), (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification
@@ -361,9 +362,9 @@ void onStart(ServiceInstance service) async {
 
   await LocalNotifications.init();
       LocalNotifications.showSimpleNotification(
-        title: "Simple Notification",
-        body: "This is a simple notification",
-        payload: "This is simple data");
+        title: "Oz Notification",
+        body: "This is a Oz notification",
+        payload: "This is Oz data");
 
     // test using external plugin
     final deviceInfo = DeviceInfoPlugin();
