@@ -83,7 +83,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+                if (user.valueOrNull?.role == UserRole.melave||user.valueOrNull?.role == UserRole.rakazEshkol||user.valueOrNull?.role == UserRole.rakazMosad) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -177,7 +177,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                       ),
                     ],
                   ),
-                ] else if (user.valueOrNull?.role == UserRole.melave) ...[
+                ] else if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                   Container(
                     height: 60,
                     alignment: Alignment.centerRight,
