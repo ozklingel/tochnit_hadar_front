@@ -76,7 +76,7 @@ ThemeData get appThemeLight {
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
-      hintStyle: TextStyles.s16w400cGrey2,
+      hintStyle: TextStyles.s16w400cGrey5,
       errorStyle: TextStyles.s12w500,
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(36),

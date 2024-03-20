@@ -9,20 +9,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
 enum _DataFillType {
   manual,
   import,
-}
-
-enum _UserType {
-  hanih,
-  melave,
-  rakaz,
-  rakazEshkol,
 }
 
 class NewUserScreen extends HookWidget {
@@ -32,9 +30,17 @@ class NewUserScreen extends HookWidget {
   Widget build(BuildContext context) {
     final pageController = usePageController();
     final title = useState('הוספת משתמש');
-    final selectedUserType = useState(_UserType.hanih);
+    final selectedUserType = useState(UserRole.apprentice);
     final selectedDataFillType = useState(_DataFillType.manual);
+    final selectedInstitution = useState(const InstitutionDto());
+    final firstNameController = useTextEditingController();
+    final lastNameController = useTextEditingController();
+    final phoneController = useTextEditingController();
     final selectedFiles = useState<List<File>>([]);
+    final formKey = useMemoized(() => GlobalKey<FormState>(), []);
+    useListenable(firstNameController);
+    useListenable(lastNameController);
+    useListenable(phoneController);
 
     final pages = [
       _SelectUserTypePage(
@@ -44,9 +50,14 @@ class NewUserScreen extends HookWidget {
         selecteDataType: selectedDataFillType,
       ),
       _FormOrImportPage(
+        selectedInstitution: selectedInstitution,
         selectedDataType: selectedDataFillType.value,
         selectedUserType: selectedUserType.value,
         files: selectedFiles,
+        formKey: formKey,
+        firstNameController: firstNameController,
+        lastNameController: lastNameController,
+        phoneController: phoneController,
       ),
     ];
 
@@ -84,7 +95,20 @@ class NewUserScreen extends HookWidget {
                     Expanded(
                       child: LargeFilledRoundedButton(
                         label: 'שמירה',
-                        onPressed: () => Toaster.unimplemented(),
+                        onPressed: firstNameController.text.isEmpty ||
+                                lastNameController.text.isEmpty ||
+                                phoneController.text.isEmpty ||
+                                selectedInstitution.value.isEmpty
+                            ? null
+                            : () {
+                                final isValidForm =
+                                    formKey.currentState?.validate() ?? false;
+                                if (!isValidForm) {
+                                  return;
+                                }
+
+                                Toaster.unimplemented();
+                              },
                       ),
                     )
                   else ...[
@@ -124,51 +148,199 @@ class NewUserScreen extends HookWidget {
   }
 }
 
-class _FormOrImportPage extends StatelessWidget {
+class _FormOrImportPage extends ConsumerWidget {
   const _FormOrImportPage({
     required this.selectedUserType,
     required this.selectedDataType,
+    required this.selectedInstitution,
     required this.files,
+    required this.formKey,
+    required this.firstNameController,
+    required this.lastNameController,
+    required this.phoneController,
   });
 
-  final _UserType selectedUserType;
+  final UserRole selectedUserType;
   final _DataFillType selectedDataType;
   final ValueNotifier<List<File>> files;
+  final ValueNotifier<InstitutionDto> selectedInstitution;
+  final GlobalKey<FormState> formKey;
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  final TextEditingController phoneController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     switch (selectedDataType) {
       case _DataFillType.manual:
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              const _FormField(
-                label: 'שם פרטי',
-                hint: 'הזן את השם הפרטי המשתמש',
-              ),
-              const SizedBox(height: 24),
-              const _FormField(
-                label: 'שם משפחה',
-                hint: 'הזן את שם המשפחה של המשתמש',
-              ),
-              const SizedBox(height: 24),
-              const _FormField(
-                label: 'מספר טלפון',
-                hint: 'הזן מספר טלפון',
-              ),
-              const SizedBox(height: 24),
-              const _FormField(
-                label: 'שיוך למוסד',
-                hint: 'מוסד',
-              ),
-              if (selectedUserType != _UserType.hanih) ...[
-                const SizedBox(height: 24),
-                const _FormField(
-                  label: 'תפקיד',
-                  hint: 'בחר תפקיד',
+        return Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                InputFieldContainer(
+                  label: 'שם פרטי',
+                  isRequired: true,
+                  child: TextFormField(
+                    controller: firstNameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'empty';
+                      }
+
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      hintText: 'הזן את השם הפרטי המשתמש',
+                    ),
+                  ),
                 ),
+                const SizedBox(height: 24),
+                InputFieldContainer(
+                  label: 'שם משפחה',
+                  isRequired: true,
+                  child: TextFormField(
+                    controller: lastNameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'empty';
+                      }
+
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      hintText: 'הזן את שם המשפחה של המשתמש',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                InputFieldContainer(
+                  label: 'מספר טלפון',
+                  isRequired: true,
+                  child: TextFormField(
+                    controller: phoneController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'empty';
+                      }
+
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      hintText: 'הזן מספר טלפון',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                InputFieldContainer(
+                  label: 'שיוך למוסד',
+                  isRequired: true,
+                  child: ref.watch(getInstitutionsProvider).when(
+                        loading: () => const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                        error: (error, stack) =>
+                            Center(child: Text(error.toString())),
+                        data: (institutions) => DropdownButtonHideUnderline(
+                          child: DropdownButton2<InstitutionDto>(
+                            hint: Text(
+                              selectedInstitution.value.isEmpty
+                                  ? 'מוסד'
+                                  : selectedInstitution.value.name,
+                              style: selectedInstitution.value.isEmpty
+                                  ? TextStyles.s16w400cGrey5
+                                  : null,
+                            ),
+                            onMenuStateChange: (isOpen) {},
+                            dropdownSearchData: const DropdownSearchData(
+                              searchInnerWidgetHeight: 50,
+                              searchInnerWidget: TextField(
+                                decoration: InputDecoration(
+                                  focusedBorder: UnderlineInputBorder(),
+                                  enabledBorder: InputBorder.none,
+                                  prefixIcon: Icon(Icons.search),
+                                  hintText: 'חיפוש',
+                                  hintStyle: TextStyles.s14w400,
+                                ),
+                              ),
+                            ),
+                            style: TextStyles.s16w400cGrey5,
+                            buttonStyleData: ButtonStyleData(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(36),
+                                border: Border.all(
+                                  color: AppColors.shades300,
+                                ),
+                              ),
+                              elevation: 0,
+                              padding: const EdgeInsets.only(right: 8),
+                            ),
+                            onChanged: (value) {
+                              selectedInstitution.value =
+                                  value ?? selectedInstitution.value;
+                            },
+                            dropdownStyleData: const DropdownStyleData(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16)),
+                              ),
+                            ),
+                            iconStyleData: const IconStyleData(
+                              icon: Padding(
+                                padding: EdgeInsets.only(left: 16),
+                                child: RotatedBox(
+                                  quarterTurns: 1,
+                                  child: Icon(
+                                    Icons.chevron_left,
+                                    color: AppColors.grey6,
+                                  ),
+                                ),
+                              ),
+                              openMenuIcon: Padding(
+                                padding: EdgeInsets.only(left: 16),
+                                child: RotatedBox(
+                                  quarterTurns: 3,
+                                  child: Icon(
+                                    Icons.chevron_left,
+                                    color: AppColors.grey6,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            items: institutions
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e.name),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                ),
+                if (selectedUserType != UserRole.apprentice) ...[
+                  const SizedBox(height: 24),
+                  InputFieldContainer(
+                    label: 'תפקיד',
+                    isRequired: true,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'empty';
+                        }
+
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'בחר תפקיד',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ],
-            ],
+            ),
           ),
         );
       case _DataFillType.import:
@@ -247,50 +419,6 @@ class _FormOrImportPage extends StatelessWidget {
   }
 }
 
-class _FormField extends StatelessWidget {
-  const _FormField({
-    required this.label,
-    required this.hint,
-  });
-
-  final String label;
-  final String hint;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text.rich(
-          TextSpan(
-            style: TextStyles.s12w500,
-            children: [
-              TextSpan(
-                text: label,
-                style: TextStyles.s12w500cGray5,
-              ),
-              const TextSpan(text: ' '),
-              const TextSpan(
-                text: '*',
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyles.s16w400cGrey5,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _SelectDataFillType extends StatelessWidget {
   const _SelectDataFillType({
     required this.selecteDataType,
@@ -328,7 +456,7 @@ class _SelectUserTypePage extends StatelessWidget {
     required this.selectedUserType,
   });
 
-  final ValueNotifier<_UserType> selectedUserType;
+  final ValueNotifier<UserRole> selectedUserType;
 
   @override
   Widget build(BuildContext context) {
@@ -352,7 +480,7 @@ class _SelectUserTypePage extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         DropdownButtonHideUnderline(
-          child: DropdownButton2<_UserType>(
+          child: DropdownButton2<UserRole>(
             value: selectedUserType.value,
             hint: const Text('בחירת סוג המשתמש'),
             onMenuStateChange: (isOpen) {},
@@ -411,19 +539,19 @@ class _SelectUserTypePage extends StatelessWidget {
             ),
             items: const [
               DropdownMenuItem(
-                value: _UserType.hanih,
+                value: UserRole.apprentice,
                 child: Text('חניך'),
               ),
               DropdownMenuItem(
-                value: _UserType.rakaz,
+                value: UserRole.rakazMosad,
                 child: Text('רכז'),
               ),
               DropdownMenuItem(
-                value: _UserType.melave,
+                value: UserRole.melave,
                 child: Text('מלווה'),
               ),
               DropdownMenuItem(
-                value: _UserType.rakazEshkol,
+                value: UserRole.rakazEshkol,
                 child: Text('רכז אשכול'),
               ),
             ],

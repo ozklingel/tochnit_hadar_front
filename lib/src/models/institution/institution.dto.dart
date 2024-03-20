@@ -92,3 +92,7 @@ class InstitutionDto with _$InstitutionDto {
   factory InstitutionDto.fromJson(Map<String, dynamic> json) =>
       _$InstitutionDtoFromJson(json);
 }
+
+extension InstitutionX on InstitutionDto {
+  bool get isEmpty => id.isEmpty;
+}

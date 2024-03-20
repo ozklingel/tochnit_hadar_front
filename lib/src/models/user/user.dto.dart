@@ -6,10 +6,11 @@ part 'user.dto.f.dart';
 part 'user.dto.g.dart';
 
 enum UserRole {
-  melave,
-  rakazMosad,
-  rakazEshkol,
   ahraiTohnit,
+  rakazEshkol,
+  rakazMosad,
+  melave,
+  apprentice,
   other;
 
   String get name {
