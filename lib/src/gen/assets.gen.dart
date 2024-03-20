@@ -154,6 +154,10 @@ class $AssetsImagesGen {
   SvgGenImage get noMessages =>
       const SvgGenImage('assets/images/no-messages.svg');
 
+  /// File path: assets/images/no-notification.svg
+  SvgGenImage get noNotification =>
+      const SvgGenImage('assets/images/no-notification.svg');
+
   /// File path: assets/images/no-tasks.svg
   SvgGenImage get noTasks => const SvgGenImage('assets/images/no-tasks.svg');
 
@@ -198,6 +202,7 @@ class $AssetsImagesGen {
         madad,
         mapa,
         noMessages,
+        noNotification,
         noTasks,
         noData,
         pencil2,

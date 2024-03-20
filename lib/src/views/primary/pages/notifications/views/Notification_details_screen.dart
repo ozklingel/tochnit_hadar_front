@@ -4,6 +4,7 @@ import 'package:hadar_program/src/models/notification/notification.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/notifications/views/widgets/notification_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -17,7 +18,6 @@ class NotificationDetailsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    Logger().d("ttttttttttttttt in ");
 
     final message = ref.watch(
       notificationsControllerProvider.select(
@@ -45,8 +45,11 @@ class NotificationDetailsScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('פרטי הודעה'),
+        title: const Text('פרטי התראה'),
         centerTitle: true,
+      ),
+        body: NotificationWidget.expanded(
+        message: message,
       ),
     );
   }

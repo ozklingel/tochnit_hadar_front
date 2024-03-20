@@ -85,7 +85,7 @@ class NotificationWidget extends ConsumerWidget {
                       if (message.numOfLinesDisplay == 2)
                         const SizedBox(height: 12),
                       if (message.numOfLinesDisplay == 2 &&
-                          message.event == "מפגש")
+                          message.event == "פגישה פיזית")
                         Text(
                           " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון של ${fromApprentice.fullName}",
                           style: TextStyles.s16w400cGrey2,
@@ -97,7 +97,7 @@ class NotificationWidget extends ConsumerWidget {
                           style: TextStyles.s16w400cGrey2,
                         ),
                       if (message.numOfLinesDisplay == 2 &&
-                          message.event == "שיחה")
+                          message.event == "שיחה טלפונית")
                         Text(
                           " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה ל${fromApprentice.fullName}",
                           style: TextStyles.s16w400cGrey2,
