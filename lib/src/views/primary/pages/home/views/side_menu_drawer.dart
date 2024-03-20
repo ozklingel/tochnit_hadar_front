@@ -120,6 +120,70 @@ class SideMenuDrawer extends ConsumerWidget {
                   title: const Text('   הגדרות מדדים'),
                   onTap: () => const InstitutionsRouteData().push(context),
                 ),
+              ]else if (user.valueOrNull?.role == UserRole.rakazEshkol) ...[
+                  ListTile(
+                dense: true,
+                leading: const Icon(FluentIcons.data_pie_24_regular),
+                title: const Text('מדדי תוכנית'),
+                onTap: () => const ChartsRouteData().go(context),
+              ),
+              ListTile(
+                dense: true,
+                leading: const Icon(FluentIcons.map_24_regular),
+                title: const Text('מפת מיקומים'),
+                onTap: () => Toaster.unimplemented(),
+              ),
+                ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.person_24_regular),
+                  title: const Text('ניהול משתמשים'),
+                  onTap: () => Toaster.unimplemented(),
+                ),
+                ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.book_open_24_regular),
+                  title: const Text('מוסדות לימוד'),
+                  onTap: () => const InstitutionsRouteData().push(context),
+                ),
+                    ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.book_open_24_regular),
+                  title: const Text('פניות שירות'),
+                  onTap: () => const InstitutionsRouteData().push(context),
+                ),
+                     ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.book_open_24_regular),
+                  title: const Text('   הגדרות התראות'),
+                  onTap: () => const InstitutionsRouteData().push(context),
+                ),
+              ]else if (user.valueOrNull?.role == UserRole.rakazMosad) ...[
+                  ListTile(
+                dense: true,
+                leading: const Icon(FluentIcons.data_pie_24_regular),
+                title: const Text('מדדי תוכנית'),
+                onTap: () => const ChartsRouteData().go(context),
+              ),
+              ListTile(
+                dense: true,
+                leading: const Icon(FluentIcons.map_24_regular),
+                title: const Text('מפת מיקומים'),
+                onTap: () => Toaster.unimplemented(),
+              ),
+                ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.person_24_regular),
+                  title: const Text('פניות שירות '),
+                  onTap: () => Toaster.unimplemented(),
+                ),
+           
+                    ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.book_open_24_regular),
+                  title: const Text('   הגדרות התראות'),
+                  onTap: () => const InstitutionsRouteData().push(context),
+                ),
+                 
               ],
               ListTile(
                 dense: true,
