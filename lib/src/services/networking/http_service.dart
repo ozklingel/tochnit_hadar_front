@@ -62,6 +62,18 @@ class HttpService {
     return response;
   }
 
+  static getUserAlert(userid) async {
+    final response = await http.get(
+      Uri.parse("${Consts.baseUrl}notification_form/get_outbound?userId=$userid"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(response.body);
+    return response;
+  }
   static setSetting(
     userId,
     bool notifyStartWeek,
