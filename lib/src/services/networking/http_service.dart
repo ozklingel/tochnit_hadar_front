@@ -71,7 +71,6 @@ class HttpService {
         'Authorization': 'Bearer $token',
       },
     );
-    print(response.body);
     return response;
   }
   static setSetting(

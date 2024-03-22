@@ -86,7 +86,11 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
             width: 0.80,
           ),
         ),
-        child: DropdownButton2<String>(
+        child: new Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor: Colors.white,
+          ),
+          child:DropdownButton2<String>(
           iconStyleData: const IconStyleData(
             icon: Icon(
               Icons.expand_more_outlined,
@@ -128,7 +132,7 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
               // print(DropdownButtonExample.subject);
             });
           },
-        ),
+        )),
       ),
     );
   }

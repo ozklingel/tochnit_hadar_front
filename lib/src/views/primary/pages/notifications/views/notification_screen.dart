@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
@@ -39,9 +40,11 @@ class NotificationScreen extends HookConsumerWidget {
           appBar: AppBar(
             centerTitle: true,
             actions: [
+              SizedBox(width: 10,),
+              
               GestureDetector(
                 child: const Icon(
-                  Icons.settings,
+                  FluentIcons.more_vertical_24_regular,
                   color: Colors.black,
                 ),
                 onTap: () => const NotificationSettingRouteData().go(context),

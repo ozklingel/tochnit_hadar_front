@@ -21,11 +21,15 @@ class SideMenuDrawer extends ConsumerWidget {
     final user = ref.watch(userServiceProvider);
     
     return Drawer(
-      child: ListView(
+      child:      Container(
+    color: Colors.white,
+          child:ListView(
         children: <Widget>[
           SizedBox(
             height: 250.0,
             child: DrawerHeader(
+                  decoration: BoxDecoration(color: Colors.white),
+
               child: Column(
                 children: [
                   Row(
@@ -64,6 +68,7 @@ class SideMenuDrawer extends ConsumerWidget {
               ),
             ),
           ),
+          
           ListView(
             shrinkWrap: true,
             children: [
@@ -88,7 +93,7 @@ class SideMenuDrawer extends ConsumerWidget {
                 dense: true,
                 leading: const Icon(FluentIcons.data_pie_24_regular),
                 title: const Text('מדדי תוכנית'),
-                onTap: () => const ChartsRouteData().go(context),
+                onTap: () => const SupportRouteData().go(context),
               ),
               ListTile(
                 dense: true,
@@ -192,7 +197,7 @@ class SideMenuDrawer extends ConsumerWidget {
                 onTap: () => const NotificationSettingRouteData().go(context),
               ),     ListTile(
                 dense: true,
-                leading: const Icon(FluentIcons.clock_alarm_16_filled),
+                leading: const Icon(Icons.notifications_none),
                 title: const Text(' התראות'),
                 onTap: () => const NotificationRouteData().go(context),
               ),
@@ -208,7 +213,7 @@ class SideMenuDrawer extends ConsumerWidget {
             ],
           ),
         ],
-      ),
+      )),
     );
   }
 }
