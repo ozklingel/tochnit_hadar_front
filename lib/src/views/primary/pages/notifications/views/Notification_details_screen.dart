@@ -6,7 +6,6 @@ import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/views/widgets/notification_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 class NotificationDetailsScreen extends HookConsumerWidget {
   const NotificationDetailsScreen({
