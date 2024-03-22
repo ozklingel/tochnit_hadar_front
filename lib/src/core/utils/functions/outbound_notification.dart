@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/networking/http_service.dart';
 import '../../../services/notifications/local_notification_service.dart';
 
-
 Future<void> initializeNotificationsService() async {
   final service = FlutterBackgroundService();
 
@@ -142,11 +141,14 @@ void onStart(ServiceInstance service) async {
         );
       }
     }
-    var userid="549247616";
-    var outbound_notifications= HttpService.getUserAlert(userid);
+
+    const userid = "549247616";
+
+    final outboundNotifications = HttpService.getUserAlert(userid);
+
     await LocalNotifications.init();
     LocalNotifications.showSimpleNotification(
-      title: outbound_notifications.toString(),
+      title: outboundNotifications.toString(),
       body: "This is a Oz notification",
       payload: "This is Oz data",
     );
@@ -173,4 +175,3 @@ void onStart(ServiceInstance service) async {
     );
   });
 }
-

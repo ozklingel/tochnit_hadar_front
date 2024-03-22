@@ -17,7 +17,6 @@ class NotificationDetailsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-
     final message = ref.watch(
       notificationsControllerProvider.select(
         (val) {
@@ -47,7 +46,7 @@ class NotificationDetailsScreen extends HookConsumerWidget {
         title: const Text('פרטי התראה'),
         centerTitle: true,
       ),
-        body: NotificationWidget.expanded(
+      body: NotificationWidget.expanded(
         message: message,
       ),
     );

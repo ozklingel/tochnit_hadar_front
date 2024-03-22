@@ -86,53 +86,54 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
             width: 0.80,
           ),
         ),
-        child: new Theme(
+        child: Theme(
           data: Theme.of(context).copyWith(
             canvasColor: Colors.white,
           ),
-          child:DropdownButton2<String>(
-          iconStyleData: const IconStyleData(
-            icon: Icon(
-              Icons.expand_more_outlined,
+          child: DropdownButton2<String>(
+            iconStyleData: const IconStyleData(
+              icon: Icon(
+                Icons.expand_more_outlined,
+              ),
+              openMenuIcon: Icon(
+                Icons.expand_less_outlined,
+              ),
+              iconSize: 20,
+              iconEnabledColor: Colors.black,
+              iconDisabledColor: Colors.grey,
             ),
-            openMenuIcon: Icon(
-              Icons.expand_less_outlined,
+            isDense: true,
+            hint: Text(
+              " נושא",
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).hintColor,
+              ),
             ),
-            iconSize: 20,
-            iconEnabledColor: Colors.black,
-            iconDisabledColor: Colors.grey,
-          ),
-          isDense: true,
-          hint: Text(
-            " נושא",
-            style: TextStyle(
-              fontSize: 15,
-              color: Theme.of(context).hintColor,
+            items: menuItems,
+            selectedItemBuilder: (context) => list
+                .map(
+                  (text) => Text(
+                    text,
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                )
+                .toList(),
+            value: selectedValue,
+            buttonStyleData: const ButtonStyleData(
+              height: 40,
+              width: 400,
             ),
+            onChanged: (String? value) {
+              setState(() {
+                DropdownButtonExample.subject = value!;
+                // print(DropdownButtonExample.subject);
+                selectedValue = value;
+                // print(DropdownButtonExample.subject);
+              });
+            },
           ),
-          items: menuItems,
-          selectedItemBuilder: (context) => list
-              .map(
-                (text) => Text(
-                  text,
-                  style: const TextStyle(fontSize: 15),
-                ),
-              )
-              .toList(),
-          value: selectedValue,
-          buttonStyleData: const ButtonStyleData(
-            height: 40,
-            width: 400,
-          ),
-          onChanged: (String? value) {
-            setState(() {
-              DropdownButtonExample.subject = value!;
-              // print(DropdownButtonExample.subject);
-              selectedValue = value;
-              // print(DropdownButtonExample.subject);
-            });
-          },
-        )),
+        ),
       ),
     );
   }
