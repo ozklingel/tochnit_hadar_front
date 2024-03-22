@@ -1,12 +1,15 @@
 // ignore_for_file: unused_element
 
-import 'dart:io';
+import 'dart:async';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
@@ -19,30 +22,58 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
+import 'package:hadar_program/src/views/widgets/list/user_search_results_widget.dart';
+import 'package:hadar_program/src/views/widgets/maps/google_map_widget.dart';
+import 'package:hadar_program/src/views/widgets/wrappers/fade_indexed_stack.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+enum _Sort {
+  a2zByFirstName,
+  a2zByLastName,
+  z2aByFirstName,
+  z2aByLastName,
+  activeToInactive,
+  inactiveToActive,
+}
+
 class UsersScreenBody extends HookConsumerWidget {
-  const UsersScreenBody({super.key});
+  const UsersScreenBody({
+    super.key,
+    required this.isMapOpen,
+  });
+
+  final bool isMapOpen;
 
   @override
   Widget build(BuildContext context, ref) {
+    final isMapShown = useState(isMapOpen);
+    final isSearchOpen = useState(!isMapOpen);
+    final mapController = useRef(Completer<GoogleMapController>());
+    final mapCameraPosition = useState<CameraPosition?>(null);
     final users = ref.watch(usersControllerProvider);
     final filters = useState(const FilterDto());
-    final selectedApprenticeIds = useState<List<String>>([]);
+    final selectedApprentices = useState<List<ApprenticeDto>>([]);
     final compounds = ref.watch(compoundControllerProvider).valueOrNull;
     final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
+    final searchController = useTextEditingController();
+    useListenable(searchController);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('משתמשים'),
         actions: [
-          if (selectedApprenticeIds.value.isNotEmpty) ...[
+          if (selectedApprentices.value.isNotEmpty) ...[
             IconButton(
-              onPressed: () => Toaster.unimplemented(),
+              onPressed: () => selectedApprentices.value.length > 1
+                  ? Toaster.error('backend???')
+                  : launchSms(phone: selectedApprentices.value),
               icon: const Icon(FluentIcons.chat_24_regular),
             ),
             IconButton(
-              onPressed: () => Toaster.unimplemented(),
+              onPressed: () => ReportNewRouteData(
+                initRecipients:
+                    selectedApprentices.value.map((e) => e.id).toList(),
+              ).push(context),
               icon: const Icon(FluentIcons.clipboard_task_24_regular),
             ),
             const SizedBox(width: 12),
@@ -242,10 +273,18 @@ class UsersScreenBody extends HookConsumerWidget {
                     child: Row(
                       children: [
                         TextButton.icon(
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (ctx) => const _SortDialog(),
-                          ),
+                          onPressed: () async {
+                            final result = await showDialog<_Sort>(
+                              context: context,
+                              builder: (ctx) => const _SortDialog(),
+                            );
+
+                            if (result == null) {
+                              return;
+                            }
+
+                            if (result == _Sort.a2zByFirstName) {}
+                          },
                           icon: const Icon(
                             FluentIcons.arrow_sort_down_lines_24_regular,
                             color: AppColors.gray2,
@@ -260,11 +299,8 @@ class UsersScreenBody extends HookConsumerWidget {
                         const Spacer(),
                         TextButton.icon(
                           onPressed: () {
-                            if (Platform.isAndroid || Platform.isIOS) {
-                              Toaster.unimplemented();
-                            } else {
-                              Toaster.unimplemented();
-                            }
+                            isMapShown.value = true;
+                            isSearchOpen.value = false;
                           },
                           style: TextButton.styleFrom(
                             textStyle: TextStyles.s14w400,
@@ -280,73 +316,113 @@ class UsersScreenBody extends HookConsumerWidget {
               ),
             ),
           ),
-          users.when(
-            loading: () => const SliverToBoxAdapter(
-              child: Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
-            ),
-            error: (error, stack) => SliverToBoxAdapter(
-              child: Text(error.toString()),
-            ),
-            data: (usersList) {
-              return SliverList.builder(
-                itemCount: usersList.length,
-                itemBuilder: (ctx, idx) => Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  child: ListTileWithTagsCard(
-                    onlineStatus: usersList[idx].callStatus,
-                    avatar: usersList[idx].avatar,
-                    name: usersList[idx].fullName,
-                    tags: [
-                      usersList[idx].highSchoolInstitution,
-                      usersList[idx].thPeriod,
-                      usersList[idx].militaryPositionNew,
-                      (institutions?.singleWhere(
-                                (element) =>
-                                    element.id == usersList[idx].institutionId,
-                                orElse: () => const InstitutionDto(),
-                              ) ??
-                              const InstitutionDto())
-                          .name,
-                      (compounds?.singleWhere(
-                                (element) =>
-                                    element.id ==
-                                    usersList[idx].militaryCompoundId,
-                                orElse: () => const CompoundDto(),
-                              ) ??
-                              const CompoundDto())
-                          .name,
-                      usersList[idx].militaryUnit,
-                      usersList[idx].maritalStatus,
-                    ],
-                    isSelected:
-                        selectedApprenticeIds.value.contains(usersList[idx].id),
-                    onLongPress: () {
-                      if (selectedApprenticeIds.value
-                          .contains(usersList[idx].id)) {
-                        final newList = selectedApprenticeIds;
-                        newList.value.remove(usersList[idx].id);
-                        selectedApprenticeIds.value = [
-                          ...newList.value,
-                        ];
-                      } else {
-                        selectedApprenticeIds.value = [
-                          ...selectedApprenticeIds.value,
-                          usersList[idx].id,
-                        ];
-                      }
-                    },
-                    onTap: () =>
-                        ApprenticeDetailsRouteData(id: usersList[idx].id)
-                            .go(context),
-                  ),
+          SliverFillRemaining(
+            child: FadeIndexedStack(
+              index: searchController.text.isNotEmpty && isSearchOpen.value
+                  ? 0
+                  : 1,
+              children: [
+                UserListSearchResultsWidget(
+                  searchString: searchController.text,
+                  selectedApprentices: selectedApprentices,
+                  onTapCard: (double lat, double lng) async {
+                    isSearchOpen.value = false;
+                    isMapShown.value = true;
+
+                    final controller = await mapController.value.future;
+
+                    await controller.animateCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                          zoom: Consts.goToObjectGeolocationZoom,
+                          target: LatLng(
+                            lat,
+                            lng,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+                FadeIndexedStack(
+                  index: isMapShown.value ? 0 : 1,
+                  children: [
+                    GoogleMapWidget(
+                      mapController: mapController,
+                      onListTypePressed: () => isMapShown.value = false,
+                      cameraPostion: mapCameraPosition.value ??
+                          Consts.defaultCameraPosition,
+                    ),
+                    users.when(
+                      loading: () => const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                      error: (error, stack) => Text(error.toString()),
+                      data: (usersList) {
+                        return ListView.builder(
+                          itemCount: usersList.length,
+                          itemBuilder: (ctx, idx) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            child: ListTileWithTagsCard(
+                              onlineStatus: usersList[idx].callStatus,
+                              avatar: usersList[idx].avatar,
+                              name: usersList[idx].fullName,
+                              tags: [
+                                usersList[idx].highSchoolInstitution,
+                                usersList[idx].thPeriod,
+                                usersList[idx].militaryPositionNew,
+                                (institutions?.singleWhere(
+                                          (element) =>
+                                              element.id ==
+                                              usersList[idx].institutionId,
+                                          orElse: () => const InstitutionDto(),
+                                        ) ??
+                                        const InstitutionDto())
+                                    .name,
+                                (compounds?.singleWhere(
+                                          (element) =>
+                                              element.id ==
+                                              usersList[idx].militaryCompoundId,
+                                          orElse: () => const CompoundDto(),
+                                        ) ??
+                                        const CompoundDto())
+                                    .name,
+                                usersList[idx].militaryUnit,
+                                usersList[idx].maritalStatus,
+                              ],
+                              isSelected: selectedApprentices.value
+                                  .contains(usersList[idx]),
+                              onLongPress: () {
+                                if (selectedApprentices.value
+                                    .contains(usersList[idx])) {
+                                  selectedApprentices.value = [
+                                    ...selectedApprentices.value.where(
+                                      (element) =>
+                                          element.id != usersList[idx].id,
+                                    ),
+                                  ];
+                                } else {
+                                  selectedApprentices.value = [
+                                    ...selectedApprentices.value,
+                                    usersList[idx],
+                                  ];
+                                }
+                              },
+                              onTap: () => ApprenticeDetailsRouteData(
+                                id: usersList[idx].id,
+                              ).go(context),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -354,11 +430,13 @@ class UsersScreenBody extends HookConsumerWidget {
   }
 }
 
-class _SortDialog extends StatelessWidget {
+class _SortDialog extends HookWidget {
   const _SortDialog();
 
   @override
   Widget build(BuildContext context) {
+    final selectedVal = useState(_Sort.a2zByFirstName);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -377,36 +455,36 @@ class _SortDialog extends StatelessWidget {
                 style: TextStyles.s16w400cGrey5,
               ),
               RadioListTile.adaptive(
-                value: 'abc-firstname',
-                groupValue: 'abc-firstname',
-                onChanged: (val) => Toaster.unimplemented(),
+                value: _Sort.a2zByFirstName,
+                groupValue: selectedVal.value,
+                onChanged: (val) => selectedVal.value = _Sort.a2zByFirstName,
                 title: const Text(
                   'א-ב שם פרטי',
                   style: TextStyles.s16w400cGrey2,
                 ),
               ),
               RadioListTile.adaptive(
-                value: 'abc-lastname',
-                groupValue: 'abc-firstname',
-                onChanged: (val) => Toaster.unimplemented(),
+                value: _Sort.a2zByLastName,
+                groupValue: selectedVal.value,
+                onChanged: (val) => selectedVal.value = _Sort.a2zByLastName,
                 title: const Text(
                   'א-ב שם משפחה',
                   style: TextStyles.s16w400cGrey2,
                 ),
               ),
               RadioListTile.adaptive(
-                value: 'active-to-inactive',
-                groupValue: 'abc-firstname',
-                onChanged: (val) => Toaster.unimplemented(),
+                value: _Sort.activeToInactive,
+                groupValue: selectedVal.value,
+                onChanged: (val) => selectedVal.value = _Sort.activeToInactive,
                 title: const Text(
                   'מהפעיל אל הפחות פעיל',
                   style: TextStyles.s16w400cGrey2,
                 ),
               ),
               RadioListTile.adaptive(
-                value: 'inactive-to-active',
-                groupValue: 'abc-firstname',
-                onChanged: (val) => Toaster.unimplemented(),
+                value: _Sort.inactiveToActive,
+                groupValue: selectedVal.value,
+                onChanged: (val) => selectedVal.value = _Sort.inactiveToActive,
                 title: const Text(
                   'מהפחות פעיל אל הפעיל',
                   style: TextStyles.s16w400cGrey2,

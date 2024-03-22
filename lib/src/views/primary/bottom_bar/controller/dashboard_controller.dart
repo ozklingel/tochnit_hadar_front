@@ -11,7 +11,8 @@ class DashboardController extends _$DashboardController {
       return 0;
     }
 
-    if (currentRoute == const ApprenticesOrUsersRouteData().location) {
+    if (currentRoute ==
+        const ApprenticesOrUsersRouteData(isMapOpen: false).location) {
       return 1;
     }
 

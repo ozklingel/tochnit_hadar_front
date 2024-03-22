@@ -6,12 +6,16 @@ part 'user.dto.f.dart';
 part 'user.dto.g.dart';
 
 enum UserRole {
-  ahraiTohnit,
-  rakazEshkol,
-  rakazMosad,
-  melave,
-  apprentice,
-  other;
+  ahraiTohnit(3),
+  rakazEshkol(2),
+  rakazMosad(1),
+  melave(0),
+  apprentice(500),
+  other(800);
+
+  const UserRole(this.val);
+
+  final int val;
 
   String get name {
     switch (this) {

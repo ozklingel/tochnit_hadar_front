@@ -95,7 +95,9 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.map_24_regular),
                     title: const Text('מפת מיקומים'),
-                    onTap: () => Toaster.unimplemented(),
+                    onTap: () =>
+                        const ApprenticesOrUsersRouteData(isMapOpen: true)
+                            .go(context),
                   ),
                   ListTile(
                     dense: true,
@@ -132,7 +134,9 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.map_24_regular),
                     title: const Text('מפת מיקומים'),
-                    onTap: () => Toaster.unimplemented(),
+                    onTap: () =>
+                        const ApprenticesOrUsersRouteData(isMapOpen: true)
+                            .go(context),
                   ),
                   ListTile(
                     dense: true,
@@ -169,7 +173,9 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.map_24_regular),
                     title: const Text('מפת מיקומים'),
-                    onTap: () => Toaster.unimplemented(),
+                    onTap: () =>
+                        const ApprenticesOrUsersRouteData(isMapOpen: true)
+                            .go(context),
                   ),
                   ListTile(
                     dense: true,
