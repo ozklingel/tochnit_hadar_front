@@ -12,13 +12,13 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
@@ -30,8 +30,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 enum _Sort {
   a2zByFirstName,
   a2zByLastName,
-  z2aByFirstName,
-  z2aByLastName,
+  // z2aByFirstName,
+  // z2aByLastName,
   activeToInactive,
   inactiveToActive,
 }
@@ -39,18 +39,15 @@ enum _Sort {
 class UsersScreenBody extends HookConsumerWidget {
   const UsersScreenBody({
     super.key,
-    required this.isMapOpen,
   });
-
-  final bool isMapOpen;
 
   @override
   Widget build(BuildContext context, ref) {
-    final isMapShown = useState(isMapOpen);
-    final isSearchOpen = useState(!isMapOpen);
+    final screenController = ref.watch(usersControllerProvider);
+    final users = screenController.valueOrNull?.users ?? [];
+    final isSearchOpen = useState(false);
     final mapController = useRef(Completer<GoogleMapController>());
     final mapCameraPosition = useState<CameraPosition?>(null);
-    final users = ref.watch(usersControllerProvider);
     final filters = useState(const FilterDto());
     final selectedApprentices = useState<List<ApprenticeDto>>([]);
     final compounds = ref.watch(compoundControllerProvider).valueOrNull;
@@ -290,7 +287,7 @@ class UsersScreenBody extends HookConsumerWidget {
                             color: AppColors.gray2,
                           ),
                           label: Text(
-                            '${(users.valueOrNull ?? []).length} משתמשים',
+                            '${(screenController.valueOrNull?.users ?? []).length} משתמשים',
                             style: TextStyles.s14w400
                                 .copyWith(color: AppColors.gray5),
                           ),
@@ -299,7 +296,9 @@ class UsersScreenBody extends HookConsumerWidget {
                         const Spacer(),
                         TextButton.icon(
                           onPressed: () {
-                            isMapShown.value = true;
+                            ref
+                                .read(usersControllerProvider.notifier)
+                                .mapView(true);
                             isSearchOpen.value = false;
                           },
                           style: TextButton.styleFrom(
@@ -327,7 +326,7 @@ class UsersScreenBody extends HookConsumerWidget {
                   selectedApprentices: selectedApprentices,
                   onTapCard: (double lat, double lng) async {
                     isSearchOpen.value = false;
-                    isMapShown.value = true;
+                    ref.read(usersControllerProvider.notifier).mapView(true);
 
                     final controller = await mapController.value.future;
 
@@ -345,79 +344,74 @@ class UsersScreenBody extends HookConsumerWidget {
                   },
                 ),
                 FadeIndexedStack(
-                  index: isMapShown.value ? 0 : 1,
+                  index: (screenController.valueOrNull?.isMapOpen ?? false)
+                      ? 0
+                      : 1,
                   children: [
                     GoogleMapWidget(
                       mapController: mapController,
-                      onListTypePressed: () => isMapShown.value = false,
+                      onListTypePressed: () => ref
+                          .read(usersControllerProvider.notifier)
+                          .mapView(false),
                       cameraPostion: mapCameraPosition.value ??
                           Consts.defaultCameraPosition,
                     ),
-                    users.when(
-                      loading: () => const Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
-                      error: (error, stack) => Text(error.toString()),
-                      data: (usersList) {
-                        return ListView.builder(
-                          itemCount: usersList.length,
-                          itemBuilder: (ctx, idx) => Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            child: ListTileWithTagsCard(
-                              onlineStatus: usersList[idx].callStatus,
-                              avatar: usersList[idx].avatar,
-                              name: usersList[idx].fullName,
-                              tags: [
-                                usersList[idx].highSchoolInstitution,
-                                usersList[idx].thPeriod,
-                                usersList[idx].militaryPositionNew,
-                                (institutions?.singleWhere(
-                                          (element) =>
-                                              element.id ==
-                                              usersList[idx].institutionId,
-                                          orElse: () => const InstitutionDto(),
-                                        ) ??
-                                        const InstitutionDto())
-                                    .name,
-                                (compounds?.singleWhere(
-                                          (element) =>
-                                              element.id ==
-                                              usersList[idx].militaryCompoundId,
-                                          orElse: () => const CompoundDto(),
-                                        ) ??
-                                        const CompoundDto())
-                                    .name,
-                                usersList[idx].militaryUnit,
-                                usersList[idx].maritalStatus,
-                              ],
-                              isSelected: selectedApprentices.value
-                                  .contains(usersList[idx]),
-                              onLongPress: () {
-                                if (selectedApprentices.value
-                                    .contains(usersList[idx])) {
-                                  selectedApprentices.value = [
-                                    ...selectedApprentices.value.where(
+                    ListView.builder(
+                      itemCount: users.length,
+                      itemBuilder: (ctx, idx) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        child: ListTileWithTagsCard(
+                          onlineStatus: users[idx].callStatus,
+                          avatar: users[idx].avatar,
+                          name: users[idx].fullName,
+                          tags: [
+                            users[idx].highSchoolInstitution,
+                            users[idx].thPeriod,
+                            users[idx].militaryPositionNew,
+                            (institutions?.singleWhere(
                                       (element) =>
-                                          element.id != usersList[idx].id,
-                                    ),
-                                  ];
-                                } else {
-                                  selectedApprentices.value = [
-                                    ...selectedApprentices.value,
-                                    usersList[idx],
-                                  ];
-                                }
-                              },
-                              onTap: () => ApprenticeDetailsRouteData(
-                                id: usersList[idx].id,
-                              ).go(context),
-                            ),
-                          ),
-                        );
-                      },
+                                          element.id ==
+                                          users[idx].institutionId,
+                                      orElse: () => const InstitutionDto(),
+                                    ) ??
+                                    const InstitutionDto())
+                                .name,
+                            (compounds?.singleWhere(
+                                      (element) =>
+                                          element.id ==
+                                          users[idx].militaryCompoundId,
+                                      orElse: () => const CompoundDto(),
+                                    ) ??
+                                    const CompoundDto())
+                                .name,
+                            users[idx].militaryUnit,
+                            users[idx].maritalStatus,
+                          ],
+                          isSelected:
+                              selectedApprentices.value.contains(users[idx]),
+                          onLongPress: () {
+                            if (selectedApprentices.value
+                                .contains(users[idx])) {
+                              selectedApprentices.value = [
+                                ...selectedApprentices.value.where(
+                                  (element) => element.id != users[idx].id,
+                                ),
+                              ];
+                            } else {
+                              selectedApprentices.value = [
+                                ...selectedApprentices.value,
+                                users[idx],
+                              ];
+                            }
+                          },
+                          onTap: () => ApprenticeDetailsRouteData(
+                            id: users[idx].id,
+                          ).go(context),
+                        ),
+                      ),
                     ),
                   ],
                 ),

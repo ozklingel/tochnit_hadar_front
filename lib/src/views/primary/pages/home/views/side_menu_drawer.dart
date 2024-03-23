@@ -6,6 +6,7 @@ import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -95,9 +96,10 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.map_24_regular),
                     title: const Text('מפת מיקומים'),
-                    onTap: () =>
-                        const ApprenticesOrUsersRouteData(isMapOpen: true)
-                            .go(context),
+                    onTap: () {
+                      ref.read(usersControllerProvider.notifier).mapView(true);
+                      const ApprenticesOrUsersRouteData().go(context);
+                    },
                   ),
                   ListTile(
                     dense: true,
@@ -120,7 +122,7 @@ class SideMenuDrawer extends ConsumerWidget {
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.book_open_24_regular),
-                    title: const Text('   הגדרות מדדים'),
+                    title: const Text('הגדרות מדדים'),
                     onTap: () => const InstitutionsRouteData().push(context),
                   ),
                 ] else if (user.valueOrNull?.role == UserRole.rakazEshkol) ...[
@@ -134,9 +136,10 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.map_24_regular),
                     title: const Text('מפת מיקומים'),
-                    onTap: () =>
-                        const ApprenticesOrUsersRouteData(isMapOpen: true)
-                            .go(context),
+                    onTap: () {
+                      ref.read(usersControllerProvider.notifier).mapView(true);
+                      const ApprenticesOrUsersRouteData().go(context);
+                    },
                   ),
                   ListTile(
                     dense: true,
@@ -173,9 +176,10 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.map_24_regular),
                     title: const Text('מפת מיקומים'),
-                    onTap: () =>
-                        const ApprenticesOrUsersRouteData(isMapOpen: true)
-                            .go(context),
+                    onTap: () {
+                      ref.read(usersControllerProvider.notifier).mapView(true);
+                      const ApprenticesOrUsersRouteData().go(context);
+                    },
                   ),
                   ListTile(
                     dense: true,

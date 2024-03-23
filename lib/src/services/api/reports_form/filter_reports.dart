@@ -1,7 +1,7 @@
 import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/services/arch/flags_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/models/filter.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'filter_reports.g.dart';

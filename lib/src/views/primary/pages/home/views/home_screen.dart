@@ -27,9 +27,14 @@ class HomeScreen extends ConsumerWidget {
     // final apprentices =
     //     ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
-    final user = ref.watch(userServiceProvider).valueOrNull ?? const UserDto();
+    final userProvider = ref.watch(userServiceProvider);
+    final user = userProvider.valueOrNull ?? const UserDto();
 
     // Logger().d(user);
+
+    if (userProvider.isLoading) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
 
     return Scaffold(
       drawer: const SideMenuDrawer(),
@@ -43,7 +48,8 @@ class HomeScreen extends ConsumerWidget {
                 loading: () => UnreadCounterBadgeWidget(
                   isLoading: true,
                   child: IconButton(
-                    onPressed: () => {const NotificationRouteData().go(context)},
+                    onPressed: () =>
+                        {const NotificationRouteData().go(context)},
                     icon: const Icon(Icons.notifications_none),
                   ),
                 ),

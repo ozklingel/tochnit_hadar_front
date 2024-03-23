@@ -479,15 +479,11 @@ class ReportDetailsRouteData extends GoRouteData {
 }
 
 class ApprenticesOrUsersRouteData extends GoRouteData {
-  const ApprenticesOrUsersRouteData({
-    this.isMapOpen = false,
-  });
-
-  final bool isMapOpen;
+  const ApprenticesOrUsersRouteData();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return ApprenticesOrUsersScreen(isMapOpen: isMapOpen);
+    return const ApprenticesOrUsersScreen();
   }
 }
 

@@ -38,7 +38,7 @@ class BottomNavigationWidget extends ConsumerWidget {
         child: BottomNavigationBar(
           backgroundColor: AppColors.scafooldBottomNavBackgroundColor,
           currentIndex: navShell.currentIndex,
-          onTap: (value) => navShell.goBranch(value),
+          onTap: (value) => navShell.goBranch(value, initialLocation: true),
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppColors.blue03,
           selectedLabelStyle: TextStyles.s12w500.copyWith(
@@ -67,7 +67,19 @@ class BottomNavigationWidget extends ConsumerWidget {
               icon: _MailIconWidget(),
               label: 'הודעות',
             ),
-            if (user.valueOrNull?.role == UserRole.melave)
+            if (user.isLoading)
+              const BottomNavigationBarItem(
+                activeIcon: SizedBox.square(
+                  dimension: 24,
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+                icon: SizedBox.square(
+                  dimension: 24,
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+                label: 'loading',
+              )
+            else if (user.valueOrNull?.role == UserRole.melave)
               const BottomNavigationBarItem(
                 activeIcon: Icon(FluentIcons.person_24_regular),
                 icon: Icon(FluentIcons.person_24_regular),

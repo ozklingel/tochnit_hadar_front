@@ -8,10 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class ApprenticesOrUsersScreen extends ConsumerWidget {
   const ApprenticesOrUsersScreen({
     super.key,
-    required this.isMapOpen,
   });
-
-  final bool isMapOpen;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -25,15 +22,11 @@ class ApprenticesOrUsersScreen extends ConsumerWidget {
 
     switch (user.valueOrNull?.role) {
       case UserRole.melave:
-        return ApprenticesScreenBody(
-          isMapOpen: isMapOpen,
-        );
+        return const ApprenticesScreenBody();
       case UserRole.ahraiTohnit:
       case UserRole.rakazEshkol:
       case UserRole.rakazMosad:
-        return UsersScreenBody(
-          isMapOpen: isMapOpen,
-        );
+        return const UsersScreenBody();
       default:
         return const Center(
           child: Text('USER ROLE?'),

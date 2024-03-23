@@ -26,14 +26,11 @@ import 'package:skeletonizer/skeletonizer.dart';
 class ApprenticesScreenBody extends HookConsumerWidget {
   const ApprenticesScreenBody({
     super.key,
-    required this.isMapOpen,
   });
-
-  final bool isMapOpen;
 
   @override
   Widget build(BuildContext context, ref) {
-    final isMapShown = useState(isMapOpen);
+    final isMapShown = useState(false);
     final isSearchOpen = useState(false);
     final selectedApprentices = useState(<ApprenticeDto>[]);
     final mapController = useRef(Completer<GoogleMapController>());
