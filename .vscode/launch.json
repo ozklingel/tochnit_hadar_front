@@ -19,7 +19,7 @@
             "name": "hadar_program (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "debug"
         }
     ]
 }
