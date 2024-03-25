@@ -77,7 +77,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.mail_24_regular),
                     title: const Text('הודעות מערכת'),
-                    onTap: () => () => const MessagesRouteData().go(context),
+                    onTap: () => const MessagesRouteData().go(context),
                   ),
                   ListTile(
                     dense: true,
