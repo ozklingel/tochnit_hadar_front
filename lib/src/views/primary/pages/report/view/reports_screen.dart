@@ -332,7 +332,7 @@ class ReportsScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: SearchAppBar(
-        text: 'דיווחים',
+        title: const Text('דיווחים'),
         isSearchOpen: isSearchOpen,
         controller: searchController,
         actions: [

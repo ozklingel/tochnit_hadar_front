@@ -40,17 +40,17 @@ class CompoundOrCityCard extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: onTap,
-            child: const Padding(
-              padding: EdgeInsets.all(16),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'בה”ד 1',
+                    title,
                     style: TextStyles.s16w500cGrey2,
                   ),
                   Text(
-                    'כתובת: הנגב 8, בה”ד 1',
+                    address,
                     style: TextStyles.s14w300cGray2,
                   ),
                 ],

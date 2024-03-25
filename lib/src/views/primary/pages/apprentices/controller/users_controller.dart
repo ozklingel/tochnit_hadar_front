@@ -1,8 +1,19 @@
+import 'package:collection/collection.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/models/users_screen.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'users_controller.g.dart';
+
+enum Sort {
+  a2zByFirstName,
+  a2zByLastName,
+  // z2aByFirstName,
+  // z2aByLastName,
+  activeToInactive,
+  inactiveToActive,
+}
 
 @Riverpod(
   dependencies: [
@@ -25,6 +36,30 @@ class UsersController extends _$UsersController {
         isMapOpen: isMapOpen,
       ),
     );
+  }
+
+  void sort(Sort sort) {
+    switch (sort) {
+      case Sort.a2zByFirstName:
+        state = AsyncData(
+          state.requireValue.copyWith(
+            users: state.requireValue.users
+                .sortedBy((element) => element.firstName),
+          ),
+        );
+        break;
+      case Sort.a2zByLastName:
+        state = AsyncData(
+          state.requireValue.copyWith(
+            users: state.requireValue.users
+                .sortedBy((element) => element.lastName),
+          ),
+        );
+        break;
+      case Sort.activeToInactive:
+      case Sort.inactiveToActive:
+        Toaster.unimplemented();
+    }
   }
 
   // Future<bool> addUser() {}

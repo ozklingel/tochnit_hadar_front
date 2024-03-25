@@ -43,6 +43,7 @@ class CompoundDto with _$CompoundDto {
 
 extension CompoundDtoX on CompoundDto {
   LatLng get latLng => LatLng(lat, lng);
+  bool get isEmpty => id.isEmpty;
 }
 
 double _extractLat(String? data) {

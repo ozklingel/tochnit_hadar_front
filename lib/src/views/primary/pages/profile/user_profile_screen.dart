@@ -157,7 +157,6 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
-
     final isEditMode = useState(false);
     final firstNController = useTextEditingController(
       text: user.valueOrNull!.firstName,

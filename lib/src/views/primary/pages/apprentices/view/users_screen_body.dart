@@ -21,20 +21,12 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/controller/com
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
+import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hadar_program/src/views/widgets/list/user_search_results_widget.dart';
 import 'package:hadar_program/src/views/widgets/maps/google_map_widget.dart';
 import 'package:hadar_program/src/views/widgets/wrappers/fade_indexed_stack.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-enum _Sort {
-  a2zByFirstName,
-  a2zByLastName,
-  // z2aByFirstName,
-  // z2aByLastName,
-  activeToInactive,
-  inactiveToActive,
-}
 
 class UsersScreenBody extends HookConsumerWidget {
   const UsersScreenBody({
@@ -44,7 +36,8 @@ class UsersScreenBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final screenController = ref.watch(usersControllerProvider);
-    final users = screenController.valueOrNull?.users ?? [];
+    final allUsers = screenController.valueOrNull?.users ?? [];
+    final sort = useState(Sort.a2zByFirstName);
     final isSearchOpen = useState(false);
     final mapController = useRef(Completer<GoogleMapController>());
     final mapCameraPosition = useState<CameraPosition?>(null);
@@ -54,29 +47,18 @@ class UsersScreenBody extends HookConsumerWidget {
     final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
     final searchController = useTextEditingController();
     useListenable(searchController);
+    final users = allUsers
+        .where(
+          (element) => element.fullName
+              .contains(searchController.value.text.toLowerCase()),
+        )
+        .toList();
+
+    if (screenController.isLoading) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('משתמשים'),
-        actions: [
-          if (selectedApprentices.value.isNotEmpty) ...[
-            IconButton(
-              onPressed: () => selectedApprentices.value.length > 1
-                  ? Toaster.error('backend???')
-                  : launchSms(phone: selectedApprentices.value),
-              icon: const Icon(FluentIcons.chat_24_regular),
-            ),
-            IconButton(
-              onPressed: () => ReportNewRouteData(
-                initRecipients:
-                    selectedApprentices.value.map((e) => e.id).toList(),
-              ).push(context),
-              icon: const Icon(FluentIcons.clipboard_task_24_regular),
-            ),
-            const SizedBox(width: 12),
-          ],
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => const NewUserRouteData().push(context),
         heroTag: UniqueKey(),
@@ -107,28 +89,72 @@ class UsersScreenBody extends HookConsumerWidget {
                         Expanded(
                           child: SizedBox(
                             height: 44,
-                            child: SearchBar(
-                              elevation: MaterialStateProperty.all(0),
-                              backgroundColor: MaterialStateColor.resolveWith(
-                                (states) => AppColors.blue08,
+                            child: SearchAppBar(
+                              controller: searchController,
+                              isSearchOpen: isSearchOpen,
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    onPressed: () => isSearchOpen.value = true,
+                                    icon: const Icon(
+                                      FluentIcons.search_24_regular,
+                                    ),
+                                  ),
+                                  const Text('משתמשים'),
+                                  const SizedBox(),
+                                ],
                               ),
-                              padding: MaterialStateProperty.all(
-                                const EdgeInsets.symmetric(horizontal: 16),
-                              ),
-                              leading: const Icon(
-                                FluentIcons.line_horizontal_3_20_filled,
-                              ),
-                              trailing: const [
-                                Icon(
-                                  FluentIcons.search_24_filled,
-                                  size: 20,
-                                ),
+                              actions: [
+                                if (selectedApprentices.value.isNotEmpty) ...[
+                                  IconButton(
+                                    onPressed: () =>
+                                        selectedApprentices.value.length > 1
+                                            ? Toaster.error('backend???')
+                                            : launchSms(
+                                                phone:
+                                                    selectedApprentices.value,
+                                              ),
+                                    icon:
+                                        const Icon(FluentIcons.chat_24_regular),
+                                  ),
+                                  IconButton(
+                                    onPressed: () => ReportNewRouteData(
+                                      initRecipients: selectedApprentices.value
+                                          .map((e) => e.id)
+                                          .toList(),
+                                    ).push(context),
+                                    icon: const Icon(
+                                      FluentIcons.clipboard_task_24_regular,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                ],
                               ],
-                              hintText: 'חיפוש',
-                              hintStyle: MaterialStateProperty.all(
-                                TextStyles.s16w400cGrey2,
-                              ),
                             ),
+                            // SearchAppBar(
+                            //   elevation: MaterialStateProperty.all(0),
+                            //   backgroundColor: MaterialStateColor.resolveWith(
+                            //     (states) => AppColors.blue08,
+                            //   ),
+                            //   padding: MaterialStateProperty.all(
+                            //     const EdgeInsets.symmetric(horizontal: 16),
+                            //   ),
+                            //   leading: const Icon(
+                            //     FluentIcons.line_horizontal_3_20_filled,
+                            //   ),
+                            //   trailing: const [
+                            //     Icon(
+                            //       FluentIcons.search_24_filled,
+                            //       size: 20,
+                            //     ),
+                            //   ],
+                            //   hintText: 'חיפוש',
+                            //   hintStyle: MaterialStateProperty.all(
+                            //     TextStyles.s16w400cGrey2,
+                            //   ),
+                            // ),
                           ),
                         ),
                         const SizedBox(width: 6),
@@ -271,16 +297,21 @@ class UsersScreenBody extends HookConsumerWidget {
                       children: [
                         TextButton.icon(
                           onPressed: () async {
-                            final result = await showDialog<_Sort>(
+                            final result = await showDialog<Sort>(
                               context: context,
-                              builder: (ctx) => const _SortDialog(),
+                              builder: (ctx) => _SortDialog(
+                                initSortVal: sort.value,
+                              ),
                             );
 
                             if (result == null) {
                               return;
                             }
 
-                            if (result == _Sort.a2zByFirstName) {}
+                            sort.value = result;
+                            ref
+                                .read(usersControllerProvider.notifier)
+                                .sort(result);
                           },
                           icon: const Icon(
                             FluentIcons.arrow_sort_down_lines_24_regular,
@@ -425,11 +456,15 @@ class UsersScreenBody extends HookConsumerWidget {
 }
 
 class _SortDialog extends HookWidget {
-  const _SortDialog();
+  const _SortDialog({
+    required this.initSortVal,
+  });
+
+  final Sort initSortVal;
 
   @override
   Widget build(BuildContext context) {
-    final selectedVal = useState(_Sort.a2zByFirstName);
+    final selectedVal = useState(initSortVal);
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -449,36 +484,40 @@ class _SortDialog extends HookWidget {
                 style: TextStyles.s16w400cGrey5,
               ),
               RadioListTile.adaptive(
-                value: _Sort.a2zByFirstName,
+                value: Sort.a2zByFirstName,
                 groupValue: selectedVal.value,
-                onChanged: (val) => selectedVal.value = _Sort.a2zByFirstName,
+                onChanged: (val) =>
+                    Navigator.of(context).pop(Sort.a2zByFirstName),
                 title: const Text(
                   'א-ב שם פרטי',
                   style: TextStyles.s16w400cGrey2,
                 ),
               ),
               RadioListTile.adaptive(
-                value: _Sort.a2zByLastName,
+                value: Sort.a2zByLastName,
                 groupValue: selectedVal.value,
-                onChanged: (val) => selectedVal.value = _Sort.a2zByLastName,
+                onChanged: (val) =>
+                    Navigator.of(context).pop(Sort.a2zByLastName),
                 title: const Text(
                   'א-ב שם משפחה',
                   style: TextStyles.s16w400cGrey2,
                 ),
               ),
               RadioListTile.adaptive(
-                value: _Sort.activeToInactive,
+                value: Sort.activeToInactive,
                 groupValue: selectedVal.value,
-                onChanged: (val) => selectedVal.value = _Sort.activeToInactive,
+                onChanged: (val) =>
+                    Navigator.of(context).pop(Sort.activeToInactive),
                 title: const Text(
                   'מהפעיל אל הפחות פעיל',
                   style: TextStyles.s16w400cGrey2,
                 ),
               ),
               RadioListTile.adaptive(
-                value: _Sort.inactiveToActive,
+                value: Sort.inactiveToActive,
                 groupValue: selectedVal.value,
-                onChanged: (val) => selectedVal.value = _Sort.inactiveToActive,
+                onChanged: (val) =>
+                    Navigator.of(context).pop(Sort.inactiveToActive),
                 title: const Text(
                   'מהפחות פעיל אל הפעיל',
                   style: TextStyles.s16w400cGrey2,

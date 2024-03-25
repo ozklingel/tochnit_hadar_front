@@ -57,7 +57,7 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
       appBar: SearchAppBar(
         controller: searchController,
         isSearchOpen: isSearchOpen,
-        text: 'משימות לביצוע',
+        title: const Text('משימות לביצוע'),
         actions: [
           IconButton(
             onPressed: () => isSearchOpen.value = true,
@@ -285,7 +285,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
 
     return Scaffold(
       appBar: SearchAppBar(
-        text: 'משימות לביצוע',
+        title: const Text('משימות לביצוע'),
         isSearchOpen: isSearchOpen,
         controller: searchController,
         actions: [

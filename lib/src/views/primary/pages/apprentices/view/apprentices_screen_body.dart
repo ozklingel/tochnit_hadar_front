@@ -23,6 +23,7 @@ import 'package:hadar_program/src/views/widgets/wrappers/fade_indexed_stack.dart
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+@Deprecated('use @UsersScreenBody')
 class ApprenticesScreenBody extends HookConsumerWidget {
   const ApprenticesScreenBody({
     super.key,

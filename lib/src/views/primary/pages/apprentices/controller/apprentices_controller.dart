@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:faker/faker.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
@@ -194,33 +195,64 @@ class ApprenticesController extends _$ApprenticesController {
     return false;
   }
 
-  FutureOr<bool> editApprentice({
+  FutureOr<bool> edit({
     required ApprenticeDto apprentice,
-  }) {
-    final newState = state.valueOrNull ?? [];
+  }) async {
+    try {
+      final result = await ref.read(dioServiceProvider).put(
+            Consts.updateApprentice,
+            queryParameters: {
+              'apprenticetId': apprentice.id,
+            },
+            data: jsonEncode({
+              'militaryCompoundId': apprentice.militaryCompoundId,
+              'militaryUnit': apprentice.militaryUnit,
+              'militaryPositionNew': apprentice.militaryPositionNew,
+              'militaryPositionOld': apprentice.militaryPositionOld,
+            }),
+          );
 
-    final apprenticeIndex = newState.indexWhere(
-      (element) => element.id == apprentice.id,
-    );
+      if (result.data['result'] == 'success') {
+        ref.invalidate(getApprenticesProvider);
 
-    if (apprenticeIndex == -1) return false;
-
-    newState[apprenticeIndex] = apprentice;
-
-    final oldState = state.valueOrNull ?? [];
-
-    state = AsyncData([...newState]);
-
-    return Future.delayed(const Duration(milliseconds: 200)).then((_) {
-      if (faker.randomGenerator.boolean()) {
         return true;
       }
+    } catch (e) {
+      Logger().e('failed to update apprentice', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
 
-      state = AsyncData([...oldState]);
-
-      return false;
-    });
+    return false;
   }
+
+  // FutureOr<bool> editApprentice({
+  //   required ApprenticeDto apprentice,
+  // }) {
+  //   final newState = state.valueOrNull ?? [];
+
+  //   final apprenticeIndex = newState.indexWhere(
+  //     (element) => element.id == apprentice.id,
+  //   );
+
+  //   if (apprenticeIndex == -1) return false;
+
+  //   newState[apprenticeIndex] = apprentice;
+
+  //   final oldState = state.valueOrNull ?? [];
+
+  //   state = AsyncData([...newState]);
+
+  //   return Future.delayed(const Duration(milliseconds: 200)).then((_) {
+  //     if (faker.randomGenerator.boolean()) {
+  //       return true;
+  //     }
+
+  //     state = AsyncData([...oldState]);
+
+  //     return false;
+  //   });
+  // }
 
   FutureOr<bool> filterUsers(FilterDto filter) async {
     _filters = filter;

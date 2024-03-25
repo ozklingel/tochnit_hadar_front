@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentices_screen_body.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/users_screen_body.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -22,7 +21,7 @@ class ApprenticesOrUsersScreen extends ConsumerWidget {
 
     switch (user.valueOrNull?.role) {
       case UserRole.melave:
-        return const ApprenticesScreenBody();
+      // return const ApprenticesScreenBody();
       case UserRole.ahraiTohnit:
       case UserRole.rakazEshkol:
       case UserRole.rakazMosad:

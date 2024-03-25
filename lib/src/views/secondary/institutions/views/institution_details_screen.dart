@@ -10,8 +10,10 @@ import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
+import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
@@ -398,7 +400,7 @@ class _UsersTab extends HookConsumerWidget {
   }
 }
 
-class _GeneralTab extends StatelessWidget {
+class _GeneralTab extends ConsumerWidget {
   const _GeneralTab({
     required this.institution,
   });
@@ -406,14 +408,18 @@ class _GeneralTab extends StatelessWidget {
   final InstitutionDto institution;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final user = ref.watch(userServiceProvider);
+
     return DetailsCard(
       title: 'פרטי מוסד',
-      trailing: IconButton(
-        onPressed: () =>
-            EditInstitutionRouteData(id: institution.id).push(context),
-        icon: const Icon(FluentIcons.edit_24_regular),
-      ),
+      trailing: user.valueOrNull?.role != UserRole.ahraiTohnit
+          ? null
+          : IconButton(
+              onPressed: () =>
+                  EditInstitutionRouteData(id: institution.id).push(context),
+              icon: const Icon(FluentIcons.edit_24_regular),
+            ),
       child: Column(
         children: [
           DetailsRowItem(

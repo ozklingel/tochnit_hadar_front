@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -66,19 +67,18 @@ class _ApprenticeDetailsScreenState
   Widget build(BuildContext context) {
     final user = ref.watch(userServiceProvider);
 
-    final apprentice = ref.watch(
-          apprenticesControllerProvider.select(
-            (value) => value.value?.singleWhere(
-              (element) => element.id == widget.apprenticeId,
-              orElse: () => const ApprenticeDto(),
-            ),
-          ),
-        ) ??
-        const ApprenticeDto();
+    final apprentice =
+        ref.watch(apprenticesControllerProvider).valueOrNull?.singleWhere(
+                  (element) => element.id == widget.apprenticeId,
+                  orElse: () => const ApprenticeDto(),
+                ) ??
+            const ApprenticeDto();
 
     final tabController = useTabController(
       initialLength: 3,
     );
+
+    // Logger().d(apprentice.militaryUnit, error: apprentice.id);
 
     final views = [
       _TohnitHadarTabView(apprentice: apprentice),
@@ -323,7 +323,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                 ) ??
             const CompoundDto();
     final isEditMode = useState(false);
-    final baseController = useTextEditingController(
+    final compoundController = useTextEditingController(
       text: compound.name,
       keys: [apprentice],
     );
@@ -339,6 +339,9 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
       text: apprentice.militaryPositionOld,
       keys: [apprentice],
     );
+    final selectedCompound = useState(compound);
+
+    // Logger().d(apprentice.militaryUnit);
 
     return AnimatedSwitcher(
       duration: Consts.defaultDurationM,
@@ -380,13 +383,89 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      InputFieldContainer(
-                        label: 'שם הבסיס',
-                        isRequired: true,
-                        child: TextField(
-                          controller: baseController,
-                        ),
-                      ),
+                      ref.watch(compoundControllerProvider).when(
+                            loading: () => const Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                            error: (error, stack) => const Center(
+                              child: Text('failed to load bases'),
+                            ),
+                            data: (compounds) => DropdownButtonHideUnderline(
+                              child: DropdownButton2<CompoundDto>(
+                                hint: Text(
+                                  selectedCompound.value.isEmpty
+                                      ? 'שם הבסיס'
+                                      : selectedCompound.value.name,
+                                  style: TextStyles.s16w400cGrey5,
+                                ),
+                                onMenuStateChange: (isOpen) {},
+                                dropdownSearchData: DropdownSearchData(
+                                  searchController: compoundController,
+                                  searchInnerWidgetHeight: 50,
+                                  searchInnerWidget: TextField(
+                                    controller: compoundController,
+                                    decoration: const InputDecoration(
+                                      focusedBorder: UnderlineInputBorder(),
+                                      enabledBorder: InputBorder.none,
+                                      prefixIcon: Icon(Icons.search),
+                                      hintText: 'חיפוש',
+                                      hintStyle: TextStyles.s14w400,
+                                    ),
+                                  ),
+                                ),
+                                style: TextStyles.s16w400cGrey5,
+                                buttonStyleData: ButtonStyleData(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(36),
+                                    border: Border.all(
+                                      color: AppColors.shades300,
+                                    ),
+                                  ),
+                                  elevation: 0,
+                                  padding: const EdgeInsets.only(right: 8),
+                                ),
+                                onChanged: (value) {
+                                  selectedCompound.value = value!;
+                                },
+                                dropdownStyleData: const DropdownStyleData(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(16)),
+                                  ),
+                                ),
+                                iconStyleData: const IconStyleData(
+                                  icon: Padding(
+                                    padding: EdgeInsets.only(left: 16),
+                                    child: RotatedBox(
+                                      quarterTurns: 1,
+                                      child: Icon(
+                                        Icons.chevron_left,
+                                        color: AppColors.grey6,
+                                      ),
+                                    ),
+                                  ),
+                                  openMenuIcon: Padding(
+                                    padding: EdgeInsets.only(left: 16),
+                                    child: RotatedBox(
+                                      quarterTurns: 3,
+                                      child: Icon(
+                                        Icons.chevron_left,
+                                        color: AppColors.grey6,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                items: compounds
+                                    .map(
+                                      (e) => DropdownMenuItem(
+                                        value: e,
+                                        child: Text(e.name),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          ),
                       const SizedBox(height: 32),
                       InputFieldContainer(
                         label: 'שיוך יחידתי',
@@ -422,10 +501,10 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                     .read(
                                       apprenticesControllerProvider.notifier,
                                     )
-                                    .editApprentice(
+                                    .edit(
                                       apprentice: apprentice.copyWith(
                                         militaryCompoundId:
-                                            apprentice.militaryCompoundId,
+                                            selectedCompound.value.id,
                                         militaryUnit: unitController.text,
                                         militaryPositionNew:
                                             positionNewController.text,

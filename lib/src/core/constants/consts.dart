@@ -79,6 +79,8 @@ abstract class Consts {
   static const getAllApprentices = 'userProfile_form/myApprentices';
   static const getAuthUser = 'userProfile_form/getProfileAtributes';
 
+  static const updateApprentice = 'apprentice_Profile_form/update';
+
   // search bar / filter
   static const getAllFiltered = 'search_bar/search_entities';
 

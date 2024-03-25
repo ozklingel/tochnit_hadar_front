@@ -2,19 +2,18 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
-import 'package:hadar_program/src/core/theming/text_styles.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SearchAppBar({
     super.key,
-    required this.text,
+    required this.title,
     required this.isSearchOpen,
     required this.controller,
     required this.actions,
     this.bottom,
   });
 
-  final String text;
+  final Widget title;
   final ValueNotifier<bool> isSearchOpen;
   final TextEditingController controller;
   final List<Widget> actions;
@@ -60,10 +59,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ],
               )
-            : Text(
-                text,
-                style: TextStyles.s22w400cGrey2,
-              ),
+            : title,
       ),
       actions: isSearchOpen.value ? [] : actions,
       bottom: bottom,

@@ -36,7 +36,7 @@ class MessagesScreen extends HookConsumerWidget {
           appBar: SearchAppBar(
             controller: searchController,
             isSearchOpen: isSearchOpen,
-            text: 'הודעות',
+            title: const Text('הודעות'),
             actions: [
               IconButton(
                 onPressed: () => isSearchOpen.value = true,
@@ -199,7 +199,7 @@ class MessagesScreen extends HookConsumerWidget {
           appBar: SearchAppBar(
             controller: searchController,
             isSearchOpen: isSearchOpen,
-            text: 'הודעות נכנסות',
+            title: const Text('הודעות נכנסות'),
             actions: [
               IconButton(
                 onPressed: () => isSearchOpen.value = true,
