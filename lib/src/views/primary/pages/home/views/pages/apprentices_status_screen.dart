@@ -19,16 +19,21 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
     super.key,
     required this.title,
     required this.isExtended,
+    required this.initIndex,
   });
 
   final String title;
   final bool isExtended;
+  final int initIndex;
 
   @override
   Widget build(BuildContext context, ref) {
     final apprentices =
         ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
-    final tabController = useTabController(initialLength: 3);
+    final tabController = useTabController(
+      initialLength: 3,
+      initialIndex: initIndex,
+    );
     final selectedApprentice = useState(const ApprenticeDto());
     final selectedDate = useState(DateTime.now());
     useListenable(tabController);

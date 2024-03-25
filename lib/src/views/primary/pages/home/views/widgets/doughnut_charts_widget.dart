@@ -30,9 +30,10 @@ class DoughnutChartsWidget extends StatelessWidget {
     return ExpansionTileContainer(
       title: 'סטטוס חניכים',
       height: 180,
-      onTap: () => const ApprenticesStatusRouteData().push(context),
       children: [
         _DoughnutChart(
+          onTap: () =>
+              const ApprenticesStatusRouteData(initIndex: 2).push(context),
           title: 'מפגשים',
           data: [
             (x: 'לא תקין', y: meeetingsRed),
@@ -41,6 +42,8 @@ class DoughnutChartsWidget extends StatelessWidget {
           ],
         ),
         _DoughnutChart(
+          onTap: () =>
+              const ApprenticesStatusRouteData(initIndex: 1).push(context),
           title: 'שיחות',
           data: [
             (x: 'לא תקין', y: callsRed),
@@ -58,77 +61,83 @@ class _DoughnutChart extends StatelessWidget {
     super.key,
     required this.title,
     required this.data,
+    required this.onTap,
   });
 
   final String title;
   final List<({String x, double y})> data;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: SizedBox(
-          width: 280,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: SfCircularChart(
-              backgroundColor: Colors.transparent,
-              title: ChartTitle(
-                text: title,
-                alignment: ChartAlignment.far,
-                textStyle: TextStyles.s16w400cGrey1,
-              ),
-              legend: Legend(
-                isVisible: true,
-                itemPadding: 0,
-                alignment: ChartAlignment.center,
-                position: LegendPosition.left,
-                overflowMode: LegendItemOverflowMode.wrap,
-                legendItemBuilder: (legendText, series, point, seriesIndex) =>
-                    Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6) +
-                      const EdgeInsets.only(right: 12),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 6,
-                        backgroundColor: seriesIndex == 0
-                            ? AppColors.blue02
-                            : seriesIndex == 1
-                                ? AppColors.blue04
-                                : AppColors.blue06,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        legendText.split(':').first,
-                        style: TextStyles.s12w400cGrey2,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        legendText.split(':').last,
-                        style: TextStyles.s12w400cGrey4,
-                      ),
-                    ],
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: IgnorePointer(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: SizedBox(
+            width: 280,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: SfCircularChart(
+                backgroundColor: Colors.transparent,
+                title: ChartTitle(
+                  text: title,
+                  alignment: ChartAlignment.far,
+                  textStyle: TextStyles.s16w400cGrey1,
+                ),
+                legend: Legend(
+                  isVisible: true,
+                  itemPadding: 0,
+                  alignment: ChartAlignment.center,
+                  position: LegendPosition.left,
+                  overflowMode: LegendItemOverflowMode.wrap,
+                  legendItemBuilder: (legendText, series, point, seriesIndex) =>
+                      Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6) +
+                        const EdgeInsets.only(right: 12),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 6,
+                          backgroundColor: seriesIndex == 0
+                              ? AppColors.blue02
+                              : seriesIndex == 1
+                                  ? AppColors.blue04
+                                  : AppColors.blue06,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          legendText.split(':').first,
+                          style: TextStyles.s12w400cGrey2,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          legendText.split(':').last,
+                          style: TextStyles.s12w400cGrey4,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+                series: [
+                  DoughnutSeries<({String x, double y}), String>(
+                    explode: true,
+                    radius: '100%',
+                    innerRadius: '70%',
+                    dataSource: data,
+                    xValueMapper: (datum, _) => '${datum.x}:${datum.y.toInt()}',
+                    yValueMapper: (datum, _) => datum.y,
+                    legendIconType: LegendIconType.circle,
+                    pointColorMapper: (datum, index) => index == 0
+                        ? AppColors.blue02
+                        : index == 1
+                            ? AppColors.blue04
+                            : AppColors.blue06,
+                  ),
+                ],
               ),
-              series: [
-                DoughnutSeries<({String x, double y}), String>(
-                  explode: true,
-                  radius: '100%',
-                  innerRadius: '70%',
-                  dataSource: data,
-                  xValueMapper: (datum, _) => '${datum.x}:${datum.y.toInt()}',
-                  yValueMapper: (datum, _) => datum.y,
-                  legendIconType: LegendIconType.circle,
-                  pointColorMapper: (datum, index) => index == 0
-                      ? AppColors.blue02
-                      : index == 1
-                          ? AppColors.blue04
-                          : AppColors.blue06,
-                ),
-              ],
             ),
           ),
         ),

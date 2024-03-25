@@ -180,6 +180,7 @@ class _ForgottenApprentices extends StatelessWidget {
                 builder: (context) => const ApprenticesStatusScreen(
                   isExtended: false,
                   title: 'חניכים נשכחים',
+                  initIndex: 0,
                 ),
               ),
             ),

@@ -138,7 +138,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('מפת מיקומים'),
                     onTap: () {
                       ref.read(usersControllerProvider.notifier).mapView(true);
-                      const ApprenticesStatusRouteData().go(context);
+                      const ApprenticesOrUsersRouteData().go(context);
                     },
                   ),
                   ListTile(
@@ -180,7 +180,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('מפת מיקומים'),
                     onTap: () {
                       ref.read(usersControllerProvider.notifier).mapView(true);
-                      const ApprenticesStatusRouteData().go(context);
+                      const ApprenticesOrUsersRouteData().go(context);
                     },
                   ),
                   ListTile(
