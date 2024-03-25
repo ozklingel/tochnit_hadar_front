@@ -7,7 +7,28 @@ enum MessageType {
   draft,
   customerService,
   sent,
+  incoming,
   other,
+}
+
+enum MessageMethod {
+  sms,
+  whatsapp,
+  system,
+  other;
+
+  String get name {
+    switch (this) {
+      case sms:
+        return 'SMS';
+      case whatsapp:
+        return 'וואטסאפ';
+      case system:
+        return 'הודעת מערכת';
+      default:
+        return 'other?';
+    }
+  }
 }
 
 @JsonSerializable()
@@ -66,20 +87,31 @@ class MessageDto with _$MessageDto {
       defaultValue: [],
     )
     List<String> to,
+    @Default(MessageMethod.other)
+    @JsonKey(
+      fromJson: _extractMessageMethod,
+    )
+    MessageMethod method,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
       _$MessageDtoFromJson(json);
 }
 
+MessageMethod _extractMessageMethod(String? data) {
+  return MessageMethod.other;
+}
+
 MessageType _extractMessageType(String? data) {
   switch (data) {
     case 'פניות_שירות':
       return MessageType.customerService;
-    case 'draft':
+    case 'טיוטות':
       return MessageType.draft;
-    case 'sent':
+    case 'יוצאות':
       return MessageType.sent;
+    case 'נכנסות':
+      return MessageType.incoming;
     default:
       return MessageType.other;
   }

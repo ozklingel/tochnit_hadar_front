@@ -34,7 +34,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
     final msg = ref.watch(newMessageControllerProvider(id: id)).valueOrNull ??
         const MessageDto();
     final selectedRecipients = useState<List<ApprenticeDto>>([]);
-    final type = useState<String?>(null);
+    final msgMethod = useState(MessageMethod.other);
     final title = useTextEditingController();
     final body = useTextEditingController();
     final isAddUserInMsg = useState(false);
@@ -166,12 +166,13 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                       label: 'סוג ההודעה',
                       isRequired: true,
                       child: DropdownButtonHideUnderline(
-                        child: DropdownButton2<String>(
-                          hint: const Text(
-                            'בחר את סוג ההודעה',
+                        child: DropdownButton2<MessageMethod>(
+                          hint: Text(
+                            msgMethod.value == MessageMethod.other
+                                ? 'בחר את סוג ההודעה'
+                                : msgMethod.value.name,
                             style: TextStyles.s16w400cGrey5,
                           ),
-                          value: type.value,
                           onMenuStateChange: (isOpen) {},
                           dropdownSearchData: const DropdownSearchData(
                             searchInnerWidgetHeight: 50,
@@ -197,7 +198,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                             padding: const EdgeInsets.only(right: 8),
                           ),
                           onChanged: (value) {
-                            type.value = value ?? '';
+                            msgMethod.value = value ?? MessageMethod.other;
                           },
                           dropdownStyleData: const DropdownStyleData(
                             decoration: BoxDecoration(
@@ -227,18 +228,18 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                               ),
                             ),
                           ),
-                          items: const [
+                          items: [
                             DropdownMenuItem(
-                              value: 'SMS',
-                              child: Text('SMS'),
+                              value: MessageMethod.sms,
+                              child: Text(MessageMethod.sms.name),
                             ),
                             DropdownMenuItem(
-                              value: 'whatsapp',
-                              child: Text('וואטסאפ'),
+                              value: MessageMethod.whatsapp,
+                              child: Text(MessageMethod.whatsapp.name),
                             ),
                             DropdownMenuItem(
-                              value: 'system',
-                              child: Text('הודעת מערכת'),
+                              value: MessageMethod.system,
+                              child: Text(MessageMethod.system.name),
                             ),
                           ],
                         ),
@@ -292,15 +293,22 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                   child: LargeFilledRoundedButton(
                     label: 'שליחה',
                     onPressed: selectedRecipients.value.isEmpty ||
-                            type.value == null ||
                             title.text.isEmpty
                         ? null
                         : () async {
                             final controllerNotifier =
                                 ref.read(messagesControllerProvider.notifier);
+                            final newMsg = msg.copyWith(
+                              to: selectedRecipients.value
+                                  .map((e) => e.id)
+                                  .toList(),
+                              method: msgMethod.value,
+                              title: title.text,
+                              content: body.text,
+                            );
                             final result = id.isEmpty || isDupe
-                                ? await controllerNotifier.create(msg)
-                                : await controllerNotifier.edit(msg);
+                                ? await controllerNotifier.create(newMsg)
+                                : await controllerNotifier.edit(newMsg);
 
                             if (result && context.mounted) {
                               showDialog(
