@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 
 part 'task.dto.f.dart';
 part 'task.dto.g.dart';
@@ -84,16 +85,19 @@ TaskType _extractTaskType(String? data) {
     case 'מפגש_קבוצתי':
       return TaskType.meetingGroup;
     case 'שיחה':
+    case 'שיחה טלפונית':
       return TaskType.call;
     case 'שיחת הורים':
     case 'שיחת_הורים':
       return TaskType.callParents;
     case 'מפגש':
+    case 'פגישה פיזית':
       return TaskType.meeting;
     case 'מפגש הורים':
     case 'מפגש_הורים':
       return TaskType.meetingParents;
     default:
+      Logger().d('extract task type fail', error: data);
       return TaskType.none;
   }
 }

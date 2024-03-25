@@ -77,7 +77,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.mail_24_regular),
                     title: const Text('הודעות מערכת'),
-                    onTap: () => () =>  MessagesRouteData().go(context),
+                    onTap: () => () => const MessagesRouteData().go(context),
                   ),
                   ListTile(
                     dense: true,
@@ -97,7 +97,6 @@ class SideMenuDrawer extends ConsumerWidget {
                     leading: const Icon(FluentIcons.map_24_regular),
                     title: const Text('מפת מיקומים'),
                     onTap: () {
-                      
                       const ApprenticesOrUsersRouteData().go(context);
                     },
                   ),
@@ -105,7 +104,8 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.person_24_regular),
                     title: const Text('ניהול משתמשים'),
-                    onTap: () => ApprenticesOrUsersRouteData().go(context),
+                    onTap: () =>
+                        const ApprenticesOrUsersRouteData().go(context),
                   ),
                   ListTile(
                     dense: true,
@@ -145,7 +145,8 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.person_24_regular),
                     title: const Text('ניהול משתמשים'),
-                    onTap: () => ApprenticesOrUsersRouteData().go(context),
+                    onTap: () =>
+                        const ApprenticesOrUsersRouteData().go(context),
                   ),
                   ListTile(
                     dense: true,
@@ -163,7 +164,8 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.book_open_24_regular),
                     title: const Text('   הגדרות התראות'),
-                    onTap: () => const NotificationSettingRouteData().push(context),
+                    onTap: () =>
+                        const NotificationSettingRouteData().push(context),
                   ),
                 ] else if (user.valueOrNull?.role == UserRole.rakazMosad) ...[
                   ListTile(
@@ -187,7 +189,6 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('פניות שירות '),
                     onTap: () => const SupportRouteData().go(context),
                   ),
-           
                 ],
                 ListTile(
                   dense: true,
