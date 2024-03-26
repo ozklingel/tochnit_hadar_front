@@ -358,6 +358,12 @@ class ApprenticeDto with _$ApprenticeDto {
       fromJson: _parseStatus,
     )
     StatusColor parentsStatus,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+      name: 'activity_score',
+    )
+    int activityScore,
   }) = _Apprentice;
 
   factory ApprenticeDto.fromJson(Map<String, dynamic> json) =>

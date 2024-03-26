@@ -179,7 +179,12 @@ class GoRouterService extends _$GoRouterService {
         TypedGoRoute<MessagesRouteData>(
           path: '/messages',
           routes: [
-            TypedGoRoute<MessageDetailsRouteData>(path: 'id/:id'),
+            TypedGoRoute<MessageDetailsRouteData>(
+              path: 'id/:id',
+            ),
+            TypedGoRoute<EditMessageRouteData>(
+              path: 'edit/:id',
+            ),
             TypedGoRoute<NewMessageRouteData>(
               path: 'new',
               routes: [
@@ -357,6 +362,21 @@ class NewMessageRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const NewOrEditMessageScreen();
+  }
+}
+
+class EditMessageRouteData extends GoRouteData {
+  const EditMessageRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return NewOrEditMessageScreen(
+      id: id,
+    );
   }
 }
 

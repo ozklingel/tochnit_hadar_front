@@ -4,7 +4,7 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -54,12 +54,14 @@ class MessageDetailsScreen extends HookConsumerWidget {
                       message.dateTime.asDateTime.isAfter(DateTime.now()))
                     PopupMenuItem(
                       child: const Text('עריכה'),
-                      onTap: () => Toaster.unimplemented(),
+                      onTap: () =>
+                          EditMessageRouteData(id: id).pushReplacement(context),
                     ),
                 if (user.role != UserRole.melave)
                   PopupMenuItem(
                     child: const Text('שכפול'),
-                    onTap: () => Toaster.unimplemented(),
+                    onTap: () =>
+                        DupeMessageRouteData(id: id).pushReplacement(context),
                   ),
                 if (user.role == UserRole.melave ||
                     message.type == MessageType.draft ||

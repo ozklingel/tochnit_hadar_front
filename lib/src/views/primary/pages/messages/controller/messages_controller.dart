@@ -45,8 +45,14 @@ class MessagesController extends _$MessagesController {
                   ref.read(storageServiceProvider.notifier).getUserPhone(),
               'created_for_ids': msg.to,
               'type': msg.type.name,
+              'icon': switch (msg.method) {
+                MessageMethod.sms => 'PHONE',
+                MessageMethod.whatsapp => 'WHATSAPP',
+                MessageMethod.system => 'SYSTEM',
+                MessageMethod.other => 'UNKNOWN',
+              },
               'attachments': msg.attachments,
-              'icon': msg.icon,
+              // 'icon': msg.icon,
             }),
           );
 
@@ -62,6 +68,7 @@ class MessagesController extends _$MessagesController {
       Sentry.captureException(e);
       Toaster.error(e);
     }
+
     return false;
   }
 

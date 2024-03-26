@@ -6,8 +6,8 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 
-class SendMessageScreen extends HookWidget {
-  const SendMessageScreen({super.key});
+class SendStatusMessagecreen extends HookWidget {
+  const SendStatusMessagecreen({super.key});
 
   @override
   Widget build(BuildContext context) {

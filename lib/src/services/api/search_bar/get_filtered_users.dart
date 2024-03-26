@@ -24,7 +24,7 @@ class GetFilteredUsers extends _$GetFilteredUsers {
     final request = await ref.watch(dioServiceProvider).get(
       Consts.getAllFiltered,
       queryParameters: {
-        'roles': filter.roles,
+        'roles': filter.roles.join(','),
         'hativa': filter.hativot,
         'years': filter.years,
         'preiods': filter.periods,

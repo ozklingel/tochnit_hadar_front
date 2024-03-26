@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/models/users_screen.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -57,8 +56,19 @@ class UsersController extends _$UsersController {
         );
         break;
       case Sort.activeToInactive:
+        state = AsyncData(
+          state.requireValue.copyWith(
+            users: state.requireValue.users
+                .sortedBy<num>((element) => element.activityScore),
+          ),
+        );
       case Sort.inactiveToActive:
-        Toaster.unimplemented();
+        state = AsyncData(
+          state.requireValue.copyWith(
+            users: state.requireValue.users.reversed.toList(),
+          ),
+        );
+        break;
     }
   }
 

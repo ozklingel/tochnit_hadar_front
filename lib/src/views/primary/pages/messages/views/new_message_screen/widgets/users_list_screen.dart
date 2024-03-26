@@ -9,8 +9,8 @@ import 'package:hadar_program/src/views/primary/pages/messages/controller/messag
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class FindUsersPage extends HookConsumerWidget {
-  const FindUsersPage({
+class UsersListScreen extends HookConsumerWidget {
+  const UsersListScreen({
     super.key,
   });
 

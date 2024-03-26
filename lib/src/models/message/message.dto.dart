@@ -107,6 +107,8 @@ MessageType _extractMessageType(String? data) {
     case 'פניות_שירות':
       return MessageType.customerService;
     case 'טיוטות':
+    case 'טיוטה':
+    case 'draft':
       return MessageType.draft;
     case 'יוצאות':
       return MessageType.sent;

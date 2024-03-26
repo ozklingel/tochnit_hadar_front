@@ -10,7 +10,7 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/apprentices_status_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_message_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_messagecreen.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -186,7 +186,8 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
                           ),
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => const SendMessageScreen(),
+                              builder: (context) =>
+                                  const SendStatusMessagecreen(),
                             ),
                           ),
                           child: const Text(
