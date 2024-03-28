@@ -35,10 +35,12 @@ class NotificationWidget extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final fromApprentice =
         ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
-                  (element) => element.phone == message.apprenticeId,
+                  (element) => element.phone == message.subject,
                   orElse: () => const ApprenticeDto(),
                 ) ??
             const ApprenticeDto();
+            print(message.subject);
+            print(fromApprentice);
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
       child: Material(

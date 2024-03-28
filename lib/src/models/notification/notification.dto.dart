@@ -30,7 +30,7 @@ class NotificationDto with _$NotificationDto {
     @JsonKey(
       defaultValue: '',
     )
-    String apprenticeId,
+    String subject,
 
     @Default('')
     @JsonKey(
