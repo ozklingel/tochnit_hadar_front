@@ -682,18 +682,32 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                   );
 
                                   final result = reportId.isEmpty || isDupe
-                                      ? await controllerNotifier
-                                          .create(processedReport)
+                                      ? await controllerNotifier.create(
+                                          processedReport,
+                                          redirect: false,
+                                        )
                                       : await controllerNotifier
                                           .edit(processedReport);
 
                                   if (result && context.mounted) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => const SuccessDialog(
-                                        msg: 'הדיווח הושלם בהצלחה!',
-                                      ),
-                                    );
+                                    final dialog = await showDialog<bool>(
+                                          context: context,
+                                          builder: (context) =>
+                                              const SuccessDialog(
+                                            msg: 'הדיווח הושלם בהצלחה!',
+                                          ),
+                                        ) ??
+                                        false;
+
+                                    if (!context.mounted) {
+                                      return;
+                                    }
+
+                                    if (dialog) {
+                                      const HomeRouteData().go(context);
+                                    } else {
+                                      const ReportsRouteData().go(context);
+                                    }
                                   }
                                 },
                         ),

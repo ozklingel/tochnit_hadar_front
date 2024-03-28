@@ -12,7 +12,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,13 +23,12 @@ enum _DataFillType {
   import,
 }
 
-class NewUserScreen extends HookWidget {
+class NewUserScreen extends HookConsumerWidget {
   const NewUserScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final pageController = usePageController();
-    final title = useState('הוספת משתמש');
     final selectedUserType = useState(UserRole.apprentice);
     final selectedDataFillType = useState(_DataFillType.manual);
     final selectedInstitution = useState(const InstitutionDto());
@@ -64,7 +63,7 @@ class NewUserScreen extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(title.value),
+        title: const Text('הוספת משתמש'),
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -100,14 +99,26 @@ class NewUserScreen extends HookWidget {
                                 phoneController.text.isEmpty ||
                                 selectedInstitution.value.isEmpty
                             ? null
-                            : () {
+                            : () async {
                                 final isValidForm =
                                     formKey.currentState?.validate() ?? false;
+
                                 if (!isValidForm) {
                                   return;
                                 }
 
-                                Toaster.unimplemented();
+                                final result = await ref
+                                    .read(usersControllerProvider.notifier)
+                                    .createManual(
+                                      role: UserRole.melave,
+                                      institutionId:
+                                          selectedInstitution.value.id,
+                                      firstName: firstNameController.text,
+                                      lastName: lastNameController.text,
+                                      phone: phoneController.text,
+                                    );
+
+                                if (result) {}
                               },
                       ),
                     )
@@ -356,14 +367,18 @@ class _FormOrImportPage extends ConsumerWidget {
             InkWell(
               borderRadius: BorderRadius.circular(12),
               onTap: () async {
-                final result =
-                    await FilePicker.platform.pickFiles(allowMultiple: true);
+                final result = await FilePicker.platform.pickFiles(
+                  allowMultiple: false,
+                  withData: true,
+                  allowedExtensions: [
+                    'xlsx',
+                  ],
+                );
 
                 if (result == null) {
                   return;
                 }
 
-                // TODO(noga-dev): upload files to backend storage then save the urls in the report
                 try {
                   files.value = [
                     ...result.paths.map((path) => File(path!)).toList(),
@@ -376,16 +391,18 @@ class _FormOrImportPage extends ConsumerWidget {
                 borderType: BorderType.RRect,
                 radius: const Radius.circular(12),
                 color: AppColors.gray5,
-                child: const SizedBox(
+                child: SizedBox(
                   height: 200,
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(FluentIcons.arrow_upload_24_regular),
-                        SizedBox(height: 12),
+                        const Icon(FluentIcons.arrow_upload_24_regular),
+                        const SizedBox(height: 12),
                         Text(
-                          'הוסף קובץ',
+                          files.value.isEmpty
+                              ? 'הוסף קובץ'
+                              : files.value.first.path,
                           style: TextStyles.s14w500,
                         ),
                       ],

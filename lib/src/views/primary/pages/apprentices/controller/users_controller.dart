@@ -1,7 +1,16 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
+import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/models/users_screen.dto.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'users_controller.g.dart';
 
@@ -17,6 +26,8 @@ enum Sort {
 @Riverpod(
   dependencies: [
     GetApprentices,
+    GoRouterService,
+    DioService,
   ],
 )
 class UsersController extends _$UsersController {
@@ -70,6 +81,68 @@ class UsersController extends _$UsersController {
         );
         break;
     }
+  }
+
+  Future<bool> createManual({
+    required UserRole role,
+    required String institutionId,
+    required String firstName,
+    required String lastName,
+    required String phone,
+  }) async {
+    try {
+      final result = await ref.read(dioServiceProvider).post(
+            Consts.addUserManual,
+            data: jsonEncode({
+              'role_id': role.val.toString(),
+              'institution_id': institutionId,
+              'phone': phone,
+              'first_name': firstName,
+              'last_name': lastName,
+            }),
+          );
+
+      if (result.data['result'] == 'success') {
+        ref.invalidate(getApprenticesProvider);
+
+        ref.read(goRouterServiceProvider).go('/apprentices-or-users');
+
+        return true;
+      }
+    } catch (e) {
+      Logger().e('failed to add user manual', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return false;
+  }
+
+  Future<bool> createExcel({
+    required List<int> data,
+  }) async {
+    try {
+      final result = await ref.read(dioServiceProvider).post(
+            Consts.addUserExcel,
+            data: jsonEncode({
+              data,
+            }),
+          );
+
+      if (result.data['result'] == 'success') {
+        ref.invalidate(getApprenticesProvider);
+
+        ref.read(goRouterServiceProvider).go('/apprentices-or-users');
+
+        return true;
+      }
+    } catch (e) {
+      Logger().e('failed to add user excel', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return false;
   }
 
   // Future<bool> addUser() {}

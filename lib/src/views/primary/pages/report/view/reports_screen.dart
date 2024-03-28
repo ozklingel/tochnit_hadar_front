@@ -83,6 +83,7 @@ class ReportsScreen extends HookConsumerWidget {
                             child: SizedBox(
                               height: 42,
                               child: SearchBar(
+                                controller: searchController,
                                 elevation: MaterialStateProperty.all(0),
                                 padding: MaterialStateProperty.all(
                                   const EdgeInsets.symmetric(horizontal: 12),

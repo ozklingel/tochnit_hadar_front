@@ -24,6 +24,12 @@ class TasksScreen extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final user = ref.watch(userServiceProvider);
 
+    if (user.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
+    }
+
     if (user.valueOrNull?.role == UserRole.melave) {
       return const _MelaveTasksBody();
     }

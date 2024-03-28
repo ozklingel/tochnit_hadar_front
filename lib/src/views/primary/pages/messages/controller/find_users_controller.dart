@@ -10,6 +10,7 @@ part 'find_users_controller.g.dart';
 @Riverpod(
   dependencies: [
     GetApprentices,
+    GetFilteredUsers,
   ],
 )
 class FindUsersController extends _$FindUsersController {

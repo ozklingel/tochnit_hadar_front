@@ -309,6 +309,7 @@ class UsersScreenBody extends HookConsumerWidget {
                             }
 
                             sort.value = result;
+
                             ref
                                 .read(usersControllerProvider.notifier)
                                 .sort(result);

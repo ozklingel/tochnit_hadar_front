@@ -78,6 +78,8 @@ abstract class Consts {
   // user profile / apprentices
   static const getAllApprentices = 'userProfile_form/myApprentices';
   static const getAuthUser = 'userProfile_form/getProfileAtributes';
+  static const addUserManual = 'userProfile_form/add_user_manual';
+  static const addUserExcel = 'userProfile_form/add_user_excel';
 
   static const updateApprentice = 'apprentice_Profile_form/update';
 

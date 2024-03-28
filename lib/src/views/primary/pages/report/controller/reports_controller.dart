@@ -73,7 +73,10 @@ class ReportsController extends _$ReportsController {
     }
   }
 
-  Future<bool> create(ReportDto report) async {
+  Future<bool> create(
+    ReportDto report, {
+    bool redirect = true,
+  }) async {
     Logger().d('start creating report', error: report);
 
     try {
@@ -93,7 +96,9 @@ class ReportsController extends _$ReportsController {
       if (result.data['result'] == 'success') {
         ref.invalidate(getReportsProvider);
 
-        ref.read(goRouterServiceProvider).go('/reports');
+        if (redirect) {
+          ref.read(goRouterServiceProvider).go('/reports');
+        }
 
         return true;
       }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 
 class SuccessDialog extends StatelessWidget {
   const SuccessDialog({
@@ -49,7 +48,7 @@ class SuccessDialog extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               TextButton(
-                onPressed: () => const HomeRouteData().go(context),
+                onPressed: () => Navigator.of(context).pop(true),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(

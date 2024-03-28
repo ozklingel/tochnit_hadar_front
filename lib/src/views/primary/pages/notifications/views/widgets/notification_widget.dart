@@ -39,8 +39,10 @@ class NotificationWidget extends ConsumerWidget {
                   orElse: () => const ApprenticeDto(),
                 ) ??
             const ApprenticeDto();
-            print(message.subject);
-            print(fromApprentice);
+
+    debugPrint(message.subject);
+    debugPrint(fromApprentice.toString());
+
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
       child: Material(
