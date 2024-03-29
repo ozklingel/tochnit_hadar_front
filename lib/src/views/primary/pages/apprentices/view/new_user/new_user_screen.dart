@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
@@ -12,11 +10,13 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 enum _DataFillType {
   manual,
@@ -35,8 +35,9 @@ class NewUserScreen extends HookConsumerWidget {
     final firstNameController = useTextEditingController();
     final lastNameController = useTextEditingController();
     final phoneController = useTextEditingController();
-    final selectedFiles = useState<List<File>>([]);
+    final selectedFiles = useState<List<PlatformFile>>([]);
     final formKey = useMemoized(() => GlobalKey<FormState>(), []);
+    final isLoading = useState(false);
     useListenable(firstNameController);
     useListenable(lastNameController);
     useListenable(phoneController);
@@ -52,6 +53,7 @@ class NewUserScreen extends HookConsumerWidget {
         selectedInstitution: selectedInstitution,
         selectedDataType: selectedDataFillType.value,
         selectedUserType: selectedUserType.value,
+        isLoading: isLoading,
         files: selectedFiles,
         formKey: formKey,
         firstNameController: firstNameController,
@@ -94,31 +96,58 @@ class NewUserScreen extends HookConsumerWidget {
                     Expanded(
                       child: LargeFilledRoundedButton(
                         label: 'שמירה',
-                        onPressed: firstNameController.text.isEmpty ||
-                                lastNameController.text.isEmpty ||
-                                phoneController.text.isEmpty ||
-                                selectedInstitution.value.isEmpty
+                        onPressed: selectedFiles.value.isEmpty &&
+                                (firstNameController.text.isEmpty ||
+                                    lastNameController.text.isEmpty ||
+                                    phoneController.text.isEmpty ||
+                                    selectedInstitution.value.isEmpty)
                             ? null
                             : () async {
-                                final isValidForm =
-                                    formKey.currentState?.validate() ?? false;
+                                isLoading.value = true;
+                                try {
+                                  if (selectedFiles.value.isNotEmpty) {
+                                    final result = await ref
+                                        .read(
+                                          usersControllerProvider.notifier,
+                                        )
+                                        .createExcel(
+                                          file: selectedFiles.value.first,
+                                        );
+                                    if (result) {}
+                                  } else {
+                                    final isValidForm =
+                                        formKey.currentState?.validate() ??
+                                            false;
 
-                                if (!isValidForm) {
-                                  return;
+                                    if (!isValidForm) {
+                                      return;
+                                    }
+
+                                    final result = await ref
+                                        .read(
+                                          usersControllerProvider.notifier,
+                                        )
+                                        .createManual(
+                                          role: UserRole.melave,
+                                          institutionId:
+                                              selectedInstitution.value.id,
+                                          firstName: firstNameController.text,
+                                          lastName: lastNameController.text,
+                                          phone: phoneController.text,
+                                        );
+
+                                    if (result) {}
+                                  }
+                                } catch (e) {
+                                  Logger().e(
+                                    'failed to add user excel ui',
+                                    error: e,
+                                  );
+                                  Sentry.captureException(e);
+                                  Toaster.error(e);
                                 }
 
-                                final result = await ref
-                                    .read(usersControllerProvider.notifier)
-                                    .createManual(
-                                      role: UserRole.melave,
-                                      institutionId:
-                                          selectedInstitution.value.id,
-                                      firstName: firstNameController.text,
-                                      lastName: lastNameController.text,
-                                      phone: phoneController.text,
-                                    );
-
-                                if (result) {}
+                                isLoading.value = false;
                               },
                       ),
                     )
@@ -159,11 +188,12 @@ class NewUserScreen extends HookConsumerWidget {
   }
 }
 
-class _FormOrImportPage extends ConsumerWidget {
+class _FormOrImportPage extends HookConsumerWidget {
   const _FormOrImportPage({
     required this.selectedUserType,
     required this.selectedDataType,
     required this.selectedInstitution,
+    required this.isLoading,
     required this.files,
     required this.formKey,
     required this.firstNameController,
@@ -173,8 +203,9 @@ class _FormOrImportPage extends ConsumerWidget {
 
   final UserRole selectedUserType;
   final _DataFillType selectedDataType;
-  final ValueNotifier<List<File>> files;
+  final ValueNotifier<List<PlatformFile>> files;
   final ValueNotifier<InstitutionDto> selectedInstitution;
+  final ValueNotifier<bool> isLoading;
   final GlobalKey<FormState> formKey;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
@@ -367,25 +398,30 @@ class _FormOrImportPage extends ConsumerWidget {
             InkWell(
               borderRadius: BorderRadius.circular(12),
               onTap: () async {
-                final result = await FilePicker.platform.pickFiles(
-                  allowMultiple: false,
-                  withData: true,
-                  allowedExtensions: [
-                    'xlsx',
-                  ],
-                );
-
-                if (result == null) {
-                  return;
-                }
+                isLoading.value = true;
 
                 try {
-                  files.value = [
-                    ...result.paths.map((path) => File(path!)).toList(),
-                  ];
+                  final result = await FilePicker.platform.pickFiles(
+                    allowMultiple: false,
+                    withData: true,
+                    type: FileType.custom,
+                    allowedExtensions: [
+                      'xlsx',
+                    ],
+                  );
+
+                  if (result != null) {
+                    files.value = [
+                      ...result.files,
+                    ];
+                  }
                 } catch (e) {
                   Logger().e('file upload error', error: e);
+                  Sentry.captureException(e);
+                  Toaster.error(e);
                 }
+
+                isLoading.value = false;
               },
               child: DottedBorder(
                 borderType: BorderType.RRect,
@@ -397,21 +433,26 @@ class _FormOrImportPage extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(FluentIcons.arrow_upload_24_regular),
-                        const SizedBox(height: 12),
-                        Text(
-                          files.value.isEmpty
-                              ? 'הוסף קובץ'
-                              : files.value.first.path,
-                          style: TextStyles.s14w500,
-                        ),
+                        if (files.value.isEmpty) ...[
+                          const Icon(FluentIcons.arrow_upload_24_regular),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'הוסף קובץ',
+                            style: TextStyles.s14w500,
+                          ),
+                        ] else ...[
+                          Text(
+                            files.value.first.name,
+                            style: TextStyles.s14w500,
+                          ),
+                        ],
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            if (files.value.isNotEmpty) ...[
+            if (isLoading.value) ...[
               const SizedBox(height: 12),
               Card(
                 color: AppColors.blue08,
@@ -421,12 +462,18 @@ class _FormOrImportPage extends ConsumerWidget {
                   title: Text(
                     files.value.isEmpty
                         ? '[Empty]'
-                        : files.value.first.uri.toString().split('/').last,
+                        : files.value.first.name.toString().split('/').last,
                   ),
                   subtitle: const LinearProgressIndicator(
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
-                  trailing: const Icon(Icons.close),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      files.value = [];
+                      isLoading.value = false;
+                    },
+                  ),
                 ),
               ),
             ],

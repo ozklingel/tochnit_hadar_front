@@ -16,7 +16,6 @@ class UploadFile extends _$UploadFile {
   @override
   Future<String> build(PlatformFile file) async {
     // final fileName = file.path.split('/').last;
-    final fileName = file.path;
 
     if (file.bytes == null) {
       throw ArgumentError('missing param bytes');
@@ -25,12 +24,12 @@ class UploadFile extends _$UploadFile {
     final formData = FormData.fromMap({
       "file": MultipartFile.fromBytes(
         file.bytes!.toList(),
-        filename: fileName,
+        filename: file.path,
         contentType: MediaType.parse('multipart/form-data'),
       ),
     });
 
-    final result = await ref.watch(dioServiceProvider).post(
+    final result = await ref.watch(dioServiceProvider).put(
           Consts.uploadFile,
           data: formData,
         );

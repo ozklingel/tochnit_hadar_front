@@ -9,8 +9,11 @@ enum TaskType {
   meeting,
   meetingParents,
   meetingGroup,
+  meetingPeriod,
   call,
   callParents,
+  failedAttempt,
+  xMessages,
 }
 
 enum TaskStatus {
@@ -84,11 +87,14 @@ TaskType _extractTaskType(String? data) {
     case 'מפגש קבוצתי':
     case 'מפגש_קבוצתי':
       return TaskType.meetingGroup;
+    case 'מפגש מחזור':
+      return TaskType.meetingPeriod;
     case 'שיחה':
     case 'שיחה טלפונית':
       return TaskType.call;
     case 'שיחת הורים':
     case 'שיחת_הורים':
+    case 'שיחה להורים':
       return TaskType.callParents;
     case 'מפגש':
     case 'פגישה פיזית':
@@ -96,6 +102,10 @@ TaskType _extractTaskType(String? data) {
     case 'מפגש הורים':
     case 'מפגש_הורים':
       return TaskType.meetingParents;
+    case 'נסיון כושל':
+      return TaskType.failedAttempt;
+    case '6 הודעות':
+      return TaskType.xMessages;
     default:
       Logger().d('extract task type fail', error: data);
       return TaskType.none;

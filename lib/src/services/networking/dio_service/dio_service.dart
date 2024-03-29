@@ -21,6 +21,8 @@ class DioService extends _$DioService {
 
     final userPhone = ref.read(storageServiceProvider.notifier).getUserPhone();
 
+    Logger().d('initializing dio with base url::${Consts.baseUrl}');
+
     final dio = Dio(
       BaseOptions(
         baseUrl: Consts.baseUrl,
@@ -42,7 +44,7 @@ class DioService extends _$DioService {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           Logger().d(
-            options.uri,
+            '${options.method}::${options.uri.path}',
             error: options.data,
             stackTrace: StackTrace.current,
           );

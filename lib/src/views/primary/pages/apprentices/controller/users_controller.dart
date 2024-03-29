@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
@@ -8,6 +10,7 @@ import 'package:hadar_program/src/services/networking/dio_service/dio_service.da
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/models/users_screen.dto.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -119,13 +122,21 @@ class UsersController extends _$UsersController {
   }
 
   Future<bool> createExcel({
-    required List<int> data,
+    required PlatformFile file,
   }) async {
     try {
+      if (file.bytes == null) {
+        throw ArgumentError('missing param bytes');
+      }
+
       final result = await ref.read(dioServiceProvider).post(
             Consts.addUserExcel,
-            data: jsonEncode({
-              data,
+            data: FormData.fromMap({
+              'file': MultipartFile.fromBytes(
+                file.bytes!.toList(),
+                filename: file.path,
+                contentType: MediaType.parse('multipart/form-data'),
+              ),
             }),
           );
 
