@@ -44,7 +44,9 @@ class DioService extends _$DioService {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           Logger().d(
-            '${options.method}::${options.uri.path}',
+            '${options.method}'
+            ' => '
+            '${options.uri.path}',
             error: options.data,
             stackTrace: StackTrace.current,
           );
@@ -64,11 +66,14 @@ class DioService extends _$DioService {
   void _dioErrorHandler(DioException error, handler) {
     Logger().e(
       {
+        'error.type': error.type,
+        'error.message': error.message ?? 'no err msg',
+        'error.requestOptions': error.requestOptions,
         'response.data': error.response?.data ?? 'no response data',
         'respone.headers': error.response?.headers ?? 'no response headers',
       },
-      error: error,
-      stackTrace: StackTrace.current,
+      error: error.error,
+      stackTrace: error.stackTrace,
     );
 
     Toaster.error(error.type.name);

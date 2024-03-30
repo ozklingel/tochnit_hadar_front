@@ -704,31 +704,27 @@ class _ReporsListBody extends ConsumerWidget {
 
     // Logger().d(selectedIds.value);
 
-    final children = reports
-        .map(
-          (e) => Skeletonizer(
-            enabled: isLoading,
-            child: ReportCard(
-              report: e,
-              isSelected: selectedReportIds.value.contains(e.id),
-              onTap: () => ReportDetailsRouteData(id: e.id).push(context),
-              onLongPress: () {
-                if (selectedReportIds.value.contains(e.id)) {
-                  selectedReportIds.value = [
-                    ...selectedReportIds.value
-                        .where((element) => element != e.id),
-                  ];
-                } else {
-                  selectedReportIds.value = [
-                    ...selectedReportIds.value,
-                    e.id,
-                  ];
-                }
-              },
+    final children = reports.map(
+      (e) {
+        return Skeletonizer(
+          enabled: isLoading,
+          child: ReportCard(
+            report: e,
+            isSelected: selectedReportIds.value.contains(e.id),
+            onTap: selectedReportIds.value.isEmpty
+                ? () => ReportDetailsRouteData(id: e.id).push(context)
+                : () => _selectReport(
+                      e: e,
+                      selectedReportIds: selectedReportIds,
+                    ),
+            onLongPress: () => _selectReport(
+              e: e,
+              selectedReportIds: selectedReportIds,
             ),
           ),
-        )
-        .toList();
+        );
+      },
+    ).toList();
 
     return ListView.separated(
       controller: scrollController,
@@ -737,5 +733,21 @@ class _ReporsListBody extends ConsumerWidget {
       separatorBuilder: (context, index) => const SizedBox(height: 8),
       itemBuilder: (context, index) => children[index],
     );
+  }
+}
+
+void _selectReport({
+  required ValueNotifier<List<String>> selectedReportIds,
+  required ReportDto e,
+}) {
+  if (selectedReportIds.value.contains(e.id)) {
+    selectedReportIds.value = [
+      ...selectedReportIds.value.where((element) => element != e.id),
+    ];
+  } else {
+    selectedReportIds.value = [
+      ...selectedReportIds.value,
+      e.id,
+    ];
   }
 }

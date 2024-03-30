@@ -20,7 +20,7 @@ class TaskCard extends ConsumerWidget {
   final bool isSelected;
   final TaskDto task;
   final VoidCallback onLongPress;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context, ref) {

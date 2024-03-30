@@ -217,19 +217,20 @@ class _MelaveTasksBody extends HookConsumerWidget {
           (e) => TaskCard(
             task: e,
             isSelected: selectedCalls.value.contains(e),
-            onTap: () => e.apprenticeIds.isEmpty
-                ? null
-                : ApprenticeDetailsRouteData(id: e.apprenticeIds.first)
-                    .push(context),
-            onLongPress: () {
-              if (selectedCalls.value.contains(e)) {
-                final newList = selectedCalls.value;
-                newList.remove(e);
-                selectedCalls.value = [...newList];
-              } else {
-                selectedCalls.value = [...selectedCalls.value, e];
-              }
-            },
+            onTap: selectedCalls.value.isEmpty
+                ? e.apprenticeIds.isEmpty
+                    ? null
+                    : () =>
+                        ApprenticeDetailsRouteData(id: e.apprenticeIds.first)
+                            .push(context)
+                : () => _selectTask(
+                      selectedTasks: selectedCalls,
+                      e: e,
+                    ),
+            onLongPress: () => _selectTask(
+              selectedTasks: selectedCalls,
+              e: e,
+            ),
           ),
         )
         .toList();
@@ -245,21 +246,20 @@ class _MelaveTasksBody extends HookConsumerWidget {
           (e) => TaskCard(
             task: e,
             isSelected: selectedMeetings.value.contains(e),
-            onTap: () => e.apprenticeIds.isEmpty
-                ? null
-                : ApprenticeDetailsRouteData(id: e.apprenticeIds.first),
-            onLongPress: () {
-              if (selectedMeetings.value.contains(e)) {
-                final newList = selectedMeetings.value;
-                newList.remove(e);
-                selectedMeetings.value = [...newList];
-              } else {
-                selectedMeetings.value = [
-                  ...selectedMeetings.value,
-                  e,
-                ];
-              }
-            },
+            onTap: selectedMeetings.value.isEmpty
+                ? e.apprenticeIds.isEmpty
+                    ? null
+                    : () =>
+                        ApprenticeDetailsRouteData(id: e.apprenticeIds.first)
+                            .push(context)
+                : () => _selectTask(
+                      selectedTasks: selectedMeetings,
+                      e: e,
+                    ),
+            onLongPress: () => _selectTask(
+              selectedTasks: selectedMeetings,
+              e: e,
+            ),
           ),
         )
         .toList();
@@ -273,18 +273,20 @@ class _MelaveTasksBody extends HookConsumerWidget {
           (e) => TaskCard(
             task: e,
             isSelected: selectedParents.value.contains(e),
-            onTap: () => e.apprenticeIds.isEmpty
-                ? null
-                : ApprenticeDetailsRouteData(id: e.apprenticeIds.first),
-            onLongPress: () {
-              if (selectedParents.value.contains(e)) {
-                final newList = selectedParents.value;
-                newList.remove(e);
-                selectedParents.value = [...newList];
-              } else {
-                selectedParents.value = [...selectedParents.value, e];
-              }
-            },
+            onTap: selectedParents.value.isEmpty
+                ? e.apprenticeIds.isEmpty
+                    ? null
+                    : () =>
+                        ApprenticeDetailsRouteData(id: e.apprenticeIds.first)
+                            .push(context)
+                : () => _selectTask(
+                      selectedTasks: selectedParents,
+                      e: e,
+                    ),
+            onLongPress: () => _selectTask(
+              selectedTasks: selectedParents,
+              e: e,
+            ),
           ),
         )
         .toList();
@@ -605,5 +607,18 @@ class _MelaveTasksBody extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+void _selectTask({
+  required ValueNotifier<List<TaskDto>> selectedTasks,
+  required TaskDto e,
+}) {
+  if (selectedTasks.value.contains(e)) {
+    selectedTasks.value = [
+      ...selectedTasks.value.where((element) => element != e),
+    ];
+  } else {
+    selectedTasks.value = [...selectedTasks.value, e];
   }
 }
