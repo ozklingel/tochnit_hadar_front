@@ -115,13 +115,13 @@ class SideMenuDrawer extends ConsumerWidget {
                   ),
                   ListTile(
                     dense: true,
-                    leading: const Icon(FluentIcons.book_open_24_regular),
+                    leading: const Icon(FluentIcons.gift_16_regular),
                     title: const Text(' ניהול קודי מתנה'),
                     onTap: () => Toaster.unimplemented(),
                   ),
                   ListTile(
                     dense: true,
-                    leading: const Icon(FluentIcons.book_open_24_regular),
+                    leading: const Icon(FluentIcons.settings_16_regular),
                     title: const Text('הגדרות מדדים'),
                     onTap: () => const ChartsRouteData().push(context),
                   ),
@@ -156,14 +156,21 @@ class SideMenuDrawer extends ConsumerWidget {
                   ),
                   ListTile(
                     dense: true,
-                    leading: const Icon(FluentIcons.book_open_24_regular),
+                    leading: const Icon(FluentIcons.mail_12_regular),
                     title: const Text('פניות שירות'),
                     onTap: () => const SupportRouteData().push(context),
                   ),
+             
+                ListTile(
+                  dense: true,
+                  leading: const Icon(Icons.notifications_none),
+                  title: const Text(' התראות'),
+                  onTap: () => const NotificationRouteData().go(context),
+                ),
                   ListTile(
                     dense: true,
-                    leading: const Icon(FluentIcons.book_open_24_regular),
-                    title: const Text('   הגדרות התראות'),
+                    leading: const Icon(FluentIcons.settings_16_regular),
+                    title: const Text('הגדרות'),
                     onTap: () =>
                         const NotificationSettingRouteData().push(context),
                   ),
@@ -186,22 +193,33 @@ class SideMenuDrawer extends ConsumerWidget {
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.person_24_regular),
-                    title: const Text('פניות שירות '),
-                    onTap: () => const SupportRouteData().go(context),
+                    title: const Text('ניהול משתמשים'),
+                    onTap: () =>
+                        const ApprenticesOrUsersRouteData().go(context),
                   ),
-                ],
-                ListTile(
-                  dense: true,
-                  leading: const Icon(FluentIcons.settings_24_regular),
-                  title: const Text('הגדרות והתראות'),
-                  onTap: () => const NotificationSettingRouteData().go(context),
-                ),
+           
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(FluentIcons.mail_12_regular),
+                    title: const Text('פניות שירות'),
+                    onTap: () => const SupportRouteData().push(context),
+                  ),
+             
                 ListTile(
                   dense: true,
                   leading: const Icon(Icons.notifications_none),
                   title: const Text(' התראות'),
                   onTap: () => const NotificationRouteData().go(context),
                 ),
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(FluentIcons.settings_16_regular),
+                    title: const Text('הגדרות'),
+                    onTap: () =>
+                        const NotificationSettingRouteData().push(context),
+                  ),
+                ],
+        
                 ListTile(
                   dense: true,
                   leading: const Icon(FluentIcons.arrow_exit_20_regular),
