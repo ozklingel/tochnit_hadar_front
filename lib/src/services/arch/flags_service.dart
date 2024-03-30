@@ -152,7 +152,7 @@ final _tasks = List.generate(
       status: TaskStatus
           .values[faker.randomGenerator.integer(TaskStatus.values.length)],
       details: faker.lorem.sentence(),
-      apprenticeIds: newApprentices
+      subject: newApprentices
           .take(faker.randomGenerator.integer(5))
           .map((e) => e.id)
           .toList(),

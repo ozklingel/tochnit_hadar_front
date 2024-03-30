@@ -201,7 +201,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
     final filteredList = tasks.where(
       (element) => apprentices
           .singleWhere(
-            (e) => element.apprenticeIds.contains(e.id),
+            (e) => element.subject.contains(e.id),
             orElse: () => const ApprenticeDto(),
           )
           .fullName
@@ -218,10 +218,10 @@ class _MelaveTasksBody extends HookConsumerWidget {
             task: e,
             isSelected: selectedCalls.value.contains(e),
             onTap: selectedCalls.value.isEmpty
-                ? e.apprenticeIds.isEmpty
+                ? e.subject.isEmpty
                     ? null
                     : () =>
-                        ApprenticeDetailsRouteData(id: e.apprenticeIds.first)
+                        ApprenticeDetailsRouteData(id: e.subject.first)
                             .push(context)
                 : () => _selectTask(
                       selectedTasks: selectedCalls,
@@ -247,10 +247,10 @@ class _MelaveTasksBody extends HookConsumerWidget {
             task: e,
             isSelected: selectedMeetings.value.contains(e),
             onTap: selectedMeetings.value.isEmpty
-                ? e.apprenticeIds.isEmpty
+                ? e.subject.isEmpty
                     ? null
                     : () =>
-                        ApprenticeDetailsRouteData(id: e.apprenticeIds.first)
+                        ApprenticeDetailsRouteData(id: e.subject.first)
                             .push(context)
                 : () => _selectTask(
                       selectedTasks: selectedMeetings,
@@ -274,10 +274,10 @@ class _MelaveTasksBody extends HookConsumerWidget {
             task: e,
             isSelected: selectedParents.value.contains(e),
             onTap: selectedParents.value.isEmpty
-                ? e.apprenticeIds.isEmpty
+                ? e.subject.isEmpty
                     ? null
                     : () =>
-                        ApprenticeDetailsRouteData(id: e.apprenticeIds.first)
+                        ApprenticeDetailsRouteData(id: e.subject.first)
                             .push(context)
                 : () => _selectTask(
                       selectedTasks: selectedParents,
@@ -308,7 +308,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
             Builder(
               builder: (context) {
                 final selectedApprentice = apprentices.singleWhere(
-                  (element) => selectedParents.value.first.apprenticeIds
+                  (element) => selectedParents.value.first.subject
                       .contains(element.id),
                 );
 
@@ -401,7 +401,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
             Builder(
               builder: (context) {
                 final selectedApprentice = apprentices.singleWhere(
-                  (element) => selectedCalls.value.first.apprenticeIds
+                  (element) => selectedCalls.value.first.subject
                       .contains(element.id),
                   orElse: () => const ApprenticeDto(),
                 );
@@ -448,16 +448,16 @@ class _MelaveTasksBody extends HookConsumerWidget {
                   (element) {
                     return tabController.index == 0
                         ? selectedCalls.value
-                            .map((e) => e.apprenticeIds)
+                            .map((e) => e.subject)
                             .expand((element) => element)
                             .contains(element.id)
                         : tabController.index == 1
                             ? selectedMeetings.value
-                                .map((e) => e.apprenticeIds)
+                                .map((e) => e.subject)
                                 .expand((element) => element)
                                 .contains(element.id)
                             : selectedParents.value
-                                .map((e) => e.apprenticeIds)
+                                .map((e) => e.subject)
                                 .expand((element) => element)
                                 .contains(element.id);
                   },

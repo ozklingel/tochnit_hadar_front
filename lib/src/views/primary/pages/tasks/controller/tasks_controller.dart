@@ -30,7 +30,7 @@ class TasksController extends _$TasksController {
       final result = await ref.read(dioServiceProvider).post(
         Consts.createTask,
         data: {
-          'apprenticeId': task.apprenticeIds,
+          'subject': task.subject,
           'date': task.dateTime,
           'description': task.details,
           'event': task.reportEventType.name,
@@ -64,7 +64,7 @@ class TasksController extends _$TasksController {
           'taskId': task.id,
         },
         data: {
-          'apprenticeId': task.apprenticeIds,
+          'subject': task.subject,
           'date': task.dateTime,
           'description': task.details,
           'event': task.reportEventType.name,

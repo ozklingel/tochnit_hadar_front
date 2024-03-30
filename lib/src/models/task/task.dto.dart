@@ -67,9 +67,9 @@ class TaskDto with _$TaskDto {
     @Default([])
     @JsonKey(
       defaultValue: [],
-      name: 'apprenticeId',
+      name: 'subject',
     )
-    List<String> apprenticeIds,
+    List<String> subject,
     @Default('')
     @JsonKey(
       defaultValue: '',

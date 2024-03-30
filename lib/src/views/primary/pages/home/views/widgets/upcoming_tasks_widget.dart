@@ -92,10 +92,10 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                         (e) => TaskCard(
                           task: e,
                           isSelected: selectedCalls.value.contains(e),
-                          onTap: () => e.apprenticeIds.isEmpty
+                          onTap: () => e.subject.isEmpty
                               ? null
                               : ApprenticeDetailsRouteData(
-                                  id: e.apprenticeIds.first,
+                                  id: e.subject.first,
                                 ),
                           onLongPress: () {
                             if (selectedCalls.value.contains(e)) {
@@ -130,10 +130,10 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                         (e) => TaskCard(
                           task: e,
                           isSelected: selectedMeetings.value.contains(e),
-                          onTap: () => e.apprenticeIds.isEmpty
+                          onTap: () => e.subject.isEmpty
                               ? null
                               : ApprenticeDetailsRouteData(
-                                  id: e.apprenticeIds.first,
+                                  id: e.subject.first,
                                 ),
                           onLongPress: () {
                             if (selectedMeetings.value.contains(e)) {
@@ -171,10 +171,10 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                         (e) => TaskCard(
                           task: e,
                           isSelected: selectedParents.value.contains(e),
-                          onTap: () => e.apprenticeIds.isEmpty
+                          onTap: () => e.subject.isEmpty
                               ? null
                               : ApprenticeDetailsRouteData(
-                                  id: e.apprenticeIds.first,
+                                  id: e.subject.first,
                                 ),
                           onLongPress: () {
                             if (selectedParents.value.contains(e)) {
@@ -215,7 +215,7 @@ class _ActionsRow extends ConsumerWidget {
         ref.watch(apprenticesControllerProvider).valueOrNull?.where(
                   (element) => selectedTasks
                       .map(
-                        (e) => e.apprenticeIds,
+                        (e) => e.subject,
                       )
                       .expand((element) => element)
                       .contains(element.id),
@@ -236,7 +236,7 @@ class _ActionsRow extends ConsumerWidget {
               builder: (context) {
                 final apprentice = apprentices.singleWhere(
                   (element) => selectedTasks
-                      .map((e) => e.apprenticeIds)
+                      .map((e) => e.subject)
                       .expand((element) => element)
                       .contains(element.id),
                   orElse: () => const ApprenticeDto(),
@@ -257,7 +257,7 @@ class _ActionsRow extends ConsumerWidget {
                     IconButton(
                       onPressed: () => ReportNewRouteData(
                         initRecipients: selectedTasks
-                            .map((e) => e.apprenticeIds)
+                            .map((e) => e.subject)
                             .expand((element) => element)
                             .toList(),
                       ).push(context),
@@ -287,7 +287,7 @@ class _ActionsRow extends ConsumerWidget {
             IconButton(
               onPressed: () => ReportNewRouteData(
                 initRecipients: selectedTasks
-                    .map((e) => e.apprenticeIds)
+                    .map((e) => e.subject)
                     .expand((element) => element)
                     .toList(),
               ).push(context),
