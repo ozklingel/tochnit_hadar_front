@@ -50,6 +50,7 @@ class DioService extends _$DioService {
             error: options.data,
             stackTrace: StackTrace.current,
           );
+
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -68,7 +69,7 @@ class DioService extends _$DioService {
       {
         'error.type': error.type,
         'error.message': error.message ?? 'no err msg',
-        'error.requestOptions': error.requestOptions,
+        // 'error.requestOptions.path': error.requestOptions.path,
         'response.data': error.response?.data ?? 'no response data',
         'respone.headers': error.response?.headers ?? 'no response headers',
       },

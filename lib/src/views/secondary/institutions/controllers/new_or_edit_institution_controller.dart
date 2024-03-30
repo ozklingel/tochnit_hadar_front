@@ -37,11 +37,12 @@ class NewOrEditInstitutionController extends _$NewOrEditInstitutionController {
         },
       );
 
-      Logger().i(request.data, error: id);
+      // Logger().i(request.data, error: id);
 
       if (request.data['result'] == 'success') {
         ref.invalidate(getInstitutionsProvider);
       }
+
       return true;
     } catch (e) {
       Logger().e('failed to update institution logo', error: e);

@@ -21,6 +21,8 @@ class UploadFile extends _$UploadFile {
       throw ArgumentError('missing param bytes');
     }
 
+    // Logger().d('upload file', error: file.bytes!.toList().length);
+
     final formData = FormData.fromMap({
       "file": MultipartFile.fromBytes(
         file.bytes!.toList(),

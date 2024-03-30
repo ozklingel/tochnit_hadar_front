@@ -156,6 +156,7 @@ class InstitutionsScreen extends HookConsumerWidget {
                       (e) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6),
                         child: ListTileWithTagsCard(
+                          avatar: e.logo,
                           name: e.name,
                           onTap: () => InstitutionDetailsRouteData(id: e.id)
                               .push(context),
