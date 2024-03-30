@@ -6,13 +6,14 @@ part 'user.dto.f.dart';
 part 'user.dto.g.dart';
 
 enum UserRole {
+      melave(0),
+
     rakazMosad(1),
 
     rakazEshkol(2),
 
     ahraiTohnit(3),
 
-    melave(0),
   apprentice(500),
   other(800);
 

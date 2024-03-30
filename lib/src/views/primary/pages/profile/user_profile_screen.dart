@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,7 +10,6 @@ import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_cont
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -16,6 +17,8 @@ import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 
 import '../../../../models/apprentice/apprentice.dto.dart';
 import '../../../../services/routing/go_router_provider.dart';
@@ -35,7 +38,9 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
     null,
     null,
   ];
-
+    File? galleryFile;
+  final picker = ImagePicker();
+ ImageProvider<Object>? profileimg =null;
   @override
   void dispose() {
     super.dispose();
@@ -86,7 +91,8 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                       avatar: user.valueOrNull!.avatar,
                       name: user.valueOrNull!.fullName,
                       phone: "0${user.valueOrNull!.phone}",
-                      onTapEditAvatar: () => Toaster.unimplemented(),
+                      onTapEditAvatar: () => _showPicker(context: context),
+
                       bottom: const Column(
                         children: [
                           SizedBox(height: 24),
@@ -149,6 +155,72 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
       ),
     );
   }
+
+ void _showPicker({
+    required BuildContext context,
+  }) {
+    final user = ref.watch(userServiceProvider);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Photo Library'),
+                onTap: () {
+                  getImage(ImageSource.gallery, user);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const CircleAvatar(
+                  backgroundImage: AssetImage(
+                    'assets/images/pencile.png',
+                  ), // No matter how big it is, it won't overflow
+                ),
+                title: const Text('Camera'),
+                onTap: () {
+                  getImage(ImageSource.camera, user);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future getImage(ImageSource img, user) async {
+    final pickedFile = await picker.pickImage(source: img);
+
+    XFile? xfilePick = pickedFile;
+
+    setState(
+      () {
+        if (xfilePick != null) {
+          galleryFile = File(pickedFile!.path);
+
+          //HttpService.uploadPhoto(galleryFile!, user.valueOrNull!.phone);
+          setState(() {
+            var profileimg = FileImage(galleryFile!);
+                 Logger().d(profileimg);
+
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            // is this context <<<
+            const SnackBar(content: Text('Nothing is selected')),
+          );
+        }
+      },
+    );
+  }
+
+  
 }
 
 class _MilitaryServiceTabView extends HookConsumerWidget {
@@ -470,4 +542,8 @@ class _TohnitHadarTabView extends ConsumerWidget {
       ],
     );
   }
+  
 }
+
+
+

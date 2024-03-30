@@ -32,7 +32,6 @@ import '../../views/primary/pages/chat_box/support_screen.dart';
 import '../../views/primary/pages/notifications/views/notification_details_screen.dart';
 import '../../views/primary/pages/notifications/views/notification_screen.dart';
 import '../../views/primary/pages/notifications/views/setting_page.dart';
-import '../../views/primary/pages/profile/edit_profile.dart';
 import '../../views/primary/pages/profile/user_profile_screen.dart';
 
 part 'go_router_provider.g.dart';
@@ -577,19 +576,7 @@ class UserProfileRouteData extends GoRouteData {
   }
 }
 
-@TypedGoRoute<EditUserProfileRouteData>(
-  path: '/editUserProfile',
-)
-class EditUserProfileRouteData extends GoRouteData {
-  const EditUserProfileRouteData();
 
-  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const ProfileEditPage();
-  }
-}
 
 @TypedGoRoute<NotificationRouteData>(
   path: '/notifications',

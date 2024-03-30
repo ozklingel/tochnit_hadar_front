@@ -94,7 +94,7 @@ class HttpService {
   }
 
   static uploadPhoto(File selectedImage, userid) async {
-    userid = "972$userid";
+    userid = "userid";
 
     var request = http.MultipartRequest(
       'POST',
