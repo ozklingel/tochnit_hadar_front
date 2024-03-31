@@ -10,21 +10,21 @@ import 'package:logger/logger.dart';
 class HttpService {
   static const _chatBoxUrl = '${Consts.baseUrl}messegaes_form/add';
   // static const _getNoriUrl = '${Consts.baseUrl}notification_form/getAll';
-  static const _getUserDetailUrl =
-      '${Consts.baseUrl}userProfile_form/getProfileAtributes';
+
   static final _setUserImageUrl = Uri.parse(
     '${Consts.baseUrl}userProfile_form/uploadPhoto',
   );
-  static const _setUserDetailUrl =
-      '${Consts.baseUrl}setEntityDetails_form/setByType';
-  static final _sendAllreadyreadUrl = Uri.parse(
-    '${Consts.baseUrl}notification_form/setWasRead',
-  );
+
+
   static final _setSettingUrl = Uri.parse(
     '${Consts.baseUrl}notification_form/setSetting',
   );
   static const _getNotifSettingUrl =
       '${Consts.baseUrl}notification_form/getAllSetting';
+        static const _getGifturl =
+      '${Consts.baseUrl}gift/getGift';
+        static const _deleteGifturl = '${Consts.baseUrl}gift/giftCode';
+
   static const token = "11"; //await Candidate().getToken();
   static final httpClient = HttpClient();
 
@@ -50,17 +50,7 @@ class HttpService {
     return frame.image;
   }
 
-  static getUserNotiSetting(userid) async {
-    final response = await http.get(
-      Uri.parse("$_getNotifSettingUrl?userId=$userid"),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-    return response;
-  }
+
 
   static getUserAlert(userid) async {
     final response = await http.get(
@@ -123,74 +113,7 @@ class HttpService {
     //http.Response response = await http.Response.fromStream(res);
   }
 
-  static sendAllreadyread(notiId) async {
-    Logger().d(_sendAllreadyreadUrl.toString());
-    var request = http.MultipartRequest(
-      'POST',
-      _sendAllreadyreadUrl,
-    );
-    Map<String, String> headers = {"Content-type": "multipart/form-data"};
-    // print(notiId);
-    request.fields['noti_id'] = notiId;
 
-    request.headers.addAll(headers);
-    // print(request);
-    var res = await request.send();
-    return res;
-  }
-
-  static Future<http.Response> getUserDetail(userid) async {
-    // print(userid);
-    userid = "972$userid";
-    Logger().d("$_getUserDetailUrl?userId=$userid");
-    final response = await http.get(
-      Uri.parse("$_getUserDetailUrl?userId=$userid"),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-    // print('Token : ${token}');
-    return response;
-  }
-
-  static setUserDetail(typeOfSet, entityId, atrrToBeSet) async {
-    // print(atrrToBeSet);
-    // print(entityId);
-    // print(typeOfSet);
-    entityId = "972$entityId";
-    //I/flutter ( 5746): ozzzzzzzzzzz{"[ggh, name][0]":"[ggh, name][0]"}}
-
-    var atrrToBeSetString = "{";
-    for (var age in atrrToBeSet) {
-      var agesplited = age.split("-");
-      if (agesplited[0] != null && agesplited[0] != "") {
-        atrrToBeSetString += "\"${agesplited[1]}\":\"${agesplited[0]}\",";
-      }
-    }
-    atrrToBeSetString =
-        atrrToBeSetString.substring(0, atrrToBeSetString.length - 1);
-    atrrToBeSetString += "}";
-    Logger().d("ozzzzzzzzzzz$atrrToBeSetString");
-    Map<String, dynamic> request = {
-      "typeOfSet": typeOfSet,
-      "entityId": entityId,
-      "atrrToBeSet": jsonDecode(atrrToBeSetString),
-    };
-
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-    final response = await http.put(
-      Uri.parse(_setUserDetailUrl),
-      headers: headers,
-      body: json.encode(request),
-    );
-    Map<String, dynamic> responsePayload = json.decode(response.body);
-    return responsePayload['result'];
-  }
 
   static chatBoxUrl(createdById, subject, contant, context) async {
     Map<String, dynamic> request = {
@@ -210,5 +133,50 @@ class HttpService {
     Map<String, dynamic> responsePayload = json.decode(response.body);
     Logger().d(responsePayload.toString());
     return responsePayload['result'];
+  }
+
+  static getGift(userid,base,teudat_zehut) async {
+    final response = await http.get(
+      Uri.parse("$_getGifturl?userId=$userid?base=$base?teudat_zehut=$teudat_zehut"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+        final u = jsonDecode(response.body);
+
+      String t1 = (u["result"]) as String;
+
+    return t1;
+  }
+
+    static delete_gift(apprentice,giftCode) async {
+    Map<String, dynamic> request = {
+      "giftCode": giftCode,
+      "apprentice": apprentice
+    };
+
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.post(
+      Uri.parse(_deleteGifturl),
+      headers: headers,
+      body: json.encode(request),
+    );
+    Map<String, dynamic> responsePayload = json.decode(response.body);
+    Logger().d(responsePayload.toString());
+    return responsePayload['result'];
+  }
+
+    static getUserNotiSetting(userid) async {
+    final response = await http.get(
+      Uri.parse("$_getNotifSettingUrl?userId=$userid"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    return response;
   }
 }

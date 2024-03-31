@@ -15,7 +15,11 @@ import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../../services/auth/user_service.dart';
+import '../../../../../services/networking/http_service.dart';
+
 class GiftScreen extends HookConsumerWidget {
+
   const GiftScreen({
     super.key,
     required this.eventId,
@@ -25,6 +29,8 @@ class GiftScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+      String res="";
+
     final apprentice =
         ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
                   (element) => element.events.any((e) => e.id == eventId),
@@ -138,8 +144,8 @@ class GiftScreen extends HookConsumerWidget {
                                 Expanded(
                                   child: TextButton(
                                     onPressed: () async {
-                                      await Clipboard.setData(
-                                        const ClipboardData(text: '12345AAA'),
+                                        await Clipboard.setData(
+                                         ClipboardData(text:  res),
                                       );
 
                                       Toaster.show(
@@ -147,9 +153,9 @@ class GiftScreen extends HookConsumerWidget {
                                         align: const Alignment(0, -0.8),
                                       );
                                     },
-                                    child: const Row(
+                                    child:  Row(
                                       children: [
-                                        Text('12345AAA'),
+                                        Text(res),
                                         Spacer(),
                                         Icon(
                                           FluentIcons.copy_24_regular,
@@ -167,8 +173,11 @@ class GiftScreen extends HookConsumerWidget {
                                       color: AppColors.blue03,
                                     ),
                                   ),
-                                  onPressed: () =>
-                                      isShowCouponCode.value = true,
+                                  onPressed: () async {
+                                        final user = ref.watch(userServiceProvider);
+                                        res = await HttpService.getGift(user.valueOrNull!.phone,compound,apprentice.teudatZehut);             
+                                      isShowCouponCode.value = true;
+                                      }
                                 ),
                             ],
                           ),
