@@ -80,12 +80,7 @@ void showFancyCustomDialog(BuildContext context) {
                   fontSize: 15,
                 ),
               ),
-              Text(
-                'תודה',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
+        
             ],
           ),
         ],

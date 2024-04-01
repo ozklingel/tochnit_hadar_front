@@ -10,6 +10,8 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/controller/use
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'gift_screen.dart';
+
 class SideMenuDrawer extends ConsumerWidget {
   const SideMenuDrawer({
     super.key,
@@ -138,7 +140,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.gift_16_regular),
                     title: const Text(' ניהול קודי מתנה'),
-                    onTap: () => Toaster.unimplemented(),
+                    onTap: () =>  GiftRouteData(id: "1").go(context),
                   ),
                   ListTile(
                     dense: true,
