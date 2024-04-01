@@ -282,9 +282,7 @@ if (user.valueOrNull?.role == UserRole.melave) {
     useListenable(phoneController);
 
     final pages = [
-      _SelectUserTypePage(
-        selectedUserType: selectedUserType,
-      ),
+    
       _SelectDataFillType(
         selecteDataType: selectedDataFillType,
       ),
@@ -304,7 +302,7 @@ if (user.valueOrNull?.role == UserRole.melave) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('הוספת משתמש'),
+        title: const Text(' ניהול קודי מתנה'),
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -329,68 +327,8 @@ if (user.valueOrNull?.role == UserRole.melave) {
               height: 80,
               child: Row(
                 children: [
-                  if ((pageController.hasClients &&
-                          pageController.page == pages.length - 1) ||
-                      selectedFiles.value.isNotEmpty)
-                    Expanded(
-                      child: LargeFilledRoundedButton(
-                        label: 'שמירה',
-                        onPressed: selectedFiles.value.isEmpty &&
-                                (firstNameController.text.isEmpty ||
-                                    lastNameController.text.isEmpty ||
-                                    phoneController.text.isEmpty ||
-                                    selectedInstitution.value.isEmpty)
-                            ? null
-                            : () async {
-                                isLoading.value = true;
-                                try {
-                                  if (selectedFiles.value.isNotEmpty) {
-                                    final result = await ref
-                                        .read(
-                                          usersControllerProvider.notifier,
-                                        )
-                                        .createExcel(
-                                          file: selectedFiles.value.first,
-                                        );
-                                    if (result) {}
-                                  } else {
-                                    final isValidForm =
-                                        formKey.currentState?.validate() ??
-                                            false;
-
-                                    if (!isValidForm) {
-                                      return;
-                                    }
-
-                                    final result = await ref
-                                        .read(
-                                          usersControllerProvider.notifier,
-                                        )
-                                        .createManual(
-                                          role: UserRole.melave,
-                                          institutionId:
-                                              selectedInstitution.value.id,
-                                          firstName: firstNameController.text,
-                                          lastName: lastNameController.text,
-                                          phone: phoneController.text,
-                                        );
-
-                                    if (result) {}
-                                  }
-                                } catch (e) {
-                                  Logger().e(
-                                    'failed to add user excel ui',
-                                    error: e,
-                                  );
-                                  Sentry.captureException(e);
-                                  Toaster.error(e);
-                                }
-
-                                isLoading.value = false;
-                              },
-                      ),
-                    )
-                  else ...[
+               
+                  
                     Expanded(
                       child: LargeFilledRoundedButton(
                         label: 'הבא',
@@ -400,23 +338,8 @@ if (user.valueOrNull?.role == UserRole.melave) {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: LargeFilledRoundedButton.cancel(
-                        label: 'ביטול',
-                        onPressed: () {
-                          if ((pageController.page ?? 0) > 0) {
-                            pageController.previousPage(
-                              duration: Consts.defaultDurationM,
-                              curve: Curves.linear,
-                            );
-                          } else {
-                            Navigator.of(context).pop();
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+                
+                  
                 ],
               ),
             ),
@@ -462,168 +385,7 @@ class _FormOrImportPage extends HookConsumerWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                InputFieldContainer(
-                  label: 'שם פרטי',
-                  isRequired: true,
-                  child: TextFormField(
-                    controller: firstNameController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'empty';
-                      }
-
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      hintText: 'הזן את השם הפרטי המשתמש',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                InputFieldContainer(
-                  label: 'שם משפחה',
-                  isRequired: true,
-                  child: TextFormField(
-                    controller: lastNameController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'empty';
-                      }
-
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      hintText: 'הזן את שם המשפחה של המשתמש',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                InputFieldContainer(
-                  label: 'מספר טלפון',
-                  isRequired: true,
-                  child: TextFormField(
-                    controller: phoneController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'empty';
-                      }
-
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      hintText: 'הזן מספר טלפון',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                InputFieldContainer(
-                  label: 'שיוך למוסד',
-                  isRequired: true,
-                  child: ref.watch(getInstitutionsProvider).when(
-                        loading: () => const Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                        error: (error, stack) =>
-                            Center(child: Text(error.toString())),
-                        data: (institutions) => DropdownButtonHideUnderline(
-                          child: DropdownButton2<InstitutionDto>(
-                            hint: Text(
-                              selectedInstitution.value.isEmpty
-                                  ? 'מוסד'
-                                  : selectedInstitution.value.name,
-                              style: selectedInstitution.value.isEmpty
-                                  ? TextStyles.s16w400cGrey5
-                                  : null,
-                            ),
-                            onMenuStateChange: (isOpen) {},
-                            dropdownSearchData: const DropdownSearchData(
-                              searchInnerWidgetHeight: 50,
-                              searchInnerWidget: TextField(
-                                decoration: InputDecoration(
-                                  focusedBorder: UnderlineInputBorder(),
-                                  enabledBorder: InputBorder.none,
-                                  prefixIcon: Icon(Icons.search),
-                                  hintText: 'חיפוש',
-                                  hintStyle: TextStyles.s14w400,
-                                ),
-                              ),
-                            ),
-                            style: TextStyles.s16w400cGrey5,
-                            buttonStyleData: ButtonStyleData(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(36),
-                                border: Border.all(
-                                  color: AppColors.shades300,
-                                ),
-                              ),
-                              elevation: 0,
-                              padding: const EdgeInsets.only(right: 8),
-                            ),
-                            onChanged: (value) {
-                              selectedInstitution.value =
-                                  value ?? selectedInstitution.value;
-                            },
-                            dropdownStyleData: const DropdownStyleData(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(16)),
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 1,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
-                                  ),
-                                ),
-                              ),
-                              openMenuIcon: Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 3,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            items: institutions
-                                .map(
-                                  (e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e.name),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                ),
-                if (selectedUserType != UserRole.apprentice) ...[
-                  const SizedBox(height: 24),
-                  InputFieldContainer(
-                    label: 'תפקיד',
-                    isRequired: true,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'empty';
-                        }
-
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'בחר תפקיד',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                ],
-              ],
+    ],
             ),
           ),
         );
@@ -633,7 +395,7 @@ class _FormOrImportPage extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'העלאת קובץ נתוני חניכים',
+              'העלאת קובץ קודי מתנה',
               style: TextStyles.s16w400cGrey5,
             ),
             const SizedBox(height: 24),

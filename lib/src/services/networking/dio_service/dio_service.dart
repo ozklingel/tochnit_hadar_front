@@ -19,7 +19,7 @@ class DioService extends _$DioService {
 
     final authToken = ref.read(storageServiceProvider.notifier).getAuthToken();
 
-    final userPhone = "528827064";
+    final userPhone = ref.read(storageServiceProvider.notifier).getUserPhone();
 
     Logger().d('initializing dio with base url::${Consts.baseUrl}');
 
