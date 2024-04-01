@@ -85,6 +85,19 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('פניות שירות'),
                     onTap: () => const SupportRouteData().go(context),
                   ),
+                            ListTile(
+                  dense: true,
+                  leading: const Icon(Icons.notifications_none),
+                  title: const Text(' התראות'),
+                  onTap: () => const NotificationRouteData().go(context),
+                ),
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(FluentIcons.settings_16_regular),
+                    title: const Text('הגדרות'),
+                    onTap: () =>
+                        const NotificationSettingRouteData().push(context),
+                  ),
                 ] else if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                   ListTile(
                     dense: true,

@@ -10,13 +10,16 @@ import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/widgets/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 import '../../../../../services/auth/user_service.dart';
 import '../../../../../services/networking/http_service.dart';
+import '../../chat_box/error_dialog.dart';
 
 class GiftScreen extends HookConsumerWidget {
 
@@ -29,7 +32,7 @@ class GiftScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-      String res="";
+      var res=useState("");
 
     final apprentice =
         ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
@@ -145,7 +148,7 @@ class GiftScreen extends HookConsumerWidget {
                                   child: TextButton(
                                     onPressed: () async {
                                         await Clipboard.setData(
-                                         ClipboardData(text:  res),
+                                         ClipboardData(text:  ""),
                                       );
 
                                       Toaster.show(
@@ -155,7 +158,7 @@ class GiftScreen extends HookConsumerWidget {
                                     },
                                     child:  Row(
                                       children: [
-                                        Text(res),
+                                        Text(res.value),
                                         Spacer(),
                                         Icon(
                                           FluentIcons.copy_24_regular,
@@ -175,7 +178,9 @@ class GiftScreen extends HookConsumerWidget {
                                   ),
                                   onPressed: () async {
                                         final user = ref.watch(userServiceProvider);
-                                        res = await HttpService.getGift(user.valueOrNull!.phone,compound,apprentice.teudatZehut);             
+                                        res.value = await HttpService.getGift(user.valueOrNull!.phone,compound,apprentice.teudatZehut); 
+                                            Logger().d("gift code : $res");
+            
                                       isShowCouponCode.value = true;
                                       }
                                 ),
@@ -204,7 +209,19 @@ class GiftScreen extends HookConsumerWidget {
                   Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: TextButton(
-                      onPressed: () => Toaster.unimplemented(),
+                      onPressed: () async { 
+                       String result =await HttpService.delete_gift(apprentice.id,res.value);
+                if (result == "success") {
+                  // print("in");
+                  // ignore: use_build_context_synchronously
+                  showFancyCustomDialog(context);
+                } else {
+                  // print("in");
+
+                  // ignore: use_build_context_synchronously
+                  showAlertDialog(context);
+                }
+                      },
                       child: const Text('לחץ כאן לביטול ההתראות הבאות'),
                     ),
                   ),

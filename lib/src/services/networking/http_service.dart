@@ -23,7 +23,7 @@ class HttpService {
       '${Consts.baseUrl}notification_form/getAllSetting';
         static const _getGifturl =
       '${Consts.baseUrl}gift/getGift';
-        static const _deleteGifturl = '${Consts.baseUrl}gift/giftCode';
+        static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
 
   static const token = "11"; //await Candidate().getToken();
   static final httpClient = HttpClient();
@@ -154,17 +154,18 @@ class HttpService {
     static delete_gift(apprentice,giftCode) async {
     Map<String, dynamic> request = {
       "giftCode": giftCode,
-      "apprentice": apprentice
+      "apprentice_id": apprentice
     };
 
     final headers = {'Content-Type': 'application/json'};
-    final response = await http.post(
+    final response = await http.put(
       Uri.parse(_deleteGifturl),
       headers: headers,
       body: json.encode(request),
     );
+        Logger().d(response.body);
+
     Map<String, dynamic> responsePayload = json.decode(response.body);
-    Logger().d(responsePayload.toString());
     return responsePayload['result'];
   }
 
