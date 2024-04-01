@@ -11,8 +11,8 @@ class HttpService {
   static const _chatBoxUrl = '${Consts.baseUrl}messegaes_form/add';
   // static const _getNoriUrl = '${Consts.baseUrl}notification_form/getAll';
 
-  static final _setUserImageUrl = Uri.parse(
-    '${Consts.baseUrl}userProfile_form/uploadPhoto',
+  static final _add_giftCode_excel = Uri.parse(
+    '${Consts.baseUrl}export_import/add_giftCode_excel',
   );
 
 
@@ -83,20 +83,18 @@ class HttpService {
     );
   }
 
-  static uploadPhoto(File selectedImage, userid) async {
-    userid = "userid";
+  static add_giftCode_excel(File selectedImage) async {
 
     var request = http.MultipartRequest(
-      'POST',
-      _setUserImageUrl,
+      'put',
+      _add_giftCode_excel,
     );
-    request.fields['userId'] = userid;
 
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
 
     request.files.add(
       http.MultipartFile(
-        'image',
+        'file',
         selectedImage.readAsBytes().asStream(),
         selectedImage.lengthSync(),
         filename: selectedImage.path.split('/').last,
@@ -105,13 +103,14 @@ class HttpService {
 
     request.headers.addAll(headers);
 
-    Logger().d("request image: $request");
 
     // ignore: unused_local_variable
     final res = await request.send();
+  var response = await http.Response.fromStream(res);
+  final result = jsonDecode(response.body) as Map<String, dynamic>;
 
-    //http.Response response = await http.Response.fromStream(res);
-  }
+  return result['result'];
+    }
 
 
 

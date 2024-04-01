@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
@@ -30,6 +32,7 @@ import '../../../../../services/networking/http_service.dart';
 import '../../../../widgets/fields/input_label.dart';
 import '../../apprentices/controller/users_controller.dart';
 import '../../chat_box/error_dialog.dart';
+import 'widgets/success_dialog_addGift.dart';
 enum _DataFillType {
   manual,
   import,
@@ -269,7 +272,6 @@ if (user.valueOrNull?.role == UserRole.melave) {
 }    else if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
         final pageController = usePageController();
     final selectedUserType = useState(UserRole.apprentice);
-    final selectedDataFillType = useState(_DataFillType.manual);
     final selectedInstitution = useState(const InstitutionDto());
     final firstNameController = useTextEditingController();
     final lastNameController = useTextEditingController();
@@ -283,12 +285,9 @@ if (user.valueOrNull?.role == UserRole.melave) {
 
     final pages = [
     
-      _SelectDataFillType(
-        selecteDataType: selectedDataFillType,
-      ),
+  
       _FormOrImportPage(
         selectedInstitution: selectedInstitution,
-        selectedDataType: selectedDataFillType.value,
         selectedUserType: selectedUserType.value,
         isLoading: isLoading,
         files: selectedFiles,
@@ -331,11 +330,20 @@ if (user.valueOrNull?.role == UserRole.melave) {
                   
                     Expanded(
                       child: LargeFilledRoundedButton(
-                        label: 'הבא',
-                        onPressed: () => pageController.nextPage(
-                          duration: Consts.defaultDurationM,
-                          curve: Curves.linear,
-                        ),
+                        label: 'שמירה',
+                            onPressed: () async {
+                                        File f= File(pages.first.files.value.first.path!);
+
+                                        var res = await HttpService.add_giftCode_excel(f ); 
+                                            Logger().d("gift code : $res");
+                                                   if (res == "success") {
+     
+                  showFancyCustomDialog_addGift(context);
+                } else {
+
+                  showAlertDialog(context);
+                }
+                                      }
                       ),
                     ),
                 
@@ -356,7 +364,6 @@ else return Text("data");}
 class _FormOrImportPage extends HookConsumerWidget {
   const _FormOrImportPage({
     required this.selectedUserType,
-    required this.selectedDataType,
     required this.selectedInstitution,
     required this.isLoading,
     required this.files,
@@ -367,7 +374,6 @@ class _FormOrImportPage extends HookConsumerWidget {
   });
 
   final UserRole selectedUserType;
-  final _DataFillType selectedDataType;
   final ValueNotifier<List<PlatformFile>> files;
   final ValueNotifier<InstitutionDto> selectedInstitution;
   final ValueNotifier<bool> isLoading;
@@ -376,8 +382,10 @@ class _FormOrImportPage extends HookConsumerWidget {
   final TextEditingController lastNameController;
   final TextEditingController phoneController;
 
+
   @override
   Widget build(BuildContext context, ref) {
+    var selectedDataType=_DataFillType.import;
     switch (selectedDataType) {
       case _DataFillType.manual:
         return Form(
@@ -405,7 +413,7 @@ class _FormOrImportPage extends HookConsumerWidget {
                 isLoading.value = true;
 
                 try {
-                  final result = await FilePicker.platform.pickFiles(
+                  var result = await FilePicker.platform.pickFiles(
                     allowMultiple: false,
                     withData: true,
                     type: FileType.custom,
@@ -415,6 +423,8 @@ class _FormOrImportPage extends HookConsumerWidget {
                   );
 
                   if (result != null) {
+                        Logger().d("request image: $result");
+
                     files.value = [
                       ...result.files,
                     ];
