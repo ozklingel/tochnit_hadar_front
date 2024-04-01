@@ -15,15 +15,13 @@ class HttpService {
     '${Consts.baseUrl}userProfile_form/uploadPhoto',
   );
 
-
   static final _setSettingUrl = Uri.parse(
     '${Consts.baseUrl}notification_form/setSetting',
   );
   static const _getNotifSettingUrl =
       '${Consts.baseUrl}notification_form/getAllSetting';
-        static const _getGifturl =
-      '${Consts.baseUrl}gift/getGift';
-        static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
+  static const _getGifturl = '${Consts.baseUrl}gift/getGift';
+  static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
 
   static const token = "11"; //await Candidate().getToken();
   static final httpClient = HttpClient();
@@ -50,11 +48,11 @@ class HttpService {
     return frame.image;
   }
 
-
-
   static getUserAlert(userid) async {
     final response = await http.get(
-      Uri.parse("${Consts.baseUrl}notification_form/get_outbound?userId=$userid"),
+      Uri.parse(
+        "${Consts.baseUrl}notification_form/get_outbound?userId=$userid",
+      ),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -63,6 +61,7 @@ class HttpService {
     );
     return response;
   }
+
   static setSetting(
     userId,
     bool notifyStartWeek,
@@ -113,8 +112,6 @@ class HttpService {
     //http.Response response = await http.Response.fromStream(res);
   }
 
-
-
   static chatBoxUrl(createdById, subject, contant, context) async {
     Map<String, dynamic> request = {
       "content": contant,
@@ -135,26 +132,28 @@ class HttpService {
     return responsePayload['result'];
   }
 
-  static getGift(userid,base,teudat_zehut) async {
+  static getGift(userid, base, teudatZehut) async {
     final response = await http.get(
-      Uri.parse("$_getGifturl?userId=$userid?base=$base?teudat_zehut=$teudat_zehut"),
+      Uri.parse(
+        "$_getGifturl?userId=$userid?base=$base?teudat_zehut=$teudatZehut",
+      ),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
-        final u = jsonDecode(response.body);
+    final u = jsonDecode(response.body);
 
-      String t1 = (u["result"]) as String;
+    String t1 = (u["result"]) as String;
 
     return t1;
   }
 
-    static delete_gift(apprentice,giftCode) async {
+  static deleteGift(apprentice, giftCode) async {
     Map<String, dynamic> request = {
       "giftCode": giftCode,
-      "apprentice_id": apprentice
+      "apprentice_id": apprentice,
     };
 
     final headers = {'Content-Type': 'application/json'};
@@ -163,13 +162,13 @@ class HttpService {
       headers: headers,
       body: json.encode(request),
     );
-        Logger().d(response.body);
+    Logger().d(response.body);
 
     Map<String, dynamic> responsePayload = json.decode(response.body);
     return responsePayload['result'];
   }
 
-    static getUserNotiSetting(userid) async {
+  static getUserNotiSetting(userid) async {
     final response = await http.get(
       Uri.parse("$_getNotifSettingUrl?userId=$userid"),
       headers: {

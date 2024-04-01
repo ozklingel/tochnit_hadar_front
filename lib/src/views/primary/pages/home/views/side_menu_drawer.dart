@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import 'gift_screen.dart';
 
 class SideMenuDrawer extends ConsumerWidget {
   const SideMenuDrawer({
@@ -75,7 +72,7 @@ class SideMenuDrawer extends ConsumerWidget {
               shrinkWrap: true,
               children: [
                 if (user.valueOrNull?.role == UserRole.melave) ...[
-                 ListTile(
+                  ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.data_pie_24_regular),
                     title: const Text('מדדי תוכנית'),
@@ -95,12 +92,12 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('פניות שירות'),
                     onTap: () => const SupportRouteData().go(context),
                   ),
-                            ListTile(
-                  dense: true,
-                  leading: const Icon(Icons.notifications_none),
-                  title: const Text(' התראות'),
-                  onTap: () => const NotificationRouteData().go(context),
-                ),
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.notifications_none),
+                    title: const Text(' התראות'),
+                    onTap: () => const NotificationRouteData().go(context),
+                  ),
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.settings_16_regular),
@@ -140,7 +137,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.gift_16_regular),
                     title: const Text(' ניהול קודי מתנה'),
-                    onTap: () =>  GiftRouteData(id: "1").go(context),
+                    onTap: () => const GiftRouteData(id: "1").go(context),
                   ),
                   ListTile(
                     dense: true,
@@ -183,13 +180,12 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('פניות שירות'),
                     onTap: () => const SupportRouteData().push(context),
                   ),
-             
-                ListTile(
-                  dense: true,
-                  leading: const Icon(Icons.notifications_none),
-                  title: const Text(' התראות'),
-                  onTap: () => const NotificationRouteData().go(context),
-                ),
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.notifications_none),
+                    title: const Text(' התראות'),
+                    onTap: () => const NotificationRouteData().go(context),
+                  ),
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.settings_16_regular),
@@ -213,21 +209,18 @@ class SideMenuDrawer extends ConsumerWidget {
                       const ApprenticesOrUsersRouteData().go(context);
                     },
                   ),
-          
-           
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.mail_12_regular),
                     title: const Text('פניות שירות'),
                     onTap: () => const SupportRouteData().push(context),
                   ),
-             
-                ListTile(
-                  dense: true,
-                  leading: const Icon(Icons.notifications_none),
-                  title: const Text(' התראות'),
-                  onTap: () => const NotificationRouteData().go(context),
-                ),
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.notifications_none),
+                    title: const Text(' התראות'),
+                    onTap: () => const NotificationRouteData().go(context),
+                  ),
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.settings_16_regular),
@@ -236,7 +229,6 @@ class SideMenuDrawer extends ConsumerWidget {
                         const NotificationSettingRouteData().push(context),
                   ),
                 ],
-        
                 ListTile(
                   dense: true,
                   leading: const Icon(FluentIcons.arrow_exit_20_regular),

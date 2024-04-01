@@ -150,6 +150,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/mapa.png
   AssetGenImage get mapa => const AssetGenImage('assets/images/mapa.png');
 
+  /// File path: assets/images/mechiot_capayim.png
+  AssetGenImage get mechiotCapayim =>
+      const AssetGenImage('assets/images/mechiot_capayim.png');
+
   /// File path: assets/images/no-messages.svg
   SvgGenImage get noMessages =>
       const SvgGenImage('assets/images/no-messages.svg');
@@ -201,6 +205,7 @@ class $AssetsImagesGen {
         logomark,
         madad,
         mapa,
+        mechiotCapayim,
         noMessages,
         noNotification,
         noTasks,

@@ -38,9 +38,9 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
     null,
     null,
   ];
-    File? galleryFile;
+  File? galleryFile;
   final picker = ImagePicker();
- ImageProvider<Object>? profileimg =null;
+  ImageProvider<Object>? profileimg;
   @override
   void dispose() {
     super.dispose();
@@ -92,7 +92,6 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                       name: user.valueOrNull!.fullName,
                       phone: "0${user.valueOrNull!.phone}",
                       onTapEditAvatar: () => _showPicker(context: context),
-
                       bottom: const Column(
                         children: [
                           SizedBox(height: 24),
@@ -156,7 +155,7 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
     );
   }
 
- void _showPicker({
+  void _showPicker({
     required BuildContext context,
   }) {
     final user = ref.watch(userServiceProvider);
@@ -207,8 +206,7 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
           //HttpService.uploadPhoto(galleryFile!, user.valueOrNull!.phone);
           setState(() {
             var profileimg = FileImage(galleryFile!);
-                 Logger().d(profileimg);
-
+            Logger().d(profileimg);
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -219,8 +217,6 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
       },
     );
   }
-
-  
 }
 
 class _MilitaryServiceTabView extends HookConsumerWidget {
@@ -542,8 +538,4 @@ class _TohnitHadarTabView extends ConsumerWidget {
       ],
     );
   }
-  
 }
-
-
-
