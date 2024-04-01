@@ -38,9 +38,11 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
     null,
     null,
   ];
+
   File? galleryFile;
   final picker = ImagePicker();
   ImageProvider<Object>? profileimg;
+
   @override
   void dispose() {
     super.dispose();

@@ -185,20 +185,21 @@ class UsersScreenBody extends HookConsumerWidget {
                               icon:
                                   const Icon(FluentIcons.filter_add_20_regular),
                             ),
-                            Positioned(
-                              right: 8,
-                              top: 8,
-                              child: IgnorePointer(
-                                child: CircleAvatar(
-                                  backgroundColor: AppColors.red1,
-                                  radius: 7,
-                                  child: Text(
-                                    filters.value.length.toString(),
-                                    style: TextStyles.s11w500fRoboto,
+                            if (filters.value.length > 0)
+                              Positioned(
+                                right: 8,
+                                top: 8,
+                                child: IgnorePointer(
+                                  child: CircleAvatar(
+                                    backgroundColor: AppColors.red1,
+                                    radius: 7,
+                                    child: Text(
+                                      filters.value.length.toString(),
+                                      style: TextStyles.s11w500fRoboto,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                       ],

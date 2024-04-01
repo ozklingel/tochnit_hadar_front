@@ -220,9 +220,8 @@ class _MelaveTasksBody extends HookConsumerWidget {
             onTap: selectedCalls.value.isEmpty
                 ? e.subject.isEmpty
                     ? null
-                    : () =>
-                        ApprenticeDetailsRouteData(id: e.subject.first)
-                            .push(context)
+                    : () => ApprenticeDetailsRouteData(id: e.subject.first)
+                        .push(context)
                 : () => _selectTask(
                       selectedTasks: selectedCalls,
                       e: e,
@@ -249,9 +248,8 @@ class _MelaveTasksBody extends HookConsumerWidget {
             onTap: selectedMeetings.value.isEmpty
                 ? e.subject.isEmpty
                     ? null
-                    : () =>
-                        ApprenticeDetailsRouteData(id: e.subject.first)
-                            .push(context)
+                    : () => ApprenticeDetailsRouteData(id: e.subject.first)
+                        .push(context)
                 : () => _selectTask(
                       selectedTasks: selectedMeetings,
                       e: e,
@@ -276,9 +274,8 @@ class _MelaveTasksBody extends HookConsumerWidget {
             onTap: selectedParents.value.isEmpty
                 ? e.subject.isEmpty
                     ? null
-                    : () =>
-                        ApprenticeDetailsRouteData(id: e.subject.first)
-                            .push(context)
+                    : () => ApprenticeDetailsRouteData(id: e.subject.first)
+                        .push(context)
                 : () => _selectTask(
                       selectedTasks: selectedParents,
                       e: e,
@@ -308,8 +305,8 @@ class _MelaveTasksBody extends HookConsumerWidget {
             Builder(
               builder: (context) {
                 final selectedApprentice = apprentices.singleWhere(
-                  (element) => selectedParents.value.first.subject
-                      .contains(element.id),
+                  (element) =>
+                      selectedParents.value.first.subject.contains(element.id),
                 );
 
                 final isEnabledMother = [
@@ -401,8 +398,8 @@ class _MelaveTasksBody extends HookConsumerWidget {
             Builder(
               builder: (context) {
                 final selectedApprentice = apprentices.singleWhere(
-                  (element) => selectedCalls.value.first.subject
-                      .contains(element.id),
+                  (element) =>
+                      selectedCalls.value.first.subject.contains(element.id),
                   orElse: () => const ApprenticeDto(),
                 );
 

@@ -21,8 +21,13 @@ class GetApprentices extends _$GetApprentices {
       return flags.apprentices;
     }
 
-    final request =
-        await ref.watch(dioServiceProvider).get(Consts.getAllApprentices);
+    final request = await ref.watch(dioServiceProvider).get(
+          Consts.getAllApprentices,
+          // Consts.getAllFiltered,
+          // queryParameters: {
+          //   'roles': filter.roles.join(','),
+          // },
+        );
 
     final result = (request.data as List<dynamic>)
         .map(

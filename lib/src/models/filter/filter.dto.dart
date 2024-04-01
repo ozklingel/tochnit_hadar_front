@@ -15,7 +15,13 @@ part 'filter.dto.g.dart';
 )
 class FilterDto with _$FilterDto {
   const factory FilterDto({
-    @Default([]) List<String> roles,
+    @Default([
+      // 'חניכים',
+      // 'רכזי אשכול',
+      // 'רכזי מוסד',
+      // 'מלוים',
+    ])
+    List<String> roles,
     @Default([]) List<String> years,
     @Default([]) List<String> institutions,
     @Default([]) List<String> periods,

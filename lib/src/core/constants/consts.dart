@@ -11,6 +11,12 @@ abstract class Consts {
   static const isFirstOnboardingKey = 'firstOnboarding';
 
   // START APIS
+
+  // TODO(noga-dev): budget permitting >>
+  // https://pub.dev/packages/chopper
+  // https://pub.dev/packages/chopper_generator
+
+  // base url
   static const baseUrl =
       'https://mis11ka38j.execute-api.us-east-1.amazonaws.com/';
 
