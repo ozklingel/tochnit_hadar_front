@@ -59,7 +59,7 @@ void showFancyCustomDialog(BuildContext context) {
                 child: Image(
                   width: 150,
                   height: 160,
-                  image: AssetImage('assets/images/success-smile.png'),
+                  image: AssetImage('assets/images/mechiot_capayim.png'),
                 ),
               ),
               SizedBox(
@@ -67,7 +67,7 @@ void showFancyCustomDialog(BuildContext context) {
                 height: 5,
               ),
               Text(
-                'פניתך נשלחה בהצלחה!',
+                'המתנה סומנה כנשלחה',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -75,7 +75,7 @@ void showFancyCustomDialog(BuildContext context) {
                 height: 20,
               ),
               Text(
-                'נחזור אליך בהקדם',
+                'ישר כוח!',
                 style: TextStyle(
                   fontSize: 15,
                 ),
