@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 
-class delete_button extends StatelessWidget {
-  const delete_button({
+class DeleteButton extends StatelessWidget {
+  const DeleteButton({
     super.key,
     required this.label,
     this.onPressed,
@@ -13,8 +12,6 @@ class delete_button extends StatelessWidget {
     this.fontSize,
     this.height,
   });
-
-
 
   final String label;
   final VoidCallback? onPressed;
@@ -26,24 +23,26 @@ class delete_button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("22222");
+    debugPrint("22222");
+
     return SizedBox.fromSize(
-  size: Size(56, 56), // button width and height
-  child: ClipOval(
-    child: Material(
-      color: Colors.white, // button color
-      child: InkWell(
-        splashColor: Colors.white, // splash color
-        onTap: () =>onPressed, // button pressed
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(Icons.delete_outlined), // icon
-            Text("מחק"), // text
-          ],
+      size: const Size(56, 56), // button width and height
+      child: ClipOval(
+        child: Material(
+          color: Colors.white, // button color
+          child: InkWell(
+            splashColor: Colors.white, // splash color
+            onTap: () => onPressed, // button pressed
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.delete_outlined), // icon
+                Text("מחק"), // text
+              ],
+            ),
+          ),
         ),
       ),
-    ),
-  ),
-);}
+    );
+  }
 }

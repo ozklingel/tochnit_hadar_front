@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../services/routing/go_router_provider.dart';
 
-
-void showFancyCustomDialog_addGift(BuildContext context) {
+void showFancyCustomDialogAddGift(BuildContext context) {
   Dialog fancyDialog = Dialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12.0),
@@ -80,7 +79,6 @@ void showFancyCustomDialog_addGift(BuildContext context) {
                   fontSize: 15,
                 ),
               ),
-        
             ],
           ),
         ],

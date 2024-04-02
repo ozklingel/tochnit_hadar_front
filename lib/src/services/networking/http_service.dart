@@ -11,7 +11,7 @@ class HttpService {
   static const _chatBoxUrl = '${Consts.baseUrl}messegaes_form/add';
   // static const _getNoriUrl = '${Consts.baseUrl}notification_form/getAll';
 
-  static final _add_giftCode_excel = Uri.parse(
+  static final _addGiftCodeExcel = Uri.parse(
     '${Consts.baseUrl}export_import/add_giftCode_excel',
   );
 
@@ -20,8 +20,7 @@ class HttpService {
   );
   static const _getNotifSettingUrl =
       '${Consts.baseUrl}notification_form/getAllSetting';
-  static const _getGifturl =
-      '${Consts.baseUrl}gift/getGift';
+  static const _getGifturl = '${Consts.baseUrl}gift/getGift';
   static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
   static const _deleteGiftAllurl = '${Consts.baseUrl}gift/deleteAll';
 
@@ -84,11 +83,10 @@ class HttpService {
     );
   }
 
-  static add_giftCode_excel(File selectedImage) async {
-
+  static addGiftCodeExcel(File selectedImage) async {
     var request = http.MultipartRequest(
       'put',
-      _add_giftCode_excel,
+      _addGiftCodeExcel,
     );
 
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
@@ -104,16 +102,13 @@ class HttpService {
 
     request.headers.addAll(headers);
 
-
     // ignore: unused_local_variable
     final res = await request.send();
-  var response = await http.Response.fromStream(res);
-  final result = jsonDecode(response.body) as Map<String, dynamic>;
+    var response = await http.Response.fromStream(res);
+    final result = jsonDecode(response.body) as Map<String, dynamic>;
 
-  return result['result'];
-    }
-
-
+    return result['result'];
+  }
 
   static chatBoxUrl(createdById, subject, contant, context) async {
     Map<String, dynamic> request = {
@@ -171,7 +166,7 @@ class HttpService {
     return responsePayload['result'];
   }
 
-      static delete_gift_all(userId) async {
+  static deleteGiftAll(userId) async {
     Map<String, dynamic> request = {
       "userId": userId,
     };
@@ -182,12 +177,11 @@ class HttpService {
       headers: headers,
       body: json.encode(request),
     );
-        Logger().d(response.body);
+    Logger().d(response.body);
 
     Map<String, dynamic> responsePayload = json.decode(response.body);
     return responsePayload['result'];
   }
-
 
   static getUserNotiSetting(userid) async {
     final response = await http.get(
