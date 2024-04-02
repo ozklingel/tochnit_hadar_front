@@ -11,8 +11,8 @@ class HttpService {
   static const _chatBoxUrl = '${Consts.baseUrl}messegaes_form/add';
   // static const _getNoriUrl = '${Consts.baseUrl}notification_form/getAll';
 
-  static final _setUserImageUrl = Uri.parse(
-    '${Consts.baseUrl}userProfile_form/uploadPhoto',
+  static final _add_giftCode_excel = Uri.parse(
+    '${Consts.baseUrl}export_import/add_giftCode_excel',
   );
 
   static final _setSettingUrl = Uri.parse(
@@ -20,8 +20,10 @@ class HttpService {
   );
   static const _getNotifSettingUrl =
       '${Consts.baseUrl}notification_form/getAllSetting';
-  static const _getGifturl = '${Consts.baseUrl}gift/getGift';
+  static const _getGifturl =
+      '${Consts.baseUrl}gift/getGift';
   static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
+  static const _deleteGiftAllurl = '${Consts.baseUrl}gift/deleteAll';
 
   static const token = "11"; //await Candidate().getToken();
   static final httpClient = HttpClient();
@@ -82,20 +84,18 @@ class HttpService {
     );
   }
 
-  static uploadPhoto(File selectedImage, userid) async {
-    userid = "userid";
+  static add_giftCode_excel(File selectedImage) async {
 
     var request = http.MultipartRequest(
-      'POST',
-      _setUserImageUrl,
+      'put',
+      _add_giftCode_excel,
     );
-    request.fields['userId'] = userid;
 
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
 
     request.files.add(
       http.MultipartFile(
-        'image',
+        'file',
         selectedImage.readAsBytes().asStream(),
         selectedImage.lengthSync(),
         filename: selectedImage.path.split('/').last,
@@ -104,13 +104,16 @@ class HttpService {
 
     request.headers.addAll(headers);
 
-    Logger().d("request image: $request");
 
     // ignore: unused_local_variable
     final res = await request.send();
+  var response = await http.Response.fromStream(res);
+  final result = jsonDecode(response.body) as Map<String, dynamic>;
 
-    //http.Response response = await http.Response.fromStream(res);
-  }
+  return result['result'];
+    }
+
+
 
   static chatBoxUrl(createdById, subject, contant, context) async {
     Map<String, dynamic> request = {
@@ -167,6 +170,24 @@ class HttpService {
     Map<String, dynamic> responsePayload = json.decode(response.body);
     return responsePayload['result'];
   }
+
+      static delete_gift_all(userId) async {
+    Map<String, dynamic> request = {
+      "userId": userId,
+    };
+
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.put(
+      Uri.parse(_deleteGiftAllurl),
+      headers: headers,
+      body: json.encode(request),
+    );
+        Logger().d(response.body);
+
+    Map<String, dynamic> responsePayload = json.decode(response.body);
+    return responsePayload['result'];
+  }
+
 
   static getUserNotiSetting(userid) async {
     final response = await http.get(

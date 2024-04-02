@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -25,8 +27,11 @@ import '../../../../../models/institution/institution.dto.dart';
 import '../../../../../models/user/user.dto.dart';
 import '../../../../../services/auth/user_service.dart';
 import '../../../../../services/networking/http_service.dart';
+import '../../../../widgets/buttons/delete_button.dart';
+import '../../../../widgets/fields/input_label.dart';
+import '../../apprentices/controller/users_controller.dart';
 import '../../chat_box/error_dialog.dart';
-
+import 'widgets/success_dialog_addGift.dart';
 enum _DataFillType {
   manual,
   import,
@@ -237,117 +242,163 @@ class GiftScreen extends HookConsumerWidget {
                           } else {
                             // print("in");
 
-                            // ignore: use_build_context_synchronously
-                            showAlertDialog(context);
-                          }
-                        },
-                        child: const Text('לחץ כאן לביטול ההתראות הבאות'),
-                      ),
+                  // ignore: use_build_context_synchronously
+                  showAlertDialog(context);
+                }
+                      },
+                      child: const Text('לחץ כאן לביטול ההתראות הבאות'),
                     ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: ColoredBox(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: LargeFilledRoundedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) =>
-                            const SuccessDialog(msg: 'המתנה סומנה כנשלחה'),
-                      );
-                    },
-                    label: 'מעבר לאתר כוורת',
                   ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: ColoredBox(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: LargeFilledRoundedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) =>
+                          const SuccessDialog(msg: 'המתנה סומנה כנשלחה'),
+                    );
+                  },
+                  label: 'מעבר לאתר כוורת',
                 ),
               ),
             ),
-          ],
-        ),
-      );
-    } else if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
-      final pageController = usePageController();
-      final selectedUserType = useState(UserRole.apprentice);
-      final selectedDataFillType = useState(_DataFillType.manual);
-      final selectedInstitution = useState(const InstitutionDto());
-      final firstNameController = useTextEditingController();
-      final lastNameController = useTextEditingController();
-      final phoneController = useTextEditingController();
-      final selectedFiles = useState<List<PlatformFile>>([]);
-      final formKey = useMemoized(() => GlobalKey<FormState>(), []);
-      final isLoading = useState(false);
-      useListenable(firstNameController);
-      useListenable(lastNameController);
-      useListenable(phoneController);
+          ),
+        ],
+      ),
+    );
+}    else if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
+        final pageController = usePageController();
+    final selectedUserType = useState(UserRole.apprentice);
+    final selectedInstitution = useState(const InstitutionDto());
+    final firstNameController = useTextEditingController();
+    final lastNameController = useTextEditingController();
+    final phoneController = useTextEditingController();
+    final selectedFiles = useState<List<PlatformFile>>([]);
+    final formKey = useMemoized(() => GlobalKey<FormState>(), []);
+    final isLoading = useState(false);
+    useListenable(firstNameController);
+    useListenable(lastNameController);
+    useListenable(phoneController);
 
-      final pages = [
-        _SelectDataFillType(
-          selecteDataType: selectedDataFillType,
-        ),
-        _FormOrImportPage(
-          selectedInstitution: selectedInstitution,
-          selectedDataType: selectedDataFillType.value,
-          selectedUserType: selectedUserType.value,
-          isLoading: isLoading,
-          files: selectedFiles,
-          formKey: formKey,
-          firstNameController: firstNameController,
-          lastNameController: lastNameController,
-          phoneController: phoneController,
-        ),
-      ];
+    final pages = [
+    
+  
+      _FormOrImportPage(
+        selectedInstitution: selectedInstitution,
+        selectedUserType: selectedUserType.value,
+        isLoading: isLoading,
+        files: selectedFiles,
+        formKey: formKey,
+        firstNameController: firstNameController,
+        lastNameController: lastNameController,
+        phoneController: phoneController,
+      ),
+    ];
 
-      return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text(' ניהול קודי מתנה'),
-          actions: [
-            IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(Icons.close),
-            ),
-            const SizedBox(width: 12),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: PageView(
-                  controller: pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: pages,
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(' ניהול קודי מתנה'),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.close),
+          ),
+          const SizedBox(width: 12),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+                        SizedBox(
+              height: 80,
+              child: Row(
+                children: [
+               
+                             Expanded(
+                      child: Text(
+                         'מןמשו 2 מתוך 45 קודים',
+                            
+                      ),
+                    ), 
+                    
+                      
+                     delete_button(
+                        label: 'מחיקה',
+                            onPressed: () async {
+                              print("object");
+ String result =await HttpService.delete_gift_all(user.valueOrNull?.id);
+                if (result == "success") {
+                  // print("in");
+                  // ignore: use_build_context_synchronously
+                  showFancyCustomDialog(context);
+                } else {
+                  // print("in");
+
+                  // ignore: use_build_context_synchronously
+                  
+                                }}
+                      ),
+                  
+                
+                  
+                ],
               ),
-              SizedBox(
-                height: 80,
-                child: Row(
-                  children: [
+            ),
+          
+            Expanded(
+              child: PageView(
+                controller: pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: pages,
+              ),
+            ),
+            SizedBox(
+              height: 80,
+              child: Row(
+                children: [
+               
+                  
                     Expanded(
                       child: LargeFilledRoundedButton(
-                        label: 'הבא',
-                        onPressed: () => pageController.nextPage(
-                          duration: Consts.defaultDurationM,
-                          curve: Curves.linear,
-                        ),
+                        label: 'שמירה',
+                            onPressed: () async {
+                                        File f= File(pages.first.files.value.first.path!);
+
+                                        var res = await HttpService.add_giftCode_excel(f ); 
+                                            Logger().d("gift code : $res");
+                                                   if (res == "success") {
+     
+                  showFancyCustomDialog_addGift(context);
+                } else {
+
+                  showAlertDialog(context);
+                }
+                                      }
                       ),
                     ),
-                  ],
-                ),
+                
+                  
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
     }
 
     return const Text("data");
@@ -357,7 +408,6 @@ class GiftScreen extends HookConsumerWidget {
 class _FormOrImportPage extends HookConsumerWidget {
   const _FormOrImportPage({
     required this.selectedUserType,
-    required this.selectedDataType,
     required this.selectedInstitution,
     required this.isLoading,
     required this.files,
@@ -368,7 +418,6 @@ class _FormOrImportPage extends HookConsumerWidget {
   });
 
   final UserRole selectedUserType;
-  final _DataFillType selectedDataType;
   final ValueNotifier<List<PlatformFile>> files;
   final ValueNotifier<InstitutionDto> selectedInstitution;
   final ValueNotifier<bool> isLoading;
@@ -377,8 +426,10 @@ class _FormOrImportPage extends HookConsumerWidget {
   final TextEditingController lastNameController;
   final TextEditingController phoneController;
 
+
   @override
   Widget build(BuildContext context, ref) {
+    var selectedDataType=_DataFillType.import;
     switch (selectedDataType) {
       case _DataFillType.manual:
         return Form(
@@ -405,7 +456,7 @@ class _FormOrImportPage extends HookConsumerWidget {
                 isLoading.value = true;
 
                 try {
-                  final result = await FilePicker.platform.pickFiles(
+                  var result = await FilePicker.platform.pickFiles(
                     allowMultiple: false,
                     withData: true,
                     type: FileType.custom,
@@ -415,6 +466,8 @@ class _FormOrImportPage extends HookConsumerWidget {
                   );
 
                   if (result != null) {
+                        Logger().d("request image: $result");
+
                     files.value = [
                       ...result.files,
                     ];
