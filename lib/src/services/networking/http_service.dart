@@ -21,9 +21,10 @@ class HttpService {
   );
   static const _getNotifSettingUrl =
       '${Consts.baseUrl}notification_form/getAllSetting';
-        static const _getGifturl =
+  static const _getGifturl =
       '${Consts.baseUrl}gift/getGift';
-        static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
+  static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
+  static const _deleteGiftAllurl = '${Consts.baseUrl}gift/deleteAll';
 
   static const token = "11"; //await Candidate().getToken();
   static final httpClient = HttpClient();
@@ -167,6 +168,24 @@ class HttpService {
     Map<String, dynamic> responsePayload = json.decode(response.body);
     return responsePayload['result'];
   }
+
+      static delete_gift_all(userId) async {
+    Map<String, dynamic> request = {
+      "userId": userId,
+    };
+
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.put(
+      Uri.parse(_deleteGiftAllurl),
+      headers: headers,
+      body: json.encode(request),
+    );
+        Logger().d(response.body);
+
+    Map<String, dynamic> responsePayload = json.decode(response.body);
+    return responsePayload['result'];
+  }
+
 
     static getUserNotiSetting(userid) async {
     final response = await http.get(

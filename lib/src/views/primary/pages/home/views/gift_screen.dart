@@ -29,6 +29,7 @@ import '../../../../../models/user/user.dto.dart';
 import '../../../../../services/api/institutions/get_institutions.dart';
 import '../../../../../services/auth/user_service.dart';
 import '../../../../../services/networking/http_service.dart';
+import '../../../../widgets/buttons/delete_button.dart';
 import '../../../../widgets/fields/input_label.dart';
 import '../../apprentices/controller/users_controller.dart';
 import '../../chat_box/error_dialog.dart';
@@ -315,6 +316,42 @@ if (user.valueOrNull?.role == UserRole.melave) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+                        SizedBox(
+              height: 80,
+              child: Row(
+                children: [
+               
+                             Expanded(
+                      child: Text(
+                         'מןמשו 2 מתוך 45 קודים',
+                            
+                      ),
+                    ), 
+                    
+                      
+                     delete_button(
+                        label: 'מחיקה',
+                            onPressed: () async {
+                              print("object");
+ String result =await HttpService.delete_gift_all(user.valueOrNull?.id);
+                if (result == "success") {
+                  // print("in");
+                  // ignore: use_build_context_synchronously
+                  showFancyCustomDialog(context);
+                } else {
+                  // print("in");
+
+                  // ignore: use_build_context_synchronously
+                  
+                                }}
+                      ),
+                  
+                
+                  
+                ],
+              ),
+            ),
+          
             Expanded(
               child: PageView(
                 controller: pageController,
