@@ -146,11 +146,15 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
               ),
             ),
             TextButton(
-              onPressed: () => isVoiceMFA.value = !isVoiceMFA.value,
-              child: Text(
-                isVoiceMFA.value
-                    ? 'שלחו לי את הקוד בהודעה קולית'
-                    : 'שלחו לי את הקוד בהודעת טקסט',
+        onPressed: () async {
+                        await ref
+                            .read(onboardingControllerProvider.notifier)
+                            .getOTP_whatsapp(phone: phone);
+                        timer.value = _timerDuration;
+                        pinCodeController.text = '';
+                      },             
+                       child: Text(
+                'שלחו לי את הקוד בהודעת ווצאפ',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                       color: AppColors.blue02,

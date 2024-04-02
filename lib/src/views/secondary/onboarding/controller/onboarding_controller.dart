@@ -38,6 +38,27 @@ class OnboardingController extends _$OnboardingController {
 
     return false;
   }
+    Future<bool> getOTP_whatsapp({
+    required String phone,
+  }) async {
+    try {
+      final result = await ref.watch(dioServiceProvider).get(
+        '/onboarding_form/getOTP_whatsapp',
+        queryParameters: {
+          'created_by_phone': phone.fixRawPhone,
+        },
+      );
+
+      if (result.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      // Logger().d('otp', error: e);
+      rethrow;
+    }
+
+    return false;
+  }
 
   Future<({bool isResponseSuccess, bool isFirstOnboarding})> verifyOtp({
     required String phone,
