@@ -81,13 +81,8 @@ abstract class Consts {
   static const chartsEshkol = 'madadim/eshcolCoordinator';
   static const chartsMosad = 'madadim/mosadCoordinator';
 
-<<<<<<< HEAD
   // user profile
-  static const getAllApprentices = 'userProfile_form/myApprentices';
-=======
-  // user profile / apprentices
   static const getAllApprentices = 'apprentice_Profile_form/myApprentices';
->>>>>>> 8679f31f91adb91055e73c110cce798b453c4f7d
   static const getAuthUser = 'userProfile_form/getProfileAtributes';
   static const addUserManual = 'userProfile_form/add_user_manual';
   static const addUserExcel = 'userProfile_form/add_user_excel';

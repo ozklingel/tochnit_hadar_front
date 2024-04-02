@@ -123,6 +123,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/call.png
   AssetGenImage get call => const AssetGenImage('assets/images/call.png');
 
+  /// File path: assets/images/delete.png
+  AssetGenImage get delete => const AssetGenImage('assets/images/delete.png');
+
   /// File path: assets/images/disconnect.png
   AssetGenImage get disconnect =>
       const AssetGenImage('assets/images/disconnect.png');
@@ -197,6 +200,7 @@ class $AssetsImagesGen {
   List<dynamic> get values => [
         backhome,
         call,
+        delete,
         disconnect,
         envalop,
         exit,
