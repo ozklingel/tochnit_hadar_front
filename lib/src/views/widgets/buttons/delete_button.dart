@@ -81,11 +81,9 @@ class DeleteButton extends HookConsumerWidget {
               ),     
       FilledButton(
         onPressed:  ()async {
-                       print(auth);
                         String result = await HttpService.deleteGiftAll(
                           auth.valueOrNull?.id,
                         );
-                        print(result);
                         if (result == "success") {
                           // print("in");
                           // ignore: use_build_context_synchronously
