@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -17,6 +18,7 @@ import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
 import 'package:hadar_program/src/services/auth/user_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -135,7 +137,30 @@ class _ApprenticeDetailsScreenState
                       avatar: apprentice.avatar,
                       name: '${apprentice.firstName} ${apprentice.lastName}',
                       phone: apprentice.phone,
-                      onTapEditAvatar: () => Toaster.unimplemented(),
+                      onTapEditAvatar: () async {
+                        final result = await FilePicker.platform.pickFiles(
+                          allowMultiple: false,
+                          withData: true,
+                        );
+
+                        if (result == null) {
+                          return;
+                        }
+
+                        final uploadUrl = await ref.read(
+                          uploadFileProvider(result.files.first).future,
+                        );
+
+                        final result2 = await ref
+                            .read(apprenticesControllerProvider.notifier)
+                            .edit(
+                              apprentice: apprentice.copyWith(
+                                avatar: uploadUrl,
+                              ),
+                            );
+
+                        if (result2) {}
+                      },
                       bottom: Column(
                         children: [
                           const SizedBox(height: 24),

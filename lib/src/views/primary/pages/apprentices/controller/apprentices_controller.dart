@@ -205,6 +205,7 @@ class ApprenticesController extends _$ApprenticesController {
               'apprenticetId': apprentice.id,
             },
             data: jsonEncode({
+              'avatar': apprentice.avatar,
               'militaryCompoundId': apprentice.militaryCompoundId,
               'militaryUnit': apprentice.militaryUnit,
               'militaryPositionNew': apprentice.militaryPositionNew,
