@@ -330,22 +330,7 @@ class GiftScreen extends HookConsumerWidget {
                     ),
                     DeleteButton(
                       label: 'מחיקה',
-                      onPressed: () async {
-                        debugPrint("object");
-
-                        String result = await HttpService.deleteGiftAll(
-                          auth.valueOrNull?.id,
-                        );
-                        if (result == "success") {
-                          // print("in");
-                          // ignore: use_build_context_synchronously
-                          showFancyCustomDialog(context);
-                        } else {
-                          // print("in");
-
-                          // ignore: use_build_context_synchronously
-                        }
-                      },
+                 
                     ),
                   ],
                 ),
