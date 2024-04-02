@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/notification/notification.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/views/widgets/notification_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,7 +30,7 @@ class NotificationDetailsScreen extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (ref.read(userServiceProvider).valueOrNull?.role ==
+        if (ref.read(authServiceProvider).valueOrNull?.role ==
             UserRole.melave) {
           ref
               .read(notificationsControllerProvider.notifier)

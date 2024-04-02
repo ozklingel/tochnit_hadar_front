@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
@@ -37,7 +37,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
       orElse: () => const MessageDto(),
     );
     final apprentices = ref.watch(getApprenticesProvider).valueOrNull ?? [];
-    final selectedRecipients = useState<List<ApprenticeDto>>([]);
+    final selectedRecipients = useState<List<PersonaDto>>([]);
     final method = useState(MessageMethod.other);
     final title = useTextEditingController(text: msg.title);
     final body = useTextEditingController(text: msg.content);
@@ -161,7 +161,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                                 side: const BorderSide(color: AppColors.blue06),
                                 onPressed: () async {
                                   final result = await Navigator.of(context)
-                                      .push<List<ApprenticeDto>>(
+                                      .push<List<PersonaDto>>(
                                     MaterialPageRoute(
                                       builder: (val) {
                                         return const UsersListScreen();

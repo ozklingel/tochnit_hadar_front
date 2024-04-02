@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,7 +12,7 @@ class ChartHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider).valueOrNull;
+    final auth = ref.watch(authServiceProvider).valueOrNull;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -20,9 +20,9 @@ class ChartHeader extends ConsumerWidget {
         SizedBox(
           width: 200,
           child: Text(
-            '${user?.fullName ?? 'N/A'}'
+            '${auth?.fullName ?? 'N/A'}'
             ' '
-            '(${user?.role.name ?? 'N/A'})',
+            '(${auth?.role.name ?? 'N/A'})',
             style: TextStyles.s24w500cGrey2,
           ),
         ),

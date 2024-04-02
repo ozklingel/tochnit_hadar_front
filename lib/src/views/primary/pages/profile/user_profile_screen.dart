@@ -7,9 +7,9 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -20,9 +20,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../models/apprentice/apprentice.dto.dart';
+import '../../../../models/persona/persona.dto.dart';
 import '../../../../services/routing/go_router_provider.dart';
-import '../apprentices/controller/apprentices_controller.dart';
+import '../apprentices/controller/personas_controller.dart';
 
 class UserProfileScreen extends StatefulHookConsumerWidget {
   const UserProfileScreen({
@@ -53,7 +53,7 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     final tabController = useTabController(
       initialLength: 2,
@@ -90,9 +90,9 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.pin,
                     background: DetailsPageHeader(
-                      avatar: user.valueOrNull!.avatar,
-                      name: user.valueOrNull!.fullName,
-                      phone: "0${user.valueOrNull!.phone}",
+                      avatar: auth.valueOrNull!.avatar,
+                      name: auth.valueOrNull!.fullName,
+                      phone: "0${auth.valueOrNull!.phone}",
                       onTapEditAvatar: () => _showPicker(context: context),
                       bottom: const Column(
                         children: [
@@ -160,7 +160,7 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
   void _showPicker({
     required BuildContext context,
   }) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     showModalBottomSheet(
       context: context,
@@ -172,7 +172,7 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                 leading: const Icon(Icons.photo_library),
                 title: const Text('Photo Library'),
                 onTap: () {
-                  getImage(ImageSource.gallery, user);
+                  getImage(ImageSource.gallery, auth);
                   Navigator.of(context).pop();
                 },
               ),
@@ -184,7 +184,7 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                 ),
                 title: const Text('Camera'),
                 onTap: () {
-                  getImage(ImageSource.camera, user);
+                  getImage(ImageSource.camera, auth);
                   Navigator.of(context).pop();
                 },
               ),
@@ -226,31 +226,31 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
     final isEditMode = useState(false);
     final firstNController = useTextEditingController(
-      text: user.valueOrNull!.firstName,
-      keys: [user],
+      text: auth.valueOrNull!.firstName,
+      keys: [auth],
     );
     final lastNController = useTextEditingController(
-      text: user.valueOrNull!.lastName,
-      keys: [user],
+      text: auth.valueOrNull!.lastName,
+      keys: [auth],
     );
     final emailController = useTextEditingController(
-      text: user.valueOrNull!.email,
-      keys: [user],
+      text: auth.valueOrNull!.email,
+      keys: [auth],
     );
     final datOfBirthController = useTextEditingController(
-      text: user.valueOrNull!.dateOfBirth.substring(0, 10),
-      keys: [user],
+      text: auth.valueOrNull!.dateOfBirth.substring(0, 10),
+      keys: [auth],
     );
     final cityController = useTextEditingController(
-      text: user.valueOrNull!.city,
-      keys: [user],
+      text: auth.valueOrNull!.city,
+      keys: [auth],
     );
     final regionController = useTextEditingController(
-      text: user.valueOrNull!.region,
-      keys: [user],
+      text: auth.valueOrNull!.region,
+      keys: [auth],
     );
 
     return AnimatedSwitcher(
@@ -403,38 +403,38 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                     children: [
                       DetailsRowItem(
                         label: 'שם פרטי',
-                        data: user.valueOrNull?.firstName ?? "אין",
+                        data: auth.valueOrNull?.firstName ?? "אין",
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: ' שם משפחה',
-                        data: user.valueOrNull?.lastName ?? "אין",
+                        data: auth.valueOrNull?.lastName ?? "אין",
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: ' כתובת מייל',
-                        data: user.valueOrNull?.email ?? "אין",
+                        data: auth.valueOrNull?.email ?? "אין",
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: ' תאריך יומהולדת',
-                        data: user.valueOrNull?.dateOfBirth.substring(0, 10) ??
+                        data: auth.valueOrNull?.dateOfBirth.substring(0, 10) ??
                             "אין",
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: ' עיר',
-                        data: user.valueOrNull!.city,
+                        data: auth.valueOrNull!.city,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: ' מוסד',
-                        data: user.valueOrNull!.institution,
+                        data: auth.valueOrNull!.institution,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: ' אזור',
-                        data: user.valueOrNull!.region,
+                        data: auth.valueOrNull!.region,
                       ),
                       const SizedBox(height: 12),
                     ],
@@ -451,10 +451,10 @@ class _TohnitHadarTabView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
     final institution =
         ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == user.valueOrNull!.institution,
+                  (element) => element.id == auth.valueOrNull!.institution,
                   orElse: () => const InstitutionDto(),
                 ) ??
             const InstitutionDto();
@@ -468,7 +468,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             children: [
               DetailsRowItem(
                 label: 'סיווג משתמש',
-                data: user.valueOrNull?.role.index == 0 ? "מלווה" : "אין תפקיד",
+                data: auth.valueOrNull?.role.index == 0 ? "מלווה" : "אין תפקיד",
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
@@ -478,7 +478,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: ' אשכול',
-                data: user.valueOrNull?.cluster ?? "לא משוייך",
+                data: auth.valueOrNull?.cluster ?? "לא משוייך",
               ),
               const SizedBox(height: 12),
             ],
@@ -494,22 +494,22 @@ class _TohnitHadarTabView extends ConsumerWidget {
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
-                    itemCount: user.valueOrNull!.apprentices.length,
+                    itemCount: auth.valueOrNull!.apprentices.length,
                     itemBuilder: (
                       BuildContext context,
                       int index,
                     ) {
                       final apprentice = ref.watch(
-                            apprenticesControllerProvider.select(
+                            personasControllerProvider.select(
                               (value) => value.value?.singleWhere(
                                 (element) =>
                                     element.id ==
-                                    user.valueOrNull!.apprentices[index],
-                                orElse: () => const ApprenticeDto(),
+                                    auth.valueOrNull!.apprentices[index],
+                                orElse: () => const PersonaDto(),
                               ),
                             ),
                           ) ??
-                          const ApprenticeDto();
+                          const PersonaDto();
                       return ListTile(
                         leading: const CircleAvatar(
                           backgroundColor: Colors.blue,
@@ -536,7 +536,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             },
           ),
         ),
-        if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[],
+        if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[],
       ],
     );
   }

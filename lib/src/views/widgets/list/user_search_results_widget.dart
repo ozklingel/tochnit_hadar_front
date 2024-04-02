@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/address_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/compound_or_city_card.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
@@ -24,7 +24,7 @@ class UserListSearchResultsWidget extends ConsumerWidget {
   });
 
   final String searchString;
-  final ValueNotifier<List<ApprenticeDto>> selectedApprentices;
+  final ValueNotifier<List<PersonaDto>> selectedApprentices;
   final Function(double lat, double lng) onTapCard;
 
   @override
@@ -33,8 +33,7 @@ class UserListSearchResultsWidget extends ConsumerWidget {
     final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
     final institutions =
         ref.watch(institutionsControllerProvider).valueOrNull ?? [];
-    final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
 
     final apprenticeWidgets = apprentices
         .where(

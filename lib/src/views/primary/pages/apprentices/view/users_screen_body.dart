@@ -10,14 +10,14 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/google_map_widget.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
@@ -42,7 +42,7 @@ class UsersScreenBody extends HookConsumerWidget {
     final mapController = useRef(Completer<GoogleMapController>());
     final mapCameraPosition = useState<CameraPosition?>(null);
     final filters = useState(const FilterDto());
-    final selectedApprentices = useState<List<ApprenticeDto>>([]);
+    final selectedApprentices = useState<List<PersonaDto>>([]);
     final compounds = ref.watch(compoundControllerProvider).valueOrNull;
     final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
     final searchController = useTextEditingController();
@@ -174,7 +174,7 @@ class UsersScreenBody extends HookConsumerWidget {
 
                                 final request = await ref
                                     .read(
-                                      apprenticesControllerProvider.notifier,
+                                      personasControllerProvider.notifier,
                                     )
                                     .filterUsers(result);
 

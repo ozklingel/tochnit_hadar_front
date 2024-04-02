@@ -9,11 +9,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
@@ -22,9 +22,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+import '../../../../../models/auth/auth.dto.dart';
 import '../../../../../models/institution/institution.dto.dart';
-import '../../../../../models/user/user.dto.dart';
-import '../../../../../services/auth/user_service.dart';
+import '../../../../../services/auth/auth_service.dart';
 import '../../../../../services/networking/http_service.dart';
 import '../../../../widgets/buttons/delete_button.dart';
 import '../../chat_box/error_dialog.dart';
@@ -45,15 +45,15 @@ class GiftScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
-    if (user.valueOrNull?.role == UserRole.melave) {
+    final auth = ref.watch(authServiceProvider);
+    if (auth.valueOrNull?.role == UserRole.melave) {
       var res = useState("");
       final apprentice =
-          ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
+          ref.watch(personasControllerProvider).valueOrNull?.firstWhere(
                     (element) => element.events.any((e) => e.id == eventId),
-                    orElse: () => const ApprenticeDto(),
+                    orElse: () => const PersonaDto(),
                   ) ??
-              const ApprenticeDto();
+              const PersonaDto();
       final compound =
           ref.watch(compoundControllerProvider).valueOrNull?.singleWhere(
                     (element) => element.id == apprentice.militaryCompoundId,
@@ -194,7 +194,7 @@ class GiftScreen extends HookConsumerWidget {
                                     ),
                                     onPressed: () async {
                                       res.value = await HttpService.getGift(
-                                        user.valueOrNull!.phone,
+                                        auth.valueOrNull!.phone,
                                         compound,
                                         apprentice.teudatZehut,
                                       );
@@ -275,7 +275,7 @@ class GiftScreen extends HookConsumerWidget {
           ],
         ),
       );
-    } else if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
+    } else if (auth.valueOrNull?.role == UserRole.ahraiTohnit) {
       final pageController = usePageController();
       final selectedUserType = useState(UserRole.apprentice);
       final selectedInstitution = useState(const InstitutionDto());
@@ -334,7 +334,7 @@ class GiftScreen extends HookConsumerWidget {
                         debugPrint("object");
 
                         String result = await HttpService.deleteGiftAll(
-                          user.valueOrNull?.id,
+                          auth.valueOrNull?.id,
                         );
                         if (result == "success") {
                           // print("in");

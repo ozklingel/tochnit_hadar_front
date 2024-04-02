@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
@@ -20,7 +20,7 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider).valueOrNull ?? const UserDto();
+    final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
     final messages = ref.watch(messagesControllerProvider).valueOrNull ?? [];
     final message = messages.firstWhere(
       (element) => element.id == id,
@@ -29,7 +29,7 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (user.role == UserRole.melave) {
+        if (auth.role == UserRole.melave) {
           ref
               .read(messagesControllerProvider.notifier)
               .setToReadStatus(message);
@@ -37,7 +37,7 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
         return null;
       },
-      [user],
+      [auth],
     );
 
     return Scaffold(
@@ -49,7 +49,7 @@ class MessageDetailsScreen extends HookConsumerWidget {
             child: const Icon(Icons.more_vert),
             itemBuilder: (context) {
               return [
-                if (user.role != UserRole.melave)
+                if (auth.role != UserRole.melave)
                   if (message.type == MessageType.draft ||
                       message.dateTime.asDateTime.isAfter(DateTime.now()))
                     PopupMenuItem(
@@ -57,13 +57,13 @@ class MessageDetailsScreen extends HookConsumerWidget {
                       onTap: () =>
                           EditMessageRouteData(id: id).pushReplacement(context),
                     ),
-                if (user.role != UserRole.melave)
+                if (auth.role != UserRole.melave)
                   PopupMenuItem(
                     child: const Text('שכפול'),
                     onTap: () =>
                         DupeMessageRouteData(id: id).pushReplacement(context),
                   ),
-                if (user.role == UserRole.melave ||
+                if (auth.role == UserRole.melave ||
                     message.type == MessageType.draft ||
                     message.dateTime.asDateTime.isAfter(DateTime.now()))
                   PopupMenuItem(

@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/services/api/apprentice/get_maps_apprentices.dart';
 import 'package:hadar_program/src/services/api/search_bar/get_filtered_users.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
@@ -13,7 +14,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-part 'apprentices_controller.g.dart';
+part 'personas_controller.g.dart';
 
 @Riverpod(
   dependencies: [
@@ -22,12 +23,12 @@ part 'apprentices_controller.g.dart';
     GetFilteredUsers,
   ],
 )
-class ApprenticesController extends _$ApprenticesController {
+class PersonasController extends _$PersonasController {
   var _filters = const FilterDto();
 
   @override
-  FutureOr<List<ApprenticeDto>> build() async {
-    final apprentices = await ref.watch(getApprenticesProvider.future);
+  FutureOr<List<PersonaDto>> build() async {
+    final apprentices = await ref.watch(getMapsApprenticesProvider.future);
 
     ref.keepAlive();
 
@@ -64,9 +65,9 @@ class ApprenticesController extends _$ApprenticesController {
 
     final apprentice = state.valueOrNull?.singleWhere(
           (element) => element.id == apprenticeId,
-          orElse: () => const ApprenticeDto(),
+          orElse: () => const PersonaDto(),
         ) ??
-        const ApprenticeDto();
+        const PersonaDto();
 
     final apprenticeIndex = state.valueOrNull?.indexOf(apprentice) ?? -1;
 
@@ -99,9 +100,9 @@ class ApprenticesController extends _$ApprenticesController {
   }) async {
     final apprentice = state.valueOrNull?.singleWhere(
           (element) => element.id == apprenticeId,
-          orElse: () => const ApprenticeDto(),
+          orElse: () => const PersonaDto(),
         ) ??
-        const ApprenticeDto();
+        const PersonaDto();
 
     final oldState = state.valueOrNull ?? [];
 
@@ -151,9 +152,9 @@ class ApprenticesController extends _$ApprenticesController {
   }) async {
     final apprentice = state.valueOrNull?.singleWhere(
           (element) => element.id == apprenticeId,
-          orElse: () => const ApprenticeDto(),
+          orElse: () => const PersonaDto(),
         ) ??
-        const ApprenticeDto();
+        const PersonaDto();
 
     final oldState = state.valueOrNull ?? [];
 
@@ -196,7 +197,7 @@ class ApprenticesController extends _$ApprenticesController {
   }
 
   FutureOr<bool> edit({
-    required ApprenticeDto apprentice,
+    required PersonaDto apprentice,
   }) async {
     try {
       final result = await ref.read(dioServiceProvider).put(

@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -16,7 +16,7 @@ class SideMenuDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     return Drawer(
       child: Container(
@@ -41,18 +41,18 @@ class SideMenuDrawer extends ConsumerWidget {
                     CircleAvatar(
                       radius: 40,
                       backgroundImage:
-                          (user.valueOrNull?.avatar.isEmpty ?? true)
+                          (auth.valueOrNull?.avatar.isEmpty ?? true)
                               ? null
                               : CachedNetworkImageProvider(
-                                  user.valueOrNull!.avatar,
+                                  auth.valueOrNull!.avatar,
                                 ),
                     ),
                     Text(
-                      user.valueOrNull?.fullName ?? '',
+                      auth.valueOrNull?.fullName ?? '',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      user.valueOrNull?.email ?? '',
+                      auth.valueOrNull?.email ?? '',
                       style: const TextStyle(fontSize: 11),
                     ),
                     TextButton(
@@ -71,7 +71,7 @@ class SideMenuDrawer extends ConsumerWidget {
             ListView(
               shrinkWrap: true,
               children: [
-                if (user.valueOrNull?.role == UserRole.melave) ...[
+                if (auth.valueOrNull?.role == UserRole.melave) ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.data_pie_24_regular),
@@ -105,7 +105,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     onTap: () =>
                         const NotificationSettingRouteData().push(context),
                   ),
-                ] else if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+                ] else if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.data_pie_24_regular),
@@ -145,7 +145,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('הגדרות מדדים'),
                     onTap: () => const ChartsRouteData().push(context),
                   ),
-                ] else if (user.valueOrNull?.role == UserRole.rakazEshkol) ...[
+                ] else if (auth.valueOrNull?.role == UserRole.rakazEshkol) ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.data_pie_24_regular),
@@ -193,7 +193,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     onTap: () =>
                         const NotificationSettingRouteData().push(context),
                   ),
-                ] else if (user.valueOrNull?.role == UserRole.rakazMosad) ...[
+                ] else if (auth.valueOrNull?.role == UserRole.rakazMosad) ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.data_pie_24_regular),
@@ -285,7 +285,7 @@ class _ConfirmSignoutDialog extends ConsumerWidget {
               LargeFilledRoundedButton.cancel(
                 label: 'התנתק',
                 onPressed: () =>
-                    ref.read(userServiceProvider.notifier).logOff(),
+                    ref.read(authServiceProvider.notifier).logOff(),
                 height: 46,
               ),
             ],

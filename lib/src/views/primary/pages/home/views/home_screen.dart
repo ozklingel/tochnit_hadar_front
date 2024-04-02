@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/ahrai_home_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/notifications_controller.dart';
@@ -27,12 +27,12 @@ class HomeScreen extends ConsumerWidget {
     // final apprentices =
     //     ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
-    final userProvider = ref.watch(userServiceProvider);
-    final user = userProvider.valueOrNull ?? const UserDto();
+    final auth = ref.watch(authServiceProvider);
+    final user = auth.valueOrNull ?? const AuthDto();
 
     // Logger().d(user);
 
-    if (userProvider.isLoading) {
+    if (auth.isLoading) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
 

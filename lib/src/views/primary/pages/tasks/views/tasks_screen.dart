@@ -5,11 +5,11 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
@@ -22,19 +22,19 @@ class TasksScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
-    if (user.isLoading) {
+    if (auth.isLoading) {
       return const Center(
         child: CircularProgressIndicator.adaptive(),
       );
     }
 
-    if (user.valueOrNull?.role == UserRole.melave) {
+    if (auth.valueOrNull?.role == UserRole.melave) {
       return const _MelaveTasksBody();
     }
 
-    if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
+    if (auth.valueOrNull?.role == UserRole.ahraiTohnit) {
       return const _AhraiTohnitTasksBody();
     }
 
@@ -202,7 +202,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
       (element) => apprentices
           .singleWhere(
             (e) => element.subject.contains(e.id),
-            orElse: () => const ApprenticeDto(),
+            orElse: () => const PersonaDto(),
           )
           .fullName
           .toLowerCase()
@@ -400,7 +400,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                 final selectedApprentice = apprentices.singleWhere(
                   (element) =>
                       selectedCalls.value.first.subject.contains(element.id),
-                  orElse: () => const ApprenticeDto(),
+                  orElse: () => const PersonaDto(),
                 );
 
                 return PopupMenuButton(

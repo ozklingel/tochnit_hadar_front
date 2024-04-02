@@ -6,8 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/performance_status_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -22,8 +22,7 @@ class PerformanceStatusScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
     final selectedDate = useState(DateTime.now());
 
     const percent = .76;

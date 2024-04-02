@@ -6,21 +6,18 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/themes.dart';
 import 'package:hadar_program/src/core/utils/functions/outbound_notification.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:timeago/timeago.dart';
-
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -112,24 +109,24 @@ class HadarProgram extends ConsumerWidget {
         LogicalKeyboardKey.numpad1,
         alt: true,
       ): () async =>
-          ref.read(userServiceProvider.notifier).overrideRole(UserRole.melave),
+          ref.read(authServiceProvider.notifier).overrideRole(UserRole.melave),
       const SingleActivator(
         LogicalKeyboardKey.numpad2,
         alt: true,
       ): () async => ref
-          .read(userServiceProvider.notifier)
+          .read(authServiceProvider.notifier)
           .overrideRole(UserRole.rakazMosad),
       const SingleActivator(
         LogicalKeyboardKey.numpad3,
         alt: true,
       ): () async => ref
-          .read(userServiceProvider.notifier)
+          .read(authServiceProvider.notifier)
           .overrideRole(UserRole.rakazEshkol),
       const SingleActivator(
         LogicalKeyboardKey.numpad4,
         alt: true,
       ): () async => ref
-          .read(userServiceProvider.notifier)
+          .read(authServiceProvider.notifier)
           .overrideRole(UserRole.ahraiTohnit),
       const SingleActivator(
         LogicalKeyboardKey.keyA,

@@ -1,5 +1,5 @@
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/arch/flags_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,7 +14,7 @@ part 'my_apprentices.g.dart';
 )
 class GetApprentices extends _$GetApprentices {
   @override
-  FutureOr<List<ApprenticeDto>> build() async {
+  FutureOr<List<PersonaDto>> build() async {
     final flags = ref.watch(flagsServiceProvider);
 
     if (flags.isMock) {
@@ -31,7 +31,7 @@ class GetApprentices extends _$GetApprentices {
 
     final result = (request.data as List<dynamic>)
         .map(
-          (e) => ApprenticeDto.fromJson(e),
+          (e) => PersonaDto.fromJson(e),
         )
         .toList();
 

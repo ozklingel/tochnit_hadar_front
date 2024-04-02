@@ -4,10 +4,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -212,7 +212,7 @@ class _ActionsRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull?.where(
+        ref.watch(personasControllerProvider).valueOrNull?.where(
                   (element) => selectedTasks
                       .map(
                         (e) => e.subject,
@@ -239,7 +239,7 @@ class _ActionsRow extends ConsumerWidget {
                       .map((e) => e.subject)
                       .expand((element) => element)
                       .contains(element.id),
-                  orElse: () => const ApprenticeDto(),
+                  orElse: () => const PersonaDto(),
                 );
 
                 return Row(

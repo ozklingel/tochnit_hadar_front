@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class MessageWidget extends ConsumerWidget {
@@ -32,11 +32,11 @@ class MessageWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final fromApprentice =
-        ref.watch(apprenticesControllerProvider).valueOrNull?.firstWhere(
+        ref.watch(personasControllerProvider).valueOrNull?.firstWhere(
                   (element) => element.phone == message.from,
-                  orElse: () => const ApprenticeDto(),
+                  orElse: () => const PersonaDto(),
                 ) ??
-            const ApprenticeDto();
+            const PersonaDto();
 
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),

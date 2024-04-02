@@ -3,14 +3,14 @@ import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/flags/flags.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'flags_service.g.dart';
@@ -42,7 +42,7 @@ final _notifications = [
   },
 ];
 
-final _userDto = UserDto(
+final _userDto = AuthDto(
   id: '1',
   firstName: 'אלכסוש',
   lastName: 'ינונוש',
@@ -114,7 +114,7 @@ final _messages = List.generate(
     return MessageDto(
       id: faker.guid.guid(),
       from: _apprentices.isEmpty
-          ? const ApprenticeDto().phone
+          ? const PersonaDto().phone
           : _apprentices[Random().nextInt(_apprentices.length)].phone,
       title: faker.lorem.sentence(),
       content: faker.lorem.sentence(),
@@ -172,7 +172,7 @@ final _tasks = List.generate(
 
 final _apprentices = List.generate(
   Consts.mockApprenticeGuids.length,
-  (index) => ApprenticeDto(
+  (index) => PersonaDto(
     id: Consts.mockApprenticeGuids[index],
     avatar: faker.image.image(
       height: 75,

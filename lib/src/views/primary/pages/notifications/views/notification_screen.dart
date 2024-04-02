@@ -2,9 +2,9 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/notification/notification.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/views/widgets/notification_widget.dart';
@@ -20,7 +20,7 @@ class NotificationScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
     final msgsController = ref.watch(notificationsControllerProvider);
     // final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
@@ -29,11 +29,11 @@ class NotificationScreen extends HookConsumerWidget {
 
     // Logger().d(msgsController.valueOrNull?.length);
 
-    if (user.isLoading) {
+    if (auth.isLoading) {
       return const CircularProgressIndicator.adaptive();
     }
 
-    switch (user.valueOrNull?.role) {
+    switch (auth.valueOrNull?.role) {
       case UserRole.melave:
       default:
         return Scaffold(
@@ -118,8 +118,7 @@ class _SearchResultsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (messages.isEmpty) {
       return EmptyState(
-        image:                 Assets.illustrations.pointDown.svg(),
-
+        image: Assets.illustrations.pointDown.svg(),
         topText: 'אין  התראות',
         bottomText: 'התראות  שיוצרו, יופיעו כאן',
       );

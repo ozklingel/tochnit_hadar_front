@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
@@ -139,7 +139,7 @@ class MessagesController extends _$MessagesController {
     return false;
   }
 
-  Future<List<ApprenticeDto>> searchApprentices(String keyword) async {
+  Future<List<PersonaDto>> searchApprentices(String keyword) async {
     final apprentices = await ref.read(getApprenticesProvider.future);
 
     final filtered = apprentices

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../../models/user/user.dto.dart';
-import '../../../../../services/auth/user_service.dart';
+import '../../../../../models/auth/auth.dto.dart';
+import '../../../../../services/auth/auth_service.dart';
 import '../../../../../services/networking/http_service.dart';
 import '../../../../../services/routing/go_router_provider.dart';
 
@@ -25,10 +25,10 @@ class _SettingPageState extends ConsumerState<SettingPage> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     final jsonData =
-        await HttpService.getUserNotiSetting(user.valueOrNull!.phone);
+        await HttpService.getUserNotiSetting(auth.valueOrNull!.phone);
     final u = jsonDecode(jsonData.body);
 
     Logger().d(u);
@@ -42,7 +42,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +52,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
             color: Colors.black,
           ),
           onTap: () => {
-            HttpService.setSetting(user.valueOrNull!.phone, !t1, !t2, !t3),
+            HttpService.setSetting(auth.valueOrNull!.phone, !t1, !t2, !t3),
             const NotificationRouteData().go(context),
           },
         ),
@@ -83,7 +83,9 @@ class _SettingPageState extends ConsumerState<SettingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (user.valueOrNull?.role == UserRole.melave||user.valueOrNull?.role == UserRole.rakazEshkol||user.valueOrNull?.role == UserRole.rakazMosad) ...[
+                if (auth.valueOrNull?.role == UserRole.melave ||
+                    auth.valueOrNull?.role == UserRole.rakazEshkol ||
+                    auth.valueOrNull?.role == UserRole.rakazMosad) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -177,7 +179,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                       ),
                     ],
                   ),
-                ] else if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+                ] else if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                   Container(
                     height: 60,
                     alignment: Alignment.centerRight,

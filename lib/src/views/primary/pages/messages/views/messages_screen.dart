@@ -4,10 +4,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
@@ -21,7 +21,7 @@ class MessagesScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
     final msgsController = ref.watch(messagesControllerProvider);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
@@ -30,7 +30,7 @@ class MessagesScreen extends HookConsumerWidget {
     useListenable(searchController);
     useListenable(tabController);
 
-    switch (user.valueOrNull?.role) {
+    switch (auth.valueOrNull?.role) {
       case UserRole.ahraiTohnit:
         return Scaffold(
           appBar: SearchAppBar(
@@ -56,7 +56,7 @@ class MessagesScreen extends HookConsumerWidget {
           ),
           floatingActionButton: (tabController.animation?.value ?? 0) < .5
               ? null
-              : user.valueOrNull?.role == UserRole.ahraiTohnit
+              : auth.valueOrNull?.role == UserRole.ahraiTohnit
                   ? FloatingActionButton(
                       onPressed: () =>
                           const NewMessageRouteData().push(context),

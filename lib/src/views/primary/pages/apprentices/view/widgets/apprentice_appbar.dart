@@ -2,9 +2,9 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/compound_bottom_sheet.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -18,12 +18,11 @@ class ApprenticeAppBar extends ConsumerWidget {
 
   final ValueNotifier<bool> isSearchOpen;
   final TextEditingController searchController;
-  final ValueNotifier<List<ApprenticeDto>> selectedApprentices;
+  final ValueNotifier<List<PersonaDto>> selectedApprentices;
 
   @override
   Widget build(BuildContext context, ref) {
-    final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
 
     return AppBar(
       centerTitle: true,
@@ -91,7 +90,7 @@ class ApprenticeAppBar extends ConsumerWidget {
                     apprentice: apprentices.singleWhere(
                       (element) =>
                           element.id == selectedApprentices.value.first.id,
-                      orElse: () => const ApprenticeDto(),
+                      orElse: () => const PersonaDto(),
                     ),
                   ),
                 )

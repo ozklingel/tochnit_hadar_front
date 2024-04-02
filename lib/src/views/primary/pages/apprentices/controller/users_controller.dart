@@ -4,12 +4,12 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/models/users_screen.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/models/personas_screen.dto.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -35,10 +35,10 @@ enum Sort {
 )
 class UsersController extends _$UsersController {
   @override
-  FutureOr<UsersScreenDto> build() async {
+  FutureOr<PersonasScreenDto> build() async {
     final apprentices = await ref.watch(getApprenticesProvider.future);
 
-    return UsersScreenDto(
+    return PersonasScreenDto(
       users: apprentices,
     );
   }

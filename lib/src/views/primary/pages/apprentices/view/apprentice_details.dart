@@ -12,18 +12,18 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
@@ -67,14 +67,14 @@ class _ApprenticeDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     final apprentice =
-        ref.watch(apprenticesControllerProvider).valueOrNull?.singleWhere(
+        ref.watch(personasControllerProvider).valueOrNull?.singleWhere(
                   (element) => element.id == widget.apprenticeId,
-                  orElse: () => const ApprenticeDto(),
+                  orElse: () => const PersonaDto(),
                 ) ??
-            const ApprenticeDto();
+            const PersonaDto();
 
     final tabController = useTabController(
       initialLength: 3,
@@ -93,7 +93,7 @@ class _ApprenticeDetailsScreenState
         centerTitle: true,
         title: const Text('כרטיס חניך'),
         actions: [
-          if (user.valueOrNull?.role == UserRole.ahraiTohnit)
+          if (auth.valueOrNull?.role == UserRole.ahraiTohnit)
             PopupMenuButton(
               offset: const Offset(0, 32),
               itemBuilder: (context) => [
@@ -152,7 +152,7 @@ class _ApprenticeDetailsScreenState
                         );
 
                         final result2 = await ref
-                            .read(apprenticesControllerProvider.notifier)
+                            .read(personasControllerProvider.notifier)
                             .edit(
                               apprentice: apprentice.copyWith(
                                 avatar: uploadUrl,
@@ -318,7 +318,7 @@ class _DeleteApprenticeDialog extends ConsumerWidget {
                     LargeFilledRoundedButton.cancel(
                       label: 'מחק',
                       onPressed: () => ref
-                          .read(apprenticesControllerProvider.notifier)
+                          .read(personasControllerProvider.notifier)
                           .deleteApprentice(apprenticeId),
                     ),
                   ],
@@ -337,7 +337,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
     required this.apprentice,
   });
 
-  final ApprenticeDto apprentice;
+  final PersonaDto apprentice;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -524,7 +524,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                               onPressed: () async {
                                 final result = await ref
                                     .read(
-                                      apprenticesControllerProvider.notifier,
+                                      personasControllerProvider.notifier,
                                     )
                                     .edit(
                                       apprentice: apprentice.copyWith(
@@ -621,11 +621,11 @@ class _TohnitHadarTabView extends ConsumerWidget {
     required this.apprentice,
   });
 
-  final ApprenticeDto apprentice;
+  final PersonaDto apprentice;
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
     final reports = ref.watch(reportsControllerProvider).valueOrNull?.where(
               (element) => element.recipients.contains(apprentice.id),
             ) ??
@@ -752,7 +752,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ],
           ),
         ),
-        if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+        if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[
           DetailsCard(
             title: 'מצב”ר',
             trailing: Row(
@@ -895,8 +895,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                     onPressed: () async {
                                       final result = await ref
                                           .read(
-                                            apprenticesControllerProvider
-                                                .notifier,
+                                            personasControllerProvider.notifier,
                                           )
                                           .deleteEvent(
                                             apprenticeId: apprentice.id,
@@ -942,7 +941,7 @@ class _EventBottomSheet extends HookConsumerWidget {
     required this.event,
   });
 
-  final ApprenticeDto apprentice;
+  final PersonaDto apprentice;
   final EventDto event;
 
   @override
@@ -1199,11 +1198,11 @@ class _PersonalInfoTabView extends ConsumerWidget {
     required this.apprentice,
   });
 
-  final ApprenticeDto apprentice;
+  final PersonaDto apprentice;
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     return Column(
       children: [
@@ -1255,7 +1254,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
         ),
         DetailsCard(
           title: 'משפחה',
-          trailing: user.valueOrNull?.role == UserRole.ahraiTohnit
+          trailing: auth.valueOrNull?.role == UserRole.ahraiTohnit
               ? IconButton(
                   icon: const Icon(
                     FluentIcons.add_circle_24_regular,
@@ -1403,7 +1402,7 @@ class _ContactButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     return Row(
       children: [
@@ -1417,7 +1416,7 @@ class _ContactButtons extends ConsumerWidget {
           ),
         ),
         const Spacer(),
-        if (user.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+        if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[
           _RowIconButton(
             onPressed: () => Toaster.unimplemented(),
             icon: const Icon(FluentIcons.edit_24_regular),

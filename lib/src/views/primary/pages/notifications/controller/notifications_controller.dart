@@ -1,5 +1,5 @@
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/notification/notification.dto.dart';
 import 'package:hadar_program/src/services/api/notification/get_notifications.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
@@ -71,7 +71,7 @@ class NotificationsController extends _$NotificationsController {
     return false;
   }
 
-  Future<List<ApprenticeDto>> searchApprentices(String keyword) async {
+  Future<List<PersonaDto>> searchApprentices(String keyword) async {
     final apprentices = await ref.read(getApprenticesProvider.future);
 
     final filtered = apprentices

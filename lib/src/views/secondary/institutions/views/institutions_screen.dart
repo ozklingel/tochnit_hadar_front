@@ -6,9 +6,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
@@ -19,7 +19,7 @@ class InstitutionsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
     final institutionsController = ref.watch(institutionsControllerProvider);
     final institutions = institutionsController.valueOrNull ?? [];
     final sortBy = useState(SortInstitutionBy.fromA2Z);
@@ -82,7 +82,7 @@ class InstitutionsScreen extends HookConsumerWidget {
                 ),
         ),
       ),
-      floatingActionButton: user.valueOrNull?.role != UserRole.ahraiTohnit
+      floatingActionButton: auth.valueOrNull?.role != UserRole.ahraiTohnit
           ? null
           : FloatingActionButton(
               onPressed: () => const NewInstitutionRouteData().push(context),

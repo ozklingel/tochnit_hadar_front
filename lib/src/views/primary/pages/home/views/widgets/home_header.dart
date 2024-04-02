@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeHeader extends ConsumerWidget {
@@ -10,7 +10,7 @@ class HomeHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -53,7 +53,7 @@ class HomeHeader extends ConsumerWidget {
                             ),
                             const TextSpan(text: '\n\n'),
                             TextSpan(
-                              text: user.valueOrNull?.fullName,
+                              text: auth.valueOrNull?.fullName,
                               style: TextStyles.s32w500cWhite,
                             ),
                           ],

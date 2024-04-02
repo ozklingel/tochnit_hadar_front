@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/users_screen_body.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -11,15 +11,15 @@ class ApprenticesOrUsersScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
-    if (user.isLoading) {
+    if (auth.isLoading) {
       return const Center(
         child: CircularProgressIndicator.adaptive(),
       );
     }
 
-    switch (user.valueOrNull?.role) {
+    switch (auth.valueOrNull?.role) {
       case UserRole.melave:
       // return const ApprenticesScreenBody();
       case UserRole.ahraiTohnit:

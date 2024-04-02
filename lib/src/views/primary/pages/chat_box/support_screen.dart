@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/views/primary/pages/chat_box/success_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../services/auth/user_service.dart';
+import '../../../../services/auth/auth_service.dart';
 import '../../../../services/networking/http_service.dart';
 import '../../../../services/routing/go_router_provider.dart';
 import 'drop_down_widget.dart';
@@ -38,7 +38,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen>
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -164,7 +164,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen>
                 if (SupportScreen.contant != "" &&
                     DropdownButtonExample.subject != null) {
                   result = await HttpService.chatBoxUrl(
-                    user.valueOrNull!.phone,
+                    auth.valueOrNull!.phone,
                     SupportScreen.contant,
                     DropdownButtonExample.subject,
                     context,

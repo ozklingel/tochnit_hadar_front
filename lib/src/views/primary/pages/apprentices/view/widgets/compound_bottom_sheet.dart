@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
@@ -15,7 +15,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 List<PopupMenuItem<dynamic>> getApprenticeCardPopupItems({
   required BuildContext context,
-  required ApprenticeDto apprentice,
+  required PersonaDto apprentice,
 }) {
   return [
     PopupMenuItem(
@@ -52,7 +52,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final apprentices = ref
-            .watch(apprenticesControllerProvider)
+            .watch(personasControllerProvider)
             .valueOrNull
             ?.where(
               (element) => element.militaryCompoundId == compound.id,

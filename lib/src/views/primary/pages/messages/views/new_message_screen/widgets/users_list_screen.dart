@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/find_users_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -22,8 +22,8 @@ class UsersListScreen extends HookConsumerWidget {
         searchTerm: searchController.text,
       ),
     );
-    final searchedUsers = useState<List<ApprenticeDto>>([]);
-    final selectedUsers = useState<List<ApprenticeDto>>([]);
+    final searchedUsers = useState<List<PersonaDto>>([]);
+    final selectedUsers = useState<List<PersonaDto>>([]);
 
     return SafeArea(
       child: Scaffold(

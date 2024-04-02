@@ -7,8 +7,8 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/apprentices_status_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_messagecreen.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
@@ -28,13 +28,12 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
     final tabController = useTabController(
       initialLength: 3,
       initialIndex: initIndex,
     );
-    final selectedApprentice = useState(const ApprenticeDto());
+    final selectedApprentice = useState(const PersonaDto());
     final selectedDate = useState(DateTime.now());
     useListenable(tabController);
 
@@ -51,7 +50,7 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
             icon: const Icon(Icons.close),
             onPressed: () => selectedApprentice.value.id.isEmpty
                 ? Navigator.of(context).pop()
-                : selectedApprentice.value = const ApprenticeDto(),
+                : selectedApprentice.value = const PersonaDto(),
           ),
           const SizedBox(width: 8),
         ],
@@ -242,9 +241,9 @@ class _TabView extends StatelessWidget {
     required this.onTap,
   });
 
-  final ApprenticeDto selectedApprentice;
-  final List<ApprenticeDto> apprentices;
-  final void Function(ApprenticeDto apprentice) onTap;
+  final PersonaDto selectedApprentice;
+  final List<PersonaDto> apprentices;
+  final void Function(PersonaDto apprentice) onTap;
 
   @override
   Widget build(BuildContext context) {

@@ -8,8 +8,8 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/services/geolocation/geolocation_service.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/compound_bottom_sheet.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
@@ -29,8 +29,7 @@ class GoogleMapWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
-    final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
     final markers = useState(<Marker>{});
 
     useEffect(

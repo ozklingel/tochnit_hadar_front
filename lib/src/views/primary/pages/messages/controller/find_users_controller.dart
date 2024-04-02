@@ -1,4 +1,4 @@
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/services/api/search_bar/get_filtered_users.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
@@ -15,7 +15,7 @@ part 'find_users_controller.g.dart';
 )
 class FindUsersController extends _$FindUsersController {
   @override
-  FutureOr<List<ApprenticeDto>> build({
+  FutureOr<List<PersonaDto>> build({
     required String searchTerm,
   }) async {
     final users = await ref.watch(

@@ -2,21 +2,16 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-part 'user.dto.f.dart';
-part 'user.dto.g.dart';
+part 'auth.dto.f.dart';
+part 'auth.dto.g.dart';
 
 enum UserRole {
+  melave(0),
 
-        melave(0),
+  rakazMosad(1),
 
-
-
-    rakazMosad(1),
-
-    rakazEshkol(2),
-            ahraiTohnit(3),
-
-
+  rakazEshkol(2),
+  ahraiTohnit(3),
 
   apprentice(500),
   other(800);
@@ -45,8 +40,8 @@ enum UserRole {
 
 @JsonSerializable()
 @Freezed(fromJson: false)
-class UserDto with _$UserDto {
-  const factory UserDto({
+class AuthDto with _$AuthDto {
+  const factory AuthDto({
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -113,10 +108,10 @@ class UserDto with _$UserDto {
       fromJson: _parseApprentices,
     )
     List<String> apprentices,
-  }) = _UserDto;
+  }) = _AuthDto;
 
-  factory UserDto.fromJson(Map<String, dynamic> json) =>
-      _$UserDtoFromJson(json);
+  factory AuthDto.fromJson(Map<String, dynamic> json) =>
+      _$AuthDtoFromJson(json);
 }
 
 List<String> _parseApprentices(List<dynamic> apprentices) {
@@ -150,6 +145,6 @@ UserRole _extractUserRole(dynamic role) {
   return result;
 }
 
-extension UserDtoX on UserDto? {
+extension UserDtoX on AuthDto? {
   String get fullName => '${this?.firstName ?? ''} ${this?.lastName}';
 }

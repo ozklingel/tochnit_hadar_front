@@ -6,14 +6,14 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
@@ -409,11 +409,11 @@ class _GeneralTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     return DetailsCard(
       title: 'פרטי מוסד',
-      trailing: user.valueOrNull?.role != UserRole.ahraiTohnit
+      trailing: auth.valueOrNull?.role != UserRole.ahraiTohnit
           ? null
           : IconButton(
               onPressed: () =>

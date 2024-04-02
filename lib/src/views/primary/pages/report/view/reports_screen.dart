@@ -6,13 +6,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
@@ -33,7 +33,7 @@ class ReportsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
+    final auth = ref.watch(authServiceProvider);
     final apprentices = ref.watch(getApprenticesProvider).valueOrNull ?? [];
     final reportsScreenController = ref.watch(reportsControllerProvider);
     final selectedReportIds = useState(<String>[]);
@@ -44,7 +44,7 @@ class ReportsScreen extends HookConsumerWidget {
     final scrollController = useScrollController();
     useListenable(searchController);
 
-    if (user.valueOrNull?.role == UserRole.ahraiTohnit) {
+    if (auth.valueOrNull?.role == UserRole.ahraiTohnit) {
       return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -361,7 +361,7 @@ class ReportsScreen extends HookConsumerWidget {
                     const ReportDto();
                 final recipients = apprentices.singleWhere(
                   (element) => report.recipients.contains(element.id),
-                  orElse: () => const ApprenticeDto(),
+                  orElse: () => const PersonaDto(),
                 );
 
                 return PopupMenuButton(

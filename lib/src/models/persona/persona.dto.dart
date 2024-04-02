@@ -6,8 +6,8 @@ import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-part 'apprentice.dto.f.dart';
-part 'apprentice.dto.g.dart';
+part 'persona.dto.f.dart';
+part 'persona.dto.g.dart';
 
 enum StatusColor {
   grey(100),
@@ -40,8 +40,8 @@ enum Relationship {
 
 @JsonSerializable()
 @Freezed(fromJson: false)
-class ApprenticeDto with _$ApprenticeDto {
-  const factory ApprenticeDto({
+class PersonaDto with _$PersonaDto {
+  const factory PersonaDto({
     @Default(AddressDto()) AddressDto address,
     @Default('')
     @JsonKey(
@@ -364,10 +364,10 @@ class ApprenticeDto with _$ApprenticeDto {
       name: 'activity_score',
     )
     int activityScore,
-  }) = _Apprentice;
+  }) = _Persona;
 
-  factory ApprenticeDto.fromJson(Map<String, dynamic> json) =>
-      _$ApprenticeDtoFromJson(json);
+  factory PersonaDto.fromJson(Map<String, dynamic> json) =>
+      _$PersonaDtoFromJson(json);
 }
 
 StatusColor _parseStatus(dynamic val) {
@@ -405,7 +405,7 @@ Relationship _extractRelationship(String? val) {
   }
 }
 
-extension ApprenticeX on ApprenticeDto {
+extension ApprenticeX on PersonaDto {
   String get fullName => '$firstName $lastName';
   List<String> get tags => [
         highSchoolInstitution,

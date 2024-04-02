@@ -10,14 +10,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
-import 'package:hadar_program/src/models/user/user.dto.dart';
 import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
-import 'package:hadar_program/src/services/auth/user_service.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/apprentices_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -47,9 +47,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final user = ref.watch(userServiceProvider);
-    final apprentices =
-        ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
+    final auth = ref.watch(authServiceProvider);
+    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
     final report =
         (ref.watch(reportsControllerProvider).valueOrNull ?? []).singleWhere(
       (element) => element.id == reportId,
@@ -167,12 +166,12 @@ class ReportDetailsScreen extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (user.valueOrNull?.role == UserRole.melave)
+                  if (auth.valueOrNull?.role == UserRole.melave)
                     InputFieldContainer(
                       label: 'בחירת חניכים',
                       isRequired: true,
                       child: DropdownButtonHideUnderline(
-                        child: DropdownButton2<ApprenticeDto>(
+                        child: DropdownButton2<PersonaDto>(
                           hint: selectedApprentices.value.isEmpty
                               ? const Text('בחירת חניכים')
                               : SizedBox(
@@ -184,7 +183,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                   ),
                                 ),
                           selectedItemBuilder: (context) {
-                            return (user.valueOrNull?.apprentices ?? [])
+                            return (auth.valueOrNull?.apprentices ?? [])
                                 .map(
                                   (e) => Center(
                                     child: SizedBox(
@@ -216,7 +215,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             searchInnerWidgetHeight: 50,
                             searchController: apprenticeSearchController,
                             searchMatchFn: (
-                              DropdownMenuItem<ApprenticeDto> item,
+                              DropdownMenuItem<PersonaDto> item,
                               searchValue,
                             ) {
                               return item.value!.firstName
@@ -338,7 +337,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         ),
                       ),
                     )
-                  else if (user.valueOrNull?.role == UserRole.ahraiTohnit)
+                  else if (auth.valueOrNull?.role == UserRole.ahraiTohnit)
                     InputFieldContainer(
                       label: 'הוספת משתתפים',
                       isRequired: true,
@@ -779,14 +778,13 @@ class _AddRecipientsManuallyScreen extends HookConsumerWidget {
     required this.initiallySelected,
   });
 
-  final List<ApprenticeDto> initiallySelected;
+  final List<PersonaDto> initiallySelected;
 
   @override
   Widget build(BuildContext context, ref) {
-    final apprentices = ref.watch(apprenticesControllerProvider);
+    final apprentices = ref.watch(personasControllerProvider);
     final searchController = useTextEditingController();
-    final selectedApprentices =
-        useState<List<ApprenticeDto>>(initiallySelected);
+    final selectedApprentices = useState<List<PersonaDto>>(initiallySelected);
 
     useListenable(searchController);
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/models/apprentice/apprentice.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/views/widgets/images/avatar_widget.dart';
 
 class ListTileWithTagsCard extends StatelessWidget {
