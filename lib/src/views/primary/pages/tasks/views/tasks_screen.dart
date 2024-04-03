@@ -8,7 +8,7 @@ import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
@@ -188,7 +188,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
-    final apprentices = ref.watch(getApprenticesProvider).valueOrNull ?? [];
+    final apprentices = ref.watch(getPersonasProvider).valueOrNull ?? [];
     final tabController = useTabController(initialLength: 3);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
@@ -220,7 +220,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
             onTap: selectedCalls.value.isEmpty
                 ? e.subject.isEmpty
                     ? null
-                    : () => ApprenticeDetailsRouteData(id: e.subject.first)
+                    : () => PersonaDetailsRouteData(id: e.subject.first)
                         .push(context)
                 : () => _selectTask(
                       selectedTasks: selectedCalls,
@@ -248,7 +248,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
             onTap: selectedMeetings.value.isEmpty
                 ? e.subject.isEmpty
                     ? null
-                    : () => ApprenticeDetailsRouteData(id: e.subject.first)
+                    : () => PersonaDetailsRouteData(id: e.subject.first)
                         .push(context)
                 : () => _selectTask(
                       selectedTasks: selectedMeetings,
@@ -274,7 +274,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
             onTap: selectedParents.value.isEmpty
                 ? e.subject.isEmpty
                     ? null
-                    : () => ApprenticeDetailsRouteData(id: e.subject.first)
+                    : () => PersonaDetailsRouteData(id: e.subject.first)
                         .push(context)
                 : () => _selectTask(
                       selectedTasks: selectedParents,
@@ -386,7 +386,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                     ),
                     PopupMenuItem(
                       child: const Text('פרופיל אישי'),
-                      onTap: () => ApprenticeDetailsRouteData(
+                      onTap: () => PersonaDetailsRouteData(
                         id: selectedApprentice.id,
                       ).push(context),
                     ),
@@ -427,7 +427,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                     ),
                     PopupMenuItem(
                       child: const Text('פרופיל אישי'),
-                      onTap: () => ApprenticeDetailsRouteData(
+                      onTap: () => PersonaDetailsRouteData(
                         id: selectedApprentice.id,
                       ).push(context),
                     ),

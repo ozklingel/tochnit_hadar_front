@@ -343,34 +343,34 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       const SizedBox(height: 32),
                       Row(
                         children: [
-                          Expanded(
+                          const Expanded(
                             child: LargeFilledRoundedButton(
                               label: 'שמירה',
-                              onPressed: () async {
-                                // final result = await ref
-                                //     .read(
-                                //       usersControllerProvider.notifier,
-                                //     )
-                                //     .editApprentice(
-                                //       user: apprentice.copyWith(
-                                //         militaryCompoundId:
-                                //             apprentice.militaryCompoundId,
-                                //         militaryUnit: unitController.text,
-                                //         militaryPositionNew:
-                                //             positionNewController.text,
-                                //         militaryPositionOld:
-                                //             positionOldController.text,
-                                //       ),
-                                //     );
+                              // onPressed: () async {
+                              //   final result = await ref
+                              //       .read(
+                              //         personasControllerProvider.notifier,
+                              //       )
+                              //       .edit(
+                              //         apprentice: apprentice.copyWith(
+                              //           militaryCompoundId:
+                              //               apprentice.militaryCompoundId,
+                              //           militaryUnit: unitController.text,
+                              //           militaryPositionNew:
+                              //               positionNewController.text,
+                              //           militaryPositionOld:
+                              //               positionOldController.text,
+                              //         ),
+                              //       );
 
-                                // if (result) {
-                                //   isEditMode.value = false;
-                                // } else {
-                                //   Toaster.show(
-                                //     'שגיאה בעת שמירת השינויים',
-                                //   );
-                                // }
-                              },
+                              //   if (result) {
+                              //     isEditMode.value = false;
+                              //   } else {
+                              //     Toaster.show(
+                              //       'שגיאה בעת שמירת השינויים',
+                              //     );
+                              //   }
+                              // },
                               textStyle: TextStyles.s14w500,
                             ),
                           ),
@@ -524,9 +524,8 @@ class _TohnitHadarTabView extends ConsumerWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onTap: () =>
-                            ApprenticeDetailsRouteData(id: apprentice.id)
-                                .go(context),
+                        onTap: () => PersonaDetailsRouteData(id: apprentice.id)
+                            .go(context),
                       );
                     },
                   ),

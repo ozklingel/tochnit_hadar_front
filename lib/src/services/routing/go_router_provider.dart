@@ -197,13 +197,13 @@ class GoRouterService extends _$GoRouterService {
     TypedStatefulShellBranch<ApprenticesBranchData>(
       routes: [
         TypedGoRoute<ApprenticesOrUsersRouteData>(
-          path: '/apprentices-or-users',
+          path: '/personas',
           routes: [
-            TypedGoRoute<ApprenticeDetailsRouteData>(
+            TypedGoRoute<PersonaDetailsRouteData>(
               path: 'details/:id',
             ),
-            TypedGoRoute<NewUserRouteData>(
-              path: 'new-user',
+            TypedGoRoute<NewPersonaRouteData>(
+              path: 'new',
             ),
           ],
         ),
@@ -506,8 +506,8 @@ class ApprenticesOrUsersRouteData extends GoRouteData {
   }
 }
 
-class ApprenticeDetailsRouteData extends GoRouteData {
-  const ApprenticeDetailsRouteData({
+class PersonaDetailsRouteData extends GoRouteData {
+  const PersonaDetailsRouteData({
     required this.id,
   });
 
@@ -521,8 +521,8 @@ class ApprenticeDetailsRouteData extends GoRouteData {
   }
 }
 
-class NewUserRouteData extends GoRouteData {
-  const NewUserRouteData();
+class NewPersonaRouteData extends GoRouteData {
+  const NewPersonaRouteData();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -575,8 +575,6 @@ class UserProfileRouteData extends GoRouteData {
     return const UserProfileScreen();
   }
 }
-
-
 
 @TypedGoRoute<NotificationRouteData>(
   path: '/notifications',

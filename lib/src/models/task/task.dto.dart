@@ -15,6 +15,7 @@ enum TaskType {
   failedAttempt,
   xMessages,
   forgottenApprentices,
+  baseVisit,
 }
 
 enum TaskStatus {
@@ -109,6 +110,8 @@ TaskType _extractTaskType(String? data) {
       return TaskType.xMessages;
     case 'חניכים נשכחים':
       return TaskType.forgottenApprentices;
+    case 'ביקור בבסיס':
+      return TaskType.baseVisit;
     default:
       Logger().d('extract task type fail', error: data);
       return TaskType.none;

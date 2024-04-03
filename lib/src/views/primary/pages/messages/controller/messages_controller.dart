@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -19,7 +19,7 @@ part 'messages_controller.g.dart';
   dependencies: [
     DioService,
     GetMessages,
-    GetApprentices,
+    GetPersonas,
     StorageService,
     GoRouterService,
   ],
@@ -140,7 +140,7 @@ class MessagesController extends _$MessagesController {
   }
 
   Future<List<PersonaDto>> searchApprentices(String keyword) async {
-    final apprentices = await ref.read(getApprenticesProvider.future);
+    final apprentices = await ref.read(getPersonasProvider.future);
 
     final filtered = apprentices
         .where(

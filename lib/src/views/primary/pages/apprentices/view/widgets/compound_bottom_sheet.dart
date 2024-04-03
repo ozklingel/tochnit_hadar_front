@@ -36,7 +36,7 @@ List<PopupMenuItem<dynamic>> getApprenticeCardPopupItems({
     ),
     PopupMenuItem(
       child: const Text('פרופיל אישי'),
-      onTap: () => ApprenticeDetailsRouteData(id: apprentice.id).push(context),
+      onTap: () => PersonaDetailsRouteData(id: apprentice.id).push(context),
     ),
   ];
 }
@@ -183,7 +183,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
                       }
                     },
                     onTap: () =>
-                        ApprenticeDetailsRouteData(id: apprentices[index].id)
+                        PersonaDetailsRouteData(id: apprentices[index].id)
                             .go(context),
                   ),
                 ),
