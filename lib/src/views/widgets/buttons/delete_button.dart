@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../core/theming/colors.dart';
 import '../../../services/auth/auth_service.dart';
 import '../../../services/networking/http_service.dart';
-import '../../../services/routing/go_router_provider.dart';
 import '../../primary/pages/home/views/widgets/success_dialog.dart';
+import 'large_filled_rounded_button.dart';
 
 class DeleteButton extends HookConsumerWidget {
   const DeleteButton({
@@ -28,121 +28,7 @@ class DeleteButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context,ref) {
-    final auth = ref.watch(authServiceProvider);
-    Dialog dialog1=Dialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      height: 350.0,
-      width: 300.0,
-      child: Stack(
-       children: <Widget>[
-          Align(
-            // These values are based on trial & error method
-            alignment: Alignment.topLeft,
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context, rootNavigator: true).pop();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-          
 
-           Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: 30,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 2, bottom: 10, left: 2, right: 2),
-                child: Image(
-                  width: 150,
-                  height: 160,
-                  image: AssetImage('assets/images/mechiot_capayim.png'),
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 5,
-              ),     
-      FilledButton(
-        onPressed:  ()async {
-                        String result = await HttpService.deleteGiftAll(
-                          auth.valueOrNull?.id,
-                        );
-                        if (result == "success") {
-                          // print("in");
-                          // ignore: use_build_context_synchronously
-                          showFancyCustomDialog(context);
-                        } else {
-                          // print("in");
-
-                          // ignore: use_build_context_synchronously
-                        }
-              },
-        style: FilledButton.styleFrom(
-          fixedSize: const Size(double.infinity, 60),
-          side: const BorderSide(
-            color: AppColors.blue03,
-            width: 1,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          backgroundColor: backgroundColor,
-          disabledBackgroundColor: AppColors.blue07,
-        ),
-        child: Text(
-          label,
-          style: textStyle.copyWith(
-            color: foregroundColor,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    
-       FilledButton(
-        onPressed: ()=>{},
-        style: FilledButton.styleFrom(
-          fixedSize: const Size(double.infinity, 60),
-          side: const BorderSide(
-            color: AppColors.blue03,
-            width: 1,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          backgroundColor: backgroundColor,
-          disabledBackgroundColor: AppColors.blue07,
-        ),
-        child: Text(
-          label,
-          style: textStyle.copyWith(
-            color: foregroundColor,
-            fontSize: 16,
-          ),
-        ),
-      ),]),
-        ],
-      ),
-    ),
-  );
-  
-   
  return SizedBox.fromSize(
       size: const Size(56, 56), // button width and height
       child: ClipOval(
@@ -150,10 +36,10 @@ class DeleteButton extends HookConsumerWidget {
           color: Colors.white, // button color
           child: InkWell(
             splashColor: Colors.white, // splash color
-            onTap: () async {
-                showDialog(context: context, builder: (BuildContext context) => dialog1);
-                      }, // button pressed
-            child: const Row(
+      onTap: () async => await showDialog(
+                    context: context,
+                    builder: (context) => const _ConfirmSignoutDialog(),
+                  ),            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Icon(Icons.delete_outlined), // icon
@@ -168,3 +54,70 @@ class DeleteButton extends HookConsumerWidget {
   }
   
 }
+
+class _ConfirmSignoutDialog extends ConsumerWidget {
+  const _ConfirmSignoutDialog();
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final auth = ref.watch(authServiceProvider);
+    return Dialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),
+      child: SizedBox(
+        height: 340,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: CloseButton(),
+              ),
+              const Text(
+                'מחיקת קודים',
+                style: TextStyles.s24w400,
+              ),
+                   const Text(
+                'פעולה זו תסיר את הקודים הקיימים',
+                style: TextStyles.s16w400cGrey3,
+              ),
+              const Text(
+                'האם אתה בטוח שברצונך להסירם מהמערכת?',
+                style: TextStyles.s16w400cGrey3,
+              ),
+              const SizedBox(height: 12),
+              LargeFilledRoundedButton(
+                label: ' לא השאר אותם',
+                onPressed: () => Navigator.of(context).pop(),
+                height: 46,
+              ),
+              LargeFilledRoundedButton.cancel(
+                label: 'מחק',
+                onPressed: () async {
+                        String result = await HttpService.deleteGiftAll(
+                          auth.valueOrNull?.id,
+                        );
+                        if (result == "success") {
+                          // print("in");
+                          // ignore: use_build_context_synchronously
+                          showFancyCustomDialog(context);
+                        } else {
+                          // print("in");
+
+                          // ignore: use_build_context_synchronously
+                        }
+              },
+                height: 46,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
