@@ -22,8 +22,8 @@ class PersonasScreen extends HookConsumerWidget {
         searchTerm: searchController.text,
       ),
     );
-    final searchedUsers = useState<List<PersonaDto>>([]);
-    final selectedUsers = useState<List<PersonaDto>>([]);
+    final searchedUsers = useState(<PersonaDto>[]);
+    final selectedUsers = useState(<PersonaDto>[]);
 
     return SafeArea(
       child: Scaffold(
