@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -28,7 +28,7 @@ enum Sort {
 
 @Riverpod(
   dependencies: [
-    GetApprentices,
+    GetPersonas,
     GoRouterService,
     DioService,
   ],
@@ -36,7 +36,7 @@ enum Sort {
 class UsersController extends _$UsersController {
   @override
   FutureOr<PersonasScreenDto> build() async {
-    final apprentices = await ref.watch(getApprenticesProvider.future);
+    final apprentices = await ref.watch(getPersonasProvider.future);
 
     return PersonasScreenDto(
       users: apprentices,
@@ -106,9 +106,9 @@ class UsersController extends _$UsersController {
           );
 
       if (result.data['result'] == 'success') {
-        ref.invalidate(getApprenticesProvider);
+        ref.invalidate(getPersonasProvider);
 
-        ref.read(goRouterServiceProvider).go('/apprentices-or-users');
+        ref.read(goRouterServiceProvider).go('/personas');
 
         return true;
       }
@@ -141,9 +141,9 @@ class UsersController extends _$UsersController {
           );
 
       if (result.data['result'] == 'success') {
-        ref.invalidate(getApprenticesProvider);
+        ref.invalidate(getPersonasProvider);
 
-        ref.read(goRouterServiceProvider).go('/apprentices-or-users');
+        ref.read(goRouterServiceProvider).go('/personas');
 
         return true;
       }

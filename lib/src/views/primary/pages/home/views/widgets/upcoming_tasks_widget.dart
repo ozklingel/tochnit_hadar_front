@@ -94,7 +94,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                           isSelected: selectedCalls.value.contains(e),
                           onTap: () => e.subject.isEmpty
                               ? null
-                              : ApprenticeDetailsRouteData(
+                              : PersonaDetailsRouteData(
                                   id: e.subject.first,
                                 ),
                           onLongPress: () {
@@ -132,7 +132,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                           isSelected: selectedMeetings.value.contains(e),
                           onTap: () => e.subject.isEmpty
                               ? null
-                              : ApprenticeDetailsRouteData(
+                              : PersonaDetailsRouteData(
                                   id: e.subject.first,
                                 ),
                           onLongPress: () {
@@ -173,7 +173,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                           isSelected: selectedParents.value.contains(e),
                           onTap: () => e.subject.isEmpty
                               ? null
-                              : ApprenticeDetailsRouteData(
+                              : PersonaDetailsRouteData(
                                   id: e.subject.first,
                                 ),
                           onLongPress: () {
@@ -272,7 +272,7 @@ class _ActionsRow extends ConsumerWidget {
                         ),
                         PopupMenuItem(
                           onTap: () =>
-                              ApprenticeDetailsRouteData(id: apprentice.id)
+                              PersonaDetailsRouteData(id: apprentice.id)
                                   .push(context),
                           child: const Text('פרופיל אישי'),
                         ),

@@ -4,7 +4,7 @@ import 'package:hadar_program/src/services/arch/flags_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'my_apprentices.g.dart';
+part 'get_personas.g.dart';
 
 @Riverpod(
   dependencies: [
@@ -12,7 +12,7 @@ part 'my_apprentices.g.dart';
     DioService,
   ],
 )
-class GetApprentices extends _$GetApprentices {
+class GetPersonas extends _$GetPersonas {
   @override
   FutureOr<List<PersonaDto>> build() async {
     final flags = ref.watch(flagsServiceProvider);
@@ -22,7 +22,7 @@ class GetApprentices extends _$GetApprentices {
     }
 
     final request = await ref.watch(dioServiceProvider).get(
-          Consts.getAllApprentices,
+          Consts.getAllPersons,
           // Consts.getAllFiltered,
           // queryParameters: {
           //   'roles': filter.roles.join(','),

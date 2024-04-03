@@ -11,7 +11,7 @@ import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -34,7 +34,7 @@ class ReportsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
-    final apprentices = ref.watch(getApprenticesProvider).valueOrNull ?? [];
+    final apprentices = ref.watch(getPersonasProvider).valueOrNull ?? [];
     final reportsScreenController = ref.watch(reportsControllerProvider);
     final selectedReportIds = useState(<String>[]);
     final filters = useState(const FilterDto());
@@ -405,7 +405,7 @@ class ReportsScreen extends HookConsumerWidget {
                     ),
                     PopupMenuItem(
                       child: const Text('פרופיל אישי'),
-                      onTap: () => ApprenticeDetailsRouteData(id: recipients.id)
+                      onTap: () => PersonaDetailsRouteData(id: recipients.id)
                           .push(context),
                     ),
                   ],

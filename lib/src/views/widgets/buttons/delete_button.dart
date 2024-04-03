@@ -50,9 +50,7 @@ class DeleteButton extends HookConsumerWidget {
         ),
       ),
     );
-    
   }
-  
 }
 
 class _ConfirmSignoutDialog extends ConsumerWidget {

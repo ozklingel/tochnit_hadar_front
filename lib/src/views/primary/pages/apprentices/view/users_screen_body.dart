@@ -60,7 +60,7 @@ class UsersScreenBody extends HookConsumerWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => const NewUserRouteData().push(context),
+        onPressed: () => const NewPersonaRouteData().push(context),
         heroTag: UniqueKey(),
         shape: const CircleBorder(),
         backgroundColor: AppColors.blue02,
@@ -440,7 +440,7 @@ class UsersScreenBody extends HookConsumerWidget {
                               ];
                             }
                           },
-                          onTap: () => ApprenticeDetailsRouteData(
+                          onTap: () => PersonaDetailsRouteData(
                             id: users[idx].id,
                           ).go(context),
                         ),

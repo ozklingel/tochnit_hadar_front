@@ -49,7 +49,8 @@ class DioService extends _$DioService {
             '${options.method}'
             ' => '
             '${options.uri.path}'
-            '?${options.queryParameters}',
+            '\nq => '
+            '${options.queryParameters}',
             error: options.data,
             stackTrace: StackTrace.current,
           );

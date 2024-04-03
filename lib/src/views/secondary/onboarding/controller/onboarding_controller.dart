@@ -38,7 +38,8 @@ class OnboardingController extends _$OnboardingController {
 
     return false;
   }
-    Future<bool> getOTP_whatsapp({
+
+  Future<bool> getOtpWhatsapp({
     required String phone,
   }) async {
     try {

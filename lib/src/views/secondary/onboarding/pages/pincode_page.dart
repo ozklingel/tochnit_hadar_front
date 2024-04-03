@@ -146,14 +146,14 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
               ),
             ),
             TextButton(
-        onPressed: () async {
-                        await ref
-                            .read(onboardingControllerProvider.notifier)
-                            .getOTP_whatsapp(phone: phone);
-                        timer.value = _timerDuration;
-                        pinCodeController.text = '';
-                      },             
-                       child: Text(
+              onPressed: () async {
+                await ref
+                    .read(onboardingControllerProvider.notifier)
+                    .getOtpWhatsapp(phone: phone);
+                timer.value = _timerDuration;
+                pinCodeController.text = '';
+              },
+              child: Text(
                 'שלחו לי את הקוד בהודעת ווצאפ',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(

@@ -1,8 +1,8 @@
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/notification/notification.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/notification/get_notifications.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/my_apprentices.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,7 +14,7 @@ part 'notifications_controller.g.dart';
   dependencies: [
     DioService,
     GetNotifications,
-    GetApprentices,
+    GetPersonas,
   ],
 )
 class NotificationsController extends _$NotificationsController {
@@ -72,7 +72,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<List<PersonaDto>> searchApprentices(String keyword) async {
-    final apprentices = await ref.read(getApprenticesProvider.future);
+    final apprentices = await ref.read(getPersonasProvider.future);
 
     final filtered = apprentices
         .where(
