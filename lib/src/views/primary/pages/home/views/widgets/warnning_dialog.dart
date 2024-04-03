@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../services/auth/auth_service.dart';
 import '../../../../../../services/networking/http_service.dart';
 import '../../../../../../services/routing/go_router_provider.dart';
 import 'success_dialog.dart';
 
-
-void showWarnningCustomDialog(BuildContext context,ref,auth) {
-
+void showWarnningCustomDialog(BuildContext context, ref, auth) {
   Dialog fancyDialog = Dialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12.0),
@@ -25,20 +22,19 @@ void showWarnningCustomDialog(BuildContext context,ref,auth) {
             alignment: Alignment.topLeft,
             child: InkWell(
               onTap: () async {
-                  
-                        String result = await HttpService.deleteGiftAll(
-                          auth.valueOrNull?.id,
-                        );
-                        if (result == "success") {
-                          // print("in");
-                          // ignore: use_build_context_synchronously
-                          showFancyCustomDialog(context);
-                        } else {
-                          // print("in");
+                String result = await HttpService.deleteGiftAll(
+                  auth.valueOrNull?.id,
+                );
+                if (result == "success") {
+                  // print("in");
+                  // ignore: use_build_context_synchronously
+                  showFancyCustomDialog(context);
+                } else {
+                  // print("in");
 
-                          // ignore: use_build_context_synchronously
-                        }
-                      },
+                  // ignore: use_build_context_synchronously
+                }
+              },
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
@@ -70,7 +66,6 @@ void showWarnningCustomDialog(BuildContext context,ref,auth) {
                 width: double.infinity,
                 height: 30,
               ),
-           
               Text(
                 '  מחיקת קודים',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -85,7 +80,6 @@ void showWarnningCustomDialog(BuildContext context,ref,auth) {
                   fontSize: 15,
                 ),
               ),
-        
             ],
           ),
         ],

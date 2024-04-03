@@ -18,7 +18,7 @@ part 'personas_controller.g.dart';
 
 @Riverpod(
   dependencies: [
-    GetApprentices,
+    GetMapsApprentices,
     DioService,
     GetFilteredUsers,
   ],

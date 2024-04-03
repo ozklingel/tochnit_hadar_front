@@ -319,18 +319,17 @@ class GiftScreen extends HookConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 80,
                 child: Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'מןמשו 2 מתוך 45 קודים',
                       ),
                     ),
                     DeleteButton(
                       label: 'מחיקה',
-                 
                     ),
                   ],
                 ),
