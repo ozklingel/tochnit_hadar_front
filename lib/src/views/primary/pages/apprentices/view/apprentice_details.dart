@@ -154,7 +154,7 @@ class _ApprenticeDetailsScreenState
                         final result2 = await ref
                             .read(personasControllerProvider.notifier)
                             .edit(
-                              apprentice: apprentice.copyWith(
+                              persona: apprentice.copyWith(
                                 avatar: uploadUrl,
                               ),
                             );
@@ -527,7 +527,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                       personasControllerProvider.notifier,
                                     )
                                     .edit(
-                                      apprentice: apprentice.copyWith(
+                                      persona: apprentice.copyWith(
                                         militaryCompoundId:
                                             selectedCompound.value.id,
                                         militaryUnit: unitController.text,
