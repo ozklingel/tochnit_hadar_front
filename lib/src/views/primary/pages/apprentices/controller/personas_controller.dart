@@ -21,6 +21,7 @@ part 'personas_controller.g.dart';
     GetMapsApprentices,
     DioService,
     GetFilteredUsers,
+    GetPersonas,
   ],
 )
 class PersonasController extends _$PersonasController {
@@ -197,25 +198,34 @@ class PersonasController extends _$PersonasController {
   }
 
   FutureOr<bool> edit({
-    required PersonaDto apprentice,
+    required PersonaDto persona,
   }) async {
     try {
+      if (persona.isEmpty) {
+        final err = 'empty user id in $this ';
+
+        Sentry.captureException(err);
+        Logger().e(this, error: err);
+
+        return false;
+      }
+
       final result = await ref.read(dioServiceProvider).put(
             Consts.updateApprentice,
             queryParameters: {
-              'apprenticetId': apprentice.id,
+              'apprenticetId': persona.id,
             },
             data: jsonEncode({
-              'avatar': apprentice.avatar,
-              'militaryCompoundId': apprentice.militaryCompoundId,
-              'militaryUnit': apprentice.militaryUnit,
-              'militaryPositionNew': apprentice.militaryPositionNew,
-              'militaryPositionOld': apprentice.militaryPositionOld,
+              'avatar': persona.avatar,
+              'militaryCompoundId': persona.militaryCompoundId,
+              'militaryUnit': persona.militaryUnit,
+              'militaryPositionNew': persona.militaryPositionNew,
+              'militaryPositionOld': persona.militaryPositionOld,
             }),
           );
 
       if (result.data['result'] == 'success') {
-        ref.invalidate(getPersonasProvider);
+        ref.invalidate(getMapsApprenticesProvider);
 
         return true;
       }
