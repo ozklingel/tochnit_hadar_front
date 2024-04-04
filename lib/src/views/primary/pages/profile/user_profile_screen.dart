@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -25,6 +26,7 @@ import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../models/persona/persona.dto.dart';
+import '../../../../services/api/impor_export/upload_file.dart';
 import '../../../../services/routing/go_router_provider.dart';
 import '../apprentices/controller/personas_controller.dart';
 
@@ -97,7 +99,37 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                       avatar: auth.valueOrNull!.avatar,
                       name: auth.valueOrNull!.fullName,
                       phone: "0${auth.valueOrNull!.phone}",
-                      onTapEditAvatar: () => _showPicker(context: context),
+                      onTapEditAvatar: () async {
+                        final result = await FilePicker.platform.pickFiles(
+                          allowMultiple: false,
+                          withData: true,
+                        );
+
+                        if (result == null) {
+                          return;
+                        }
+
+                        final uploadUrl = await ref.read(
+                          uploadFileProvider(result.files.first).future,
+                        );
+                      final user = auth.valueOrNull ?? const AuthDto();
+
+                      final result2 =await ref.read(dioServiceProvider).put(
+                                            Consts.updateUser,
+                                            queryParameters: {
+                                              'userId': user.id,
+                                            },
+                                            data: jsonEncode({
+                                               'photo_path': uploadUrl,
+             
+                                            }),
+                                          );
+
+                                  if (result2.data['result'] == 'success') {
+
+                                      Logger().d("success upload");
+                                  }
+                      },
                       bottom: const Column(
                         children: [
                           SizedBox(height: 24),
