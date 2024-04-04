@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -9,7 +10,10 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -19,6 +23,7 @@ import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../models/persona/persona.dto.dart';
 import '../../../../services/routing/go_router_provider.dart';
@@ -343,34 +348,33 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       const SizedBox(height: 32),
                       Row(
                         children: [
-                          const Expanded(
+                           Expanded(
                             child: LargeFilledRoundedButton(
                               label: 'שמירה',
-                              // onPressed: () async {
-                              //   final result = await ref
-                              //       .read(
-                              //         personasControllerProvider.notifier,
-                              //       )
-                              //       .edit(
-                              //         apprentice: apprentice.copyWith(
-                              //           militaryCompoundId:
-                              //               apprentice.militaryCompoundId,
-                              //           militaryUnit: unitController.text,
-                              //           militaryPositionNew:
-                              //               positionNewController.text,
-                              //           militaryPositionOld:
-                              //               positionOldController.text,
-                              //         ),
-                              //       );
+                               onPressed: () async {
+    try {
+      final result = await ref.read(dioServiceProvider).put(
+            Consts.updateApprentice,
+            queryParameters: {
+              'userId': auth.valueOrNull!.id,
+            },
+            data: jsonEncode({
+              'avatar': auth.valueOrNull!.avatar,
+        
+            }),
+          );
 
-                              //   if (result) {
-                              //     isEditMode.value = false;
-                              //   } else {
-                              //     Toaster.show(
-                              //       'שגיאה בעת שמירת השינויים',
-                              //     );
-                              //   }
-                              // },
+      if (result.data['result'] == 'success') {
+        ref.invalidate(getPersonasProvider);
+
+      }
+    } catch (e) {
+      Logger().e('failed to update apprentice', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+  },
                               textStyle: TextStyles.s14w500,
                             ),
                           ),
