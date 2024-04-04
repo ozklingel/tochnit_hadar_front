@@ -230,8 +230,16 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    
     final auth = ref.watch(authServiceProvider);
     final user = auth.valueOrNull ?? const AuthDto();
+    
+    final institution =
+        ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
+                  (element) => element.id == auth.valueOrNull!.institution,
+                  orElse: () => const InstitutionDto(),
+                ) ??
+            const InstitutionDto();
     final isEditMode = useState(false);
     final firstNController = useTextEditingController(
       text: auth.valueOrNull!.firstName,
@@ -243,6 +251,10 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
     );
     final emailController = useTextEditingController(
       text: auth.valueOrNull!.email,
+      keys: [auth],
+    );
+        final mosadController = useTextEditingController(
+      text: institution.name,
       keys: [auth],
     );
     final datOfBirthController = useTextEditingController(
@@ -338,6 +350,14 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 32),
+                         InputFieldContainer(
+                        label: '  מוסד',
+                        isRequired: true,
+                        child: TextField(
+                          controller: mosadController,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
                       InputFieldContainer(
                         label: '  אזור',
                         isRequired: true,
@@ -360,11 +380,21 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                               'userId': user.id,
                                             },
                                             data: jsonEncode({
-                                              'name': "רונן",
+                                               'city': cityController.text,
+                                              'birthday': datOfBirthController.text,
+                                              'email': emailController.text,
+                                              'last_name': lastNController.text,
+                                              'name': firstNController.text,
+                                             
+                                              
                                             }),
                                           );
 
-                                  if (result.data['result'] == 'success') {}
+                                  if (result.data['result'] == 'success') {
+
+                                    isEditMode.value = false;
+
+                                  }
                                 } catch (e) {
                                   Logger().e(
                                     'failed to update apprentice',
@@ -432,7 +462,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       const SizedBox(height: 12),
                       DetailsRowItem(
                         label: ' מוסד',
-                        data: auth.valueOrNull!.institution,
+                        data: institution.name,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
