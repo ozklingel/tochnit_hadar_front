@@ -69,7 +69,7 @@ class _ApprenticeDetailsScreenState
   Widget build(BuildContext context) {
     final auth = ref.watch(authServiceProvider);
 
-    final apprentice =
+    final persona =
         ref.watch(personasControllerProvider).valueOrNull?.singleWhere(
                   (element) => element.id == widget.apprenticeId,
                   orElse: () => const PersonaDto(),
@@ -83,9 +83,9 @@ class _ApprenticeDetailsScreenState
     // Logger().d(apprentice.militaryUnit, error: apprentice.id);
 
     final views = [
-      _TohnitHadarTabView(apprentice: apprentice),
-      _PersonalInfoTabView(apprentice: apprentice),
-      _MilitaryServiceTabView(apprentice: apprentice),
+      _TohnitHadarTabView(apprentice: persona),
+      _PersonalInfoTabView(apprentice: persona),
+      _MilitaryServiceTabView(apprentice: persona),
     ];
 
     return Scaffold(
@@ -102,7 +102,7 @@ class _ApprenticeDetailsScreenState
                     context: context,
                     builder: (context) {
                       return _DeleteApprenticeDialog(
-                        apprenticeId: apprentice.id,
+                        apprenticeId: persona.id,
                       );
                     },
                   ),
@@ -134,9 +134,9 @@ class _ApprenticeDetailsScreenState
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.pin,
                     background: DetailsPageHeader(
-                      avatar: apprentice.avatar,
-                      name: '${apprentice.firstName} ${apprentice.lastName}',
-                      phone: apprentice.phone,
+                      avatar: persona.avatar,
+                      name: '${persona.firstName} ${persona.lastName}',
+                      phone: persona.phone,
                       onTapEditAvatar: () async {
                         final result = await FilePicker.platform.pickFiles(
                           allowMultiple: false,
@@ -154,7 +154,7 @@ class _ApprenticeDetailsScreenState
                         final result2 = await ref
                             .read(personasControllerProvider.notifier)
                             .edit(
-                              persona: apprentice.copyWith(
+                              persona: persona.copyWith(
                                 avatar: uploadUrl,
                               ),
                             );
@@ -171,7 +171,7 @@ class _ApprenticeDetailsScreenState
                                 text: 'שיחה',
                                 icon: const Icon(FluentIcons.call_24_regular),
                                 onPressed: () async {
-                                  if (apprentice.phone.isEmpty) {
+                                  if (persona.phone.isEmpty) {
                                     showDialog(
                                       context: context,
                                       builder: (_) =>
@@ -182,7 +182,7 @@ class _ApprenticeDetailsScreenState
                                   }
 
                                   final url =
-                                      Uri.tryParse('tel:${apprentice.phone}') ??
+                                      Uri.tryParse('tel:${persona.phone}') ??
                                           Uri.parse('');
 
                                   if (!await launchUrl(url)) {
@@ -194,13 +194,13 @@ class _ApprenticeDetailsScreenState
                                 text: 'וואטסאפ',
                                 icon: Assets.icons.whatsapp.svg(height: 20),
                                 onPressed: () =>
-                                    launchWhatsapp(phone: apprentice.phone),
+                                    launchWhatsapp(phone: persona.phone),
                               ),
                               _ActionButton(
                                 text: 'SMS',
                                 icon: const Icon(FluentIcons.chat_24_regular),
                                 onPressed: () =>
-                                    launchSms(phone: apprentice.phone),
+                                    launchSms(phone: persona.phone),
                               ),
                               _ActionButton(
                                 text: 'דיווח',

@@ -31,7 +31,7 @@ class UploadFile extends _$UploadFile {
       ),
     });
 
-    final result = await ref.watch(dioServiceProvider).put(
+    final result = await ref.watch(dioServiceProvider).post(
           Consts.uploadFile,
           data: formData,
         );

@@ -10,7 +10,6 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -231,9 +230,9 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-final auth = ref.watch(authServiceProvider);
+    final auth = ref.watch(authServiceProvider);
     final user = auth.valueOrNull ?? const AuthDto();
-        final isEditMode = useState(false);
+    final isEditMode = useState(false);
     final firstNController = useTextEditingController(
       text: auth.valueOrNull!.firstName,
       keys: [auth],
@@ -349,34 +348,32 @@ final auth = ref.watch(authServiceProvider);
                       const SizedBox(height: 32),
                       Row(
                         children: [
-                           Expanded(
+                          Expanded(
                             child: LargeFilledRoundedButton(
                               label: 'שמירה',
-                               onPressed: () async {
-    try {
-             
- 
+                              onPressed: () async {
+                                try {
+                                  final result =
+                                      await ref.read(dioServiceProvider).put(
+                                            Consts.updateUser,
+                                            queryParameters: {
+                                              'userId': user.id,
+                                            },
+                                            data: jsonEncode({
+                                              'name': "רונן",
+                                            }),
+                                          );
 
-      final result = await ref.read(dioServiceProvider).put(
-            Consts.updateUser,
-            queryParameters: {
-              'userId': user.id,
-            },
-            data: jsonEncode({
-              'name': "רונן",
-            
-            }),
-          );
-
-      if (result.data['result'] == 'success') {
-      }
-    } catch (e) {
-      Logger().e('failed to update apprentice', error: e);
-      Sentry.captureException(e);
-      Toaster.error(e);
-    }
-
-  },
+                                  if (result.data['result'] == 'success') {}
+                                } catch (e) {
+                                  Logger().e(
+                                    'failed to update apprentice',
+                                    error: e,
+                                  );
+                                  Sentry.captureException(e);
+                                  Toaster.error(e);
+                                }
+                              },
                               textStyle: TextStyles.s14w500,
                             ),
                           ),
@@ -458,7 +455,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
- 
+
     final institution =
         ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
                   (element) => element.id == auth.valueOrNull!.institution,
