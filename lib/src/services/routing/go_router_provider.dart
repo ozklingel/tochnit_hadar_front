@@ -64,20 +64,15 @@ class GoRouterService extends _$GoRouterService {
       ),
       routes: $appRoutes,
       redirect: (context, state) {
-        final userPhone = ref
-                .read(storageServiceProvider)
-                .requireValue
-                .getString(Consts.userPhoneKey) ??
-            '';
+        final userPhone =
+            ref.read(storageServiceProvider.notifier).getUserPhone();
 
-        final accessToken = ref
-                .read(storageServiceProvider)
-                .requireValue
-                .getString(Consts.accessTokenKey) ??
-            '';
+        final accessToken =
+            ref.read(storageServiceProvider.notifier).getAuthToken();
 
         if (userPhone.isEmpty || accessToken.isEmpty) {
           Logger().w('empty userPhone');
+
           return const OnboardingRouteData().location;
         }
 
@@ -89,6 +84,7 @@ class GoRouterService extends _$GoRouterService {
 
         if (firstOnboarding) {
           Logger().w('empty firstOnboarding');
+
           return OnboardingRouteData(isOnboarding: firstOnboarding).location;
         }
 

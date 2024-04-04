@@ -321,9 +321,9 @@ class GiftScreen extends HookConsumerWidget {
             children: [
               const SizedBox(
                 height: 80,
-                child: const Row(
+                child: Row(
                   children: [
-                     Expanded(
+                    Expanded(
                       child: Text(
                         'מןמשו 2 מתוך 45 קודים',
                       ),

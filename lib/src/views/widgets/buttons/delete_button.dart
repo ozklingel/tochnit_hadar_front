@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../core/theming/colors.dart';
 import '../../../services/auth/auth_service.dart';
 import '../../../services/networking/http_service.dart';
 import '../../primary/pages/home/views/widgets/success_dialog.dart';
@@ -27,19 +26,19 @@ class DeleteButton extends HookConsumerWidget {
   final double? height;
 
   @override
-  Widget build(BuildContext context,ref) {
-
- return SizedBox.fromSize(
+  Widget build(BuildContext context, ref) {
+    return SizedBox.fromSize(
       size: const Size(56, 56), // button width and height
       child: ClipOval(
         child: Material(
           color: Colors.white, // button color
           child: InkWell(
             splashColor: Colors.white, // splash color
-      onTap: () async => await showDialog(
-                    context: context,
-                    builder: (context) => const _ConfirmSignoutDialog(),
-                  ),            child: const Row(
+            onTap: () async => await showDialog(
+              context: context,
+              builder: (context) => const _ConfirmSignoutDialog(),
+            ),
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Icon(Icons.delete_outlined), // icon
@@ -79,7 +78,7 @@ class _ConfirmSignoutDialog extends ConsumerWidget {
                 'מחיקת קודים',
                 style: TextStyles.s24w400,
               ),
-                   const Text(
+              const Text(
                 'פעולה זו תסיר את הקודים הקיימים',
                 style: TextStyles.s16w400cGrey3,
               ),
@@ -96,19 +95,19 @@ class _ConfirmSignoutDialog extends ConsumerWidget {
               LargeFilledRoundedButton.cancel(
                 label: 'מחק',
                 onPressed: () async {
-                        String result = await HttpService.deleteGiftAll(
-                          auth.valueOrNull?.id,
-                        );
-                        if (result == "success") {
-                          // print("in");
-                          // ignore: use_build_context_synchronously
-                          showFancyCustomDialog(context);
-                        } else {
-                          // print("in");
+                  String result = await HttpService.deleteGiftAll(
+                    auth.valueOrNull?.id,
+                  );
+                  if (result == "success") {
+                    // print("in");
+                    // ignore: use_build_context_synchronously
+                    showFancyCustomDialog(context);
+                  } else {
+                    // print("in");
 
-                          // ignore: use_build_context_synchronously
-                        }
-              },
+                    // ignore: use_build_context_synchronously
+                  }
+                },
                 height: 46,
               ),
             ],
@@ -118,4 +117,3 @@ class _ConfirmSignoutDialog extends ConsumerWidget {
     );
   }
 }
-
