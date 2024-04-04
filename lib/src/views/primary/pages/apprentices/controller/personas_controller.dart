@@ -7,7 +7,6 @@ import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/apprentice/get_maps_apprentices.dart';
 import 'package:hadar_program/src/services/api/search_bar/get_filtered_users.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:logger/logger.dart';
@@ -21,7 +20,6 @@ part 'personas_controller.g.dart';
     GetMapsApprentices,
     DioService,
     GetFilteredUsers,
-    GetPersonas,
   ],
 )
 class PersonasController extends _$PersonasController {
