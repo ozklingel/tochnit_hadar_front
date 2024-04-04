@@ -231,8 +231,9 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final auth = ref.watch(authServiceProvider);
-    final isEditMode = useState(false);
+final auth = ref.watch(authServiceProvider);
+    final user = auth.valueOrNull ?? const AuthDto();
+        final isEditMode = useState(false);
     final firstNController = useTextEditingController(
       text: auth.valueOrNull!.firstName,
       keys: [auth],
@@ -353,20 +354,21 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                               label: 'שמירה',
                                onPressed: () async {
     try {
+             
+ 
+
       final result = await ref.read(dioServiceProvider).put(
-            Consts.updateApprentice,
+            Consts.updateUser,
             queryParameters: {
-              'userId': auth.valueOrNull!.id,
+              'userId': user.id,
             },
             data: jsonEncode({
-              'avatar': auth.valueOrNull!.avatar,
-        
+              'name': "רונן",
+            
             }),
           );
 
       if (result.data['result'] == 'success') {
-        ref.invalidate(getPersonasProvider);
-
       }
     } catch (e) {
       Logger().e('failed to update apprentice', error: e);
@@ -456,6 +458,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
+ 
     final institution =
         ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
                   (element) => element.id == auth.valueOrNull!.institution,
