@@ -112,24 +112,23 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                         final uploadUrl = await ref.read(
                           uploadFileProvider(result.files.first).future,
                         );
-                      final user = auth.valueOrNull ?? const AuthDto();
 
-                      final result2 =await ref.read(dioServiceProvider).put(
-                                            Consts.updateUser,
-                                            queryParameters: {
-                                              'userId': user.id,
-                                            },
-                                            data: jsonEncode({
-                                               'photo_path': uploadUrl,
-             
-                                            }),
-                                          );
+                        final user = auth.valueOrNull ?? const AuthDto();
 
-                                  if (result2.data['result'] == 'success') {
+                        final result2 = await ref.read(dioServiceProvider).put(
+                              Consts.updateUser,
+                              queryParameters: {
+                                'userId': user.id,
+                              },
+                              data: jsonEncode({
+                                'photo_path': uploadUrl,
+                              }),
+                            );
 
-                                      Logger().d("success upload");
-                                      setState(() {});
-                                  }
+                        if (result2.data['result'] == 'success') {
+                          Logger().d("success upload");
+                          setState(() {});
+                        }
                       },
                       bottom: const Column(
                         children: [
@@ -194,44 +193,6 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
     );
   }
 
-  void _showPicker({
-    required BuildContext context,
-  }) {
-    final auth = ref.watch(authServiceProvider);
-
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Photo Library'),
-                onTap: () {
-                  getImage(ImageSource.gallery, auth);
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                leading: const CircleAvatar(
-                  backgroundImage: AssetImage(
-                    'assets/images/pencile.png',
-                  ), // No matter how big it is, it won't overflow
-                ),
-                title: const Text('Camera'),
-                onTap: () {
-                  getImage(ImageSource.camera, auth);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Future getImage(ImageSource img, user) async {
     final pickedFile = await picker.pickImage(source: img);
 
@@ -263,10 +224,9 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    
     final auth = ref.watch(authServiceProvider);
     final user = auth.valueOrNull ?? const AuthDto();
-    
+
     final institution =
         ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
                   (element) => element.id == auth.valueOrNull!.institution,
@@ -286,7 +246,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
       text: auth.valueOrNull!.email,
       keys: [auth],
     );
-        final mosadController = useTextEditingController(
+    final mosadController = useTextEditingController(
       text: institution.name,
       keys: [auth],
     );
@@ -383,7 +343,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 32),
-                         InputFieldContainer(
+                      InputFieldContainer(
                         label: '  מוסד',
                         isRequired: true,
                         child: TextField(
@@ -413,20 +373,17 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                               'userId': user.id,
                                             },
                                             data: jsonEncode({
-                                               'city': cityController.text,
-                                              'birthday': datOfBirthController.text,
+                                              'city': cityController.text,
+                                              'birthday':
+                                                  datOfBirthController.text,
                                               'email': emailController.text,
                                               'last_name': lastNController.text,
                                               'name': firstNController.text,
-                                             
-                                              
                                             }),
                                           );
 
                                   if (result.data['result'] == 'success') {
-
                                     isEditMode.value = false;
-
                                   }
                                 } catch (e) {
                                   Logger().e(
