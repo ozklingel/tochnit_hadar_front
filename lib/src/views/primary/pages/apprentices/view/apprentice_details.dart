@@ -68,8 +68,7 @@ class _ApprenticeDetailsScreenState
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(authServiceProvider);
-    print("object");
-    print(personasControllerProvider);
+
     final persona =
         ref.watch(personasControllerProvider).valueOrNull?.singleWhere(
                   (element) => element.id == widget.apprenticeId,
