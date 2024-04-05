@@ -128,6 +128,7 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                                   if (result2.data['result'] == 'success') {
 
                                       Logger().d("success upload");
+                                      setState(() {});
                                   }
                       },
                       bottom: const Column(
