@@ -21,6 +21,8 @@ class HttpService {
   static const _getNotifSettingUrl =
       '${Consts.baseUrl}notification_form/getAllSetting';
   static const _getGifturl = '${Consts.baseUrl}gift/getGift';
+  static const _getUsedGifturl = '${Consts.baseUrl}gift/getGifts_cnt';
+
   static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
   static const _deleteGiftAllurl = '${Consts.baseUrl}gift/deleteAll';
 
@@ -193,5 +195,28 @@ class HttpService {
       },
     );
     return response;
+  }
+
+    static getUsedGifts(userid, ) async {
+    final response = await http.get(
+      Uri.parse(
+        "$_getUsedGifturl?userId=$userid",
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    var u = jsonDecode(response.body);
+
+    //String t1 = (u["result"]) as String;
+        Logger().d(u);
+//Map<String, dynamic> map3 = Map.of(u);
+
+    //Logger().d("cnt_giftCode_not_used"]+"מתוך"+map3["cnt_giftCode_used"]+"מומשו ");
+
+    return u;
+
   }
 }
