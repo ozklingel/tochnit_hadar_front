@@ -5,29 +5,29 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 
 List<PopupMenuItem<dynamic>> personaCardPopupMenuItems({
   required BuildContext context,
-  required PersonaDto apprentice,
+  required PersonaDto persona,
 }) {
   return [
     PopupMenuItem(
       child: const Text('להתקשר'),
-      onTap: () => launchCall(phone: apprentice.phone),
+      onTap: () => launchCall(phone: persona.phone),
     ),
     PopupMenuItem(
       child: const Text('שליחת וואטסאפ'),
-      onTap: () => launchWhatsapp(phone: apprentice.phone),
+      onTap: () => launchWhatsapp(phone: persona.phone),
     ),
     PopupMenuItem(
       child: const Text('שליחת SMS'),
-      onTap: () => launchSms(phone: apprentice.phone),
+      onTap: () => launchSms(phone: [persona.phone]),
     ),
     PopupMenuItem(
       child: const Text('דיווח'),
       onTap: () =>
-          ReportNewRouteData(initRecipients: [apprentice.id]).push(context),
+          ReportNewRouteData(initRecipients: [persona.id]).push(context),
     ),
     PopupMenuItem(
       child: const Text('פרופיל אישי'),
-      onTap: () => PersonaDetailsRouteData(id: apprentice.id).push(context),
+      onTap: () => PersonaDetailsRouteData(id: persona.id).push(context),
     ),
   ];
 }

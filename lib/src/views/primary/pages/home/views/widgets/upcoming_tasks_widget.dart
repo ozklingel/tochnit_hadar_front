@@ -234,7 +234,7 @@ class _ActionsRow extends ConsumerWidget {
           if (selectedTasks.length == 1)
             Builder(
               builder: (context) {
-                final apprentice = apprentices.singleWhere(
+                final persona = apprentices.singleWhere(
                   (element) => selectedTasks
                       .map((e) => e.subject)
                       .expand((element) => element)
@@ -245,11 +245,11 @@ class _ActionsRow extends ConsumerWidget {
                 return Row(
                   children: [
                     IconButton(
-                      onPressed: () => launchCall(phone: apprentice.phone),
+                      onPressed: () => launchCall(phone: persona.phone),
                       icon: const Icon(FluentIcons.call_24_regular),
                     ),
                     IconButton(
-                      onPressed: () => launchWhatsapp(phone: apprentice.phone),
+                      onPressed: () => launchWhatsapp(phone: persona.phone),
                       icon: Assets.icons.whatsapp.svg(
                         height: 20,
                       ),
@@ -267,13 +267,12 @@ class _ActionsRow extends ConsumerWidget {
                       offset: const Offset(0, 32),
                       itemBuilder: (context) => [
                         PopupMenuItem(
-                          onTap: () => launchSms(phone: apprentice.phone),
+                          onTap: () => launchSms(phone: [persona.phone]),
                           child: const Text('שליחת SMS'),
                         ),
                         PopupMenuItem(
-                          onTap: () =>
-                              PersonaDetailsRouteData(id: apprentice.id)
-                                  .push(context),
+                          onTap: () => PersonaDetailsRouteData(id: persona.id)
+                              .push(context),
                           child: const Text('פרופיל אישי'),
                         ),
                       ],

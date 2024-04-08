@@ -397,7 +397,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
           if (tabController.index == 0 && selectedCalls.value.length == 1)
             Builder(
               builder: (context) {
-                final selectedApprentice = apprentices.singleWhere(
+                final selectedPersona = apprentices.singleWhere(
                   (element) =>
                       selectedCalls.value.first.subject.contains(element.id),
                   orElse: () => const PersonaDto(),
@@ -408,27 +408,26 @@ class _MelaveTasksBody extends HookConsumerWidget {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       child: const Text('להתקשר'),
-                      onTap: () => launchCall(phone: selectedApprentice.phone),
+                      onTap: () => launchCall(phone: selectedPersona.phone),
                     ),
                     PopupMenuItem(
                       child: const Text('שליחת וואטסאפ'),
-                      onTap: () =>
-                          launchWhatsapp(phone: selectedApprentice.phone),
+                      onTap: () => launchWhatsapp(phone: selectedPersona.phone),
                     ),
                     PopupMenuItem(
                       child: const Text('שליחת SMS'),
-                      onTap: () => launchSms(phone: selectedApprentice.phone),
+                      onTap: () => launchSms(phone: [selectedPersona.phone]),
                     ),
                     PopupMenuItem(
                       child: const Text('דיווח'),
                       onTap: () => ReportNewRouteData(
-                        initRecipients: [selectedApprentice.id],
+                        initRecipients: [selectedPersona.id],
                       ).push(context),
                     ),
                     PopupMenuItem(
                       child: const Text('פרופיל אישי'),
                       onTap: () => PersonaDetailsRouteData(
-                        id: selectedApprentice.id,
+                        id: selectedPersona.id,
                       ).push(context),
                     ),
                   ],

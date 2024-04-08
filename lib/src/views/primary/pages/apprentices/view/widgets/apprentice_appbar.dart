@@ -87,7 +87,7 @@ class ApprenticeAppBar extends ConsumerWidget {
                   offset: const Offset(0, 32),
                   itemBuilder: (context) => personaCardPopupMenuItems(
                     context: context,
-                    apprentice: apprentices.singleWhere(
+                    persona: apprentices.singleWhere(
                       (element) =>
                           element.id == selectedApprentices.value.first.id,
                       orElse: () => const PersonaDto(),

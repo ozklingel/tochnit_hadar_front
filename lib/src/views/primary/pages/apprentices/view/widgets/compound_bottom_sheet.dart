@@ -5,7 +5,6 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -107,7 +106,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
                               itemBuilder: (context) =>
                                   personaCardPopupMenuItems(
                                 context: context,
-                                apprentice: personas.firstWhere(
+                                persona: personas.firstWhere(
                                   (element) =>
                                       selectedPersonas.value.first == element,
                                   orElse: () => const PersonaDto(),
@@ -116,11 +115,19 @@ class CompoundBottomSheet extends HookConsumerWidget {
                             )
                           else if (selectedPersonas.value.length > 1) ...[
                             IconButton(
-                              onPressed: () => Toaster.backend(),
+                              onPressed: () => launchSms(
+                                phone: selectedPersonas.value
+                                    .map((e) => e.phone)
+                                    .toList(),
+                              ),
                               icon: const Icon(FluentIcons.chat_24_regular),
                             ),
                             IconButton(
-                              onPressed: () => Toaster.backend(),
+                              onPressed: () => ReportNewRouteData(
+                                initRecipients: selectedPersonas.value
+                                    .map((e) => e.id)
+                                    .toList(),
+                              ).push(context),
                               icon: const Icon(
                                 FluentIcons.clipboard_task_24_regular,
                               ),

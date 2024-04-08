@@ -200,7 +200,7 @@ class _ApprenticeDetailsScreenState
                                 text: 'SMS',
                                 icon: const Icon(FluentIcons.chat_24_regular),
                                 onPressed: () =>
-                                    launchSms(phone: persona.phone),
+                                    launchSms(phone: [persona.phone]),
                               ),
                               _ActionButton(
                                 text: 'דיווח',
@@ -1427,7 +1427,7 @@ class _ContactButtons extends ConsumerWidget {
           ),
         ] else ...[
           _RowIconButton(
-            onPressed: () => launchSms(phone: phone),
+            onPressed: () => launchSms(phone: [phone]),
             icon: const Icon(FluentIcons.chat_24_regular),
           ),
           const SizedBox(width: 4),

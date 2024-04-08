@@ -42,7 +42,7 @@ class UsersScreenBody extends HookConsumerWidget {
     final mapController = useRef(Completer<GoogleMapController>());
     final mapCameraPosition = useState<CameraPosition?>(null);
     final filters = useState(const FilterDto());
-    final selectedApprentices = useState<List<PersonaDto>>([]);
+    final selectedPersonas = useState<List<PersonaDto>>([]);
     final compounds = ref.watch(compoundControllerProvider).valueOrNull;
     final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
     final searchController = useTextEditingController();
@@ -116,14 +116,15 @@ class UsersScreenBody extends HookConsumerWidget {
                                   ],
                                 ),
                                 actions: [
-                                  if (selectedApprentices.value.isNotEmpty) ...[
+                                  if (selectedPersonas.value.isNotEmpty) ...[
                                     IconButton(
                                       onPressed: () =>
-                                          selectedApprentices.value.length > 1
+                                          selectedPersonas.value.length > 1
                                               ? Toaster.error('backend???')
                                               : launchSms(
-                                                  phone:
-                                                      selectedApprentices.value,
+                                                  phone: selectedPersonas.value
+                                                      .map((e) => e.phone)
+                                                      .toList(),
                                                 ),
                                       icon: const Icon(
                                         FluentIcons.chat_24_regular,
@@ -131,8 +132,7 @@ class UsersScreenBody extends HookConsumerWidget {
                                     ),
                                     IconButton(
                                       onPressed: () => ReportNewRouteData(
-                                        initRecipients: selectedApprentices
-                                            .value
+                                        initRecipients: selectedPersonas.value
                                             .map((e) => e.id)
                                             .toList(),
                                       ).push(context),
@@ -371,7 +371,7 @@ class UsersScreenBody extends HookConsumerWidget {
                 children: [
                   UserListSearchResultsWidget(
                     searchString: searchController.text,
-                    selectedApprentices: selectedApprentices,
+                    selectedApprentices: selectedPersonas,
                     onTapCard: (double lat, double lng) async {
                       isSearchOpen.value = false;
                       ref.read(usersControllerProvider.notifier).mapView(true);
@@ -439,18 +439,17 @@ class UsersScreenBody extends HookConsumerWidget {
                               users[idx].maritalStatus,
                             ],
                             isSelected:
-                                selectedApprentices.value.contains(users[idx]),
+                                selectedPersonas.value.contains(users[idx]),
                             onLongPress: () {
-                              if (selectedApprentices.value
-                                  .contains(users[idx])) {
-                                selectedApprentices.value = [
-                                  ...selectedApprentices.value.where(
+                              if (selectedPersonas.value.contains(users[idx])) {
+                                selectedPersonas.value = [
+                                  ...selectedPersonas.value.where(
                                     (element) => element.id != users[idx].id,
                                   ),
                                 ];
                               } else {
-                                selectedApprentices.value = [
-                                  ...selectedApprentices.value,
+                                selectedPersonas.value = [
+                                  ...selectedPersonas.value,
                                   users[idx],
                                 ];
                               }

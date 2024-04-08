@@ -59,10 +59,12 @@ void launchWhatsapp({
 }
 
 void launchSms({
-  required phone,
+  required List<String> phone,
   String bodyText = '',
 }) async {
-  final uri = Uri.parse('sms:+972$phone?body=${Uri.encodeComponent(bodyText)}');
+  final uri = Uri.parse(
+    'sms:${phone.map((e) => '+972$e').join(',')}?body=${Uri.encodeComponent(bodyText)}',
+  );
 
   try {
     if (!await canLaunchUrl(uri)) {
