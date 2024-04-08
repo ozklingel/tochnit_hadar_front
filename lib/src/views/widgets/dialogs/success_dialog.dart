@@ -33,7 +33,7 @@ class SuccessDialog extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Assets.images.success.svg(),
+              Assets.illustrations.twoThumbsUp.svg(),
               const SizedBox(height: 24),
               Text(
                 msg,

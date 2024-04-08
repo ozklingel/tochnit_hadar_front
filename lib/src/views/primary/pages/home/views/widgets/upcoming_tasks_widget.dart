@@ -87,28 +87,31 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                 ListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: calls
-                      .map(
-                        (e) => TaskCard(
-                          task: e,
-                          isSelected: selectedCalls.value.contains(e),
-                          onTap: () => e.subject.isEmpty
-                              ? null
-                              : PersonaDetailsRouteData(
-                                  id: e.subject.first,
-                                ),
-                          onLongPress: () {
-                            if (selectedCalls.value.contains(e)) {
-                              final newList = selectedCalls.value;
-                              newList.remove(e);
-                              selectedCalls.value = [...newList];
-                            } else {
-                              selectedCalls.value = [...selectedCalls.value, e];
-                            }
-                          },
-                        ),
-                      )
-                      .toList(),
+                  children: calls.map(
+                    (e) {
+                      void onSelect() {
+                        if (selectedCalls.value.contains(e)) {
+                          selectedCalls.value = [
+                            ...selectedCalls.value
+                                .where((element) => element != e),
+                          ];
+                        } else {
+                          selectedCalls.value = [...selectedCalls.value, e];
+                        }
+                      }
+
+                      return TaskCard(
+                        task: e,
+                        isSelected: selectedCalls.value.contains(e),
+                        onTap: selectedCalls.value.isEmpty
+                            ? () => e.subject.isEmpty
+                                ? null
+                                : PersonaDetailsRouteData(id: e.subject.first)
+                            : onSelect,
+                        onLongPress: onSelect,
+                      );
+                    },
+                  ).toList(),
                 ),
               const SizedBox(height: 24),
               _ActionsRow(
@@ -125,31 +128,34 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                 ListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: meetings
-                      .map(
-                        (e) => TaskCard(
-                          task: e,
-                          isSelected: selectedMeetings.value.contains(e),
-                          onTap: () => e.subject.isEmpty
-                              ? null
-                              : PersonaDetailsRouteData(
-                                  id: e.subject.first,
-                                ),
-                          onLongPress: () {
-                            if (selectedMeetings.value.contains(e)) {
-                              final newList = selectedMeetings.value;
-                              newList.remove(e);
-                              selectedMeetings.value = [...newList];
-                            } else {
-                              selectedMeetings.value = [
-                                ...selectedMeetings.value,
-                                e,
-                              ];
-                            }
-                          },
-                        ),
-                      )
-                      .toList(),
+                  children: meetings.map(
+                    (e) {
+                      void onSelect() {
+                        if (selectedMeetings.value.contains(e)) {
+                          selectedMeetings.value = [
+                            ...selectedMeetings.value
+                                .where((element) => element != e),
+                          ];
+                        } else {
+                          selectedMeetings.value = [
+                            ...selectedMeetings.value,
+                            e,
+                          ];
+                        }
+                      }
+
+                      return TaskCard(
+                        task: e,
+                        isSelected: selectedMeetings.value.contains(e),
+                        onTap: selectedMeetings.value.isEmpty
+                            ? () => e.subject.isEmpty
+                                ? null
+                                : PersonaDetailsRouteData(id: e.subject.first)
+                            : onSelect,
+                        onLongPress: onSelect,
+                      );
+                    },
+                  ).toList(),
                 ),
               const SizedBox(height: 24),
               _ActionsRow(
@@ -166,31 +172,34 @@ class UpcomingTasksWidget extends HookConsumerWidget {
                 ListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: parents
-                      .map(
-                        (e) => TaskCard(
-                          task: e,
-                          isSelected: selectedParents.value.contains(e),
-                          onTap: () => e.subject.isEmpty
-                              ? null
-                              : PersonaDetailsRouteData(
-                                  id: e.subject.first,
-                                ),
-                          onLongPress: () {
-                            if (selectedParents.value.contains(e)) {
-                              final newList = selectedParents.value;
-                              newList.remove(e);
-                              selectedParents.value = [...newList];
-                            } else {
-                              selectedParents.value = [
-                                ...selectedParents.value,
-                                e,
-                              ];
-                            }
-                          },
-                        ),
-                      )
-                      .toList(),
+                  children: parents.map(
+                    (e) {
+                      void onSelect() {
+                        if (selectedParents.value.contains(e)) {
+                          selectedParents.value = [
+                            ...selectedParents.value
+                                .where((element) => element != e),
+                          ];
+                        } else {
+                          selectedParents.value = [
+                            ...selectedParents.value,
+                            e,
+                          ];
+                        }
+                      }
+
+                      return TaskCard(
+                        task: e,
+                        isSelected: selectedParents.value.contains(e),
+                        onTap: selectedParents.value.isEmpty
+                            ? () => e.subject.isEmpty
+                                ? null
+                                : PersonaDetailsRouteData(id: e.subject.first)
+                            : onSelect,
+                        onLongPress: onSelect,
+                      );
+                    },
+                  ).toList(),
                 ),
             ],
           ),

@@ -28,13 +28,14 @@ class HomeScreen extends ConsumerWidget {
     //     ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
 
     final auth = ref.watch(authServiceProvider);
-    final user = auth.valueOrNull ?? const AuthDto();
 
     // Logger().d(user);
 
     if (auth.isLoading) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
+
+    final user = auth.valueOrNull ?? const AuthDto();
 
     return Scaffold(
       drawer: const SideMenuDrawer(),
