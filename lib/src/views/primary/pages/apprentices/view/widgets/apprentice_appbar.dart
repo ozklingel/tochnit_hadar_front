@@ -5,7 +5,7 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/compound_bottom_sheet.dart';
+import 'package:hadar_program/src/views/widgets/list/persona_card_popup_menu_items.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ApprenticeAppBar extends ConsumerWidget {
@@ -85,7 +85,7 @@ class ApprenticeAppBar extends ConsumerWidget {
                   icon: const Icon(FluentIcons.more_vertical_24_regular),
                   surfaceTintColor: Colors.white,
                   offset: const Offset(0, 32),
-                  itemBuilder: (context) => getApprenticeCardPopupItems(
+                  itemBuilder: (context) => personaCardPopupMenuItems(
                     context: context,
                     apprentice: apprentices.singleWhere(
                       (element) =>

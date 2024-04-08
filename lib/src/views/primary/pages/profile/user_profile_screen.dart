@@ -51,10 +51,11 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     for (final scrollController in scrollControllers) {
       scrollController?.dispose();
     }
+
+    super.dispose();
   }
 
   @override

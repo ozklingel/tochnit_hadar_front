@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
@@ -44,7 +43,6 @@ class GiftScreen extends HookConsumerWidget {
 
   final String eventId;
   @override
-
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
@@ -304,7 +302,6 @@ class GiftScreen extends HookConsumerWidget {
         ),
       ];
 
-
       return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -322,24 +319,24 @@ class GiftScreen extends HookConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               SizedBox(
+              SizedBox(
                 height: 80,
                 child: Row(
                   children: [
                     Expanded(
                       child: FutureBuilder(
-        future: someFutureStringFunction(auth.valueOrNull!.phone),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            
-            return Text(snapshot.data.toString()    );
-          } else {
-            return Text('Loading...');
-          }
-        },
-      ),
+                        future:
+                            someFutureStringFunction(auth.valueOrNull!.phone),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(snapshot.data.toString());
+                          } else {
+                            return const Text('Loading...');
+                          }
+                        },
+                      ),
                     ),
-                    DeleteButton(
+                    const DeleteButton(
                       label: 'מחיקה',
                     ),
                   ],
@@ -388,11 +385,11 @@ class GiftScreen extends HookConsumerWidget {
 
     return const Text("data");
   }
-  
-  someFutureStringFunction(phone) async {
 
-          return await HttpService.getUsedGifts(
-                                       phone);
+  someFutureStringFunction(phone) async {
+    return await HttpService.getUsedGifts(
+      phone,
+    );
   }
 }
 

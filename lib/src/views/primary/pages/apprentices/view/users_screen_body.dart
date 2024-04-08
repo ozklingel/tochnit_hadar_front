@@ -58,400 +58,416 @@ class UsersScreenBody extends HookConsumerWidget {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
 
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => const NewPersonaRouteData().push(context),
-        heroTag: UniqueKey(),
-        shape: const CircleBorder(),
-        backgroundColor: AppColors.blue02,
-        child: const Text(
-          '+',
-          style: TextStyle(
-            fontSize: 30,
-            color: Colors.white,
-          ),
-        ),
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 90,
-            collapsedHeight: 90,
-            pinned: true,
-            flexibleSpace: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 44,
-                            child: SearchAppBar(
-                              controller: searchController,
-                              isSearchOpen: isSearchOpen,
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: () => isSearchOpen.value = true,
-                                    icon: const Icon(
-                                      FluentIcons.search_24_regular,
-                                    ),
-                                  ),
-                                  const Text('משתמשים'),
-                                  const SizedBox(),
-                                ],
-                              ),
-                              actions: [
-                                if (selectedApprentices.value.isNotEmpty) ...[
-                                  IconButton(
-                                    onPressed: () =>
-                                        selectedApprentices.value.length > 1
-                                            ? Toaster.error('backend???')
-                                            : launchSms(
-                                                phone:
-                                                    selectedApprentices.value,
-                                              ),
-                                    icon:
-                                        const Icon(FluentIcons.chat_24_regular),
-                                  ),
-                                  IconButton(
-                                    onPressed: () => ReportNewRouteData(
-                                      initRecipients: selectedApprentices.value
-                                          .map((e) => e.id)
-                                          .toList(),
-                                    ).push(context),
-                                    icon: const Icon(
-                                      FluentIcons.clipboard_task_24_regular,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                ],
-                              ],
-                            ),
-                            // SearchAppBar(
-                            //   elevation: MaterialStateProperty.all(0),
-                            //   backgroundColor: MaterialStateColor.resolveWith(
-                            //     (states) => AppColors.blue08,
-                            //   ),
-                            //   padding: MaterialStateProperty.all(
-                            //     const EdgeInsets.symmetric(horizontal: 16),
-                            //   ),
-                            //   leading: const Icon(
-                            //     FluentIcons.line_horizontal_3_20_filled,
-                            //   ),
-                            //   trailing: const [
-                            //     Icon(
-                            //       FluentIcons.search_24_filled,
-                            //       size: 20,
-                            //     ),
-                            //   ],
-                            //   hintText: 'חיפוש',
-                            //   hintStyle: MaterialStateProperty.all(
-                            //     TextStyles.s16w400cGrey2,
-                            //   ),
-                            // ),
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Stack(
-                          children: [
-                            IconButton(
-                              onPressed: () async {
-                                final result = await Navigator.of(context).push(
-                                      MaterialPageRoute<FilterDto>(
-                                        builder: (ctx) => FiltersScreen.users(
-                                          initFilters: filters.value,
-                                        ),
-                                        fullscreenDialog: true,
-                                      ),
-                                    ) ??
-                                    const FilterDto();
-
-                                final request = await ref
-                                    .read(
-                                      personasControllerProvider.notifier,
-                                    )
-                                    .filterUsers(result);
-
-                                if (request) {
-                                  filters.value = result;
-                                }
-                              },
-                              icon:
-                                  const Icon(FluentIcons.filter_add_20_regular),
-                            ),
-                            if (filters.value.length > 0)
-                              Positioned(
-                                right: 8,
-                                top: 8,
-                                child: IgnorePointer(
-                                  child: CircleAvatar(
-                                    backgroundColor: AppColors.red1,
-                                    radius: 7,
-                                    child: Text(
-                                      filters.value.length.toString(),
-                                      style: TextStyles.s11w500fRoboto,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButton: (screenController.valueOrNull?.isMapOpen ?? false)
+            ? null
+            : FloatingActionButton(
+                onPressed: () => const NewPersonaRouteData().push(context),
+                heroTag: UniqueKey(),
+                shape: const CircleBorder(),
+                backgroundColor: AppColors.blue02,
+                child: const Text(
+                  '+',
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.white,
                   ),
-                  if (filters.value.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 32,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
+                ),
+              ),
+        body: CustomScrollView(
+          physics: (screenController.valueOrNull?.isMapOpen ?? false)
+              ? const NeverScrollableScrollPhysics()
+              : null,
+          slivers: [
+            SliverAppBar(
+              expandedHeight:
+                  (screenController.valueOrNull?.isMapOpen ?? false) ? 60 : 100,
+              collapsedHeight:
+                  (screenController.valueOrNull?.isMapOpen ?? false) ? 60 : 100,
+              pinned: true,
+              flexibleSpace: SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Row(
                         children: [
-                          ...filters.value.roles.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.years.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.institutions.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.periods.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.eshkols.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.statuses.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.bases.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.hativot.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.regions.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.regions.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                          ...filters.value.cities.map(
-                            (e) => FilterChip(
-                              label: Text(e),
-                              onSelected: (val) => Toaster.unimplemented(),
-                            ),
-                          ),
-                        ]
-                            .map(
-                              (e) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
+                          Expanded(
+                            child: SizedBox(
+                              height: 44,
+                              child: SearchAppBar(
+                                controller: searchController,
+                                isSearchOpen: isSearchOpen,
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () =>
+                                          isSearchOpen.value = true,
+                                      icon: const Icon(
+                                        FluentIcons.search_24_regular,
+                                      ),
+                                    ),
+                                    const Text('משתמשים'),
+                                    const SizedBox(),
+                                  ],
                                 ),
-                                child: e,
+                                actions: [
+                                  if (selectedApprentices.value.isNotEmpty) ...[
+                                    IconButton(
+                                      onPressed: () =>
+                                          selectedApprentices.value.length > 1
+                                              ? Toaster.error('backend???')
+                                              : launchSms(
+                                                  phone:
+                                                      selectedApprentices.value,
+                                                ),
+                                      icon: const Icon(
+                                        FluentIcons.chat_24_regular,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () => ReportNewRouteData(
+                                        initRecipients: selectedApprentices
+                                            .value
+                                            .map((e) => e.id)
+                                            .toList(),
+                                      ).push(context),
+                                      icon: const Icon(
+                                        FluentIcons.clipboard_task_24_regular,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                  ],
+                                ],
                               ),
-                            )
-                            .toList(),
+                              // SearchAppBar(
+                              //   elevation: MaterialStateProperty.all(0),
+                              //   backgroundColor: MaterialStateColor.resolveWith(
+                              //     (states) => AppColors.blue08,
+                              //   ),
+                              //   padding: MaterialStateProperty.all(
+                              //     const EdgeInsets.symmetric(horizontal: 16),
+                              //   ),
+                              //   leading: const Icon(
+                              //     FluentIcons.line_horizontal_3_20_filled,
+                              //   ),
+                              //   trailing: const [
+                              //     Icon(
+                              //       FluentIcons.search_24_filled,
+                              //       size: 20,
+                              //     ),
+                              //   ],
+                              //   hintText: 'חיפוש',
+                              //   hintStyle: MaterialStateProperty.all(
+                              //     TextStyles.s16w400cGrey2,
+                              //   ),
+                              // ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Stack(
+                            children: [
+                              IconButton(
+                                onPressed: () async {
+                                  final result =
+                                      await Navigator.of(context).push(
+                                            MaterialPageRoute<FilterDto>(
+                                              builder: (ctx) =>
+                                                  FiltersScreen.users(
+                                                initFilters: filters.value,
+                                              ),
+                                              fullscreenDialog: true,
+                                            ),
+                                          ) ??
+                                          const FilterDto();
+
+                                  final request = await ref
+                                      .read(
+                                        personasControllerProvider.notifier,
+                                      )
+                                      .filterUsers(result);
+
+                                  if (request) {
+                                    filters.value = result;
+                                  }
+                                },
+                                icon: const Icon(
+                                  FluentIcons.filter_add_20_regular,
+                                ),
+                              ),
+                              if (filters.value.length > 0)
+                                Positioned(
+                                  right: 8,
+                                  top: 8,
+                                  child: IgnorePointer(
+                                    child: CircleAvatar(
+                                      backgroundColor: AppColors.red1,
+                                      radius: 7,
+                                      child: Text(
+                                        filters.value.length.toString(),
+                                        style: TextStyles.s11w500fRoboto,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Row(
-                      children: [
-                        TextButton.icon(
-                          onPressed: () async {
-                            final result = await showDialog<Sort>(
-                              context: context,
-                              builder: (ctx) => _SortDialog(
-                                initSortVal: sort.value,
+                    if (filters.value.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        height: 32,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ...filters.value.roles.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
                               ),
-                            );
+                            ),
+                            ...filters.value.years.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                            ...filters.value.institutions.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                            ...filters.value.periods.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                            ...filters.value.eshkols.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                            ...filters.value.statuses.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                            ...filters.value.bases.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                            ...filters.value.hativot.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                            ...filters.value.regions.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                            ...filters.value.regions.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                            ...filters.value.cities.map(
+                              (e) => FilterChip(
+                                label: Text(e),
+                                onSelected: (val) => Toaster.unimplemented(),
+                              ),
+                            ),
+                          ]
+                              .map(
+                                (e) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                  child: e,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 8),
+                    if (!(screenController.valueOrNull?.isMapOpen ?? false))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          children: [
+                            TextButton.icon(
+                              onPressed: () async {
+                                final result = await showDialog<Sort>(
+                                  context: context,
+                                  builder: (ctx) => _SortDialog(
+                                    initSortVal: sort.value,
+                                  ),
+                                );
 
-                            if (result == null) {
-                              return;
-                            }
+                                if (result == null) {
+                                  return;
+                                }
 
-                            sort.value = result;
+                                sort.value = result;
 
-                            ref
-                                .read(usersControllerProvider.notifier)
-                                .sort(result);
-                          },
-                          icon: const Icon(
-                            FluentIcons.arrow_sort_down_lines_24_regular,
-                            color: AppColors.gray2,
-                          ),
-                          label: Text(
-                            '${(screenController.valueOrNull?.users ?? []).length} משתמשים',
-                            style: TextStyles.s14w400
-                                .copyWith(color: AppColors.gray5),
+                                ref
+                                    .read(usersControllerProvider.notifier)
+                                    .sort(result);
+                              },
+                              icon: const Icon(
+                                FluentIcons.arrow_sort_down_lines_24_regular,
+                                color: AppColors.gray2,
+                              ),
+                              label: Text(
+                                '${(screenController.valueOrNull?.users ?? []).length} משתמשים',
+                                style: TextStyles.s14w400
+                                    .copyWith(color: AppColors.gray5),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            const Spacer(),
+                            TextButton.icon(
+                              onPressed: () {
+                                ref
+                                    .read(usersControllerProvider.notifier)
+                                    .mapView(true);
+                                isSearchOpen.value = false;
+                              },
+                              style: TextButton.styleFrom(
+                                textStyle: TextStyles.s14w400,
+                                foregroundColor: AppColors.gray1,
+                              ),
+                              icon: const Icon(FluentIcons.location_24_regular),
+                              label: const Text('תצוגת מפה'),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            SliverFillRemaining(
+              child: FadeIndexedStack(
+                index: searchController.text.isNotEmpty && isSearchOpen.value
+                    ? 0
+                    : 1,
+                children: [
+                  UserListSearchResultsWidget(
+                    searchString: searchController.text,
+                    selectedApprentices: selectedApprentices,
+                    onTapCard: (double lat, double lng) async {
+                      isSearchOpen.value = false;
+                      ref.read(usersControllerProvider.notifier).mapView(true);
+
+                      final controller = await mapController.value.future;
+
+                      await controller.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                            zoom: Consts.goToObjectGeolocationZoom,
+                            target: LatLng(
+                              lat,
+                              lng,
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 6),
-                        const Spacer(),
-                        TextButton.icon(
-                          onPressed: () {
-                            ref
-                                .read(usersControllerProvider.notifier)
-                                .mapView(true);
-                            isSearchOpen.value = false;
-                          },
-                          style: TextButton.styleFrom(
-                            textStyle: TextStyles.s14w400,
-                            foregroundColor: AppColors.gray1,
+                      );
+                    },
+                  ),
+                  FadeIndexedStack(
+                    index: (screenController.valueOrNull?.isMapOpen ?? false)
+                        ? 0
+                        : 1,
+                    children: [
+                      GoogleMapWidget(
+                        mapController: mapController,
+                        onListTypePressed: () => ref
+                            .read(usersControllerProvider.notifier)
+                            .mapView(false),
+                        cameraPostion: mapCameraPosition.value ??
+                            Consts.defaultCameraPosition,
+                      ),
+                      ListView.builder(
+                        itemCount: users.length,
+                        itemBuilder: (ctx, idx) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
                           ),
-                          icon: const Icon(FluentIcons.location_24_regular),
-                          label: const Text('תצוגת מפה'),
+                          child: ListTileWithTagsCard(
+                            onlineStatus: users[idx].callStatus,
+                            avatar: users[idx].avatar,
+                            name: users[idx].fullName,
+                            tags: [
+                              users[idx].highSchoolInstitution,
+                              users[idx].thPeriod,
+                              users[idx].militaryPositionNew,
+                              (institutions?.singleWhere(
+                                        (element) =>
+                                            element.id ==
+                                            users[idx].institutionId,
+                                        orElse: () => const InstitutionDto(),
+                                      ) ??
+                                      const InstitutionDto())
+                                  .name,
+                              (compounds?.singleWhere(
+                                        (element) =>
+                                            element.id ==
+                                            users[idx].militaryCompoundId,
+                                        orElse: () => const CompoundDto(),
+                                      ) ??
+                                      const CompoundDto())
+                                  .name,
+                              users[idx].militaryUnit,
+                              users[idx].maritalStatus,
+                            ],
+                            isSelected:
+                                selectedApprentices.value.contains(users[idx]),
+                            onLongPress: () {
+                              if (selectedApprentices.value
+                                  .contains(users[idx])) {
+                                selectedApprentices.value = [
+                                  ...selectedApprentices.value.where(
+                                    (element) => element.id != users[idx].id,
+                                  ),
+                                ];
+                              } else {
+                                selectedApprentices.value = [
+                                  ...selectedApprentices.value,
+                                  users[idx],
+                                ];
+                              }
+                            },
+                            onTap: () => PersonaDetailsRouteData(
+                              id: users[idx].id,
+                            ).go(context),
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-          ),
-          SliverFillRemaining(
-            child: FadeIndexedStack(
-              index: searchController.text.isNotEmpty && isSearchOpen.value
-                  ? 0
-                  : 1,
-              children: [
-                UserListSearchResultsWidget(
-                  searchString: searchController.text,
-                  selectedApprentices: selectedApprentices,
-                  onTapCard: (double lat, double lng) async {
-                    isSearchOpen.value = false;
-                    ref.read(usersControllerProvider.notifier).mapView(true);
-
-                    final controller = await mapController.value.future;
-
-                    await controller.animateCamera(
-                      CameraUpdate.newCameraPosition(
-                        CameraPosition(
-                          zoom: Consts.goToObjectGeolocationZoom,
-                          target: LatLng(
-                            lat,
-                            lng,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                FadeIndexedStack(
-                  index: (screenController.valueOrNull?.isMapOpen ?? false)
-                      ? 0
-                      : 1,
-                  children: [
-                    GoogleMapWidget(
-                      mapController: mapController,
-                      onListTypePressed: () => ref
-                          .read(usersControllerProvider.notifier)
-                          .mapView(false),
-                      cameraPostion: mapCameraPosition.value ??
-                          Consts.defaultCameraPosition,
-                    ),
-                    ListView.builder(
-                      itemCount: users.length,
-                      itemBuilder: (ctx, idx) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        child: ListTileWithTagsCard(
-                          onlineStatus: users[idx].callStatus,
-                          avatar: users[idx].avatar,
-                          name: users[idx].fullName,
-                          tags: [
-                            users[idx].highSchoolInstitution,
-                            users[idx].thPeriod,
-                            users[idx].militaryPositionNew,
-                            (institutions?.singleWhere(
-                                      (element) =>
-                                          element.id ==
-                                          users[idx].institutionId,
-                                      orElse: () => const InstitutionDto(),
-                                    ) ??
-                                    const InstitutionDto())
-                                .name,
-                            (compounds?.singleWhere(
-                                      (element) =>
-                                          element.id ==
-                                          users[idx].militaryCompoundId,
-                                      orElse: () => const CompoundDto(),
-                                    ) ??
-                                    const CompoundDto())
-                                .name,
-                            users[idx].militaryUnit,
-                            users[idx].maritalStatus,
-                          ],
-                          isSelected:
-                              selectedApprentices.value.contains(users[idx]),
-                          onLongPress: () {
-                            if (selectedApprentices.value
-                                .contains(users[idx])) {
-                              selectedApprentices.value = [
-                                ...selectedApprentices.value.where(
-                                  (element) => element.id != users[idx].id,
-                                ),
-                              ];
-                            } else {
-                              selectedApprentices.value = [
-                                ...selectedApprentices.value,
-                                users[idx],
-                              ];
-                            }
-                          },
-                          onTap: () => PersonaDetailsRouteData(
-                            id: users[idx].id,
-                          ).go(context),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

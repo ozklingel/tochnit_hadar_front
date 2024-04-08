@@ -5,6 +5,18 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 
 abstract class Toaster {
+  static void backend() => BotToast.showText(
+        text: 'Unimplemented',
+        align: const Alignment(0.9, -0.9),
+        contentColor: AppColors.error500,
+        contentPadding: const EdgeInsets.all(16),
+        textStyle: const TextStyle(
+          fontSize: 20.0,
+          fontVariations: [FontVariation('wght', 700)],
+          color: Colors.black,
+        ),
+      );
+
   static void unimplemented() => BotToast.showText(
         text: 'Unimplemented',
         align: const Alignment(0.9, -0.9),

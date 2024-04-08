@@ -11,35 +11,8 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/controller/per
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
+import 'package:hadar_program/src/views/widgets/list/persona_card_popup_menu_items.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-List<PopupMenuItem<dynamic>> getApprenticeCardPopupItems({
-  required BuildContext context,
-  required PersonaDto apprentice,
-}) {
-  return [
-    PopupMenuItem(
-      child: const Text('להתקשר'),
-      onTap: () => launchCall(phone: apprentice.phone),
-    ),
-    PopupMenuItem(
-      child: const Text('שליחת וואטסאפ'),
-      onTap: () => launchWhatsapp(phone: apprentice.phone),
-    ),
-    PopupMenuItem(
-      child: const Text('שליחת SMS'),
-      onTap: () => launchSms(phone: apprentice.phone),
-    ),
-    PopupMenuItem(
-      child: const Text('דיווח'),
-      onTap: () => Toaster.unimplemented(),
-    ),
-    PopupMenuItem(
-      child: const Text('פרופיל אישי'),
-      onTap: () => PersonaDetailsRouteData(id: apprentice.id).push(context),
-    ),
-  ];
-}
 
 class CompoundBottomSheet extends HookConsumerWidget {
   const CompoundBottomSheet({
@@ -51,7 +24,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final apprentices = ref
+    final personas = ref
             .watch(personasControllerProvider)
             .valueOrNull
             ?.where(
@@ -60,7 +33,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
             .toList() ??
         [];
 
-    final selectedIds = useState(<String>[]);
+    final selectedPersonas = useState(<PersonaDto>[]);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
@@ -125,28 +98,29 @@ class CompoundBottomSheet extends HookConsumerWidget {
                             style: TextStyles.s16w400cGrey2,
                           ),
                           const Spacer(),
-                          if (selectedIds.value.length == 1)
+                          if (selectedPersonas.value.length == 1)
                             PopupMenuButton(
                               icon: const Icon(
                                 FluentIcons.more_vertical_24_regular,
                               ),
                               offset: const Offset(0, 40),
                               itemBuilder: (context) =>
-                                  getApprenticeCardPopupItems(
+                                  personaCardPopupMenuItems(
                                 context: context,
-                                apprentice: apprentices.firstWhere(
+                                apprentice: personas.firstWhere(
                                   (element) =>
-                                      selectedIds.value.first == element.id,
+                                      selectedPersonas.value.first == element,
+                                  orElse: () => const PersonaDto(),
                                 ),
                               ),
                             )
-                          else if (selectedIds.value.length > 1) ...[
+                          else if (selectedPersonas.value.length > 1) ...[
                             IconButton(
-                              onPressed: () => Toaster.unimplemented(),
+                              onPressed: () => Toaster.backend(),
                               icon: const Icon(FluentIcons.chat_24_regular),
                             ),
                             IconButton(
-                              onPressed: () => Toaster.unimplemented(),
+                              onPressed: () => Toaster.backend(),
                               icon: const Icon(
                                 FluentIcons.clipboard_task_24_regular,
                               ),
@@ -162,29 +136,29 @@ class CompoundBottomSheet extends HookConsumerWidget {
               Expanded(
                 child: ListView.separated(
                   controller: scrollController,
-                  itemCount: apprentices.length,
+                  itemCount: personas.length,
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) => ListTileWithTagsCard(
-                    name: apprentices[index].fullName,
-                    isSelected: selectedIds.value.contains(compound.id),
+                    name: personas[index].fullName,
+                    isSelected:
+                        selectedPersonas.value.contains(personas[index]),
                     onLongPress: () {
-                      if (selectedIds.value.contains(compound.id)) {
-                        final newList = selectedIds;
-                        newList.value.remove(compound.id);
-                        selectedIds.value = [
-                          ...newList.value,
+                      if (selectedPersonas.value.contains(personas[index])) {
+                        selectedPersonas.value = [
+                          ...selectedPersonas.value.where(
+                            (element) => element.id != personas[index].id,
+                          ),
                         ];
                       } else {
-                        selectedIds.value = [
-                          ...selectedIds.value,
-                          compound.id,
+                        selectedPersonas.value = [
+                          ...selectedPersonas.value,
+                          personas[index],
                         ];
                       }
                     },
-                    onTap: () =>
-                        PersonaDetailsRouteData(id: apprentices[index].id)
-                            .go(context),
+                    onTap: () => PersonaDetailsRouteData(id: personas[index].id)
+                        .go(context),
                   ),
                 ),
               ),

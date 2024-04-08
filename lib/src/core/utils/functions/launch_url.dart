@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -63,7 +62,7 @@ void launchSms({
   required phone,
   String bodyText = '',
 }) async {
-  final uri = Uri.parse('sms:$phone?body=${Uri.encodeComponent(bodyText)}');
+  final uri = Uri.parse('sms:+972$phone?body=${Uri.encodeComponent(bodyText)}');
 
   try {
     if (!await canLaunchUrl(uri)) {
@@ -99,7 +98,7 @@ void launchEmail({
 void launchCall({
   required phone,
 }) async {
-  final url = Uri.parse('tel:972$phone');
+  final url = Uri.parse('tel:+972$phone');
   if (await canLaunchUrl(url)) {
     launchUrl(url);
   } else {
