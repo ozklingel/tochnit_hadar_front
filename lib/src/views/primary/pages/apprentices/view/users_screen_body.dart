@@ -10,10 +10,12 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
@@ -36,6 +38,7 @@ class UsersScreenBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final auth = ref.watch(authServiceProvider);
     final screenController = ref.watch(usersControllerProvider);
     final allUsers = screenController.valueOrNull?.users ?? [];
     final sort = useState(Sort.a2zByFirstName);
@@ -55,7 +58,7 @@ class UsersScreenBody extends HookConsumerWidget {
         )
         .toList();
 
-    if (screenController.isLoading) {
+    if (screenController.isLoading || auth.isLoading) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
 
@@ -63,19 +66,21 @@ class UsersScreenBody extends HookConsumerWidget {
       child: Scaffold(
         floatingActionButton: (screenController.valueOrNull?.isMapOpen ?? false)
             ? null
-            : FloatingActionButton(
-                onPressed: () => const NewPersonaRouteData().push(context),
-                heroTag: UniqueKey(),
-                shape: const CircleBorder(),
-                backgroundColor: AppColors.blue02,
-                child: const Text(
-                  '+',
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.white,
+            : (auth.valueOrNull ?? const AuthDto()).role == UserRole.melave
+                ? null
+                : FloatingActionButton(
+                    onPressed: () => const NewPersonaRouteData().push(context),
+                    heroTag: UniqueKey(),
+                    shape: const CircleBorder(),
+                    backgroundColor: AppColors.blue02,
+                    child: const Text(
+                      '+',
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-              ),
         body: CustomScrollView(
           physics: (screenController.valueOrNull?.isMapOpen ?? false)
               ? const NeverScrollableScrollPhysics()
