@@ -51,16 +51,17 @@ class UsersScreenBody extends HookConsumerWidget {
     final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
     final searchController = useTextEditingController();
     useListenable(searchController);
-    final users = allUsers
+
+    if (screenController.isLoading || auth.isLoading) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
+
+    final filteredUsers = allUsers
         .where(
           (element) => element.fullName
               .contains(searchController.value.text.toLowerCase()),
         )
         .toList();
-
-    if (screenController.isLoading || auth.isLoading) {
-      return const Center(child: CircularProgressIndicator.adaptive());
-    }
 
     return SafeArea(
       child: Scaffold(
@@ -103,53 +104,94 @@ class UsersScreenBody extends HookConsumerWidget {
                           Expanded(
                             child: SizedBox(
                               height: 44,
-                              child: SearchAppBar(
-                                controller: searchController,
-                                isSearchOpen: isSearchOpen,
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () =>
-                                          isSearchOpen.value = true,
-                                      icon: const Icon(
-                                        FluentIcons.search_24_regular,
+                              child: (screenController.valueOrNull?.isMapOpen ??
+                                      false)
+                                  ? AppBar(
+                                      actions: [
+                                        IconButton(
+                                          onPressed: () async {
+                                            ref
+                                                .read(
+                                                  usersControllerProvider
+                                                      .notifier,
+                                                )
+                                                .mapView(false);
+                                            isSearchOpen.value = true;
+                                          },
+                                          icon: const Icon(
+                                            FluentIcons.search_24_regular,
+                                          ),
+                                        ),
+                                      ],
+                                      title: const Text(
+                                        'מפת חניכים',
+                                        style: TextStyles.s22w400cGrey2,
                                       ),
-                                    ),
-                                    const Text('משתמשים'),
-                                    const SizedBox(),
-                                  ],
-                                ),
-                                actions: [
-                                  if (selectedPersonas.value.isNotEmpty) ...[
-                                    IconButton(
-                                      onPressed: () =>
-                                          selectedPersonas.value.length > 1
-                                              ? Toaster.error('backend???')
-                                              : launchSms(
-                                                  phone: selectedPersonas.value
-                                                      .map((e) => e.phone)
-                                                      .toList(),
-                                                ),
-                                      icon: const Icon(
-                                        FluentIcons.chat_24_regular,
+                                      bottom: PreferredSize(
+                                        preferredSize:
+                                            const Size.fromHeight(24),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${filteredUsers.length} משתמשים',
+                                              style: TextStyles.s14w400cGrey5,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () => ReportNewRouteData(
-                                        initRecipients: selectedPersonas.value
-                                            .map((e) => e.id)
-                                            .toList(),
-                                      ).push(context),
-                                      icon: const Icon(
-                                        FluentIcons.clipboard_task_24_regular,
+                                    )
+                                  : SearchAppBar(
+                                      controller: searchController,
+                                      isSearchOpen: isSearchOpen,
+                                      title: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          IconButton(
+                                            onPressed: () =>
+                                                isSearchOpen.value = true,
+                                            icon: const Icon(
+                                              FluentIcons.search_24_regular,
+                                            ),
+                                          ),
+                                          const Text('משתמשים'),
+                                          const SizedBox(),
+                                        ],
                                       ),
+                                      actions: [
+                                        if (selectedPersonas
+                                            .value.isNotEmpty) ...[
+                                          IconButton(
+                                            onPressed: () => selectedPersonas
+                                                        .value.length >
+                                                    1
+                                                ? Toaster.error('backend???')
+                                                : launchSms(
+                                                    phone: selectedPersonas
+                                                        .value
+                                                        .map((e) => e.phone)
+                                                        .toList(),
+                                                  ),
+                                            icon: const Icon(
+                                              FluentIcons.chat_24_regular,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () => ReportNewRouteData(
+                                              initRecipients: selectedPersonas
+                                                  .value
+                                                  .map((e) => e.id)
+                                                  .toList(),
+                                            ).push(context),
+                                            icon: const Icon(
+                                              FluentIcons
+                                                  .clipboard_task_24_regular,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                        ],
+                                      ],
                                     ),
-                                    const SizedBox(width: 12),
-                                  ],
-                                ],
-                              ),
                               // SearchAppBar(
                               //   elevation: MaterialStateProperty.all(0),
                               //   backgroundColor: MaterialStateColor.resolveWith(
@@ -174,54 +216,57 @@ class UsersScreenBody extends HookConsumerWidget {
                               // ),
                             ),
                           ),
-                          const SizedBox(width: 6),
-                          Stack(
-                            children: [
-                              IconButton(
-                                onPressed: () async {
-                                  final result =
-                                      await Navigator.of(context).push(
-                                            MaterialPageRoute<FilterDto>(
-                                              builder: (ctx) =>
-                                                  FiltersScreen.users(
-                                                initFilters: filters.value,
+                          if (!(screenController.valueOrNull?.isMapOpen ??
+                              false)) ...[
+                            const SizedBox(width: 6),
+                            Stack(
+                              children: [
+                                IconButton(
+                                  onPressed: () async {
+                                    final result =
+                                        await Navigator.of(context).push(
+                                              MaterialPageRoute<FilterDto>(
+                                                builder: (ctx) =>
+                                                    FiltersScreen.users(
+                                                  initFilters: filters.value,
+                                                ),
+                                                fullscreenDialog: true,
                                               ),
-                                              fullscreenDialog: true,
-                                            ),
-                                          ) ??
-                                          const FilterDto();
+                                            ) ??
+                                            const FilterDto();
 
-                                  final request = await ref
-                                      .read(
-                                        personasControllerProvider.notifier,
-                                      )
-                                      .filterUsers(result);
+                                    final request = await ref
+                                        .read(
+                                          personasControllerProvider.notifier,
+                                        )
+                                        .filterUsers(result);
 
-                                  if (request) {
-                                    filters.value = result;
-                                  }
-                                },
-                                icon: const Icon(
-                                  FluentIcons.filter_add_20_regular,
+                                    if (request) {
+                                      filters.value = result;
+                                    }
+                                  },
+                                  icon: const Icon(
+                                    FluentIcons.filter_add_20_regular,
+                                  ),
                                 ),
-                              ),
-                              if (filters.value.length > 0)
-                                Positioned(
-                                  right: 8,
-                                  top: 8,
-                                  child: IgnorePointer(
-                                    child: CircleAvatar(
-                                      backgroundColor: AppColors.red1,
-                                      radius: 7,
-                                      child: Text(
-                                        filters.value.length.toString(),
-                                        style: TextStyles.s11w500fRoboto,
+                                if (filters.value.length > 0)
+                                  Positioned(
+                                    right: 8,
+                                    top: 8,
+                                    child: IgnorePointer(
+                                      child: CircleAvatar(
+                                        backgroundColor: AppColors.red1,
+                                        radius: 7,
+                                        child: Text(
+                                          filters.value.length.toString(),
+                                          style: TextStyles.s11w500fRoboto,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                            ],
-                          ),
+                              ],
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -421,7 +466,7 @@ class UsersScreenBody extends HookConsumerWidget {
                 children: [
                   UserListSearchResultsWidget(
                     searchString: searchController.text,
-                    selectedApprentices: selectedPersonas,
+                    selectedPersonas: selectedPersonas,
                     onTapCard: (double lat, double lng) async {
                       isSearchOpen.value = false;
                       ref.read(usersControllerProvider.notifier).mapView(true);
@@ -455,24 +500,24 @@ class UsersScreenBody extends HookConsumerWidget {
                             Consts.defaultCameraPosition,
                       ),
                       ListView.builder(
-                        itemCount: users.length,
+                        itemCount: filteredUsers.length,
                         itemBuilder: (ctx, idx) => Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 6,
                           ),
                           child: ListTileWithTagsCard(
-                            onlineStatus: users[idx].callStatus,
-                            avatar: users[idx].avatar,
-                            name: users[idx].fullName,
+                            onlineStatus: filteredUsers[idx].callStatus,
+                            avatar: filteredUsers[idx].avatar,
+                            name: filteredUsers[idx].fullName,
                             tags: [
-                              users[idx].highSchoolInstitution,
-                              users[idx].thPeriod,
-                              users[idx].militaryPositionNew,
+                              filteredUsers[idx].highSchoolInstitution,
+                              filteredUsers[idx].thPeriod,
+                              filteredUsers[idx].militaryPositionNew,
                               (institutions?.singleWhere(
                                         (element) =>
                                             element.id ==
-                                            users[idx].institutionId,
+                                            filteredUsers[idx].institutionId,
                                         orElse: () => const InstitutionDto(),
                                       ) ??
                                       const InstitutionDto())
@@ -480,32 +525,35 @@ class UsersScreenBody extends HookConsumerWidget {
                               (compounds?.singleWhere(
                                         (element) =>
                                             element.id ==
-                                            users[idx].militaryCompoundId,
+                                            filteredUsers[idx]
+                                                .militaryCompoundId,
                                         orElse: () => const CompoundDto(),
                                       ) ??
                                       const CompoundDto())
                                   .name,
-                              users[idx].militaryUnit,
-                              users[idx].maritalStatus,
+                              filteredUsers[idx].militaryUnit,
+                              filteredUsers[idx].maritalStatus,
                             ],
-                            isSelected:
-                                selectedPersonas.value.contains(users[idx]),
+                            isSelected: selectedPersonas.value
+                                .contains(filteredUsers[idx]),
                             onLongPress: () {
-                              if (selectedPersonas.value.contains(users[idx])) {
+                              if (selectedPersonas.value
+                                  .contains(filteredUsers[idx])) {
                                 selectedPersonas.value = [
                                   ...selectedPersonas.value.where(
-                                    (element) => element.id != users[idx].id,
+                                    (element) =>
+                                        element.id != filteredUsers[idx].id,
                                   ),
                                 ];
                               } else {
                                 selectedPersonas.value = [
                                   ...selectedPersonas.value,
-                                  users[idx],
+                                  filteredUsers[idx],
                                 ];
                               }
                             },
                             onTap: () => PersonaDetailsRouteData(
-                              id: users[idx].id,
+                              id: filteredUsers[idx].id,
                             ).go(context),
                           ),
                         ),

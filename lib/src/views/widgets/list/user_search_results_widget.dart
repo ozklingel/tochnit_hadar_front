@@ -1,9 +1,13 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
@@ -11,16 +15,16 @@ import 'package:hadar_program/src/views/widgets/cards/compound_or_city_card.dart
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class UserListSearchResultsWidget extends ConsumerWidget {
+class UserListSearchResultsWidget extends HookConsumerWidget {
   const UserListSearchResultsWidget({
     super.key,
     required this.searchString,
-    required this.selectedApprentices,
+    required this.selectedPersonas,
     required this.onTapCard,
   });
 
   final String searchString;
-  final ValueNotifier<List<PersonaDto>> selectedApprentices;
+  final ValueNotifier<List<PersonaDto>> selectedPersonas;
   final Function(double lat, double lng) onTapCard;
 
   @override
@@ -62,16 +66,16 @@ class UserListSearchResultsWidget extends ConsumerWidget {
             e.militaryUnit,
             e.maritalStatus,
           ],
-          isSelected: selectedApprentices.value.contains(e),
+          isSelected: selectedPersonas.value.contains(e),
           onLongPress: () {
-            if (selectedApprentices.value.contains(e)) {
-              selectedApprentices.value = [
-                ...selectedApprentices.value
+            if (selectedPersonas.value.contains(e)) {
+              selectedPersonas.value = [
+                ...selectedPersonas.value
                     .where((element) => element.id != e.id),
               ];
             } else {
-              selectedApprentices.value = [
-                ...selectedApprentices.value,
+              selectedPersonas.value = [
+                ...selectedPersonas.value,
                 e,
               ];
             }
@@ -129,11 +133,42 @@ class UserListSearchResultsWidget extends ConsumerWidget {
         horizontal: 12,
       ),
       children: [
-        Text(
-          'חניכים',
-          style: TextStyles.s16w400cGrey2.copyWith(
-            color: AppColors.gray5,
-          ),
+        Row(
+          children: [
+            Text(
+              '${apprenticeWidgets.length} חניכים',
+              style: TextStyles.s16w400cGrey2.copyWith(
+                color: AppColors.gray5,
+              ),
+            ),
+            const Spacer(),
+            ...[
+              if (selectedPersonas.value.isNotEmpty) ...[
+                IconButton(
+                  onPressed: () => selectedPersonas.value.length > 1
+                      ? Toaster.error('backend???')
+                      : launchSms(
+                          phone: selectedPersonas.value
+                              .map((e) => e.phone)
+                              .toList(),
+                        ),
+                  icon: const Icon(
+                    FluentIcons.chat_24_regular,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => ReportNewRouteData(
+                    initRecipients:
+                        selectedPersonas.value.map((e) => e.id).toList(),
+                  ).push(context),
+                  icon: const Icon(
+                    FluentIcons.clipboard_task_24_regular,
+                  ),
+                ),
+                const SizedBox(width: 12),
+              ],
+            ],
+          ],
         ),
         const SizedBox(height: 12),
         if (apprenticeWidgets.isEmpty)
