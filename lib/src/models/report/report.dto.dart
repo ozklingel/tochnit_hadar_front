@@ -1,4 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'report.dto.f.dart';
 part 'report.dto.g.dart';
@@ -87,6 +90,8 @@ enum ReportEventType {
   doingForAlumni, // עשיה לבוגרים
   adminsGathering, // ישיבת רכזי תוכנית
   failedAttempt, // נסיון שכשל
+  sevenMsgs, // נסיון שכשל
+  sixMsgs, // נסיון שכשל
   other;
 
   String get name {
@@ -127,6 +132,10 @@ enum ReportEventType {
         return 'הזנת מחזור';
       case ReportEventType.mosadMeetings:
         return 'ישיבה מוסדית';
+      case ReportEventType.sevenMsgs:
+        return '7 הודעות';
+      case ReportEventType.sixMsgs:
+        return '6 הודעות';
       case ReportEventType.other:
         return 'UNKNOWN TYPE';
     }
@@ -138,39 +147,46 @@ ReportEventType _extractType(String? val) {
     return ReportEventType.none;
   }
 
-  if (val.replaceAll('_', ' ') == ReportEventType.adminsGathering.name) {
+  val = val.replaceAll('_', ' ');
+
+  if (val == ReportEventType.adminsGathering.name) {
     return ReportEventType.adminsGathering;
-  } else if (val.replaceAll('_', ' ') ==
-      ReportEventType.annualConference.name) {
+  } else if (val == ReportEventType.annualConference.name) {
     return ReportEventType.annualConference;
-  } else if (val.replaceAll('_', ' ') == ReportEventType.baseVisit.name) {
+  } else if (val == ReportEventType.baseVisit.name) {
     return ReportEventType.baseVisit;
-  } else if (val.replaceAll('_', ' ') == ReportEventType.doingForAlumni.name) {
+  } else if (val == ReportEventType.doingForAlumni.name) {
     return ReportEventType.doingForAlumni;
-  } else if (val.replaceAll('_', ' ') == ReportEventType.failedAttempt.name) {
+  } else if (val == ReportEventType.failedAttempt.name) {
     return ReportEventType.failedAttempt;
-  } else if (val.replaceAll('_', ' ') == ReportEventType.fiveMessages.name) {
+  } else if (val == ReportEventType.fiveMessages.name) {
     return ReportEventType.fiveMessages;
-  } else if (val.replaceAll('_', ' ') ==
-      ReportEventType.matsbarGathering.name) {
+  } else if (val == ReportEventType.matsbarGathering.name) {
     return ReportEventType.matsbarGathering;
-  } else if (val.replaceAll('_', ' ') ==
-      ReportEventType.monthlyProfessionalConference.name) {
+  } else if (val == ReportEventType.monthlyProfessionalConference.name) {
     return ReportEventType.monthlyProfessionalConference;
-  } else if (val.replaceAll('_', ' ') == ReportEventType.offlineMeeting.name) {
+  } else if (val == ReportEventType.offlineMeeting.name) {
     return ReportEventType.offlineMeeting;
-  } else if (val.replaceAll('_', ' ') == ReportEventType.onlineMeeting.name) {
+  } else if (val == ReportEventType.offlineGroupMeeting.name) {
+    return ReportEventType.offlineGroupMeeting;
+  } else if (val == ReportEventType.onlineMeeting.name) {
     return ReportEventType.onlineMeeting;
-  } else if (val.replaceAll('_', ' ') == ReportEventType.call.name) {
+  } else if (val == ReportEventType.call.name) {
     return ReportEventType.call;
-  } else if (val.replaceAll('_', ' ') ==
-      ReportEventType.recurringMeeting.name) {
+  } else if (val == ReportEventType.recurringMeeting.name) {
     return ReportEventType.recurringMeeting;
-  } else if (val.replaceAll('_', ' ') == ReportEventType.recurringSabath.name) {
+  } else if (val == ReportEventType.recurringSabath.name) {
     return ReportEventType.recurringSabath;
-  } else if (val == 'שיחה') {
-    return ReportEventType.call;
+  } else if (val == ReportEventType.sevenMsgs.name) {
+    return ReportEventType.sevenMsgs;
+  } else if (val == ReportEventType.sixMsgs.name) {
+    return ReportEventType.sixMsgs;
   } else {
+    const err = 'failed to extract report type';
+    Logger().i(err, error: val);
+    Sentry.captureException(Exception(err));
+    Toaster.error(err);
+
     return ReportEventType.other;
   }
 }
