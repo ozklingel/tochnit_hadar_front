@@ -146,11 +146,8 @@ class CompoundBottomSheet extends HookConsumerWidget {
                   itemCount: personas.length,
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) => ListTileWithTagsCard(
-                    name: personas[index].fullName,
-                    isSelected:
-                        selectedPersonas.value.contains(personas[index]),
-                    onLongPress: () {
+                  itemBuilder: (context, index) {
+                    void onSelect() {
                       if (selectedPersonas.value.contains(personas[index])) {
                         selectedPersonas.value = [
                           ...selectedPersonas.value.where(
@@ -163,10 +160,20 @@ class CompoundBottomSheet extends HookConsumerWidget {
                           personas[index],
                         ];
                       }
-                    },
-                    onTap: () => PersonaDetailsRouteData(id: personas[index].id)
-                        .go(context),
-                  ),
+                    }
+
+                    return ListTileWithTagsCard(
+                      name: personas[index].fullName,
+                      isSelected:
+                          selectedPersonas.value.contains(personas[index]),
+                      onLongPress: onSelect,
+                      onTap: selectedPersonas.value.isEmpty
+                          ? () =>
+                              PersonaDetailsRouteData(id: personas[index].id)
+                                  .go(context)
+                          : onSelect,
+                    );
+                  },
                 ),
               ),
               SizedBox(
