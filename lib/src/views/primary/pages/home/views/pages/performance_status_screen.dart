@@ -30,7 +30,7 @@ class PerformanceStatusScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        centerTitle: false,
+        centerTitle: true,
         title: Text(
           title,
           style: TextStyles.s20w500,
@@ -131,15 +131,15 @@ class PerformanceStatusScreen extends HookConsumerWidget {
                   'מחזור ג',
                 ],
                 onlineStatus: apprentices[index].callStatus,
-                trailing: const Column(
+                trailing: Column(
                   children: [
                     Text(
-                      '${percent * 100}%',
+                      '${(percent * 100).round()}%',
                       style: percent > 75
                           ? TextStyles.s18w400cYellow1
                           : TextStyles.s18w400cRed1,
                     ),
-                    Text(
+                    const Text(
                       'ציון',
                       style: TextStyles.s12w400cGrey6,
                     ),

@@ -1,4 +1,3 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_call_parents_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_calls_page.dart';
@@ -8,6 +7,7 @@ import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/mela
 import 'package:hadar_program/src/views/secondary/charts/melave/views/pages/melave_charts_professional_meetings_page.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_details_card.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/chart_header.dart';
+import 'package:hadar_program/src/views/secondary/charts/widgets/charts_appbar.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/circular_progress_gauge.dart';
 import 'package:hadar_program/src/views/secondary/charts/widgets/linear_progress_chart_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -96,16 +96,7 @@ class AhraiTohnitChartsDashboardScreen extends HookConsumerWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('מדדים'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(FluentIcons.search_24_regular),
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
+      appBar: const ChartsAppBar(),
       body: ListView.separated(
         padding: const EdgeInsets.all(24),
         itemCount: children.length,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
@@ -31,6 +32,14 @@ class AuthService extends _$AuthService {
     final user = AuthDto.fromJson(request.data);
 
     ref.keepAlive();
+
+    if (kDebugMode &&
+        ref.read(storageServiceProvider.notifier).getUserPhone() ==
+            '523301800') {
+      return user.copyWith(
+        role: UserRole.rakazEshkol,
+      );
+    }
 
     return user;
   }
