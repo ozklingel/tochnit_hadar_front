@@ -183,7 +183,9 @@ class GoRouterService extends _$GoRouterService {
             TypedGoRoute<NewMessageRouteData>(
               path: 'new',
               routes: [
-                TypedGoRoute<DupeMessageRouteData>(path: ':id'),
+                TypedGoRoute<DupeMessageRouteData>(
+                  path: ':id',
+                ),
               ],
             ),
           ],
@@ -352,11 +354,17 @@ class NotificationDetailsRouteData extends GoRouteData {
 }
 
 class NewMessageRouteData extends GoRouteData {
-  const NewMessageRouteData();
+  const NewMessageRouteData({
+    this.initRecpients = const [],
+  });
+
+  final List<String> initRecpients;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const NewOrEditMessageScreen();
+    return NewOrEditMessageScreen(
+      initRecipients: initRecpients,
+    );
   }
 }
 

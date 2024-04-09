@@ -32,7 +32,7 @@ class AuthService extends _$AuthService {
 
     ref.keepAlive();
 
-    return user;
+    return user.copyWith(role: UserRole.ahraiTohnit);
   }
 
   @internal

@@ -4,7 +4,6 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/widgets/list/persona_card_popup_menu_items.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -13,17 +12,15 @@ class ApprenticeAppBar extends ConsumerWidget {
     super.key,
     required this.isSearchOpen,
     required this.searchController,
-    required this.selectedApprentices,
+    required this.selectedPersonas,
   });
 
   final ValueNotifier<bool> isSearchOpen;
   final TextEditingController searchController;
-  final ValueNotifier<List<PersonaDto>> selectedApprentices;
+  final ValueNotifier<List<PersonaDto>> selectedPersonas;
 
   @override
   Widget build(BuildContext context, ref) {
-    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
-
     return AppBar(
       centerTitle: true,
       title: AnimatedSwitcher(
@@ -75,30 +72,21 @@ class ApprenticeAppBar extends ConsumerWidget {
       actions: isSearchOpen.value
           ? []
           : [
-              if (selectedApprentices.value.isEmpty)
+              if (selectedPersonas.value.isEmpty)
                 IconButton(
                   onPressed: () => isSearchOpen.value = true,
                   icon: const Icon(FluentIcons.search_24_regular),
                 )
-              else if (selectedApprentices.value.length == 1)
-                PopupMenuButton(
-                  icon: const Icon(FluentIcons.more_vertical_24_regular),
-                  surfaceTintColor: Colors.white,
+              else if (selectedPersonas.value.length == 1)
+                PersonaCardPopupMoreVerticalWidget(
+                  personas: selectedPersonas.value,
                   offset: const Offset(0, 32),
-                  itemBuilder: (context) => personaCardPopupMenuItems(
-                    context: context,
-                    persona: apprentices.singleWhere(
-                      (element) =>
-                          element.id == selectedApprentices.value.first.id,
-                      orElse: () => const PersonaDto(),
-                    ),
-                  ),
                 )
               else
                 IconButton(
                   onPressed: () => ReportNewRouteData(
                     initRecipients:
-                        selectedApprentices.value.map((e) => e.id).toList(),
+                        selectedPersonas.value.map((e) => e.id).toList(),
                   ).push(context),
                   icon: const Icon(FluentIcons.clipboard_task_24_regular),
                 ),

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -23,6 +25,8 @@ class CompoundBottomSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
+
     final personas = ref
             .watch(personasControllerProvider)
             .valueOrNull
@@ -98,41 +102,85 @@ class CompoundBottomSheet extends HookConsumerWidget {
                           ),
                           const Spacer(),
                           if (selectedPersonas.value.length == 1)
-                            PopupMenuButton(
-                              icon: const Icon(
-                                FluentIcons.more_vertical_24_regular,
+                            if (auth.role == UserRole.melave) ...[
+                              IconButton(
+                                onPressed: () => launchSms(
+                                  phone: selectedPersonas.value
+                                      .map((e) => e.phone)
+                                      .toList(),
+                                ),
+                                icon: const Icon(FluentIcons.chat_24_regular),
                               ),
-                              offset: const Offset(0, 40),
-                              itemBuilder: (context) =>
-                                  personaCardPopupMenuItems(
-                                context: context,
-                                persona: personas.firstWhere(
-                                  (element) =>
-                                      selectedPersonas.value.first == element,
-                                  orElse: () => const PersonaDto(),
+                              IconButton(
+                                onPressed: () => ReportNewRouteData(
+                                  initRecipients: selectedPersonas.value
+                                      .map((e) => e.id)
+                                      .toList(),
+                                ).push(context),
+                                icon: const Icon(
+                                  FluentIcons.clipboard_task_24_regular,
                                 ),
                               ),
-                            )
-                          else if (selectedPersonas.value.length > 1) ...[
-                            IconButton(
-                              onPressed: () => launchSms(
-                                phone: selectedPersonas.value
-                                    .map((e) => e.phone)
-                                    .toList(),
+                            ] else ...[
+                              IconButton(
+                                onPressed: () => launchSms(
+                                  phone: selectedPersonas.value
+                                      .map((e) => e.phone)
+                                      .toList(),
+                                ),
+                                icon: const Icon(FluentIcons.chat_24_regular),
                               ),
-                              icon: const Icon(FluentIcons.chat_24_regular),
-                            ),
-                            IconButton(
-                              onPressed: () => ReportNewRouteData(
-                                initRecipients: selectedPersonas.value
-                                    .map((e) => e.id)
-                                    .toList(),
-                              ).push(context),
-                              icon: const Icon(
-                                FluentIcons.clipboard_task_24_regular,
+                              IconButton(
+                                onPressed: () => ReportNewRouteData(
+                                  initRecipients: selectedPersonas.value
+                                      .map((e) => e.id)
+                                      .toList(),
+                                ).push(context),
+                                icon: const Icon(
+                                  FluentIcons.clipboard_task_24_regular,
+                                ),
                               ),
-                            ),
-                          ],
+                              PersonaCardPopupMoreVerticalWidget(
+                                personas: selectedPersonas.value,
+                                showCall: false,
+                              ),
+                            ]
+                          else if (selectedPersonas.value.length > 1)
+                            if (auth.role == UserRole.melave) ...[
+                              IconButton(
+                                onPressed: () => ReportNewRouteData(
+                                  initRecipients: selectedPersonas.value
+                                      .map((e) => e.id)
+                                      .toList(),
+                                ).push(context),
+                                icon: const Icon(
+                                  FluentIcons.clipboard_task_24_regular,
+                                ),
+                              ),
+                            ] else ...[
+                              IconButton(
+                                onPressed: () => launchSms(
+                                  phone: selectedPersonas.value
+                                      .map((e) => e.phone)
+                                      .toList(),
+                                ),
+                                icon: const Icon(FluentIcons.chat_24_regular),
+                              ),
+                              IconButton(
+                                onPressed: () => ReportNewRouteData(
+                                  initRecipients: selectedPersonas.value
+                                      .map((e) => e.id)
+                                      .toList(),
+                                ).push(context),
+                                icon: const Icon(
+                                  FluentIcons.clipboard_task_24_regular,
+                                ),
+                              ),
+                              PersonaCardPopupMoreVerticalWidget(
+                                personas: selectedPersonas.value,
+                                showCall: false,
+                              ),
+                            ],
                         ],
                       ),
                     ),

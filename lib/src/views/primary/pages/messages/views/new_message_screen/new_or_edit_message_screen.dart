@@ -24,10 +24,12 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
     super.key,
     this.id = '',
     this.isDupe = false,
+    this.initRecipients = const [],
   });
 
   final String id;
   final bool isDupe;
+  final List<String> initRecipients;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -36,8 +38,8 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
       (element) => element.id == id,
       orElse: () => const MessageDto(),
     );
-    final apprentices = ref.watch(getPersonasProvider).valueOrNull ?? [];
-    final selectedRecipients = useState<List<PersonaDto>>([]);
+    final personas = ref.watch(getPersonasProvider).valueOrNull ?? [];
+    final selectedRecipients = useState(<PersonaDto>[]);
     final method = useState(MessageMethod.other);
     final title = useTextEditingController(text: msg.title);
     final body = useTextEditingController(text: msg.content);
@@ -46,22 +48,27 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
 
     useEffect(
       () {
-        selectedRecipients.value = apprentices
-            .where((element) => msg.to.contains(element.id))
+        personas
+            .where(
+              (element) =>
+                  initRecipients.contains(element.id) ||
+                  msg.to.contains(element.id),
+            )
             .toList();
+
         title.text = msg.title;
         body.text = msg.content;
         method.value = msg.method;
 
         return null;
       },
-      [apprentices, msg],
+      [personas, msg],
     );
 
     useListenable(title);
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvoked: (didPop) async {
         // final navContext = Navigator.of(context);
 
@@ -80,7 +87,8 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
             to: selectedRecipients.value.map((e) => e.id).toList(),
           );
 
-          final result = id.isEmpty
+          // final result =
+          id.isEmpty
               ? await ref
                   .read(messagesControllerProvider.notifier)
                   .create(newMsg)
@@ -88,7 +96,13 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                   .read(messagesControllerProvider.notifier)
                   .edit(newMsg);
 
-          if (result) {}
+          // Logger().d(result);
+
+          // if (result) {
+          //   navContext.pop();
+          // } else {
+          //   Toaster.error('failed to save');
+          // }
         }
 
         // navContext.pop();
@@ -132,6 +146,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                     selectedRecipients.value = [];
                     title.text = '';
                     body.text = '';
+
                     Navigator.of(context).maybePop();
                   },
                 ),
