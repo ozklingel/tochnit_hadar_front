@@ -10,7 +10,9 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -155,10 +157,17 @@ class NewPersonaScreen extends HookConsumerWidget {
                     Expanded(
                       child: LargeFilledRoundedButton(
                         label: 'הבא',
-                        onPressed: () => pageController.nextPage(
-                          duration: Consts.defaultDurationM,
-                          curve: Curves.linear,
-                        ),
+                        onPressed: () {
+                          if (selectedUserType.value == UserRole.other) {
+                            Navigator.of(context).pop();
+                            const NewInstitutionRouteData().push(context);
+                          } else {
+                            pageController.nextPage(
+                              duration: Consts.defaultDurationM,
+                              curve: Curves.linear,
+                            );
+                          }
+                        },
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -515,7 +524,7 @@ class _SelectDataFillType extends StatelessWidget {
   }
 }
 
-class _SelectUserTypePage extends StatelessWidget {
+class _SelectUserTypePage extends ConsumerWidget {
   const _SelectUserTypePage({
     required this.selectedUserType,
   });
@@ -523,7 +532,9 @@ class _SelectUserTypePage extends StatelessWidget {
   final ValueNotifier<UserRole> selectedUserType;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -601,23 +612,45 @@ class _SelectUserTypePage extends StatelessWidget {
                 ),
               ),
             ),
-            items: const [
-              DropdownMenuItem(
+            items: [
+              const DropdownMenuItem(
                 value: UserRole.apprentice,
                 child: Text('חניך'),
               ),
-              DropdownMenuItem(
-                value: UserRole.rakazMosad,
-                child: Text('רכז'),
-              ),
-              DropdownMenuItem(
-                value: UserRole.melave,
-                child: Text('מלווה'),
-              ),
-              DropdownMenuItem(
-                value: UserRole.rakazEshkol,
-                child: Text('רכז אשכול'),
-              ),
+              if (![
+                UserRole.melave,
+              ].contains(auth.role))
+                const DropdownMenuItem(
+                  value: UserRole.melave,
+                  child: Text('מלווה'),
+                ),
+              if (![
+                UserRole.melave,
+                UserRole.rakazMosad,
+              ].contains(auth.role))
+                const DropdownMenuItem(
+                  value: UserRole.rakazMosad,
+                  child: Text('רכז מוסד'),
+                ),
+              if (![
+                UserRole.melave,
+                UserRole.rakazMosad,
+                UserRole.rakazEshkol,
+              ].contains(auth.role))
+                const DropdownMenuItem(
+                  value: UserRole.rakazEshkol,
+                  child: Text('רכז אשכול'),
+                ),
+              if (auth.role == UserRole.ahraiTohnit)
+                const DropdownMenuItem(
+                  value: UserRole.ahraiTohnit,
+                  child: Text('אחראי תוכנית'),
+                ),
+              if (auth.role == UserRole.ahraiTohnit)
+                const DropdownMenuItem(
+                  value: UserRole.other,
+                  child: Text('מוסד'),
+                ),
             ],
           ),
         ),

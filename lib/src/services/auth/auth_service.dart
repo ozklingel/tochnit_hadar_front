@@ -37,7 +37,7 @@ class AuthService extends _$AuthService {
         ref.read(storageServiceProvider.notifier).getUserPhone() ==
             '523301800') {
       return user.copyWith(
-        role: UserRole.rakazEshkol,
+        role: UserRole.ahraiTohnit,
       );
     }
 
