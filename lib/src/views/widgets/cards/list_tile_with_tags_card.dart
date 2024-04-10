@@ -89,6 +89,20 @@ class ListTileWithTagsCard extends StatelessWidget {
                           ),
                         ),
                       ),
+                      if (isSelected)
+                        const Positioned(
+                          bottom: 1,
+                          right: 1,
+                          child: CircleAvatar(
+                            radius: 8,
+                            backgroundColor: AppColors.green1,
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 11,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                   const SizedBox(width: 16),
