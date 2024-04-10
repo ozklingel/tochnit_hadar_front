@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hadar_program/src/views/primary/bottom_bar/ui/dashboard_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentice_details.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/apprentices_or_users_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user/new_user_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_persona_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/persona_details_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/personas_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/gift_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/home_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/apprentices_status_screen.dart';
@@ -506,7 +506,7 @@ class ApprenticesOrUsersRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const ApprenticesOrUsersScreen();
+    return const PersonasScreen();
   }
 }
 
@@ -519,7 +519,7 @@ class PersonaDetailsRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return ApprenticeDetailsScreen(
+    return PersonaDetailsScreen(
       apprenticeId: id,
     );
   }
@@ -530,7 +530,7 @@ class NewPersonaRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const NewUserScreen();
+    return const NewPersonaScreen();
   }
 }
 

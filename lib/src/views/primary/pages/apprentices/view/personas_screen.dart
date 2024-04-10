@@ -31,8 +31,8 @@ import 'package:hadar_program/src/views/widgets/list/user_search_results_widget.
 import 'package:hadar_program/src/views/widgets/wrappers/fade_indexed_stack.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class UsersScreenBody extends HookConsumerWidget {
-  const UsersScreenBody({
+class PersonasScreen extends HookConsumerWidget {
+  const PersonasScreen({
     super.key,
   });
 

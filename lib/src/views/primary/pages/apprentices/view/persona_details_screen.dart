@@ -36,8 +36,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ApprenticeDetailsScreen extends StatefulHookConsumerWidget {
-  const ApprenticeDetailsScreen({
+class PersonaDetailsScreen extends StatefulHookConsumerWidget {
+  const PersonaDetailsScreen({
     super.key,
     required this.apprenticeId,
   });
@@ -45,12 +45,12 @@ class ApprenticeDetailsScreen extends StatefulHookConsumerWidget {
   final String apprenticeId;
 
   @override
-  ConsumerState<ApprenticeDetailsScreen> createState() =>
+  ConsumerState<PersonaDetailsScreen> createState() =>
       _ApprenticeDetailsScreenState();
 }
 
 class _ApprenticeDetailsScreenState
-    extends ConsumerState<ApprenticeDetailsScreen> {
+    extends ConsumerState<PersonaDetailsScreen> {
   final scrollControllers = <SubordinateScrollController?>[
     null,
     null,

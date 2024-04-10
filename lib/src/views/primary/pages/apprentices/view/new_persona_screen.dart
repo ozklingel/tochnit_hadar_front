@@ -23,8 +23,8 @@ enum _DataFillType {
   import,
 }
 
-class NewUserScreen extends HookConsumerWidget {
-  const NewUserScreen({super.key});
+class NewPersonaScreen extends HookConsumerWidget {
+  const NewPersonaScreen({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
