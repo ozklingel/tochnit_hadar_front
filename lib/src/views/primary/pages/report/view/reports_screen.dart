@@ -64,13 +64,14 @@ class ReportsScreen extends HookConsumerWidget {
         body: RefreshIndicator.adaptive(
           onRefresh: () {
             selectedReportIds.value = [];
+
             return ref.refresh(getReportsProvider.future);
           },
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: filters.value.isEmpty ? 82 : 132,
-                collapsedHeight: filters.value.isEmpty ? 82 : 132,
+                expandedHeight: filters.value.isEmpty ? 96 : 132,
+                collapsedHeight: filters.value.isEmpty ? 96 : 132,
                 automaticallyImplyLeading: false,
                 pinned: true,
                 flexibleSpace: Column(
@@ -135,20 +136,21 @@ class ReportsScreen extends HookConsumerWidget {
                                   FluentIcons.filter_add_20_regular,
                                 ),
                               ),
-                              Positioned(
-                                right: 8,
-                                top: 8,
-                                child: IgnorePointer(
-                                  child: CircleAvatar(
-                                    backgroundColor: AppColors.red1,
-                                    radius: 7,
-                                    child: Text(
-                                      filters.value.length.toString(),
-                                      style: TextStyles.s11w500fRoboto,
+                              if (filters.value.isNotEmpty)
+                                Positioned(
+                                  right: 8,
+                                  top: 8,
+                                  child: IgnorePointer(
+                                    child: CircleAvatar(
+                                      backgroundColor: AppColors.red1,
+                                      radius: 7,
+                                      child: Text(
+                                        filters.value.length.toString(),
+                                        style: TextStyles.s11w500fRoboto,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ],

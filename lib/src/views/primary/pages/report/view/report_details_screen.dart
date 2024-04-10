@@ -537,7 +537,10 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             .map(
                               (e) => DropdownMenuItem(
                                 value: e,
-                                child: Text(e.name),
+                                child: Text(
+                                  e.name,
+                                  style: TextStyles.s16w400cGrey2,
+                                ),
                               ),
                             )
                             .toList(),
@@ -789,109 +792,115 @@ class _AddRecipientsManuallyScreen extends HookConsumerWidget {
     useListenable(searchController);
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            collapsedHeight: selectedApprentices.value.isEmpty ? 60 : 100,
-            automaticallyImplyLeading: false,
-            pinned: true,
-            flexibleSpace: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: SearchBar(
-                    controller: searchController,
-                    elevation: MaterialStateProperty.all(0),
-                    padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(horizontal: 12),
+      body: Padding(
+        padding: const EdgeInsets.only(top: kToolbarHeight),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              collapsedHeight: selectedApprentices.value.isEmpty ? 60 : 100,
+              automaticallyImplyLeading: false,
+              pinned: true,
+              flexibleSpace: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: SearchBar(
+                      controller: searchController,
+                      elevation: MaterialStateProperty.all(0),
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                      backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => AppColors.blue07,
+                      ),
+                      leading: IconButton(
+                        onPressed: () => Navigator.of(context)
+                            .pop(selectedApprentices.value),
+                        icon: const Icon(Icons.arrow_back),
+                      ),
+                      trailing: const [Icon(Icons.search)],
                     ),
-                    backgroundColor: MaterialStateColor.resolveWith(
-                      (states) => AppColors.blue07,
-                    ),
-                    leading: IconButton(
-                      onPressed: () =>
-                          Navigator.of(context).pop(selectedApprentices.value),
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                    trailing: const [Icon(Icons.search)],
                   ),
-                ),
-                if (selectedApprentices.value.isNotEmpty)
-                  SizedBox(
-                    height: 40,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      children: selectedApprentices.value
-                          .map(
-                            (e) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 6),
-                              child: ChoiceChip(
-                                showCheckmark: false,
-                                selectedColor: AppColors.blue06,
-                                color: MaterialStateColor.resolveWith(
-                                  (states) => AppColors.blue06,
-                                ),
-                                selected: true,
-                                onSelected: (val) {
-                                  final newList = selectedApprentices.value;
-                                  newList.remove(e);
-                                  selectedApprentices.value = [...newList];
-                                },
-                                label: Row(
-                                  children: [
-                                    Text(e.fullName),
-                                    const SizedBox(width: 8),
-                                    const Icon(
-                                      Icons.close,
-                                      color: AppColors.blue02,
-                                      size: 16,
-                                    ),
-                                  ],
-                                ),
-                                labelStyle: TextStyles.s14w400cBlue2,
-                                side: const BorderSide(
-                                  color: AppColors.blue06,
+                  if (selectedApprentices.value.isNotEmpty)
+                    SizedBox(
+                      height: 40,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        children: selectedApprentices.value
+                            .map(
+                              (e) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                child: ChoiceChip(
+                                  showCheckmark: false,
+                                  selectedColor: AppColors.blue06,
+                                  color: MaterialStateColor.resolveWith(
+                                    (states) => AppColors.blue06,
+                                  ),
+                                  selected: true,
+                                  onSelected: (val) {
+                                    final newList = selectedApprentices.value;
+                                    newList.remove(e);
+                                    selectedApprentices.value = [...newList];
+                                  },
+                                  label: Row(
+                                    children: [
+                                      Text(e.fullName),
+                                      const SizedBox(width: 8),
+                                      const Icon(
+                                        Icons.close,
+                                        color: AppColors.blue02,
+                                        size: 16,
+                                      ),
+                                    ],
+                                  ),
+                                  labelStyle: TextStyles.s14w400cBlue2,
+                                  side: const BorderSide(
+                                    color: AppColors.blue06,
+                                  ),
                                 ),
                               ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                (apprentices.valueOrNull?.where(
+                          (element) =>
+                              element.fullName
+                                  .toLowerCase()
+                                  .contains(searchController.text) &&
+                              !selectedApprentices.value.contains(element),
+                        ) ??
+                        [])
+                    .map(
+                      (e) => Row(
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              selectedApprentices.value = [
+                                e,
+                                ...selectedApprentices.value,
+                              ];
+                            },
+                            child: Text(
+                              e.fullName,
+                              style: TextStyles.s16w400cGrey2,
                             ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-              ],
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              (apprentices.valueOrNull?.where(
-                        (element) =>
-                            element.fullName
-                                .toLowerCase()
-                                .contains(searchController.text) &&
-                            !selectedApprentices.value.contains(element),
-                      ) ??
-                      [])
-                  .map(
-                    (e) => Row(
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            selectedApprentices.value = [
-                              e,
-                              ...selectedApprentices.value,
-                            ];
-                          },
-                          child: Text(e.fullName),
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
