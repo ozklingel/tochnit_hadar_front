@@ -501,62 +501,68 @@ class PersonasScreen extends HookConsumerWidget {
                       ),
                       ListView.builder(
                         itemCount: filteredUsers.length,
-                        itemBuilder: (ctx, idx) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          child: ListTileWithTagsCard(
-                            onlineStatus: filteredUsers[idx].callStatus,
-                            avatar: filteredUsers[idx].avatar,
-                            name: filteredUsers[idx].fullName,
-                            tags: [
-                              filteredUsers[idx].highSchoolInstitution,
-                              filteredUsers[idx].thPeriod,
-                              filteredUsers[idx].militaryPositionNew,
-                              (institutions?.singleWhere(
-                                        (element) =>
-                                            element.id ==
-                                            filteredUsers[idx].institutionId,
-                                        orElse: () => const InstitutionDto(),
-                                      ) ??
-                                      const InstitutionDto())
-                                  .name,
-                              (compounds?.singleWhere(
-                                        (element) =>
-                                            element.id ==
-                                            filteredUsers[idx]
-                                                .militaryCompoundId,
-                                        orElse: () => const CompoundDto(),
-                                      ) ??
-                                      const CompoundDto())
-                                  .name,
-                              filteredUsers[idx].militaryUnit,
-                              filteredUsers[idx].maritalStatus,
-                            ],
-                            isSelected: selectedPersonas.value
-                                .contains(filteredUsers[idx]),
-                            onLongPress: () {
-                              if (selectedPersonas.value
-                                  .contains(filteredUsers[idx])) {
-                                selectedPersonas.value = [
-                                  ...selectedPersonas.value.where(
-                                    (element) =>
-                                        element.id != filteredUsers[idx].id,
-                                  ),
-                                ];
-                              } else {
-                                selectedPersonas.value = [
-                                  ...selectedPersonas.value,
-                                  filteredUsers[idx],
-                                ];
-                              }
-                            },
-                            onTap: () => PersonaDetailsRouteData(
-                              id: filteredUsers[idx].id,
-                            ).go(context),
-                          ),
-                        ),
+                        itemBuilder: (ctx, idx) {
+                          void onSelect() {
+                            if (selectedPersonas.value
+                                .contains(filteredUsers[idx])) {
+                              selectedPersonas.value = [
+                                ...selectedPersonas.value.where(
+                                  (element) =>
+                                      element.id != filteredUsers[idx].id,
+                                ),
+                              ];
+                            } else {
+                              selectedPersonas.value = [
+                                ...selectedPersonas.value,
+                                filteredUsers[idx],
+                              ];
+                            }
+                          }
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            child: ListTileWithTagsCard(
+                              onlineStatus: filteredUsers[idx].callStatus,
+                              avatar: filteredUsers[idx].avatar,
+                              name: filteredUsers[idx].fullName,
+                              tags: [
+                                filteredUsers[idx].highSchoolInstitution,
+                                filteredUsers[idx].thPeriod,
+                                filteredUsers[idx].militaryPositionNew,
+                                (institutions?.singleWhere(
+                                          (element) =>
+                                              element.id ==
+                                              filteredUsers[idx].institutionId,
+                                          orElse: () => const InstitutionDto(),
+                                        ) ??
+                                        const InstitutionDto())
+                                    .name,
+                                (compounds?.singleWhere(
+                                          (element) =>
+                                              element.id ==
+                                              filteredUsers[idx]
+                                                  .militaryCompoundId,
+                                          orElse: () => const CompoundDto(),
+                                        ) ??
+                                        const CompoundDto())
+                                    .name,
+                                filteredUsers[idx].militaryUnit,
+                                filteredUsers[idx].maritalStatus,
+                              ],
+                              isSelected: selectedPersonas.value
+                                  .contains(filteredUsers[idx]),
+                              onLongPress: onSelect,
+                              onTap: selectedPersonas.value.isEmpty
+                                  ? () => PersonaDetailsRouteData(
+                                        id: filteredUsers[idx].id,
+                                      ).go(context)
+                                  : onSelect,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
