@@ -20,6 +20,7 @@ import 'package:hadar_program/src/views/primary/pages/tasks/views/new_or_edit_ta
 import 'package:hadar_program/src/views/primary/pages/tasks/views/task_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/views/tasks_screen.dart';
 import 'package:hadar_program/src/views/secondary/charts/charts_screen.dart';
+import 'package:hadar_program/src/views/secondary/charts/charts_settings_screen.dart';
 import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/views/institution_details_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/views/institutions_screen.dart';
@@ -150,6 +151,11 @@ class GoRouterService extends _$GoRouterService {
             ),
             TypedGoRoute<ChartsRouteData>(
               path: 'charts',
+              routes: [
+                TypedGoRoute<ChartsSettingsRouteData>(
+                  path: 'settings',
+                ),
+              ],
             ),
             TypedGoRoute<InstitutionsRouteData>(
               path: 'institutions',
@@ -711,5 +717,16 @@ class ChartsRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const ChartsScreen();
+  }
+}
+
+class ChartsSettingsRouteData extends GoRouteData {
+  const ChartsSettingsRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ChartsSettingsScreen();
   }
 }

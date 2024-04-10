@@ -33,8 +33,10 @@ abstract class Consts {
   static const getHomePageInitMaster = '/homepage_form/initMaster';
   static const getClosestEvents = '/homepage_form/get_closest_Events';
 
-  // master
+  // master user
   static const deleteApprentice = 'master_user/deleteEnt';
+  static const getChartSettings = 'master_user/getAllSetting_madadim';
+  static const setChartSettings = 'master_user/setSetting_madadim';
 
   // notifications
   static const getAllNotifications = 'notification_form/getAll';

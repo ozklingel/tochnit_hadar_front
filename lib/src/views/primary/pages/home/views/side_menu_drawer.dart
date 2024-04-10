@@ -143,7 +143,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     dense: true,
                     leading: const Icon(FluentIcons.settings_16_regular),
                     title: const Text('הגדרות מדדים'),
-                    onTap: () => const ChartsRouteData().push(context),
+                    onTap: () => const ChartsSettingsRouteData().push(context),
                   ),
                 ] else if (auth.valueOrNull?.role == UserRole.rakazEshkol) ...[
                   ListTile(
