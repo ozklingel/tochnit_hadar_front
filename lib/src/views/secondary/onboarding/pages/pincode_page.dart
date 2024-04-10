@@ -25,8 +25,14 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final pinCodeController = useTextEditingController();
     final timer = useState(_timerDuration);
-    final isVoiceMFA = useState(false);
+    final isWhatsAppMFA = useState(false);
     final isRememberMeChecked = useState(false);
+    final buttonText = useState('שלח לי את הקוד דרך הווצאפ');
+
+    void toggleMFA() {
+      isWhatsAppMFA.value = !isWhatsAppMFA.value; // Toggle the state
+      buttonText.value = isWhatsAppMFA.value ? 'שלח לי את הקוד דרך סמס' : 'שלח לי את הקוד דרך הווצאפ';
+    }
 
     useListenable(pinCodeController);
 
@@ -54,11 +60,12 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  if (isVoiceMFA.value) ...[
-                    const TextSpan(text: 'שלחנו לך קוד למספר'),
+                  if (isWhatsAppMFA.value) ...[
+                    const TextSpan(text: 'שלחנו לך דרך ווצאפ'),
                     const TextSpan(text: '\n'),
+                    const TextSpan(text: 'למספר'),
                   ] else ...[
-                    const TextSpan(text: 'שלחנו לך קוד בהודעה קולית'),
+                    const TextSpan(text: 'שלחנו לך דרך סמס'),
                     const TextSpan(text: '\n'),
                     const TextSpan(text: 'למספר'),
                   ],
@@ -107,7 +114,7 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                             .read(onboardingControllerProvider.notifier)
                             .getOtp(phone: phone);
                         timer.value = _timerDuration;
-                        pinCodeController.text = '';
+                        pinCodeController.text = 'CCCCCCCCCC';
                       },
                       child: Text(
                         'שליחת קוד חדש',
@@ -152,9 +159,10 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                     .getOtpWhatsapp(phone: phone);
                 timer.value = _timerDuration;
                 pinCodeController.text = '';
+                toggleMFA();
               },
               child: Text(
-                'שלחו לי את הקוד בהודעת ווצאפ',
+                buttonText.value,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                       color: AppColors.blue02,
@@ -185,7 +193,6 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                           },
                         );
                       }
-
                       onSuccess(result.isFirstOnboarding);
                     },
             ),

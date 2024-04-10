@@ -22,10 +22,13 @@ import 'package:timeago/timeago.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Platform.isAndroid || Platform.isIOS) {
+  // Check if the platform is not web and is either Android or iOS
+  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
     // TODO(noga-dev): budget permitting this should have an init loader
+    // Initialize notifications service only for Android or iOS
     await initializeNotificationsService();
   }
+
 
   await SentryFlutter.init(
     (options) {

@@ -69,20 +69,32 @@ class DioService extends _$DioService {
   }
 
   void _dioErrorHandler(DioException error, handler) {
-    Logger().e(
-      {
-        'error.type': error.type,
-        'error.message': error.message ?? 'no err msg',
-        // 'error.requestOptions.path': error.requestOptions.path,
-        'response.data': error.response?.data ?? 'no response data',
-        'respone.headers': error.response?.headers ?? 'no response headers',
-      },
-      error: error.error,
-      stackTrace: error.stackTrace,
-    );
+      if (error.response?.statusCode == 401) {
+        // Handle 401 error without throwing an exception
+        print("Handled 401 Error Inside Interceptor");
+        // You can return a custom Response object or handle the error differently
+        return handler.resolve(Response(
+          requestOptions: error.requestOptions,
+          statusCode: 401,
+        )); // Modify this as needed
+      }
+      else{
+            Logger().e(
+            {
+              'error.type': error.type,
+              'error.message': error.message ?? 'no err msg',
+              // 'error.requestOptions.path': error.requestOptions.path,
+              'response.data': error.response?.data ?? 'no response data',
+              'respone.headers': error.response?.headers ?? 'no response headers',
+            },
+            error: error.error,
+            stackTrace: error.stackTrace,
+          );
 
-    Toaster.error(error.type.name);
+          Toaster.error(error.type.name);
 
-    handler.next(error);
+          handler.next(error);
+
+      }
   }
 }

@@ -16,6 +16,19 @@ class OnboardingPage1Phone extends HookConsumerWidget {
   });
 
   final void Function(String phone) onSuccess;
+  void showErrorMessage(BuildContext context) {
+    var str = 'מתנצלים, אבל לא זיהינו את מספר הנייד הזה.';
+    str += "\n";
+    str += 'ייתכן שהתבלבת באחד התווים, או שנרשמת ממספר אחר.';
+
+    // Here, using a SnackBar as an example:
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(str),
+        duration: Duration(seconds: 5),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, ref) {
@@ -73,7 +86,7 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                         text: 'מספר הנייד',
                       ),
                       TextSpan(
-                        text: ' ',
+                        text: '',
                         style: TextStyle(color: AppColors.red2),
                       ),
                       TextSpan(
@@ -97,7 +110,12 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                     if (phoneTextEditingController.text.length != 10) {
                       return 'מספר הנייד חייב להיות בעל 10 ספרות';
                     }
-
+                    // if (...) {
+                    //   var str = 'מתנצלים, אבל לא זיהינו את מספר הנייד הזה.';
+                    //   str += "\n";
+                    //   str += 'ייתכן שהתבלבת באחד התווים, או שנרשמת ממספר אחר.';
+                    //   return str;
+                    // }
                     return null;
                   },
                   decoration: InputDecoration(
@@ -150,6 +168,9 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                           .getOtp(phone: phoneTextEditingController.text);
                       if (result) {
                         onSuccess(phoneTextEditingController.text);
+                      }
+                      else{
+                        showErrorMessage(context);
                       }
                     }
                   : null,
