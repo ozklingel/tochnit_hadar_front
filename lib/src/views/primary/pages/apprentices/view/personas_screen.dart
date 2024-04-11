@@ -103,7 +103,7 @@ class PersonasScreen extends HookConsumerWidget {
                         children: [
                           Expanded(
                             child: SizedBox(
-                              height: 44,
+                              height: 56,
                               child: (screenController.valueOrNull?.isMapOpen ??
                                       false)
                                   ? AppBar(
@@ -156,9 +156,15 @@ class PersonasScreen extends HookConsumerWidget {
                                           ),
                                           if (auth.valueOrNull?.role ==
                                               UserRole.melave)
-                                            const Text('חניכים')
+                                            const Text(
+                                              'חניכים',
+                                              style: TextStyles.s22w400cGrey2,
+                                            )
                                           else
-                                            const Text('משתמשים וחניכים'),
+                                            const Text(
+                                              'משתמשים וחניכים',
+                                              style: TextStyles.s22w400cGrey2,
+                                            ),
                                           const SizedBox(),
                                         ],
                                       ),
