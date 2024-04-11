@@ -154,7 +154,11 @@ class PersonasScreen extends HookConsumerWidget {
                                               FluentIcons.search_24_regular,
                                             ),
                                           ),
-                                          const Text('משתמשים'),
+                                          if (auth.valueOrNull?.role ==
+                                              UserRole.melave)
+                                            const Text('חניכים')
+                                          else
+                                            const Text('משתמשים וחניכים'),
                                           const SizedBox(),
                                         ],
                                       ),
