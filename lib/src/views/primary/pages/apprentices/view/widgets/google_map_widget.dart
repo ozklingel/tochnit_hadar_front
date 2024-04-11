@@ -59,6 +59,8 @@ class GoogleMapWidget extends HookConsumerWidget {
                 onTap: () => showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
+                  useRootNavigator: true,
+                  constraints: const BoxConstraints.expand(),
                   builder: (context) => CompoundBottomSheet(compound: c),
                 ),
                 icon: await Padding(

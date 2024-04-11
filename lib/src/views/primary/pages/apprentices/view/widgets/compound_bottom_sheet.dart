@@ -39,7 +39,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
     final selectedPersonas = useState(<PersonaDto>[]);
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.6,
+      initialChildSize: 0.8,
       minChildSize: 0.4,
       maxChildSize: 0.8,
       expand: false,
