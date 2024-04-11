@@ -1,7 +1,8 @@
-import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_controller.g.dart';
@@ -12,16 +13,11 @@ part 'onboarding_controller.g.dart';
     StorageService,
   ],
 )
-
-
-
 class OnboardingController extends _$OnboardingController {
   @override
   void build() {
-
     ref.watch(dioServiceProvider);
   }
-
 
   Future<bool> getOtp({
     required String phone,
@@ -36,14 +32,13 @@ class OnboardingController extends _$OnboardingController {
 
       if (result.statusCode == 200) {
         return true;
-      }
-      else if(result.statusCode == 401){
-        print("AAABB");
+      } else if (result.statusCode == 401) {
+        // TODO(yeo4): don't use print, use Logger
+        debugPrint("AAABB");
         return false;
       }
     } catch (e) {
-      print("CCC");
-      // Logger().d('otp', error: e);
+      Logger().d('otp', error: e);
       rethrow;
     }
 

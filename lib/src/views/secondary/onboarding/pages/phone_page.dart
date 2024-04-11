@@ -25,7 +25,7 @@ class OnboardingPage1Phone extends HookConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(str),
-        duration: Duration(seconds: 5),
+        duration: const Duration(seconds: 5),
       ),
     );
   }
@@ -168,8 +168,9 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                           .getOtp(phone: phoneTextEditingController.text);
                       if (result) {
                         onSuccess(phoneTextEditingController.text);
-                      }
-                      else{
+                      } else {
+                        // TODO(yeo4): fix this
+                        // ignore: use_build_context_synchronously
                         showErrorMessage(context);
                       }
                     }

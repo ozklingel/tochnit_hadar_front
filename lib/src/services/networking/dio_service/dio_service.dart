@@ -20,9 +20,9 @@ class DioService extends _$DioService {
     final authToken = ref.read(storageServiceProvider.notifier).getAuthToken();
 
     final userPhone = ref.read(storageServiceProvider.notifier).getUserPhone();
-     //const userPhone = "506795170";
-     //const userPhone = "544817610";
-     //const userPhone = "543124511";
+    //const userPhone = "506795170";
+    //const userPhone = "544817610";
+    //const userPhone = "543124511";
 
     Logger().d('initializing dio with base url::${Consts.baseUrl}');
 
@@ -69,32 +69,32 @@ class DioService extends _$DioService {
   }
 
   void _dioErrorHandler(DioException error, handler) {
-      if (error.response?.statusCode == 401) {
-        // Handle 401 error without throwing an exception
-        print("Handled 401 Error Inside Interceptor");
-        // You can return a custom Response object or handle the error differently
-        return handler.resolve(Response(
+    if (error.response?.statusCode == 401) {
+      // Handle 401 error without throwing an exception
+      Logger().d("Handled 401 Error Inside Interceptor");
+      // You can return a custom Response object or handle the error differently
+      handler.resolve(
+        Response(
           requestOptions: error.requestOptions,
           statusCode: 401,
-        )); // Modify this as needed
-      }
-      else{
-            Logger().e(
-            {
-              'error.type': error.type,
-              'error.message': error.message ?? 'no err msg',
-              // 'error.requestOptions.path': error.requestOptions.path,
-              'response.data': error.response?.data ?? 'no response data',
-              'respone.headers': error.response?.headers ?? 'no response headers',
-            },
-            error: error.error,
-            stackTrace: error.stackTrace,
-          );
+        ),
+      ); // Modify this as needed
+    } else {
+      Logger().e(
+        {
+          'error.type': error.type,
+          'error.message': error.message ?? 'no err msg',
+          // 'error.requestOptions.path': error.requestOptions.path,
+          'response.data': error.response?.data ?? 'no response data',
+          'respone.headers': error.response?.headers ?? 'no response headers',
+        },
+        error: error.error,
+        stackTrace: error.stackTrace,
+      );
 
-          Toaster.error(error.type.name);
+      Toaster.error(error.type.name);
 
-          handler.next(error);
-
-      }
+      handler.next(error);
+    }
   }
 }
