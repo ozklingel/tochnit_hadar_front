@@ -207,7 +207,9 @@ class _ApprenticeDetailsScreenState
                                 icon: const Icon(
                                   FluentIcons.clipboard_task_24_regular,
                                 ),
-                                onPressed: () => Toaster.unimplemented(),
+                                onPressed: () => ReportNewRouteData(
+                                  initRecipients: [persona.id],
+                                ).push(context),
                               ),
                             ],
                           ),

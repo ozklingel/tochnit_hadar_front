@@ -10,7 +10,7 @@ import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/widgets/personas_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/widgets/message_personas_screen.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
@@ -179,7 +179,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                                       .push<List<PersonaDto>>(
                                     MaterialPageRoute(
                                       builder: (val) {
-                                        return const PersonasScreen();
+                                        return const MessagePersonasScreen();
                                       },
                                     ),
                                   );

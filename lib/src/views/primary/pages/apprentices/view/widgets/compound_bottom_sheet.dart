@@ -104,12 +104,12 @@ class CompoundBottomSheet extends HookConsumerWidget {
                           if (selectedPersonas.value.length == 1)
                             if (auth.role == UserRole.melave) ...[
                               IconButton(
-                                onPressed: () => launchSms(
-                                  phone: selectedPersonas.value
-                                      .map((e) => e.phone)
+                                onPressed: () => NewMessageRouteData(
+                                  initRecpients: selectedPersonas.value
+                                      .map((e) => e.id)
                                       .toList(),
-                                ),
-                                icon: const Icon(FluentIcons.chat_24_regular),
+                                ).push(context),
+                                icon: const Icon(FluentIcons.mail_24_regular),
                               ),
                               IconButton(
                                 onPressed: () => ReportNewRouteData(
@@ -120,6 +120,10 @@ class CompoundBottomSheet extends HookConsumerWidget {
                                 icon: const Icon(
                                   FluentIcons.clipboard_task_24_regular,
                                 ),
+                              ),
+                              PersonaCardPopupMoreVerticalWidget(
+                                personas: selectedPersonas.value,
+                                showCall: false,
                               ),
                             ] else ...[
                               IconButton(
