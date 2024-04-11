@@ -15,6 +15,16 @@ import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hadar_program/src/views/widgets/list/persona_card_popup_menu_items.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+Future<void> showCompoundBottomSheet({
+  required BuildContext context,
+  required CompoundDto compound,
+}) =>
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => CompoundBottomSheet(compound: compound),
+    );
+
 class CompoundBottomSheet extends HookConsumerWidget {
   const CompoundBottomSheet({
     super.key,
@@ -192,42 +202,45 @@ class CompoundBottomSheet extends HookConsumerWidget {
                   ],
                 ),
               ),
-              Expanded(
-                child: ListView.separated(
-                  controller: scrollController,
-                  itemCount: personas.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    void onSelect() {
-                      if (selectedPersonas.value.contains(personas[index])) {
-                        selectedPersonas.value = [
-                          ...selectedPersonas.value.where(
-                            (element) => element.id != personas[index].id,
-                          ),
-                        ];
-                      } else {
-                        selectedPersonas.value = [
-                          ...selectedPersonas.value,
-                          personas[index],
-                        ];
+              if (personas.isEmpty)
+                const Expanded(child: Center(child: Text('אין')))
+              else
+                Expanded(
+                  child: ListView.separated(
+                    controller: scrollController,
+                    itemCount: personas.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      void onSelect() {
+                        if (selectedPersonas.value.contains(personas[index])) {
+                          selectedPersonas.value = [
+                            ...selectedPersonas.value.where(
+                              (element) => element.id != personas[index].id,
+                            ),
+                          ];
+                        } else {
+                          selectedPersonas.value = [
+                            ...selectedPersonas.value,
+                            personas[index],
+                          ];
+                        }
                       }
-                    }
 
-                    return ListTileWithTagsCard(
-                      name: personas[index].fullName,
-                      isSelected:
-                          selectedPersonas.value.contains(personas[index]),
-                      onLongPress: onSelect,
-                      onTap: selectedPersonas.value.isEmpty
-                          ? () =>
-                              PersonaDetailsRouteData(id: personas[index].id)
-                                  .go(context)
-                          : onSelect,
-                    );
-                  },
+                      return ListTileWithTagsCard(
+                        name: personas[index].fullName,
+                        isSelected:
+                            selectedPersonas.value.contains(personas[index]),
+                        onLongPress: onSelect,
+                        onTap: selectedPersonas.value.isEmpty
+                            ? () =>
+                                PersonaDetailsRouteData(id: personas[index].id)
+                                    .go(context)
+                            : onSelect,
+                      );
+                    },
+                  ),
                 ),
-              ),
               SizedBox(
                 height: 80,
                 child: Padding(

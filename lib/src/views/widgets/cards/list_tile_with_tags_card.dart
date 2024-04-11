@@ -85,7 +85,7 @@ class ListTileWithTagsCard extends StatelessWidget {
                                 ? Colors.green
                                 : onlineStatus == StatusColor.red
                                     ? Colors.red
-                                    : Colors.purple,
+                                    : Colors.orange,
                           ),
                         ),
                       ),
