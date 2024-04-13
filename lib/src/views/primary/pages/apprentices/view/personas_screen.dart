@@ -107,6 +107,10 @@ class PersonasScreen extends HookConsumerWidget {
                               child: (screenController.valueOrNull?.isMapOpen ??
                                       false)
                                   ? AppBar(
+                                      title: const Text(
+                                        'מפת חניכים',
+                                        style: TextStyles.s22w500cGrey2,
+                                      ),
                                       actions: [
                                         IconButton(
                                           onPressed: () async {
@@ -123,10 +127,6 @@ class PersonasScreen extends HookConsumerWidget {
                                           ),
                                         ),
                                       ],
-                                      title: const Text(
-                                        'מפת חניכים',
-                                        style: TextStyles.s22w400cGrey2,
-                                      ),
                                       bottom: PreferredSize(
                                         preferredSize:
                                             const Size.fromHeight(24),
@@ -158,12 +158,12 @@ class PersonasScreen extends HookConsumerWidget {
                                               UserRole.melave)
                                             const Text(
                                               'חניכים',
-                                              style: TextStyles.s22w400cGrey2,
+                                              style: TextStyles.s22w500cGrey2,
                                             )
                                           else
                                             const Text(
                                               'משתמשים וחניכים',
-                                              style: TextStyles.s22w400cGrey2,
+                                              style: TextStyles.s22w500cGrey2,
                                             ),
                                           const SizedBox(),
                                         ],

@@ -203,7 +203,11 @@ class CompoundBottomSheet extends HookConsumerWidget {
                 ),
               ),
               if (personas.isEmpty)
-                const Expanded(child: Center(child: Text('אין')))
+                const Expanded(
+                  child: Center(
+                    child: Text('אין'),
+                  ),
+                )
               else
                 Expanded(
                   child: ListView.separated(

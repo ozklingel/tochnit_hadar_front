@@ -11,7 +11,7 @@ class ChartsSettingsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text(
           'הגדרות מדדים ',
-          style: TextStyles.s22w400cGrey2,
+          style: TextStyles.s22w500cGrey2,
         ),
       ),
       body: Padding(
