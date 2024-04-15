@@ -30,12 +30,11 @@ class NotificationDetailsScreen extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (ref.read(authServiceProvider).valueOrNull?.role ==
-            UserRole.melave) {
+        
           ref
               .read(notificationsControllerProvider.notifier)
               .setToReadStatus(message);
-        }
+        
         return null;
       },
       [],
@@ -46,9 +45,30 @@ class NotificationDetailsScreen extends HookConsumerWidget {
         title: const Text('פרטי התראה'),
         centerTitle: true,
       ),
-      body: NotificationWidget.expanded(
-        message: message,
-      ),
+      body:  Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 232,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                         Text(
+                          message.description
+                        ),
+                   ],
+                  ),
+                ),
+              
+              ],
+            ),
+          ),
+      
+    
+  
     );
   }
 }

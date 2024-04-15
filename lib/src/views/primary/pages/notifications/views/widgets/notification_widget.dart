@@ -49,7 +49,7 @@ class NotificationWidget extends ConsumerWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: isExpanded
-              ? null
+              ? () => NotificationDetailsRouteData(id: message.id).go(context)
               : () => NotificationDetailsRouteData(id: message.id).go(context),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -108,74 +108,23 @@ class NotificationWidget extends ConsumerWidget {
                             style: TextStyles.s16w400cGrey2,
                           ),
                       ],
-                      if (auth.valueOrNull?.role == UserRole.rakazMosad) ...[
+                if (auth.valueOrNull?.role != UserRole.melave) ...[
                         if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "הכנסת מחזור חדש" ||
-                                message.event == "דוח דו שבועי-חניכים נשכחים" ||
+                            (message.event == "הכנסת מחזור חדש" ||message.event == "עידכון חודשי-ציון מוסדות" ||message.event == "ישיבת מוסד אשכול" ||
+                                message.event == "דוח דו שבועי-חניכים נשכחים" ||message.event == "ישיבת רכזי תוכנית" ||
                                 message.event == "דוח  חודשי- ציון מלווים"))
                           Text(
                             " ${message.event}",
                             style: TextStyles.s18w600cShade09,
                           ),
                         if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "מפגש מלווים מקצועי" ||
+                            (message.event == "מפגש מלווים קבוצתי" || message.event == "ישיבת מצב”ר"||
                                 message.event == "עשיה לטובת בוגרים"))
                           Text(
                             "הגיע הזמן ל${message.event}",
                             style: TextStyles.s18w600cShade09,
                           ),
-                        if (message.numOfLinesDisplay == 2 &&
-                            message.event == "ישיבת מצב”ר")
-                          Text(
-                            "הגיע הזמן ל${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
-                      ],
-                      if (auth.valueOrNull?.role == UserRole.rakazEshkol) ...[
-                        if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "הכנסת מחזור חדש" ||
-                                message.event == "דוח דו שבועי-חניכים נשכחים" ||
-                                message.event == "דוח  חודשי- ציון מלווים"))
-                          Text(
-                            " ${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
-                        if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "מפגש מלווים מקצועי" ||
-                                message.event == "עשיה לטובת בוגרים"))
-                          Text(
-                            "הגיע הזמן ל${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
-                        if (message.numOfLinesDisplay == 2 &&
-                            message.event == "ישיבת מצב”ר")
-                          Text(
-                            "הגיע הזמן ל${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
-                      ],
-                      if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[
-                        if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "הכנסת מחזור חדש" ||
-                                message.event == "דוח דו שבועי-חניכים נשכחים" ||
-                                message.event == "דוח  חודשי- ציון מלווים"))
-                          Text(
-                            " ${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
-                        if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "מפגש מלווים מקצועי" ||
-                                message.event == "עשיה לטובת בוגרים"))
-                          Text(
-                            "הגיע הזמן ל${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
-                        if (message.numOfLinesDisplay == 2 &&
-                            message.event == "ישיבת מצב”ר")
-                          Text(
-                            "הגיע הזמן ל${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
+                    
                       ],
                     ],
                   ),
