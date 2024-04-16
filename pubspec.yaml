@@ -63,7 +63,7 @@ dependencies:
   cached_network_image: ^3.2.3
 
   # icons
-  fluentui_system_icons: ^1.1.215
+  fluentui_system_icons: ^1.1.234
 
   # widgets
   flutter_easyloading: ^3.0.5 # todo: remove

@@ -65,6 +65,8 @@ abstract class Consts {
   static const updateInstitution = 'institutionProfile_form/update';
   static const getAllInstitutionApprenticesAndMelavim =
       'institutionProfile_form/apprentice_and_melave';
+  static const addInstitutionFromExcel =
+      'institutionProfile_form/add_mosad_excel';
 
   // eshkol
   static const getAllEshkols = 'eshcol/getAll';
@@ -105,6 +107,9 @@ abstract class Consts {
   static const defaultDurationL = Duration(milliseconds: 600);
   static const defaultDurationXL = Duration(milliseconds: 900);
   static const defaultErrorDuration = Duration(milliseconds: 4000);
+
+  // curves
+  static const defaultCurve = Curves.linear;
 
   // widget props
   static const borderRadius24 = BorderRadius.all(Radius.circular(24));

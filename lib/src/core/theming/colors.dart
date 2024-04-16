@@ -52,6 +52,8 @@ abstract class AppColors {
   static const error100 = Color(0xFFFCE9E8);
   static const error000 = Color(0xFFFEF6F6);
 
+  static const failedUpload = Color(0xFFFFE7E5);
+
   static const shade10 = Color(0xFF242424);
   static const shade09 = Color(0xFF373737);
   static const shade08 = Color(0xFF494949);

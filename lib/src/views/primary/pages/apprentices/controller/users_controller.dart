@@ -29,7 +29,7 @@ enum Sort {
 
 @Riverpod(
   dependencies: [
-    GetPersonas,
+    GetMapsApprentices,
     GoRouterService,
     DioService,
   ],

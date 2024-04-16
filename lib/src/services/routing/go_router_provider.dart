@@ -22,7 +22,9 @@ import 'package:hadar_program/src/views/primary/pages/tasks/views/tasks_screen.d
 import 'package:hadar_program/src/views/secondary/charts/charts_screen.dart';
 import 'package:hadar_program/src/views/secondary/charts/charts_settings_screen.dart';
 import 'package:hadar_program/src/views/secondary/error/route_error_screen.dart';
+import 'package:hadar_program/src/views/secondary/institutions/views/add_institutions_from_excel_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/views/institution_details_screen.dart';
+import 'package:hadar_program/src/views/secondary/institutions/views/institution_type_picker_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/views/institutions_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/views/new_or_edit_institution_screen.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/onboarding_screen.dart';
@@ -160,11 +162,17 @@ class GoRouterService extends _$GoRouterService {
             TypedGoRoute<InstitutionsRouteData>(
               path: 'institutions',
               routes: [
-                TypedGoRoute<InstitutionDetailsRouteData>(
-                  path: 'details/:id',
+                TypedGoRoute<InstitutionTypePickerRouteData>(
+                  path: 'type-picker',
+                ),
+                TypedGoRoute<InstitutionFromExcelRouteData>(
+                  path: 'excel',
                 ),
                 TypedGoRoute<NewInstitutionRouteData>(
                   path: 'new',
+                ),
+                TypedGoRoute<InstitutionDetailsRouteData>(
+                  path: 'details/:id',
                 ),
                 TypedGoRoute<EditInstitutionRouteData>(
                   path: 'edit/:id',
@@ -676,6 +684,24 @@ class InstitutionDetailsRouteData extends GoRouteData {
     return InstitutionDetailsScreen(
       id: id,
     );
+  }
+}
+
+class InstitutionTypePickerRouteData extends GoRouteData {
+  const InstitutionTypePickerRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const InstitutionTypePickerScreen();
+  }
+}
+
+class InstitutionFromExcelRouteData extends GoRouteData {
+  const InstitutionFromExcelRouteData();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AddInstitutionFromExcel();
   }
 }
 

@@ -160,7 +160,8 @@ class NewPersonaScreen extends HookConsumerWidget {
                         onPressed: () {
                           if (selectedUserType.value == UserRole.other) {
                             Navigator.of(context).pop();
-                            const NewInstitutionRouteData().push(context);
+                            const InstitutionTypePickerRouteData()
+                                .push(context);
                           } else {
                             pageController.nextPage(
                               duration: Consts.defaultDurationM,

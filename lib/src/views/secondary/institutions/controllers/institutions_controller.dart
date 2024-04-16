@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
@@ -6,6 +8,7 @@ import 'package:hadar_program/src/services/networking/dio_service/dio_service.da
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -90,6 +93,39 @@ class InstitutionsController extends _$InstitutionsController {
       }
     } catch (e) {
       Logger().e('failed to create institution', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return false;
+  }
+
+  Future<bool> addFromExcel(PlatformFile file) async {
+    if (file.bytes == null) {
+      throw ArgumentError('missing param bytes');
+    }
+
+    final formData = FormData.fromMap({
+      "file": MultipartFile.fromBytes(
+        file.bytes!.toList(),
+        filename: file.path,
+        contentType: MediaType.parse('multipart/form-data'),
+      ),
+    });
+
+    try {
+      final result = await ref.watch(dioServiceProvider).put(
+            Consts.addInstitutionFromExcel,
+            data: formData,
+          );
+
+      if (result.data['result'] == 'success') {
+        ref.read(goRouterServiceProvider).pop();
+
+        return true;
+      }
+    } catch (e) {
+      Logger().e('failed to add institution excel', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
     }

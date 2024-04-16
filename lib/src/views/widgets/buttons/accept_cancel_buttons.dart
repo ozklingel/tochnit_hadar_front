@@ -23,7 +23,7 @@ class AcceptCancelButtons extends StatelessWidget {
         Expanded(
           child: LargeFilledRoundedButton(
             label: okText,
-            onPressed: onPressedOk ?? () => Toaster.unimplemented(),
+            onPressed: onPressedOk,
           ),
         ),
         const SizedBox(width: 12),
