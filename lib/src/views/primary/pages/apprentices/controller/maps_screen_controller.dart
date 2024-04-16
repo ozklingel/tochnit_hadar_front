@@ -12,10 +12,10 @@ part 'maps_screen_controller.g.dart';
 class MapsScreenController extends _$MapsScreenController {
   @override
   FutureOr<List<PersonaDto>> build() async {
-    final apprentices = await ref.watch(getMapsApprenticesProvider.future);
+    final personas = await ref.watch(getMapsApprenticesProvider.future);
 
     ref.keepAlive();
 
-    return apprentices;
+    return personas;
   }
 }

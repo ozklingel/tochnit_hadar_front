@@ -7,7 +7,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
+import 'package:hadar_program/src/services/api/apprentice/get_maps_apprentices.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/widgets/message_personas_screen.dart';
@@ -38,7 +38,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
       (element) => element.id == id,
       orElse: () => const MessageDto(),
     );
-    final personas = ref.watch(getPersonasProvider).valueOrNull ?? [];
+    final personas = ref.watch(getMapsApprenticesProvider).valueOrNull ?? [];
     final selectedRecipients = useState(<PersonaDto>[]);
     final method = useState(MessageMethod.other);
     final title = useTextEditingController(text: msg.title);
@@ -59,6 +59,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
         title.text = msg.title;
         body.text = msg.content;
         method.value = msg.method;
+        selectedRecipients.value = personas;
 
         return null;
       },
@@ -66,6 +67,17 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
     );
 
     useListenable(title);
+
+    // Logger().d(
+    //   personas.length,
+    //   error: personas
+    //       .where(
+    //         (element) =>
+    //             initRecipients.contains(element.id) ||
+    //             msg.to.contains(element.id),
+    //       )
+    //       .toList(),
+    // );
 
     return PopScope(
       canPop: true,

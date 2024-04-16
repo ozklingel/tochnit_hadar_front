@@ -29,10 +29,9 @@ Future<void> main() async {
     await initializeNotificationsService();
   }
 
-
   await SentryFlutter.init(
     (options) {
-      options.debug = kDebugMode;
+      // options.debug = kDebugMode;
       options.attachScreenshot = kReleaseMode;
       // or define SENTRY_DSN via Dart environment variable (--dart-define)
       options.dsn =

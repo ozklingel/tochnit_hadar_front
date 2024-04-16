@@ -52,7 +52,7 @@ List<(double, double)> _extractScore(List<dynamic>? data) {
 
   return data
       .map<(num, num)>((e) {
-        if ((e as List<num>).length < 2) {
+        if ((e as List<dynamic>).length < 2) {
           Sentry.captureException('bad backend _extractScore data');
 
           return (0, 0);

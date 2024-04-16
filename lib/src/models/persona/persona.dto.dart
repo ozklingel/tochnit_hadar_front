@@ -162,8 +162,8 @@ class PersonaDto with _$PersonaDto {
     String email,
     @Default([])
     @JsonKey(
-      defaultValue: [],
       name: 'events',
+      fromJson: _parseEvents,
     )
     List<EventDto> events,
     @Default('')
@@ -230,8 +230,8 @@ class PersonaDto with _$PersonaDto {
     String phone,
     @Default([])
     @JsonKey(
-      defaultValue: [],
       name: 'reports',
+      fromJson: _extractReports,
     )
     List<String> reportsIds,
     @Default('')
@@ -360,14 +360,33 @@ class PersonaDto with _$PersonaDto {
     StatusColor parentsStatus,
     @Default(0)
     @JsonKey(
-      defaultValue: 0,
       name: 'activity_score',
+      fromJson: _extractActivityScore,
     )
     int activityScore,
   }) = _Persona;
 
   factory PersonaDto.fromJson(Map<String, dynamic> json) =>
       _$PersonaDtoFromJson(json);
+}
+
+int _extractActivityScore(dynamic val) {
+  if (val is int) {
+    return val;
+  }
+
+  final result = int.tryParse(val);
+
+  if (result == null) {
+    Logger().w('extractActivityScore');
+    Sentry.captureException(
+      Exception('failed to extract extractActivityScore'),
+    );
+
+    return 0;
+  }
+
+  return result;
 }
 
 StatusColor _parseStatus(dynamic val) {
@@ -395,6 +414,46 @@ StatusColor _parseStatus(dynamic val) {
 
       return StatusColor.grey;
   }
+}
+
+List<String> _extractReports(dynamic val) {
+  const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION';
+
+  if (val is List<dynamic>) {
+    if (val is List<String>) {
+      return val;
+    } else {
+      // not suposed to be here but found this during dev so putting it here
+      Sentry.captureMessage(errMsg);
+      Logger().w(errMsg);
+    }
+  } else if (val is String) {
+    // not suposed to be here but found this during dev so putting it here
+    Sentry.captureMessage(errMsg);
+    Logger().w(errMsg);
+
+    return [];
+  }
+
+  return [];
+}
+
+List<EventDto> _parseEvents(dynamic val) {
+  const errMsg = 'MISSING EVENTS PARSE IMPLEMENTATION';
+
+  if (val is List<dynamic>) {
+    Logger().w(errMsg);
+
+    return [];
+  } else if (val is String) {
+    // not suposed to be here but found this during dev so putting it here
+    Sentry.captureMessage(errMsg);
+    Logger().w(errMsg);
+
+    return [];
+  }
+
+  return [];
 }
 
 Relationship _extractRelationship(String? val) {

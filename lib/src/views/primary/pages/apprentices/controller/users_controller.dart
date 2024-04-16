@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/api/apprentice/get_maps_apprentices.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -36,7 +37,7 @@ enum Sort {
 class UsersController extends _$UsersController {
   @override
   FutureOr<PersonasScreenDto> build() async {
-    final apprentices = await ref.watch(getPersonasProvider.future);
+    final apprentices = await ref.watch(getMapsApprenticesProvider.future);
 
     return PersonasScreenDto(
       users: apprentices,

@@ -16,7 +16,6 @@ import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
@@ -65,9 +64,8 @@ class PersonasScreen extends HookConsumerWidget {
 
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: (screenController.valueOrNull?.isMapOpen ?? false)
-            ? null
-            : (auth.valueOrNull ?? const AuthDto()).role == UserRole.melave
+        floatingActionButton:
+            (auth.valueOrNull ?? const AuthDto()).role == UserRole.melave
                 ? null
                 : FloatingActionButton(
                     onPressed: () => const NewPersonaRouteData().push(context),
@@ -168,39 +166,7 @@ class PersonasScreen extends HookConsumerWidget {
                                           const SizedBox(),
                                         ],
                                       ),
-                                      actions: [
-                                        if (selectedPersonas
-                                            .value.isNotEmpty) ...[
-                                          IconButton(
-                                            onPressed: () => selectedPersonas
-                                                        .value.length >
-                                                    1
-                                                ? Toaster.error('backend???')
-                                                : launchSms(
-                                                    phone: selectedPersonas
-                                                        .value
-                                                        .map((e) => e.phone)
-                                                        .toList(),
-                                                  ),
-                                            icon: const Icon(
-                                              FluentIcons.chat_24_regular,
-                                            ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () => ReportNewRouteData(
-                                              initRecipients: selectedPersonas
-                                                  .value
-                                                  .map((e) => e.id)
-                                                  .toList(),
-                                            ).push(context),
-                                            icon: const Icon(
-                                              FluentIcons
-                                                  .clipboard_task_24_regular,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 12),
-                                        ],
-                                      ],
+                                      actions: const [],
                                     ),
                               // SearchAppBar(
                               //   elevation: MaterialStateProperty.all(0),
@@ -447,20 +413,37 @@ class PersonasScreen extends HookConsumerWidget {
                             ),
                             const SizedBox(width: 6),
                             const Spacer(),
-                            TextButton.icon(
-                              onPressed: () {
-                                ref
-                                    .read(usersControllerProvider.notifier)
-                                    .mapView(true);
-                                isSearchOpen.value = false;
-                              },
-                              style: TextButton.styleFrom(
-                                textStyle: TextStyles.s14w400,
-                                foregroundColor: AppColors.gray1,
+                            if (selectedPersonas.value.isNotEmpty) ...[
+                              IconButton(
+                                onPressed: () =>
+                                    selectedPersonas.value.length > 1
+                                        ? NewMessageRouteData(
+                                            initRecpients: selectedPersonas
+                                                .value
+                                                .map((e) => e.id)
+                                                .toList(),
+                                          ).push(context)
+                                        : launchSms(
+                                            phone: selectedPersonas.value
+                                                .map((e) => e.phone)
+                                                .toList(),
+                                          ),
+                                icon: const Icon(
+                                  FluentIcons.chat_24_regular,
+                                ),
                               ),
-                              icon: const Icon(FluentIcons.location_24_regular),
-                              label: const Text('תצוגת מפה'),
-                            ),
+                              IconButton(
+                                onPressed: () => ReportNewRouteData(
+                                  initRecipients: selectedPersonas.value
+                                      .map((e) => e.id)
+                                      .toList(),
+                                ).push(context),
+                                icon: const Icon(
+                                  FluentIcons.clipboard_task_24_regular,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                            ],
                           ],
                         ),
                       ),
@@ -509,70 +492,14 @@ class PersonasScreen extends HookConsumerWidget {
                         cameraPostion: mapCameraPosition.value ??
                             Consts.defaultCameraPosition,
                       ),
-                      ListView.builder(
-                        itemCount: filteredUsers.length,
-                        itemBuilder: (ctx, idx) {
-                          void onSelect() {
-                            if (selectedPersonas.value
-                                .contains(filteredUsers[idx])) {
-                              selectedPersonas.value = [
-                                ...selectedPersonas.value.where(
-                                  (element) =>
-                                      element.id != filteredUsers[idx].id,
-                                ),
-                              ];
-                            } else {
-                              selectedPersonas.value = [
-                                ...selectedPersonas.value,
-                                filteredUsers[idx],
-                              ];
-                            }
-                          }
-
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            child: ListTileWithTagsCard(
-                              onlineStatus: filteredUsers[idx].callStatus,
-                              avatar: filteredUsers[idx].avatar,
-                              name: filteredUsers[idx].fullName,
-                              tags: [
-                                filteredUsers[idx].highSchoolInstitution,
-                                filteredUsers[idx].thPeriod,
-                                filteredUsers[idx].militaryPositionNew,
-                                (institutions?.singleWhere(
-                                          (element) =>
-                                              element.id ==
-                                              filteredUsers[idx].institutionId,
-                                          orElse: () => const InstitutionDto(),
-                                        ) ??
-                                        const InstitutionDto())
-                                    .name,
-                                (compounds?.singleWhere(
-                                          (element) =>
-                                              element.id ==
-                                              filteredUsers[idx]
-                                                  .militaryCompoundId,
-                                          orElse: () => const CompoundDto(),
-                                        ) ??
-                                        const CompoundDto())
-                                    .name,
-                                filteredUsers[idx].militaryUnit,
-                                filteredUsers[idx].maritalStatus,
-                              ],
-                              isSelected: selectedPersonas.value
-                                  .contains(filteredUsers[idx]),
-                              onLongPress: onSelect,
-                              onTap: selectedPersonas.value.isEmpty
-                                  ? () => PersonaDetailsRouteData(
-                                        id: filteredUsers[idx].id,
-                                      ).go(context)
-                                  : onSelect,
-                            ),
-                          );
-                        },
+                      _ListViewWidget(
+                        filteredUsers: filteredUsers,
+                        selectedPersonas: selectedPersonas,
+                        institutions: institutions,
+                        compounds: compounds,
+                        onListTypePressed: () => ref
+                            .read(usersControllerProvider.notifier)
+                            .mapView(true),
                       ),
                     ],
                   ),
@@ -582,6 +509,110 @@ class PersonasScreen extends HookConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ListViewWidget extends StatelessWidget {
+  const _ListViewWidget({
+    super.key,
+    required this.filteredUsers,
+    required this.selectedPersonas,
+    required this.institutions,
+    required this.compounds,
+    required this.onListTypePressed,
+  });
+
+  final List<PersonaDto> filteredUsers;
+  final ValueNotifier<List<PersonaDto>> selectedPersonas;
+  final List<InstitutionDto>? institutions;
+  final List<CompoundDto>? compounds;
+  final VoidCallback onListTypePressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        ListView.builder(
+          itemCount: filteredUsers.length,
+          itemBuilder: (ctx, idx) {
+            void onSelect() {
+              if (selectedPersonas.value.contains(filteredUsers[idx])) {
+                selectedPersonas.value = [
+                  ...selectedPersonas.value.where(
+                    (element) => element.id != filteredUsers[idx].id,
+                  ),
+                ];
+              } else {
+                selectedPersonas.value = [
+                  ...selectedPersonas.value,
+                  filteredUsers[idx],
+                ];
+              }
+            }
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6,
+              ),
+              child: ListTileWithTagsCard(
+                onlineStatus: filteredUsers[idx].callStatus,
+                avatar: filteredUsers[idx].avatar,
+                name: filteredUsers[idx].fullName,
+                tags: [
+                  filteredUsers[idx].highSchoolInstitution,
+                  filteredUsers[idx].thPeriod,
+                  filteredUsers[idx].militaryPositionNew,
+                  (institutions?.singleWhere(
+                            (element) =>
+                                element.id == filteredUsers[idx].institutionId,
+                            orElse: () => const InstitutionDto(),
+                          ) ??
+                          const InstitutionDto())
+                      .name,
+                  (compounds?.singleWhere(
+                            (element) =>
+                                element.id ==
+                                filteredUsers[idx].militaryCompoundId,
+                            orElse: () => const CompoundDto(),
+                          ) ??
+                          const CompoundDto())
+                      .name,
+                  filteredUsers[idx].militaryUnit,
+                  filteredUsers[idx].maritalStatus,
+                ],
+                isSelected: selectedPersonas.value.contains(filteredUsers[idx]),
+                onLongPress: onSelect,
+                onTap: selectedPersonas.value.isEmpty
+                    ? () => PersonaDetailsRouteData(
+                          id: filteredUsers[idx].id,
+                        ).go(context)
+                    : onSelect,
+              ),
+            );
+          },
+        ),
+        Align(
+          alignment: AlignmentDirectional.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: FloatingActionButton.extended(
+              onPressed: onListTypePressed,
+              heroTag: UniqueKey(),
+              backgroundColor: AppColors.mainCTA,
+              foregroundColor: Colors.white,
+              extendedTextStyle: const TextStyle(
+                fontFamily: 'Assistant',
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+              label: const Text('תצוגת מפה'),
+              icon: const Icon(FluentIcons.location_24_regular),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
