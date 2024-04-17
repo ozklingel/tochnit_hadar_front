@@ -462,6 +462,7 @@ class PersonasScreen extends HookConsumerWidget {
                     selectedPersonas: selectedPersonas,
                     onTapCard: (double lat, double lng) async {
                       isSearchOpen.value = false;
+
                       ref.read(usersControllerProvider.notifier).mapView(true);
 
                       final controller = await mapController.value.future;

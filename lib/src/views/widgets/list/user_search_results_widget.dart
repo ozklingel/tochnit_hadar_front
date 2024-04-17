@@ -81,8 +81,9 @@ class UserListSearchResultsWidget extends HookConsumerWidget {
               ];
             }
           },
-          onTap: () {
-            onTapCard(e.address.lat, e.address.lng);
+          onTap: () async {
+            await PersonaDetailsRouteData(id: e.id).push(context);
+            // onTapCard(e.address.lat, e.address.lng);
           },
         );
       },

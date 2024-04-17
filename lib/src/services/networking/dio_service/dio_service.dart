@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fancy_dio_inspector/fancy_dio_inspector.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
@@ -43,26 +44,29 @@ class DioService extends _$DioService {
       ),
     );
 
-    dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          Logger().d(
-            '${options.method}'
-            ' => '
-            '${options.uri.path}'
-            '?${options.queryParameters}',
-            error: options.data,
-            stackTrace: StackTrace.current,
-          );
+    dio.interceptors.addAll(
+      [
+        InterceptorsWrapper(
+          onRequest: (options, handler) {
+            // Logger().d(
+            //   '${options.method}'
+            //   ' => '
+            //   '${options.uri.path}'
+            //   '?${options.queryParameters}',
+            //   error: options.data,
+            //   stackTrace: StackTrace.current,
+            // );
 
-          return handler.next(options);
-        },
-        onResponse: (response, handler) {
-          // Logger().i(response.data);
-          return handler.next(response);
-        },
-        onError: _dioErrorHandler,
-      ),
+            return handler.next(options);
+          },
+          onResponse: (response, handler) {
+            // Logger().i(response.data);
+            return handler.next(response);
+          },
+          onError: _dioErrorHandler,
+        ),
+        FancyDioInterceptor(),
+      ],
     );
 
     return dio;

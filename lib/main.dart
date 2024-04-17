@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:fancy_dio_inspector/fancy_dio_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -106,6 +107,15 @@ class HadarProgram extends ConsumerWidget {
         if (router.canPop()) {
           router.pop();
         }
+      },
+      const SingleActivator(
+        LogicalKeyboardKey.keyH,
+      ): () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const FancyDioInspectorView(),
+          ),
+        );
       },
       const SingleActivator(
         LogicalKeyboardKey.numpad1,

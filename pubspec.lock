@@ -361,6 +361,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  fancy_dio_inspector:
+    dependency: "direct main"
+    description:
+      name: fancy_dio_inspector
+      sha256: "66a05f381c1b14f0a4e408282442582919d422e38a57b8342b008cfbe0f8be02"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.7.0"
   ffi:
     dependency: transitive
     description:

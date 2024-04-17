@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fancy_dio_inspector/fancy_dio_inspector.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
@@ -24,7 +26,7 @@ class SideMenuDrawer extends ConsumerWidget {
         child: ListView(
           children: <Widget>[
             SizedBox(
-              height: 250.0,
+              height: 260,
               child: DrawerHeader(
                 decoration: const BoxDecoration(color: Colors.white),
                 child: Column(
@@ -240,6 +242,17 @@ class SideMenuDrawer extends ConsumerWidget {
                 ),
               ],
             ),
+            if (kDebugMode)
+              ListTile(
+                dense: true,
+                leading: const Icon(FluentIcons.network_check_24_filled),
+                title: const Text('DIO HTTP'),
+                onTap: () async => await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const FancyDioInspectorView(),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
