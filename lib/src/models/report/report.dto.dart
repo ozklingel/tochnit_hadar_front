@@ -26,7 +26,7 @@ class ReportDto with _$ReportDto {
       name: 'ent_group',
     )
     String group,
-    @Default(ReportEventType.none)
+    @Default(ReportEventType.other)
     @JsonKey(
       name: 'title',
       fromJson: _extractType,
@@ -72,70 +72,72 @@ class ReportDto with _$ReportDto {
 // }
 
 enum ReportEventType {
-  none,
-  offlineMeeting, // מפגש
-  offlineGroupMeeting, // מפגש קבוצתי
-  periodInput, // הזנת מחזור
-  mosadMeetings, // ישיבה מוסדית
-  onlineMeeting,
-  recurringMeeting, // מפגש מחזור
-  matsbarGathering, // ישיבת מצב”ר
-  call, // שיחה
-  callParents, // שיחה להורים
-  baseVisit, // ביקור בבסיס
-  recurringSabath, // שבת מחזור
-  fiveMessages,
-  annualConference, // כנס מלווים שנתי
-  monthlyProfessionalConference, // כנס מלווים מקצועי חודשי
-  doingForAlumni, // עשיה לבוגרים
-  adminsGathering, // ישיבת רכזי תוכנית
-  failedAttempt, // נסיון שכשל
-  sevenMsgs, // נסיון שכשל
-  sixMsgs, // נסיון שכשל
-  other;
+  offlineMeeting(100), // מפגש
+  offlineGroupMeeting(101), // מפגש קבוצתי
+  onlineMeeting(102),
+  call(103), // שיחה
+  callParents(104), // שיחה להורים
+  baseVisit(105), // ביקור בבסיס
+  fiveMessages(106),
+  failedAttempt(107), // נסיון שכשל
+  // melave
+  matsbarGathering(200), // ישיבת מצב”ר
+  recurringSabath(201), // שבת מחזור
+  doingForAlumni(202), // עשיה לבוגרים
+  monthlyProfessionalConference(203), // כנס מלווים מקצועי חודשי
+  periodInput(204), // הזנת מחזור
+  recurringMeeting(205), // מפגש מחזור
+  mosadMeetings(206), // ישיבה מוסדית
+  // rakaz mosad
+  annualConference(300), // כנס מלווים שנתי
+  adminsGathering(301), // ישיבת רכזי תוכנית
+  // rakz eshkol
+  // ahrai tohnit
+  other(999);
+
+  const ReportEventType(this.val);
+
+  final int val;
 
   String get name {
     switch (this) {
-      case ReportEventType.none:
-        return 'אין';
       case ReportEventType.offlineMeeting:
         return 'פגישה פיזית';
+      case ReportEventType.offlineGroupMeeting:
+        return 'מפגש קבוצתי';
       case ReportEventType.onlineMeeting:
         return 'פגישה מקוונת';
       case ReportEventType.call:
         return 'שיחה טלפונית';
       case ReportEventType.callParents:
         return 'שיחה להורים';
+      case ReportEventType.baseVisit:
+        return 'ביקור בבסיס';
       case ReportEventType.fiveMessages:
         return '5 הודעות';
       case ReportEventType.failedAttempt:
         return 'נסיון כושל';
-      case ReportEventType.recurringMeeting:
-        return 'מפגש מחזור';
+      // end melave
       case ReportEventType.matsbarGathering:
         return 'ישיבת מצב”ר';
-      case ReportEventType.baseVisit:
-        return 'ביקור בבסיס';
       case ReportEventType.recurringSabath:
         return 'שבת מחזור';
-      case ReportEventType.annualConference:
-        return 'כנס מלווים שנתי';
-      case ReportEventType.monthlyProfessionalConference:
-        return 'כנס מלווים מקצועי חודשי';
       case ReportEventType.doingForAlumni:
         return 'עשיה לבוגרים';
-      case ReportEventType.adminsGathering:
-        return 'ישיבת רכזי תוכנית';
-      case ReportEventType.offlineGroupMeeting:
-        return 'מפגש קבוצתי';
+      case ReportEventType.monthlyProfessionalConference:
+        return 'כנס מלווים מקצועי חודשי';
       case ReportEventType.periodInput:
         return 'הזנת מחזור';
+      case ReportEventType.recurringMeeting:
+        return 'מפגש מחזור';
       case ReportEventType.mosadMeetings:
         return 'ישיבה מוסדית';
-      case ReportEventType.sevenMsgs:
-        return '7 הודעות';
-      case ReportEventType.sixMsgs:
-        return '6 הודעות';
+      // end rakaz mosad
+      case ReportEventType.annualConference:
+        return 'כנס מלווים שנתי';
+      case ReportEventType.adminsGathering:
+        return 'ישיבת רכזי תוכנית';
+      // end rakaz eshkol
       case ReportEventType.other:
         return 'UNKNOWN TYPE';
     }
@@ -143,11 +145,8 @@ enum ReportEventType {
 }
 
 ReportEventType _extractType(String? val) {
-  if (val == null) {
-    return ReportEventType.none;
-  }
-
-  val = val.replaceAll('_', ' ');
+  // account for bad server data
+  val = val?.replaceAll('_', ' ');
 
   if (val == ReportEventType.adminsGathering.name) {
     return ReportEventType.adminsGathering;
@@ -177,10 +176,6 @@ ReportEventType _extractType(String? val) {
     return ReportEventType.recurringMeeting;
   } else if (val == ReportEventType.recurringSabath.name) {
     return ReportEventType.recurringSabath;
-  } else if (val == ReportEventType.sevenMsgs.name) {
-    return ReportEventType.sevenMsgs;
-  } else if (val == ReportEventType.sixMsgs.name) {
-    return ReportEventType.sixMsgs;
   } else {
     const err = 'failed to extract report type';
     Logger().i(err, error: val);

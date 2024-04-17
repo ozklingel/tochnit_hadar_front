@@ -48,6 +48,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
+    final role = (auth.valueOrNull ?? const AuthDto()).role;
     final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
     final report =
         (ref.watch(reportsControllerProvider).valueOrNull ?? []).singleWhere(
@@ -488,7 +489,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                     isRequired: true,
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton2(
-                        value: selectedEventType.value == ReportEventType.none
+                        value: selectedEventType.value == ReportEventType.other
                             ? null
                             : selectedEventType.value,
                         hint: const Text('בחירת סוג האירוע'),
@@ -504,7 +505,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                           padding: const EdgeInsets.only(right: 8),
                         ),
                         onChanged: (value) => selectedEventType.value =
-                            value ?? ReportEventType.none,
+                            value ?? ReportEventType.other,
                         dropdownStyleData: const DropdownStyleData(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -533,7 +534,17 @@ class ReportDetailsScreen extends HookConsumerWidget {
                           ),
                         ),
                         items: ReportEventType.values
-                            .where((x) => x != ReportEventType.none)
+                            .where((x) => x != ReportEventType.other)
+                            .where((x) {
+                              switch (role) {
+                                case UserRole.melave:
+                                  return x.val < 200;
+                                case UserRole.rakazMosad:
+                                  return x.val < 300;
+                                default:
+                                  return true;
+                              }
+                            })
                             .map(
                               (e) => DropdownMenuItem(
                                 value: e,
@@ -664,7 +675,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         child: LargeFilledRoundedButton(
                           label: reportId.isEmpty ? 'דיווח' : 'שמירה',
                           onPressed: selectedEventType.value ==
-                                      ReportEventType.none ||
+                                      ReportEventType.other ||
                                   selectedDatetime.value == null ||
                                   selectedApprentices.value.isEmpty
                               ? null
