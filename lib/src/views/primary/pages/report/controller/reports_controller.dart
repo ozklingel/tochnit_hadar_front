@@ -96,9 +96,11 @@ class ReportsController extends _$ReportsController {
       if (result.data['result'] == 'success') {
         ref.invalidate(getReportsProvider);
 
-        if (redirect) {
-          ref.read(goRouterServiceProvider).go('/reports');
-        }
+        // if (redirect) {
+        //   ref.read(goRouterServiceProvider).go('/reports');
+        // }
+
+        ref.read(goRouterServiceProvider).pop();
 
         return true;
       }
