@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
@@ -10,6 +11,7 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/compound_bottom_sheet.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/compound_or_city_card.dart';
@@ -22,11 +24,13 @@ class UserListSearchResultsWidget extends HookConsumerWidget {
     required this.searchString,
     required this.selectedPersonas,
     required this.onTapCard,
+    required this.sort,
   });
 
   final String searchString;
   final ValueNotifier<List<PersonaDto>> selectedPersonas;
   final Function(double lat, double lng) onTapCard;
+  final Sort sort;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -42,52 +46,66 @@ class UserListSearchResultsWidget extends HookConsumerWidget {
                 searchString.toLowerCase().trim(),
               ),
         )
+        .sorted((e1, e2) {
+          switch (sort) {
+            case Sort.a2zByLastName:
+              return e1.lastName.compareTo(e2.lastName);
+            case Sort.activeToInactive:
+              return e1.activityScore.compareTo(e2.activityScore);
+            case Sort.inactiveToActive:
+              return e2.activityScore.compareTo(e1.activityScore);
+            case Sort.a2zByFirstName:
+            default:
+              return e1.firstName.compareTo(e2.firstName);
+          }
+        })
         .take(3)
         .map(
-      (e) {
-        final compound = compounds.singleWhere(
-          (element) => element.id == e.militaryCompoundId,
-          orElse: () => const CompoundDto(),
-        );
+          (e) {
+            final compound = compounds.singleWhere(
+              (element) => element.id == e.militaryCompoundId,
+              orElse: () => const CompoundDto(),
+            );
 
-        final institution = institutions.singleWhere(
-          (element) => element.id == e.institutionId,
-          orElse: () => const InstitutionDto(),
-        );
+            final institution = institutions.singleWhere(
+              (element) => element.id == e.institutionId,
+              orElse: () => const InstitutionDto(),
+            );
 
-        return ListTileWithTagsCard(
-          avatar: e.avatar,
-          name: e.fullName,
-          tags: [
-            e.highSchoolInstitution,
-            e.thPeriod,
-            e.militaryPositionNew,
-            institution.name,
-            compound.name,
-            e.militaryUnit,
-            e.maritalStatus,
-          ],
-          isSelected: selectedPersonas.value.contains(e),
-          onLongPress: () {
-            if (selectedPersonas.value.contains(e)) {
-              selectedPersonas.value = [
-                ...selectedPersonas.value
-                    .where((element) => element.id != e.id),
-              ];
-            } else {
-              selectedPersonas.value = [
-                ...selectedPersonas.value,
-                e,
-              ];
-            }
+            return ListTileWithTagsCard(
+              avatar: e.avatar,
+              name: e.fullName,
+              tags: [
+                e.highSchoolInstitution,
+                e.thPeriod,
+                e.militaryPositionNew,
+                institution.name,
+                compound.name,
+                e.militaryUnit,
+                e.maritalStatus,
+              ],
+              isSelected: selectedPersonas.value.contains(e),
+              onLongPress: () {
+                if (selectedPersonas.value.contains(e)) {
+                  selectedPersonas.value = [
+                    ...selectedPersonas.value
+                        .where((element) => element.id != e.id),
+                  ];
+                } else {
+                  selectedPersonas.value = [
+                    ...selectedPersonas.value,
+                    e,
+                  ];
+                }
+              },
+              onTap: () async {
+                await PersonaDetailsRouteData(id: e.id).push(context);
+                // onTapCard(e.address.lat, e.address.lng);
+              },
+            );
           },
-          onTap: () async {
-            await PersonaDetailsRouteData(id: e.id).push(context);
-            // onTapCard(e.address.lat, e.address.lng);
-          },
-        );
-      },
-    ).toList();
+        )
+        .toList();
 
     final compoundsWidgets = compounds
         // .where(

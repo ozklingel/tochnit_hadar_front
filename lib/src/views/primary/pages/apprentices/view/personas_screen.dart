@@ -460,6 +460,7 @@ class PersonasScreen extends HookConsumerWidget {
                   UserListSearchResultsWidget(
                     searchString: searchController.text,
                     selectedPersonas: selectedPersonas,
+                    sort: sort.value,
                     onTapCard: (double lat, double lng) async {
                       isSearchOpen.value = false;
 
@@ -634,7 +635,7 @@ class _SortDialog extends HookWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: SizedBox(
-        height: 260,
+        height: 272,
         width: 300,
         child: Padding(
           padding: const EdgeInsets.all(12),
