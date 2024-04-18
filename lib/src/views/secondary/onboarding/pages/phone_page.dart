@@ -16,19 +16,6 @@ class OnboardingPage1Phone extends HookConsumerWidget {
   });
 
   final void Function(String phone) onSuccess;
-  void showErrorMessage(BuildContext context) {
-    var str = 'מתנצלים, אבל לא זיהינו את מספר הנייד הזה.';
-    str += "\n";
-    str += 'ייתכן שהתבלבת באחד התווים, או שנרשמת ממספר אחר.';
-
-    // Here, using a SnackBar as an example:
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(str),
-        duration: const Duration(seconds: 5),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context, ref) {
@@ -36,6 +23,7 @@ class OnboardingPage1Phone extends HookConsumerWidget {
     final phoneFocusNode = useFocusNode();
     final formKey = useMemoized(() => GlobalKey<FormState>(), []);
     final isFormValid = useState(false);
+    final isFormFails = useState(false);
 
     useEffect(
       () {
@@ -110,12 +98,12 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                     if (phoneTextEditingController.text.length != 10) {
                       return 'מספר הנייד חייב להיות בעל 10 ספרות';
                     }
-                    // if (...) {
-                    //   var str = 'מתנצלים, אבל לא זיהינו את מספר הנייד הזה.';
-                    //   str += "\n";
-                    //   str += 'ייתכן שהתבלבת באחד התווים, או שנרשמת ממספר אחר.';
-                    //   return str;
-                    // }
+                    if (isFormFails.value) {
+                      var str = 'מתנצלים, אבל לא זיהינו את מספר הנייד הזה.';
+                      str += "\n";
+                      str += 'ייתכן שהתבלבת באחד התווים, או שנרשמת ממספר אחר.';
+                      return str;
+                    }
                     return null;
                   },
                   decoration: InputDecoration(
@@ -169,9 +157,7 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                       if (result) {
                         onSuccess(phoneTextEditingController.text);
                       } else {
-                        // TODO(yeo4): fix this
-                        // ignore: use_build_context_synchronously
-                        showErrorMessage(context);
+                        isFormFails.value = true;
                       }
                     }
                   : null,
