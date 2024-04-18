@@ -155,8 +155,10 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                           .read(onboardingControllerProvider.notifier)
                           .getOtp(phone: phoneTextEditingController.text);
                       if (result) {
+                        print("OK!");
                         onSuccess(phoneTextEditingController.text);
                       } else {
+                        print("False");
                         isFormFails.value = true;
                       }
                     }

@@ -28,8 +28,10 @@ class OnboardingScreen extends HookConsumerWidget {
         padding: const EdgeInsets.all(24),
         child: PageView(
           controller: pageController,
-          physics: const NeverScrollableScrollPhysics(),  // Disabled swipe gesture
-          children: [
+          physics: kDebugMode
+              ? const AlwaysScrollableScrollPhysics()
+              : const NeverScrollableScrollPhysics(),
+           children: [
             OnboardingPage0Logo(
               onLoaded: () => pageController.nextPage(
                 duration: Consts.defaultDurationM,
@@ -38,6 +40,10 @@ class OnboardingScreen extends HookConsumerWidget {
             ),
             OnboardingPage1Phone(
               onSuccess: (phone) {
+                pageController.nextPage(
+                  duration: Consts.defaultDurationM,
+                  curve: Curves.linear,
+                );
                 phoneController.value = phone;
               },
             ),
@@ -54,7 +60,7 @@ class OnboardingScreen extends HookConsumerWidget {
                     curve: Curves.linear,
                   );
                 } else {
-                  HomeRouteData().go(context);
+                  const HomeRouteData().go(context);
                 }
               },
               phone: phoneController.value,
@@ -79,8 +85,8 @@ class OnboardingScreen extends HookConsumerWidget {
                   duration: Consts.defaultDurationM,
                   curve: Curves.linear,
                 );
-                HomeRouteData().go(context);
-              },
+                const HomeRouteData().go(context);
+            },
             ),
           ],
         ),
