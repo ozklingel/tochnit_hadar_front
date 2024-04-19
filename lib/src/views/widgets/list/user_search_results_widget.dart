@@ -72,6 +72,20 @@ class UserListSearchResultsWidget extends HookConsumerWidget {
               orElse: () => const InstitutionDto(),
             );
 
+            void onSelect() {
+              if (selectedPersonas.value.contains(e)) {
+                selectedPersonas.value = [
+                  ...selectedPersonas.value
+                      .where((element) => element.id != e.id),
+                ];
+              } else {
+                selectedPersonas.value = [
+                  ...selectedPersonas.value,
+                  e,
+                ];
+              }
+            }
+
             return ListTileWithTagsCard(
               avatar: e.avatar,
               name: e.fullName,
@@ -85,23 +99,13 @@ class UserListSearchResultsWidget extends HookConsumerWidget {
                 e.maritalStatus,
               ],
               isSelected: selectedPersonas.value.contains(e),
-              onLongPress: () {
-                if (selectedPersonas.value.contains(e)) {
-                  selectedPersonas.value = [
-                    ...selectedPersonas.value
-                        .where((element) => element.id != e.id),
-                  ];
-                } else {
-                  selectedPersonas.value = [
-                    ...selectedPersonas.value,
-                    e,
-                  ];
-                }
-              },
-              onTap: () async {
-                await PersonaDetailsRouteData(id: e.id).push(context);
-                // onTapCard(e.address.lat, e.address.lng);
-              },
+              onLongPress: onSelect,
+              onTap: selectedPersonas.value.isEmpty
+                  ? () async {
+                      await PersonaDetailsRouteData(id: e.id).push(context);
+                      // onTapCard(e.address.lat, e.address.lng);
+                    }
+                  : onSelect,
             );
           },
         )
