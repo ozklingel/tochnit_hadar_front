@@ -106,7 +106,9 @@ class NewPersonaScreen extends HookConsumerWidget {
                                     lastNameController.text.isEmpty ||
                                     phoneController.text.isEmpty ||
                                     (selectedInstitution.value.isEmpty &&
-                                        selectedEshkol.value.isEmpty))
+                                        selectedEshkol.value.isEmpty &&
+                                        selectedUserType.value !=
+                                            UserRole.ahraiTohnit))
                             ? null
                             : () async {
                                 isLoading.value = true;
