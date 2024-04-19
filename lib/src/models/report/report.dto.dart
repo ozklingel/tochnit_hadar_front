@@ -158,7 +158,8 @@ ReportEventType _extractType(String? val) {
     return ReportEventType.doingForAlumni;
   } else if (val == ReportEventType.failedAttempt.name) {
     return ReportEventType.failedAttempt;
-  } else if (val == ReportEventType.fiveMessages.name) {
+  } else if (val == ReportEventType.fiveMessages.name ||
+      (val?.contains(' הודעות') ?? false)) {
     return ReportEventType.fiveMessages;
   } else if (val == ReportEventType.matsbarGathering.name) {
     return ReportEventType.matsbarGathering;
@@ -172,6 +173,8 @@ ReportEventType _extractType(String? val) {
     return ReportEventType.onlineMeeting;
   } else if (val == ReportEventType.call.name) {
     return ReportEventType.call;
+  } else if (val == ReportEventType.periodInput.name) {
+    return ReportEventType.periodInput;
   } else if (val == ReportEventType.recurringMeeting.name) {
     return ReportEventType.recurringMeeting;
   } else if (val == ReportEventType.recurringSabath.name) {

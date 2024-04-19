@@ -425,12 +425,12 @@ List<String> _extractReports(dynamic val) {
     } else {
       // not suposed to be here but found this during dev so putting it here
       Sentry.captureMessage(errMsg);
-      Logger().w(errMsg);
+      Logger().w(errMsg, error: val);
     }
   } else if (val is String) {
     // not suposed to be here but found this during dev so putting it here
     Sentry.captureMessage(errMsg);
-    Logger().w(errMsg);
+    Logger().w(errMsg, error: val);
 
     return [];
   }

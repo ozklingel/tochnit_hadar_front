@@ -45,6 +45,7 @@ class PersonasScreen extends HookConsumerWidget {
     final mapController = useRef(Completer<GoogleMapController>());
     final mapCameraPosition = useState<CameraPosition?>(null);
     final filters = useState(const FilterDto());
+    final filtersResult = useState<List<String>?>(null);
     final selectedPersonas = useState<List<PersonaDto>>([]);
     final compounds = ref.watch(compoundControllerProvider).valueOrNull;
     final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
@@ -57,10 +58,16 @@ class PersonasScreen extends HookConsumerWidget {
 
     final filteredUsers = allUsers
         .where(
-          (element) => element.fullName
-              .contains(searchController.value.text.toLowerCase()),
-        )
-        .toList();
+      (element) =>
+          element.fullName.contains(searchController.value.text.toLowerCase()),
+    )
+        .where((element) {
+      if (filtersResult.value == null) {
+        return true;
+      }
+
+      return filtersResult.value!.contains(element.id);
+    }).toList();
 
     return SafeArea(
       child: Scaffold(
@@ -217,7 +224,9 @@ class PersonasScreen extends HookConsumerWidget {
                                         )
                                         .filterUsers(result);
 
-                                    if (request) {
+                                    filtersResult.value = request;
+
+                                    if (request != null) {
                                       filters.value = result;
                                     }
                                   },

@@ -155,10 +155,12 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                           .read(onboardingControllerProvider.notifier)
                           .getOtp(phone: phoneTextEditingController.text);
                       if (result) {
-                        print("OK!");
+                        // TODO(yeo4): don't use print, use Logger
+                        debugPrint("OK!");
                         onSuccess(phoneTextEditingController.text);
                       } else {
-                        print("False");
+                        // TODO(yeo4): don't use print, use Logger
+                        debugPrint("False");
                         isFormFails.value = true;
                       }
                     }

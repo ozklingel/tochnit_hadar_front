@@ -371,26 +371,27 @@ class _FormOrImportPage extends HookConsumerWidget {
                         ),
                       ),
                 ),
-                if (selectedUserType != UserRole.apprentice) ...[
-                  const SizedBox(height: 24),
-                  InputFieldContainer(
-                    label: 'תפקיד',
-                    isRequired: true,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'empty';
-                        }
+                // https://trello.com/c/wGLVPUva/86-%D7%91%D7%90%D7%92-%D7%94%D7%95%D7%A1%D7%A4%D7%AA-%D7%9E%D7%A9%D7%AA%D7%9E%D7%A9
+                // if (selectedUserType != UserRole.apprentice) ...[
+                //   const SizedBox(height: 24),
+                //   InputFieldContainer(
+                //     label: 'תפקיד',
+                //     isRequired: true,
+                //     child: TextFormField(
+                //       validator: (value) {
+                //         if (value == null || value.isEmpty) {
+                //           return 'empty';
+                //         }
 
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'בחר תפקיד',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                ],
+                //         return null;
+                //       },
+                //       decoration: const InputDecoration(
+                //         hintText: 'בחר תפקיד',
+                //       ),
+                //     ),
+                //   ),
+                //   const SizedBox(height: 24),
+                // ],
               ],
             ),
           ),

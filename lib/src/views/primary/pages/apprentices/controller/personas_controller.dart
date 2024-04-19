@@ -264,13 +264,13 @@ class PersonasController extends _$PersonasController {
   //   });
   // }
 
-  FutureOr<bool> filterUsers(FilterDto filter) async {
+  FutureOr<List<String>?> filterUsers(FilterDto filter) async {
     _filters = filter;
 
     if (_filters.isEmpty) {
       ref.invalidateSelf();
 
-      return true;
+      return null;
     }
 
     try {
@@ -282,13 +282,13 @@ class PersonasController extends _$PersonasController {
             .toList(),
       );
 
-      return true;
+      return request;
     } catch (e) {
       Logger().e('failed to filter users', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
     }
 
-    return false;
+    return null;
   }
 }
