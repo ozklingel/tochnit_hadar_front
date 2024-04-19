@@ -85,7 +85,8 @@ class InstitutionsScreen extends HookConsumerWidget {
       floatingActionButton: auth.valueOrNull?.role != UserRole.ahraiTohnit
           ? null
           : FloatingActionButton(
-              onPressed: () => const NewInstitutionRouteData().push(context),
+              onPressed: () =>
+                  const InstitutionTypePickerRouteData().push(context),
               heroTag: UniqueKey(),
               backgroundColor: AppColors.blue02,
               shape: const CircleBorder(),
