@@ -166,6 +166,17 @@ class ReportsScreen extends HookConsumerWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             scrollDirection: Axis.horizontal,
                             children: [
+                              ...filters.value.reportEventTypes.map(
+                                (e) => FilterChipWidget(
+                                  text: e.name,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    roles: filters.value.roles
+                                        .where((element) => element != e.name)
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
                               ...filters.value.roles.map(
                                 (e) => FilterChipWidget(
                                   text: e,
