@@ -132,10 +132,10 @@ class GoogleMapWidget extends HookConsumerWidget {
           markers: markers.value,
         ),
         Align(
-          alignment: AlignmentDirectional.bottomEnd +
-              const AlignmentDirectional(0, -0.2),
+          alignment: AlignmentDirectional.bottomEnd,
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding:
+                const EdgeInsets.all(16) + const EdgeInsets.only(bottom: 64),
             child: FloatingActionButton(
               heroTag: UniqueKey(),
               shape: const CircleBorder(),
