@@ -822,10 +822,9 @@ class _AddRecipientsManuallyScreen extends HookConsumerWidget {
 
     useListenable(searchController);
 
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: kToolbarHeight),
-        child: CustomScrollView(
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
           slivers: [
             SliverAppBar(
               collapsedHeight: selectedApprentices.value.isEmpty ? 60 : 100,
