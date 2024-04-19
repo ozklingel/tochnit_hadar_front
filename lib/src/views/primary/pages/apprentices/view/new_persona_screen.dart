@@ -9,6 +9,7 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/services/api/eshkol/get_eshkols.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -34,6 +35,7 @@ class NewPersonaScreen extends HookConsumerWidget {
     final selectedUserType = useState(UserRole.apprentice);
     final selectedDataFillType = useState(_DataFillType.manual);
     final selectedInstitution = useState(const InstitutionDto());
+    final selectedEshkol = useState('');
     final firstNameController = useTextEditingController();
     final lastNameController = useTextEditingController();
     final phoneController = useTextEditingController();
@@ -53,6 +55,7 @@ class NewPersonaScreen extends HookConsumerWidget {
       ),
       _FormOrImportPage(
         selectedInstitution: selectedInstitution,
+        selectedEshkol: selectedEshkol,
         selectedDataType: selectedDataFillType.value,
         selectedUserType: selectedUserType.value,
         isLoading: isLoading,
@@ -102,7 +105,8 @@ class NewPersonaScreen extends HookConsumerWidget {
                                 (firstNameController.text.isEmpty ||
                                     lastNameController.text.isEmpty ||
                                     phoneController.text.isEmpty ||
-                                    selectedInstitution.value.isEmpty)
+                                    (selectedInstitution.value.isEmpty &&
+                                        selectedEshkol.value.isEmpty))
                             ? null
                             : () async {
                                 isLoading.value = true;
@@ -203,6 +207,7 @@ class _FormOrImportPage extends HookConsumerWidget {
     required this.selectedUserType,
     required this.selectedDataType,
     required this.selectedInstitution,
+    required this.selectedEshkol,
     required this.isLoading,
     required this.files,
     required this.formKey,
@@ -215,6 +220,7 @@ class _FormOrImportPage extends HookConsumerWidget {
   final _DataFillType selectedDataType;
   final ValueNotifier<List<PlatformFile>> files;
   final ValueNotifier<InstitutionDto> selectedInstitution;
+  final ValueNotifier<String> selectedEshkol;
   final ValueNotifier<bool> isLoading;
   final GlobalKey<FormState> formKey;
   final TextEditingController firstNameController;
@@ -283,94 +289,186 @@ class _FormOrImportPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                InputFieldContainer(
-                  label: 'שיוך למוסד',
-                  isRequired: true,
-                  child: ref.watch(getInstitutionsProvider).when(
-                        loading: () => const Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                        error: (error, stack) =>
-                            Center(child: Text(error.toString())),
-                        data: (institutions) => DropdownButtonHideUnderline(
-                          child: DropdownButton2<InstitutionDto>(
-                            hint: Text(
-                              selectedInstitution.value.isEmpty
-                                  ? 'מוסד'
-                                  : selectedInstitution.value.name,
-                              style: selectedInstitution.value.isEmpty
-                                  ? TextStyles.s16w400cGrey5
-                                  : null,
-                            ),
-                            onMenuStateChange: (isOpen) {},
-                            dropdownSearchData: const DropdownSearchData(
-                              searchInnerWidgetHeight: 50,
-                              searchInnerWidget: TextField(
-                                decoration: InputDecoration(
-                                  focusedBorder: UnderlineInputBorder(),
-                                  enabledBorder: InputBorder.none,
-                                  prefixIcon: Icon(Icons.search),
-                                  hintText: 'חיפוש',
-                                  hintStyle: TextStyles.s14w400,
-                                ),
+                if (selectedUserType == UserRole.rakazMosad) ...[
+                  const SizedBox(height: 24),
+                  InputFieldContainer(
+                    label: 'שיוך למוסד',
+                    isRequired: true,
+                    child: ref.watch(getInstitutionsProvider).when(
+                          loading: () => const Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                          error: (error, stack) =>
+                              Center(child: Text(error.toString())),
+                          data: (institutions) => DropdownButtonHideUnderline(
+                            child: DropdownButton2<InstitutionDto>(
+                              hint: Text(
+                                selectedInstitution.value.isEmpty
+                                    ? 'מוסד'
+                                    : selectedInstitution.value.name,
+                                style: selectedInstitution.value.isEmpty
+                                    ? TextStyles.s16w400cGrey5
+                                    : null,
                               ),
-                            ),
-                            style: TextStyles.s16w400cGrey5,
-                            buttonStyleData: ButtonStyleData(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(36),
-                                border: Border.all(
-                                  color: AppColors.shades300,
-                                ),
-                              ),
-                              elevation: 0,
-                              padding: const EdgeInsets.only(right: 8),
-                            ),
-                            onChanged: (value) {
-                              selectedInstitution.value =
-                                  value ?? selectedInstitution.value;
-                            },
-                            dropdownStyleData: const DropdownStyleData(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(16)),
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 1,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
+                              onMenuStateChange: (isOpen) {},
+                              dropdownSearchData: const DropdownSearchData(
+                                searchInnerWidgetHeight: 50,
+                                searchInnerWidget: TextField(
+                                  decoration: InputDecoration(
+                                    focusedBorder: UnderlineInputBorder(),
+                                    enabledBorder: InputBorder.none,
+                                    prefixIcon: Icon(Icons.search),
+                                    hintText: 'חיפוש',
+                                    hintStyle: TextStyles.s14w400,
                                   ),
                                 ),
                               ),
-                              openMenuIcon: Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 3,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
+                              style: TextStyles.s16w400cGrey5,
+                              buttonStyleData: ButtonStyleData(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(36),
+                                  border: Border.all(
+                                    color: AppColors.shades300,
+                                  ),
+                                ),
+                                elevation: 0,
+                                padding: const EdgeInsets.only(right: 8),
+                              ),
+                              onChanged: (value) {
+                                selectedInstitution.value =
+                                    value ?? selectedInstitution.value;
+                              },
+                              dropdownStyleData: const DropdownStyleData(
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(16)),
+                                ),
+                              ),
+                              iconStyleData: const IconStyleData(
+                                icon: Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: RotatedBox(
+                                    quarterTurns: 1,
+                                    child: Icon(
+                                      Icons.chevron_left,
+                                      color: AppColors.grey6,
+                                    ),
+                                  ),
+                                ),
+                                openMenuIcon: Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: RotatedBox(
+                                    quarterTurns: 3,
+                                    child: Icon(
+                                      Icons.chevron_left,
+                                      color: AppColors.grey6,
+                                    ),
                                   ),
                                 ),
                               ),
+                              items: institutions
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e.name),
+                                    ),
+                                  )
+                                  .toList(),
                             ),
-                            items: institutions
-                                .map(
-                                  (e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e.name),
-                                  ),
-                                )
-                                .toList(),
                           ),
                         ),
-                      ),
-                ),
+                  ),
+                ],
+                if (selectedUserType == UserRole.rakazEshkol) ...[
+                  const SizedBox(height: 24),
+                  InputFieldContainer(
+                    label: 'שיוך לאשכול',
+                    isRequired: true,
+                    child: ref.watch(getEshkolListProvider).when(
+                          loading: () => const Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                          error: (error, stack) =>
+                              Center(child: Text(error.toString())),
+                          data: (eshkols) => DropdownButtonHideUnderline(
+                            child: DropdownButton2<String>(
+                              hint: Text(
+                                selectedEshkol.value.isEmpty
+                                    ? 'אשכול'
+                                    : selectedEshkol.value,
+                                style: selectedEshkol.value.isEmpty
+                                    ? TextStyles.s16w400cGrey5
+                                    : null,
+                              ),
+                              onMenuStateChange: (isOpen) {},
+                              dropdownSearchData: const DropdownSearchData(
+                                searchInnerWidgetHeight: 50,
+                                searchInnerWidget: TextField(
+                                  decoration: InputDecoration(
+                                    focusedBorder: UnderlineInputBorder(),
+                                    enabledBorder: InputBorder.none,
+                                    prefixIcon: Icon(Icons.search),
+                                    hintText: 'חיפוש',
+                                    hintStyle: TextStyles.s14w400,
+                                  ),
+                                ),
+                              ),
+                              style: TextStyles.s16w400cGrey5,
+                              buttonStyleData: ButtonStyleData(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(36),
+                                  border: Border.all(
+                                    color: AppColors.shades300,
+                                  ),
+                                ),
+                                elevation: 0,
+                                padding: const EdgeInsets.only(right: 8),
+                              ),
+                              onChanged: (value) {
+                                selectedEshkol.value =
+                                    value ?? selectedEshkol.value;
+                              },
+                              dropdownStyleData: const DropdownStyleData(
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(16)),
+                                ),
+                              ),
+                              iconStyleData: const IconStyleData(
+                                icon: Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: RotatedBox(
+                                    quarterTurns: 1,
+                                    child: Icon(
+                                      Icons.chevron_left,
+                                      color: AppColors.grey6,
+                                    ),
+                                  ),
+                                ),
+                                openMenuIcon: Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: RotatedBox(
+                                    quarterTurns: 3,
+                                    child: Icon(
+                                      Icons.chevron_left,
+                                      color: AppColors.grey6,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              items: eshkols
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ),
+                  ),
+                ],
                 // https://trello.com/c/wGLVPUva/86-%D7%91%D7%90%D7%92-%D7%94%D7%95%D7%A1%D7%A4%D7%AA-%D7%9E%D7%A9%D7%AA%D7%9E%D7%A9
                 // if (selectedUserType != UserRole.apprentice) ...[
                 //   const SizedBox(height: 24),
