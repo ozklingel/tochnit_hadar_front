@@ -19,7 +19,7 @@ class SuccessDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: SizedBox(
-        height: 372,
+        height: MediaQuery.of(context).size.height * 0.7,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
