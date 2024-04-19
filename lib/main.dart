@@ -110,6 +110,7 @@ class HadarProgram extends ConsumerWidget {
       },
       const SingleActivator(
         LogicalKeyboardKey.keyH,
+        alt: true,
       ): () async {
         await Navigator.of(context).push(
           MaterialPageRoute(
