@@ -1,13 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
@@ -166,44 +163,45 @@ class UserListSearchResultsWidget extends HookConsumerWidget {
         horizontal: 12,
       ),
       children: [
-        Row(
-          children: [
-            Text(
-              '${apprenticeWidgets.length} חניכים',
-              style: TextStyles.s16w400cGrey2.copyWith(
-                color: AppColors.gray5,
-              ),
-            ),
-            const Spacer(),
-            ...[
-              if (selectedPersonas.value.isNotEmpty) ...[
-                IconButton(
-                  onPressed: () => selectedPersonas.value.length > 1
-                      ? Toaster.error('backend???')
-                      : launchSms(
-                          phone: selectedPersonas.value
-                              .map((e) => e.phone)
-                              .toList(),
-                        ),
-                  icon: const Icon(
-                    FluentIcons.chat_24_regular,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => ReportNewRouteData(
-                    initRecipients:
-                        selectedPersonas.value.map((e) => e.id).toList(),
-                  ).push(context),
-                  icon: const Icon(
-                    FluentIcons.clipboard_task_24_regular,
-                  ),
-                ),
-                const SizedBox(width: 12),
-              ],
-            ],
-          ],
-        ),
-        const SizedBox(height: 12),
+        // https://trello.com/c/SrdczJAh/82-%D7%91%D7%90%D7%92-%D7%91%D7%97%D7%99%D7%A4%D7%95%D7%A9
+        // Row(
+        //   children: [
+        //     Text(
+        //       '${apprenticeWidgets.length} חניכים',
+        //       style: TextStyles.s16w400cGrey2.copyWith(
+        //         color: AppColors.gray5,
+        //       ),
+        //     ),
+        //     const Spacer(),
+        //     ...[
+        //       if (selectedPersonas.value.isNotEmpty) ...[
+        //         IconButton(
+        //           onPressed: () => selectedPersonas.value.length > 1
+        //               ? Toaster.error('backend???')
+        //               : launchSms(
+        //                   phone: selectedPersonas.value
+        //                       .map((e) => e.phone)
+        //                       .toList(),
+        //                 ),
+        //           icon: const Icon(
+        //             FluentIcons.chat_24_regular,
+        //           ),
+        //         ),
+        //         IconButton(
+        //           onPressed: () => ReportNewRouteData(
+        //             initRecipients:
+        //                 selectedPersonas.value.map((e) => e.id).toList(),
+        //           ).push(context),
+        //           icon: const Icon(
+        //             FluentIcons.clipboard_task_24_regular,
+        //           ),
+        //         ),
+        //         const SizedBox(width: 12),
+        //       ],
+        //     ],
+        //   ],
+        // ),
+        // const SizedBox(height: 12),
         if (apprenticeWidgets.isEmpty)
           const Text('אין')
         else
