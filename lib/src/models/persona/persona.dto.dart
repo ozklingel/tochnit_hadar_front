@@ -417,17 +417,18 @@ StatusColor _parseStatus(dynamic val) {
 }
 
 List<String> _extractReports(dynamic val) {
-  const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION';
-
+  // TODO(oz): fix this
   if (val is List<dynamic>) {
     if (val is List<String>) {
       return val;
     } else {
+      const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION LIST';
       // not suposed to be here but found this during dev so putting it here
       Sentry.captureMessage(errMsg);
-      Logger().w(errMsg, error: val);
+      Logger().w('$errMsg list', error: val);
     }
   } else if (val is String) {
+    const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION STRING';
     // not suposed to be here but found this during dev so putting it here
     Sentry.captureMessage(errMsg);
     Logger().w(errMsg, error: val);

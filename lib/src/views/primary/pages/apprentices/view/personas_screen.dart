@@ -87,435 +87,488 @@ class PersonasScreen extends HookConsumerWidget {
                       ),
                     ),
                   ),
-        body: CustomScrollView(
-          physics: (screenController.valueOrNull?.isMapOpen ?? false)
-              ? const NeverScrollableScrollPhysics()
-              : null,
-          slivers: [
-            SliverAppBar(
-              expandedHeight:
-                  (screenController.valueOrNull?.isMapOpen ?? false) ? 60 : 100,
-              collapsedHeight:
-                  (screenController.valueOrNull?.isMapOpen ?? false) ? 60 : 100,
-              pinned: true,
-              flexibleSpace: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: 56,
-                              child: (screenController.valueOrNull?.isMapOpen ??
-                                      false)
-                                  ? AppBar(
-                                      title: const Text(
-                                        'מפת חניכים',
-                                        style: TextStyles.s22w500cGrey2,
-                                      ),
-                                      actions: [
-                                        IconButton(
-                                          onPressed: () async {
-                                            ref
-                                                .read(
-                                                  usersControllerProvider
-                                                      .notifier,
-                                                )
-                                                .mapView(false);
-                                            isSearchOpen.value = true;
-                                          },
-                                          icon: const Icon(
-                                            FluentIcons.search_24_regular,
+        body: Stack(
+          children: [
+            CustomScrollView(
+              physics: (screenController.valueOrNull?.isMapOpen ?? false)
+                  ? const NeverScrollableScrollPhysics()
+                  : null,
+              slivers: [
+                SliverAppBar(
+                  expandedHeight:
+                      (screenController.valueOrNull?.isMapOpen ?? false)
+                          ? 60
+                          : 100,
+                  collapsedHeight:
+                      (screenController.valueOrNull?.isMapOpen ?? false)
+                          ? 60
+                          : 100,
+                  pinned: true,
+                  flexibleSpace: SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: SizedBox(
+                                  height: 56,
+                                  child: (screenController
+                                              .valueOrNull?.isMapOpen ??
+                                          false)
+                                      ? AppBar(
+                                          title: const Text(
+                                            'מפת חניכים',
+                                            style: TextStyles.s22w500cGrey2,
                                           ),
-                                        ),
-                                      ],
-                                      bottom: PreferredSize(
-                                        preferredSize:
-                                            const Size.fromHeight(24),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              '${filteredUsers.length} משתמשים',
-                                              style: TextStyles.s14w400cGrey5,
+                                          actions: [
+                                            IconButton(
+                                              onPressed: () async {
+                                                ref
+                                                    .read(
+                                                      usersControllerProvider
+                                                          .notifier,
+                                                    )
+                                                    .mapView(false);
+                                                isSearchOpen.value = true;
+                                              },
+                                              icon: const Icon(
+                                                FluentIcons.search_24_regular,
+                                              ),
                                             ),
                                           ],
-                                        ),
-                                      ),
-                                    )
-                                  : SearchAppBar(
-                                      controller: searchController,
-                                      isSearchOpen: isSearchOpen,
-                                      title: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          IconButton(
-                                            onPressed: () =>
-                                                isSearchOpen.value = true,
-                                            icon: const Icon(
-                                              FluentIcons.search_24_regular,
+                                          bottom: PreferredSize(
+                                            preferredSize:
+                                                const Size.fromHeight(24),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '${filteredUsers.length} משתמשים',
+                                                  style:
+                                                      TextStyles.s14w400cGrey5,
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          if (auth.valueOrNull?.role ==
-                                              UserRole.melave)
-                                            const Text(
-                                              'חניכים',
-                                              style: TextStyles.s22w500cGrey2,
+                                        )
+                                      : SearchAppBar(
+                                          controller: searchController,
+                                          isSearchOpen: isSearchOpen,
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              IconButton(
+                                                onPressed: () =>
+                                                    isSearchOpen.value = true,
+                                                icon: const Icon(
+                                                  FluentIcons.search_24_regular,
+                                                ),
+                                              ),
+                                              if (auth.valueOrNull?.role ==
+                                                  UserRole.melave)
+                                                const Text(
+                                                  'חניכים',
+                                                  style:
+                                                      TextStyles.s22w500cGrey2,
+                                                )
+                                              else
+                                                const Text(
+                                                  'משתמשים וחניכים',
+                                                  style:
+                                                      TextStyles.s22w500cGrey2,
+                                                ),
+                                              const SizedBox(),
+                                            ],
+                                          ),
+                                          actions: const [],
+                                        ),
+                                  // SearchAppBar(
+                                  //   elevation: MaterialStateProperty.all(0),
+                                  //   backgroundColor: MaterialStateColor.resolveWith(
+                                  //     (states) => AppColors.blue08,
+                                  //   ),
+                                  //   padding: MaterialStateProperty.all(
+                                  //     const EdgeInsets.symmetric(horizontal: 16),
+                                  //   ),
+                                  //   leading: const Icon(
+                                  //     FluentIcons.line_horizontal_3_20_filled,
+                                  //   ),
+                                  //   trailing: const [
+                                  //     Icon(
+                                  //       FluentIcons.search_24_filled,
+                                  //       size: 20,
+                                  //     ),
+                                  //   ],
+                                  //   hintText: 'חיפוש',
+                                  //   hintStyle: MaterialStateProperty.all(
+                                  //     TextStyles.s16w400cGrey2,
+                                  //   ),
+                                  // ),
+                                ),
+                              ),
+                              if (!(screenController.valueOrNull?.isMapOpen ??
+                                  false)) ...[
+                                const SizedBox(width: 6),
+                                Stack(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () async {
+                                        final result =
+                                            await Navigator.of(context).push(
+                                                  MaterialPageRoute<FilterDto>(
+                                                    builder: (ctx) =>
+                                                        FiltersScreen.users(
+                                                      initFilters:
+                                                          filters.value,
+                                                    ),
+                                                    fullscreenDialog: true,
+                                                  ),
+                                                ) ??
+                                                const FilterDto();
+
+                                        final request = await ref
+                                            .read(
+                                              personasControllerProvider
+                                                  .notifier,
                                             )
-                                          else
-                                            const Text(
-                                              'משתמשים וחניכים',
-                                              style: TextStyles.s22w500cGrey2,
-                                            ),
-                                          const SizedBox(),
-                                        ],
+                                            .filterUsers(result);
+
+                                        filtersResult.value = request;
+
+                                        if (request != null) {
+                                          filters.value = result;
+                                        }
+                                      },
+                                      icon: const Icon(
+                                        FluentIcons.filter_add_20_regular,
                                       ),
-                                      actions: const [],
                                     ),
-                              // SearchAppBar(
-                              //   elevation: MaterialStateProperty.all(0),
-                              //   backgroundColor: MaterialStateColor.resolveWith(
-                              //     (states) => AppColors.blue08,
-                              //   ),
-                              //   padding: MaterialStateProperty.all(
-                              //     const EdgeInsets.symmetric(horizontal: 16),
-                              //   ),
-                              //   leading: const Icon(
-                              //     FluentIcons.line_horizontal_3_20_filled,
-                              //   ),
-                              //   trailing: const [
-                              //     Icon(
-                              //       FluentIcons.search_24_filled,
-                              //       size: 20,
-                              //     ),
-                              //   ],
-                              //   hintText: 'חיפוש',
-                              //   hintStyle: MaterialStateProperty.all(
-                              //     TextStyles.s16w400cGrey2,
-                              //   ),
-                              // ),
+                                    if (filters.value.length > 0)
+                                      Positioned(
+                                        right: 8,
+                                        top: 8,
+                                        child: IgnorePointer(
+                                          child: CircleAvatar(
+                                            backgroundColor: AppColors.red1,
+                                            radius: 7,
+                                            child: Text(
+                                              filters.value.length.toString(),
+                                              style: TextStyles.s11w500fRoboto,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        if (filters.value.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            height: 32,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                ...filters.value.roles.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      roles: filters.value.roles
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.years.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      years: filters.value.years
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.institutions.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      institutions: filters.value.institutions
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.periods.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      periods: filters.value.periods
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.eshkols.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      eshkols: filters.value.eshkols
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.statuses.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      statuses: filters.value.statuses
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.bases.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      bases: filters.value.bases
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.hativot.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      hativot: filters.value.hativot
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.regions.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      regions: filters.value.regions
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.cities.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      cities: filters.value.cities
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                              ]
+                                  .map(
+                                    (e) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                      ),
+                                      child: e,
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                           ),
-                          if (!(screenController.valueOrNull?.isMapOpen ??
-                              false)) ...[
-                            const SizedBox(width: 6),
-                            Stack(
+                        ],
+                        const SizedBox(height: 8),
+                        if (!(screenController.valueOrNull?.isMapOpen ?? false))
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Row(
                               children: [
-                                IconButton(
+                                TextButton.icon(
                                   onPressed: () async {
-                                    final result =
-                                        await Navigator.of(context).push(
-                                              MaterialPageRoute<FilterDto>(
-                                                builder: (ctx) =>
-                                                    FiltersScreen.users(
-                                                  initFilters: filters.value,
-                                                ),
-                                                fullscreenDialog: true,
-                                              ),
-                                            ) ??
-                                            const FilterDto();
+                                    final result = await showDialog<Sort>(
+                                      context: context,
+                                      builder: (ctx) => _SortDialog(
+                                        initSortVal: sort.value,
+                                      ),
+                                    );
 
-                                    final request = await ref
-                                        .read(
-                                          personasControllerProvider.notifier,
-                                        )
-                                        .filterUsers(result);
-
-                                    filtersResult.value = request;
-
-                                    if (request != null) {
-                                      filters.value = result;
+                                    if (result == null) {
+                                      return;
                                     }
+
+                                    sort.value = result;
+
+                                    ref
+                                        .read(usersControllerProvider.notifier)
+                                        .sort(result);
                                   },
                                   icon: const Icon(
-                                    FluentIcons.filter_add_20_regular,
+                                    FluentIcons
+                                        .arrow_sort_down_lines_24_regular,
+                                    color: AppColors.gray2,
+                                  ),
+                                  label: Text(
+                                    '${(screenController.valueOrNull?.users ?? []).length} משתמשים',
+                                    style: TextStyles.s14w400
+                                        .copyWith(color: AppColors.gray5),
                                   ),
                                 ),
-                                if (filters.value.length > 0)
-                                  Positioned(
-                                    right: 8,
-                                    top: 8,
-                                    child: IgnorePointer(
-                                      child: CircleAvatar(
-                                        backgroundColor: AppColors.red1,
-                                        radius: 7,
-                                        child: Text(
-                                          filters.value.length.toString(),
-                                          style: TextStyles.s11w500fRoboto,
-                                        ),
-                                      ),
+                                const SizedBox(width: 6),
+                                const Spacer(),
+                                if (selectedPersonas.value.isNotEmpty) ...[
+                                  IconButton(
+                                    onPressed: () =>
+                                        selectedPersonas.value.length > 1
+                                            ? NewMessageRouteData(
+                                                initRecpients: selectedPersonas
+                                                    .value
+                                                    .map((e) => e.id)
+                                                    .toList(),
+                                              ).push(context)
+                                            : launchSms(
+                                                phone: selectedPersonas.value
+                                                    .map((e) => e.phone)
+                                                    .toList(),
+                                              ),
+                                    icon: const Icon(
+                                      FluentIcons.chat_24_regular,
                                     ),
                                   ),
+                                  IconButton(
+                                    onPressed: () => ReportNewRouteData(
+                                      initRecipients: selectedPersonas.value
+                                          .map((e) => e.id)
+                                          .toList(),
+                                    ).push(context),
+                                    icon: const Icon(
+                                      FluentIcons.clipboard_task_24_regular,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                ],
                               ],
                             ),
-                          ],
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverFillRemaining(
+                  child: FadeIndexedStack(
+                    index:
+                        searchController.text.isNotEmpty && isSearchOpen.value
+                            ? 0
+                            : 1,
+                    children: [
+                      UserListSearchResultsWidget(
+                        searchString: searchController.text,
+                        selectedPersonas: selectedPersonas,
+                        sort: sort.value,
+                        onTapCard: (double lat, double lng) async {
+                          isSearchOpen.value = false;
+
+                          ref
+                              .read(usersControllerProvider.notifier)
+                              .mapView(true);
+
+                          final controller = await mapController.value.future;
+
+                          await controller.animateCamera(
+                            CameraUpdate.newCameraPosition(
+                              CameraPosition(
+                                zoom: Consts.goToObjectGeolocationZoom,
+                                target: LatLng(
+                                  lat,
+                                  lng,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      FadeIndexedStack(
+                        index:
+                            (screenController.valueOrNull?.isMapOpen ?? false)
+                                ? 0
+                                : 1,
+                        children: [
+                          GoogleMapWidget(
+                            mapController: mapController,
+                            cameraPostion: mapCameraPosition.value ??
+                                Consts.defaultCameraPosition,
+                          ),
+                          _ListViewWidget(
+                            filteredUsers: filteredUsers,
+                            selectedPersonas: selectedPersonas,
+                            institutions: institutions,
+                            compounds: compounds,
+                          ),
                         ],
                       ),
-                    ),
-                    if (filters.value.isNotEmpty) ...[
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        height: 32,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            ...filters.value.roles.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  roles: filters.value.roles
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            ...filters.value.years.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  years: filters.value.years
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            ...filters.value.institutions.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  institutions: filters.value.institutions
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            ...filters.value.periods.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  periods: filters.value.periods
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            ...filters.value.eshkols.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  eshkols: filters.value.eshkols
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            ...filters.value.statuses.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  statuses: filters.value.statuses
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            ...filters.value.bases.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  bases: filters.value.bases
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            ...filters.value.hativot.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  hativot: filters.value.hativot
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            ...filters.value.regions.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  regions: filters.value.regions
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            ...filters.value.cities.map(
-                              (e) => FilterChipWidget(
-                                text: e,
-                                onTap: () =>
-                                    filters.value = filters.value.copyWith(
-                                  cities: filters.value.cities
-                                      .where((element) => element != e)
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                          ]
-                              .map(
-                                (e) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 4,
-                                  ),
-                                  child: e,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
                     ],
-                    const SizedBox(height: 8),
-                    if (!(screenController.valueOrNull?.isMapOpen ?? false))
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Row(
-                          children: [
-                            TextButton.icon(
-                              onPressed: () async {
-                                final result = await showDialog<Sort>(
-                                  context: context,
-                                  builder: (ctx) => _SortDialog(
-                                    initSortVal: sort.value,
-                                  ),
-                                );
-
-                                if (result == null) {
-                                  return;
-                                }
-
-                                sort.value = result;
-
-                                ref
-                                    .read(usersControllerProvider.notifier)
-                                    .sort(result);
-                              },
-                              icon: const Icon(
-                                FluentIcons.arrow_sort_down_lines_24_regular,
-                                color: AppColors.gray2,
-                              ),
-                              label: Text(
-                                '${(screenController.valueOrNull?.users ?? []).length} משתמשים',
-                                style: TextStyles.s14w400
-                                    .copyWith(color: AppColors.gray5),
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            const Spacer(),
-                            if (selectedPersonas.value.isNotEmpty) ...[
-                              IconButton(
-                                onPressed: () =>
-                                    selectedPersonas.value.length > 1
-                                        ? NewMessageRouteData(
-                                            initRecpients: selectedPersonas
-                                                .value
-                                                .map((e) => e.id)
-                                                .toList(),
-                                          ).push(context)
-                                        : launchSms(
-                                            phone: selectedPersonas.value
-                                                .map((e) => e.phone)
-                                                .toList(),
-                                          ),
-                                icon: const Icon(
-                                  FluentIcons.chat_24_regular,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () => ReportNewRouteData(
-                                  initRecipients: selectedPersonas.value
-                                      .map((e) => e.id)
-                                      .toList(),
-                                ).push(context),
-                                icon: const Icon(
-                                  FluentIcons.clipboard_task_24_regular,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                            ],
-                          ],
-                        ),
-                      ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-            SliverFillRemaining(
-              child: FadeIndexedStack(
-                index: searchController.text.isNotEmpty && isSearchOpen.value
-                    ? 0
-                    : 1,
-                children: [
-                  UserListSearchResultsWidget(
-                    searchString: searchController.text,
-                    selectedPersonas: selectedPersonas,
-                    sort: sort.value,
-                    onTapCard: (double lat, double lng) async {
-                      isSearchOpen.value = false;
+            Builder(
+              builder: (context) {
+                final isMapOpen = (ref
+                        .watch(usersControllerProvider)
+                        .valueOrNull
+                        ?.isMapOpen ??
+                    false);
 
-                      ref.read(usersControllerProvider.notifier).mapView(true);
-
-                      final controller = await mapController.value.future;
-
-                      await controller.animateCamera(
-                        CameraUpdate.newCameraPosition(
-                          CameraPosition(
-                            zoom: Consts.goToObjectGeolocationZoom,
-                            target: LatLng(
-                              lat,
-                              lng,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  FadeIndexedStack(
-                    index: (screenController.valueOrNull?.isMapOpen ?? false)
-                        ? 0
-                        : 1,
-                    children: [
-                      GoogleMapWidget(
-                        mapController: mapController,
-                        onListTypePressed: () => ref
+                return Align(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        isSearchOpen.value = false;
+                        ref
                             .read(usersControllerProvider.notifier)
-                            .mapView(false),
-                        cameraPostion: mapCameraPosition.value ??
-                            Consts.defaultCameraPosition,
+                            .mapView(!isMapOpen);
+                      },
+                      heroTag: UniqueKey(),
+                      backgroundColor: AppColors.mainCTA,
+                      foregroundColor: Colors.white,
+                      extendedTextStyle: const TextStyle(
+                        fontFamily: 'Assistant',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
                       ),
-                      _ListViewWidget(
-                        filteredUsers: filteredUsers,
-                        selectedPersonas: selectedPersonas,
-                        institutions: institutions,
-                        compounds: compounds,
-                        onListTypePressed: () => ref
-                            .read(usersControllerProvider.notifier)
-                            .mapView(true),
+                      label: Text(
+                        isMapOpen ? 'תצוגת רשימה' : 'תצוגת מפה',
                       ),
-                    ],
+                      icon: Icon(
+                        isMapOpen
+                            ? FluentIcons.text_bullet_list_24_regular
+                            : FluentIcons.location_24_regular,
+                      ),
+                    ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -531,14 +584,12 @@ class _ListViewWidget extends StatelessWidget {
     required this.selectedPersonas,
     required this.institutions,
     required this.compounds,
-    required this.onListTypePressed,
   });
 
   final List<PersonaDto> filteredUsers;
   final ValueNotifier<List<PersonaDto>> selectedPersonas;
   final List<InstitutionDto>? institutions;
   final List<CompoundDto>? compounds;
-  final VoidCallback onListTypePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -603,25 +654,6 @@ class _ListViewWidget extends StatelessWidget {
               ),
             );
           },
-        ),
-        Align(
-          alignment: AlignmentDirectional.bottomCenter,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: FloatingActionButton.extended(
-              onPressed: onListTypePressed,
-              heroTag: UniqueKey(),
-              backgroundColor: AppColors.mainCTA,
-              foregroundColor: Colors.white,
-              extendedTextStyle: const TextStyle(
-                fontFamily: 'Assistant',
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
-              label: const Text('תצוגת מפה'),
-              icon: const Icon(FluentIcons.location_24_regular),
-            ),
-          ),
         ),
       ],
     );

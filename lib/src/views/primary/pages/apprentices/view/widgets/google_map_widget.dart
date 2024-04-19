@@ -19,11 +19,9 @@ class GoogleMapWidget extends HookConsumerWidget {
     super.key,
     required this.mapController,
     required this.cameraPostion,
-    required this.onListTypePressed,
   });
 
   final ObjectRef<Completer<GoogleMapController>> mapController;
-  final VoidCallback onListTypePressed;
   final CameraPosition cameraPostion;
 
   @override
@@ -167,25 +165,6 @@ class GoogleMapWidget extends HookConsumerWidget {
                   color: AppColors.blue03,
                 ),
               ),
-            ),
-          ),
-        ),
-        Align(
-          alignment: AlignmentDirectional.bottomCenter,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: FloatingActionButton.extended(
-              onPressed: onListTypePressed,
-              heroTag: UniqueKey(),
-              backgroundColor: AppColors.mainCTA,
-              foregroundColor: Colors.white,
-              extendedTextStyle: const TextStyle(
-                fontFamily: 'Assistant',
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
-              label: const Text('תצוגת רשימה'),
-              icon: const Icon(FluentIcons.text_bullet_list_24_regular),
             ),
           ),
         ),
