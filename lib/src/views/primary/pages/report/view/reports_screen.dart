@@ -20,6 +20,7 @@ import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/report_card.dart';
+import 'package:hadar_program/src/views/widgets/chips/filter_chip.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -70,8 +71,8 @@ class ReportsScreen extends HookConsumerWidget {
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: filters.value.isEmpty ? 96 : 132,
-                collapsedHeight: filters.value.isEmpty ? 96 : 132,
+                expandedHeight: filters.value.isEmpty ? 96 : 144,
+                collapsedHeight: filters.value.isEmpty ? 96 : 144,
                 automaticallyImplyLeading: false,
                 pinned: true,
                 flexibleSpace: Column(
@@ -166,69 +167,113 @@ class ReportsScreen extends HookConsumerWidget {
                             scrollDirection: Axis.horizontal,
                             children: [
                               ...filters.value.roles.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    roles: filters.value.roles
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               ...filters.value.years.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    years: filters.value.years
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               ...filters.value.institutions.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    institutions: filters.value.institutions
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               ...filters.value.periods.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    periods: filters.value.periods
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               ...filters.value.eshkols.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    eshkols: filters.value.eshkols
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               ...filters.value.statuses.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    statuses: filters.value.statuses
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               ...filters.value.bases.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    bases: filters.value.bases
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               ...filters.value.hativot.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    hativot: filters.value.hativot
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               ...filters.value.regions.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
-                                ),
-                              ),
-                              ...filters.value.regions.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    regions: filters.value.regions
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                               ...filters.value.cities.map(
-                                (e) => FilterChip(
-                                  label: Text(e),
-                                  onSelected: (val) => Toaster.unimplemented(),
+                                (e) => FilterChipWidget(
+                                  text: e,
+                                  onTap: () =>
+                                      filters.value = filters.value.copyWith(
+                                    cities: filters.value.cities
+                                        .where((element) => element != e)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
                             ]
