@@ -406,51 +406,56 @@ class ReportDetailsScreen extends HookConsumerWidget {
                               }
                             },
                           ),
-                          if (selectedApprentices.value.isNotEmpty)
-                            FilterChip(
-                              selected: true,
-                              selectedColor: AppColors.blue07,
-                              showCheckmark: false,
-                              label: ExtendedText.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: selectedApprentices.value
-                                          .map((e) => e.fullName)
-                                          .join(', '),
-                                    ),
-                                    const TextSpan(text: ' '),
-                                    const WidgetSpan(
-                                      child: Icon(
-                                        Icons.close,
-                                        size: 16,
-                                        color: AppColors.blue02,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                overflowWidget: TextOverflowWidget(
-                                  position: TextOverflowPosition.start,
-                                  align: TextOverflowAlign.left,
-                                  // just for debug
-                                  // debugOverflowRectColor:
-                                  //     Colors.red.withOpacity(0.1),
-                                  child: ColoredBox(
-                                    color: AppColors.blue07,
-                                    child: Text(
-                                      '(${selectedApprentices.value.length})',
-                                      style: TextStyles.s12w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              labelStyle: TextStyles.s14w400cBlue2,
-                              backgroundColor: Colors.white,
-                              onSelected: (_) => selectedApprentices.value = [],
-                            ),
                         ],
                       ),
                     ),
+                  if (selectedApprentices.value.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: FilterChip(
+                        selected: true,
+                        selectedColor: AppColors.blue07,
+                        showCheckmark: false,
+                        label: ExtendedText.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: selectedApprentices.value
+                                    .map((e) => e.fullName)
+                                    .join(', '),
+                              ),
+                              const TextSpan(text: ' '),
+                              const WidgetSpan(
+                                child: Icon(
+                                  Icons.close,
+                                  size: 16,
+                                  color: AppColors.blue02,
+                                ),
+                              ),
+                            ],
+                          ),
+                          overflowWidget: TextOverflowWidget(
+                            position: TextOverflowPosition.start,
+                            align: TextOverflowAlign.left,
+                            // just for debug
+                            // debugOverflowRectColor:
+                            //     Colors.red.withOpacity(0.1),
+                            child: ColoredBox(
+                              color: AppColors.blue07,
+                              child: Text(
+                                '(${selectedApprentices.value.length})',
+                                style: TextStyles.s12w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        labelStyle: TextStyles.s14w400cBlue2,
+                        backgroundColor: Colors.white,
+                        onSelected: (_) => selectedApprentices.value = [],
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   InputFieldContainer(
                     label: 'תאריך',
