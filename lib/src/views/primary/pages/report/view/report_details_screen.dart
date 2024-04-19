@@ -145,8 +145,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              const _AttachmentsWidget(
-                attachments: [],
+              _AttachmentsWidget(
+                attachments: report.attachments,
               ),
             ],
           ),
@@ -769,6 +769,10 @@ class _AttachmentsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (attachments.isEmpty) {
+      return const Text('אין תמונות');
+    }
+
     return SizedBox(
       height: 140,
       child: ListView(
