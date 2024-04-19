@@ -16,6 +16,7 @@ import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
@@ -373,20 +374,30 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             labelStyle: TextStyles.s14w400cBlue2,
                             backgroundColor: Colors.white,
                             onPressed: () async {
-                              final result = await Navigator.of(context).push(
-                                    MaterialPageRoute<FilterDto>(
-                                      builder: (context) => FiltersScreen.users(
-                                        initFilters: filters.value,
-                                      ),
-                                    ),
-                                  ) ??
-                                  const FilterDto();
+                              final filtersModel =
+                                  await Navigator.of(context).push(
+                                        MaterialPageRoute<FilterDto>(
+                                          builder: (context) =>
+                                              FiltersScreen.users(
+                                            initFilters: filters.value,
+                                          ),
+                                        ),
+                                      ) ??
+                                      const FilterDto();
+
+                              if (filtersModel.isEmpty) {
+                                return;
+                              }
+
+                              Logger().d(filtersModel);
 
                               final request = await ref
                                   .read(reportsControllerProvider.notifier)
-                                  .filterRecipients(result);
+                                  .filterRecipients(filtersModel);
 
-                              if (request.isNotEmpty) {
+                              if (request.isEmpty) {
+                                Toaster.warning('אין משתמשים תואמים');
+                              } else {
                                 selectedApprentices.value = apprentices
                                     .where(
                                       (element) => request.contains(element.id),

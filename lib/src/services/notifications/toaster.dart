@@ -39,6 +39,16 @@ abstract class Toaster {
         textStyle: TextStyles.s12w500,
       );
 
+  static void warning(Object? message) => BotToast.showText(
+        duration: Consts.defaultErrorDuration,
+        text: message?.toString().split(' ').take(120).join(' ').toString() ??
+            '???',
+        align: const Alignment(0.9, -0.9),
+        contentColor: AppColors.warning500,
+        contentPadding: const EdgeInsets.all(16),
+        textStyle: TextStyles.s12w500,
+      );
+
   static void success(Object? message) => BotToast.showText(
         duration: Consts.defaultErrorDuration,
         text: message?.toString().split(' ').take(120).join(' ').toString() ??
