@@ -27,6 +27,10 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
     final selectedCity = useState('');
     final selectedRegion = useState(AddressRegion.none);
     final isTermsOfServiceAccepted = useState(false);
+    // final isTermsOfServiceAccepted = useState(false);
+    // final isTermsOfServiceAccepted = useState(false);
+    // final isTermsOfServiceAccepted = useState(false);
+    
     final citySearchController = useTextEditingController();
 
     return FocusTraversalGroup(

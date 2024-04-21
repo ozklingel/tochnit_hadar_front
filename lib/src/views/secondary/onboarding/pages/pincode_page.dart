@@ -8,8 +8,10 @@ import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_but
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+
 const _kPinCodeLength = 6;
 const _timerDuration = 60;
+final pinErrorProvider = StateProvider<bool>((ref) => false);
 
 class OnboardingPage2PinCode extends HookConsumerWidget {
   const OnboardingPage2PinCode({
@@ -45,6 +47,9 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
       const Duration(seconds: 1),
     );
 
+        final hasError = ref.watch(pinErrorProvider.state);
+
+      // bool hasError = false;
     return FocusTraversalGroup(
       child: SingleChildScrollView(
         child: Column(
@@ -82,29 +87,52 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
               style: Theme.of(context).textTheme.bodyMedium!,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Directionality(
                 textDirection: TextDirection.ltr,
-                child: PinCodeTextField(
-                  appContext: context,
-                  autoFocus: true,
-                  controller: pinCodeController,
-                  autoDisposeControllers: false,
-                  length: _kPinCodeLength,
-                  hintCharacter: '*',
-                  cursorColor: AppColors.shade09,
-                  pinTheme: PinTheme(
-                    inactiveColor: AppColors.shade09,
-                    selectedColor: AppColors.shade09,
-                    activeColor: AppColors.shade09,
-                    errorBorderColor: AppColors.error500,
-                    selectedBorderWidth: 2,
-                    inactiveBorderWidth: 1,
-                    activeBorderWidth: 1,
-                  ),
+                child: Column(
+                  children: <Widget>[
+                    PinCodeTextField(
+                      appContext: context,
+                      autoFocus: true,
+                      controller: pinCodeController,
+                      autoDisposeControllers: false,
+                      length: _kPinCodeLength,
+                      hintCharacter: '*',
+                      textStyle: TextStyle(
+                        color: hasError.state ? AppColors.error500 : AppColors.shade09, // Specify the desired color here
+                      ),
+                      cursorColor: AppColors.shade09,
+                      pinTheme: PinTheme(
+                        inactiveColor: hasError.state ? AppColors.error500 : AppColors.shade09,
+                        selectedColor: hasError.state ? AppColors.error500 : AppColors.shade09,
+                        activeColor: hasError.state ? AppColors.error500 : AppColors.shade09,
+                        errorBorderColor: AppColors.error500,
+                        selectedBorderWidth: 2,
+                        inactiveBorderWidth: 1,
+                        activeBorderWidth: 1,
+                      ),
+                      onChanged: (value) {
+                        hasError.state = false;
+                      },
+                    ),
+
+                    const SizedBox(height: 0), // Use this to adjust the vertical space between the PinCodeTextField and the Text widget
+
+                    Center( // Centers the text horizontally
+                      child: hasError.state 
+                          ? const Text(
+                              "קוד אימות שגוי, רוצה לנסות שוב?",
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(color: Colors.red, fontSize: 11),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
                 ),
               ),
             ),
+          const SizedBox(height: 10), // Use this to adjust the vertical space between the PinCodeTextField and the Text widget
             SizedBox(
               height: 24,
               child: timer.value == 0
@@ -182,18 +210,22 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                           );
 
                       if (!result.isResponseSuccess) {
-                        // ignore: use_build_context_synchronously
-                        showDialog(
-                          // ignore: use_build_context_synchronously
-                          context: context,
-                          builder: (context) {
-                            return const AlertDialog.adaptive(
-                              content: Text('תקלה'),
-                            );
-                          },
-                        );
+                        ref.read(pinErrorProvider.state).state = true;
+                        // // ignore: use_build_context_synchronously
+                        // showDialog(
+                        //   // ignore: use_build_context_synchronously
+                        //   context: context,
+                        //   builder: (context) {
+                        //     return const AlertDialog.adaptive(
+                        //       content: Text('תקלה'),
+                        //     );
+                        //   },
+                        // );
                       }
-                      onSuccess(result.isFirstOnboarding);
+                      else
+                      {
+                        onSuccess(result.isFirstOnboarding);
+                      }
                     },
             ),
           ],

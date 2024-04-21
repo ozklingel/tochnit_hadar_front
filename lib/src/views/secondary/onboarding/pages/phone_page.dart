@@ -39,8 +39,7 @@ class OnboardingPage1Phone extends HookConsumerWidget {
 
     useListenable(phoneFocusNode);
 
-    return FocusTraversalGroup(
-      child: Form(
+    return Form(
         key: formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,6 +95,7 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                   ],
                   validator: (_) {
                     if (phoneTextEditingController.text.length != 10) {
+                      isFormFails.value = false;
                       return 'מספר הנייד חייב להיות בעל 10 ספרות';
                     }
                     if (isFormFails.value) {
@@ -123,7 +123,7 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(24)),
                     ),
-                    counter: isFormValid.value
+                    counter: isFormValid.value && !isFormFails.value
                         ? Align(
                             alignment: Alignment.centerRight,
                             child: AnimatedDefaultTextStyle(
@@ -155,20 +155,16 @@ class OnboardingPage1Phone extends HookConsumerWidget {
                           .read(onboardingControllerProvider.notifier)
                           .getOtp(phone: phoneTextEditingController.text);
                       if (result) {
-                        // TODO(yeo4): don't use print, use Logger
-                        debugPrint("OK!");
                         onSuccess(phoneTextEditingController.text);
                       } else {
-                        // TODO(yeo4): don't use print, use Logger
-                        debugPrint("False");
                         isFormFails.value = true;
+                        formKey.currentState?.validate();
                       }
                     }
                   : null,
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
