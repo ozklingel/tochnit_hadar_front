@@ -58,40 +58,50 @@ class PersonasController extends _$PersonasController {
     required String apprenticeId,
     required EventDto event,
   }) async {
+    Toaster.backend();
+
     if (apprenticeId.isEmpty) {
       return false;
     }
 
-    final apprentice = state.valueOrNull?.singleWhere(
-          (element) => element.id == apprenticeId,
-          orElse: () => const PersonaDto(),
-        ) ??
-        const PersonaDto();
-
-    final apprenticeIndex = state.valueOrNull?.indexOf(apprentice) ?? -1;
-
-    if (apprenticeIndex == -1) return false;
-
-    final newState = state.valueOrNull ?? [];
-
-    newState[apprenticeIndex] = apprentice.copyWith(
-      events: [...apprentice.events, event],
-    );
-
-    final oldState = state.valueOrNull ?? [];
-
-    state = AsyncData([...newState]);
-
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    if (faker.randomGenerator.boolean()) {
-      return true;
-    }
-
-    state = AsyncData([...oldState]);
-
     return false;
   }
+
+  // }) async {
+  //   if (apprenticeId.isEmpty) {
+  //     return false;
+  //   }
+
+  //   final apprentice = state.valueOrNull?.singleWhere(
+  //         (element) => element.id == apprenticeId,
+  //         orElse: () => const PersonaDto(),
+  //       ) ??
+  //       const PersonaDto();
+
+  //   final apprenticeIndex = state.valueOrNull?.indexOf(apprentice) ?? -1;
+
+  //   if (apprenticeIndex == -1) return false;
+
+  //   final newState = state.valueOrNull ?? [];
+
+  //   newState[apprenticeIndex] = apprentice.copyWith(
+  //     events: [...apprentice.events, event],
+  //   );
+
+  //   final oldState = state.valueOrNull ?? [];
+
+  //   state = AsyncData([...newState]);
+
+  //   await Future.delayed(const Duration(milliseconds: 200));
+
+  //   if (faker.randomGenerator.boolean()) {
+  //     return true;
+  //   }
+
+  //   state = AsyncData([...oldState]);
+
+  //   return false;
+  // }
 
   FutureOr<bool> deleteEvent({
     required String apprenticeId,

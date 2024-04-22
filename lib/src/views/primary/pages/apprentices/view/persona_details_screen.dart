@@ -1100,7 +1100,7 @@ class _EventBottomSheet extends HookConsumerWidget {
                       ),
                     ],
                   ),
-                  const Positioned(
+                  Positioned(
                     bottom: 0,
                     left: 0,
                     right: 0,
@@ -1110,6 +1110,15 @@ class _EventBottomSheet extends HookConsumerWidget {
                         height: 60,
                         child: LargeFilledRoundedButton(
                           label: 'שמירה',
+                          onPressed: () async {
+                            await ref
+                                .read(personasControllerProvider.notifier)
+                                .addEvent(
+                                  apprenticeId: '',
+                                  event: const EventDto(),
+                                );
+                          },
+
                           // TODO (noga-dev): bring back
                           // onPressed: () async {
                           //   final navContext = Navigator.of(context);
@@ -1247,6 +1256,7 @@ class _PersonalInfoTabView extends ConsumerWidget {
                 label: 'יום הולדת',
                 data: 'כ”א ניסן',
               ),
+              SizedBox(height: 12),
               DetailsRowItem(
                 label: 'יום נישואים',
                 data: 'ט”ו אב',
