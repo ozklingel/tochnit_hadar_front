@@ -12,6 +12,7 @@ import 'package:hadar_program/src/views/secondary/onboarding/controller/onboardi
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+
 class OnboardingPage4PersonalDetails extends HookConsumerWidget {
   const OnboardingPage4PersonalDetails({
     super.key,
@@ -21,7 +22,7 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
   final VoidCallback onSuccess;
 
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final emailController = useTextEditingController();
     final selectedDateOfBirth = useState<DateTime?>(null);
     final selectedCity = useState('');
@@ -32,8 +33,16 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
     // final isTermsOfServiceAccepted = useState(false);
     
     final citySearchController = useTextEditingController();
-
-    return FocusTraversalGroup(
+    return FutureBuilder<bool>(
+      future: ref.read(onboardingControllerProvider.notifier).verifyRegistered(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show a loading indicator while waiting for the result
+        } else if (!snapshot.hasError && snapshot.hasData && snapshot.data!) {
+          onSuccess();
+          return Container(); // Return an empty container or your desired next screen widget
+        } else {
+        return FocusTraversalGroup(
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -367,5 +376,11 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
         ),
       ),
     );
+        }
+      },
+    );
   }
+
+
+
 }

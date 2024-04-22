@@ -4,6 +4,8 @@ import 'package:hadar_program/src/services/networking/dio_service/dio_service.da
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:intl/intl.dart';
+import 'dart:convert';  // Include this at the top of your file
 
 part 'onboarding_controller.g.dart';
 
@@ -33,8 +35,6 @@ class OnboardingController extends _$OnboardingController {
       if (result.statusCode == 200) {
         return true;
       } else if (result.statusCode == 401) {
-        // TODO(yeo4): don't use print, use Logger
-        debugPrint("AAABB");
         return false;
       }
     } catch (e) {
@@ -58,6 +58,8 @@ class OnboardingController extends _$OnboardingController {
 
       if (result.statusCode == 200) {
         return true;
+      } else if (result.statusCode == 401) {
+        return false;
       }
     } catch (e) {
       // Logger().d('otp', error: e);
@@ -67,6 +69,30 @@ class OnboardingController extends _$OnboardingController {
     return false;
   }
 
+Future<bool> verifyRegistered() async {
+  final phone = ref
+      .read(storageServiceProvider)
+      .requireValue
+      .getString(Consts.userPhoneKey);
+
+  final result = await ref.watch(dioServiceProvider).get(
+    '/userProfile_form/getProfileAtributes',
+    queryParameters: {
+      'userId': phone,
+    },
+  );
+
+  if (result.statusCode == 200) {
+    final data = json.decode(result.data);
+    final email = data['email'] as String?;
+    debugPrint('Email: $email');
+    print('Email: $email');
+    return email != null; // Return true if email is not null, false otherwise
+  } else {
+    return false; // Return false if the API request fails
+  }
+}
+  
   Future<({bool isResponseSuccess, bool isFirstOnboarding})> verifyOtp({
     required String phone,
     required String otp,
@@ -137,7 +163,7 @@ class OnboardingController extends _$OnboardingController {
           "atrrToBeSet": {
             "phone": userPhone,
             "email": email,
-            "birthday": dateOfBirth.toIso8601String(),
+            "birthday": DateFormat('yyyy-MM-dd').format(dateOfBirth),
           },
         },
       );
