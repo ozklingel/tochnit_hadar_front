@@ -1,11 +1,12 @@
+import 'dart:convert'; // Include this at the top of your file
+
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:intl/intl.dart';
-import 'dart:convert';  // Include this at the top of your file
 
 part 'onboarding_controller.g.dart';
 
@@ -69,30 +70,30 @@ class OnboardingController extends _$OnboardingController {
     return false;
   }
 
-Future<bool> verifyRegistered() async {
-  final phone = ref
-      .read(storageServiceProvider)
-      .requireValue
-      .getString(Consts.userPhoneKey);
+  Future<bool> verifyRegistered() async {
+    final phone = ref
+        .read(storageServiceProvider)
+        .requireValue
+        .getString(Consts.userPhoneKey);
 
-  final result = await ref.watch(dioServiceProvider).get(
-    '/userProfile_form/getProfileAtributes',
-    queryParameters: {
-      'userId': phone,
-    },
-  );
+    final result = await ref.watch(dioServiceProvider).get(
+      '/userProfile_form/getProfileAtributes',
+      queryParameters: {
+        'userId': phone,
+      },
+    );
 
-  if (result.statusCode == 200) {
-    final data = json.decode(result.data);
-    final email = data['email'] as String?;
-    debugPrint('Email: $email');
-    print('Email: $email');
-    return email != null; // Return true if email is not null, false otherwise
-  } else {
-    return false; // Return false if the API request fails
+    if (result.statusCode == 200) {
+      final data = json.decode(result.data);
+      final email = data['email'] as String?;
+      debugPrint('Email: $email');
+      Logger().d('Email: $email');
+      return email != null; // Return true if email is not null, false otherwise
+    } else {
+      return false; // Return false if the API request fails
+    }
   }
-}
-  
+
   Future<({bool isResponseSuccess, bool isFirstOnboarding})> verifyOtp({
     required String phone,
     required String otp,
