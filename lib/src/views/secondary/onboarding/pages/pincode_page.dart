@@ -8,7 +8,6 @@ import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_but
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-
 const _kPinCodeLength = 6;
 const _timerDuration = 60;
 final pinErrorProvider = StateProvider<bool>((ref) => false);
@@ -33,7 +32,9 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
 
     void toggleMFA() {
       isWhatsAppMFA.value = !isWhatsAppMFA.value; // Toggle the state
-      buttonText.value = isWhatsAppMFA.value ? 'שלח לי את הקוד דרך סמס' : 'שלח לי את הקוד דרך הווצאפ';
+      buttonText.value = isWhatsAppMFA.value
+          ? 'שלח לי את הקוד דרך סמס'
+          : 'שלח לי את הקוד דרך הווצאפ';
     }
 
     useListenable(pinCodeController);
@@ -47,9 +48,13 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
       const Duration(seconds: 1),
     );
 
-        final hasError = ref.watch(pinErrorProvider.state);
+    // TODO(yeo):
+    // 'state' is deprecated and shouldn't be used. Will be removed in 3.0.0. Use either `ref.watch(provider)` or `ref.read(provider.notifier)` instead.
+    // Try replacing the use of the deprecated member with the replacement.
+    // ignore: deprecated_member_use
+    final hasError = ref.watch(pinErrorProvider.state);
 
-      // bool hasError = false;
+    // bool hasError = false;
     return FocusTraversalGroup(
       child: SingleChildScrollView(
         child: Column(
@@ -100,13 +105,22 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                       length: _kPinCodeLength,
                       hintCharacter: '*',
                       textStyle: TextStyle(
-                        color: hasError.state ? AppColors.error500 : AppColors.shade09, // Specify the desired color here
+                        color: hasError.state
+                            ? AppColors.error500
+                            : AppColors
+                                .shade09, // Specify the desired color here
                       ),
                       cursorColor: AppColors.shade09,
                       pinTheme: PinTheme(
-                        inactiveColor: hasError.state ? AppColors.error500 : AppColors.shade09,
-                        selectedColor: hasError.state ? AppColors.error500 : AppColors.shade09,
-                        activeColor: hasError.state ? AppColors.error500 : AppColors.shade09,
+                        inactiveColor: hasError.state
+                            ? AppColors.error500
+                            : AppColors.shade09,
+                        selectedColor: hasError.state
+                            ? AppColors.error500
+                            : AppColors.shade09,
+                        activeColor: hasError.state
+                            ? AppColors.error500
+                            : AppColors.shade09,
                         errorBorderColor: AppColors.error500,
                         selectedBorderWidth: 2,
                         inactiveBorderWidth: 1,
@@ -117,10 +131,13 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                       },
                     ),
 
-                    const SizedBox(height: 0), // Use this to adjust the vertical space between the PinCodeTextField and the Text widget
+                    const SizedBox(
+                      height: 0,
+                    ), // Use this to adjust the vertical space between the PinCodeTextField and the Text widget
 
-                    Center( // Centers the text horizontally
-                      child: hasError.state 
+                    Center(
+                      // Centers the text horizontally
+                      child: hasError.state
                           ? const Text(
                               "קוד אימות שגוי, רוצה לנסות שוב?",
                               textDirection: TextDirection.rtl,
@@ -132,7 +149,9 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                 ),
               ),
             ),
-          const SizedBox(height: 10), // Use this to adjust the vertical space between the PinCodeTextField and the Text widget
+            const SizedBox(
+              height: 10,
+            ), // Use this to adjust the vertical space between the PinCodeTextField and the Text widget
             SizedBox(
               height: 24,
               child: timer.value == 0
@@ -210,6 +229,10 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                           );
 
                       if (!result.isResponseSuccess) {
+                        // TODO(yeo):
+                        // 'state' is deprecated and shouldn't be used. Will be removed in 3.0.0. Use either `ref.watch(provider)` or `ref.read(provider.notifier)` instead.
+                        // Try replacing the use of the deprecated member with the replacement.
+                        // ignore: deprecated_member_use
                         ref.read(pinErrorProvider.state).state = true;
                         // // ignore: use_build_context_synchronously
                         // showDialog(
@@ -221,9 +244,7 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                         //     );
                         //   },
                         // );
-                      }
-                      else
-                      {
+                      } else {
                         onSuccess(result.isFirstOnboarding);
                       }
                     },
