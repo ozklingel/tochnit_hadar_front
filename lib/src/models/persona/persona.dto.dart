@@ -35,7 +35,6 @@ enum Relationship {
   wife,
   husband,
   other,
-  none,
 }
 
 @JsonSerializable()
@@ -79,7 +78,7 @@ class PersonaDto with _$PersonaDto {
       name: 'contact1_phone',
     )
     String contact1Phone,
-    @Default(Relationship.none)
+    @Default(Relationship.other)
     @JsonKey(
       name: 'contact1_relation',
       fromJson: _extractRelationship,
@@ -109,7 +108,7 @@ class PersonaDto with _$PersonaDto {
       name: 'contact2_phone',
     )
     String contact2Phone,
-    @Default(Relationship.none)
+    @Default(Relationship.other)
     @JsonKey(
       name: 'contact2_relation',
       fromJson: _extractRelationship,
@@ -139,7 +138,7 @@ class PersonaDto with _$PersonaDto {
       name: 'contact3_phone',
     )
     String contact3Phone,
-    @Default(Relationship.none)
+    @Default(Relationship.other)
     @JsonKey(
       name: 'contact3_relation',
       fromJson: _extractRelationship,
@@ -459,7 +458,18 @@ List<EventDto> _parseEvents(dynamic val) {
 
 Relationship _extractRelationship(String? val) {
   switch (val) {
-    case '':
+    case 'אבא':
+      return Relationship.father;
+    case 'אמא':
+      return Relationship.mother;
+    case 'אח':
+      return Relationship.brother;
+    case 'אחות':
+      return Relationship.sister;
+    case 'בעל':
+      return Relationship.husband;
+    case 'אישה':
+      return Relationship.wife;
     default:
       return Relationship.other;
   }
