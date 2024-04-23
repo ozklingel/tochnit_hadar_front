@@ -34,7 +34,7 @@ class PersonasController extends _$PersonasController {
     return apprentices;
   }
 
-  FutureOr<bool> deleteApprentice(String apprenticeId) async {
+  FutureOr<bool> deletePersona(String apprenticeId) async {
     try {
       final result = await ref.read(dioServiceProvider).put(
             apprenticeId,

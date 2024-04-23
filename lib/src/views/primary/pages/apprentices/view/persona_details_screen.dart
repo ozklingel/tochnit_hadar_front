@@ -101,7 +101,7 @@ class _ApprenticeDetailsScreenState
                   onTap: () => showDialog(
                     context: context,
                     builder: (context) {
-                      return _DeleteApprenticeDialog(
+                      return _DeletePersonaDialog(
                         apprenticeId: persona.id,
                       );
                     },
@@ -271,8 +271,8 @@ class _ApprenticeDetailsScreenState
   }
 }
 
-class _DeleteApprenticeDialog extends ConsumerWidget {
-  const _DeleteApprenticeDialog({
+class _DeletePersonaDialog extends ConsumerWidget {
+  const _DeletePersonaDialog({
     required this.apprenticeId,
   });
 
@@ -284,10 +284,9 @@ class _DeleteApprenticeDialog extends ConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(6)),
       ),
-      child: SizedBox(
-        height: 432,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0) + const EdgeInsets.only(bottom: 24),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -321,7 +320,7 @@ class _DeleteApprenticeDialog extends ConsumerWidget {
                       label: 'מחק',
                       onPressed: () => ref
                           .read(personasControllerProvider.notifier)
-                          .deleteApprentice(apprenticeId),
+                          .deletePersona(apprenticeId),
                     ),
                   ],
                 ),

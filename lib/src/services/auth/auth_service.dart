@@ -32,10 +32,11 @@ class AuthService extends _$AuthService {
     final user = AuthDto.fromJson(request.data);
 
     if (kDebugMode) {
-      if (ref.read(storageServiceProvider.notifier).getUserPhone() ==
-          '523301800') {
+      final phone = ref.read(storageServiceProvider.notifier).getUserPhone();
+
+      if (phone == '523301800') {
         return user.copyWith(
-          role: UserRole.melave,
+          role: UserRole.ahraiTohnit,
         );
       }
     } else {
