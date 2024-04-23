@@ -15,7 +15,7 @@ class ListTileWithTagsCard extends StatelessWidget {
     this.isSelected = false,
     this.onLongPress,
     this.onTap,
-    this.onlineStatus = StatusColor.orange,
+    this.onlineStatus = StatusColor.invis,
     this.trailing,
   });
 
@@ -73,22 +73,19 @@ class ListTileWithTagsCard extends StatelessWidget {
                               radius: 20,
                               avatarUrl: avatar,
                             ),
-                      Positioned(
-                        bottom: 1,
-                        right: 1,
-                        child: CircleAvatar(
-                          radius: 6,
-                          backgroundColor: Colors.white,
+                      if (onlineStatus != StatusColor.invis)
+                        Positioned(
+                          bottom: 1,
+                          right: 1,
                           child: CircleAvatar(
-                            radius: 4,
-                            backgroundColor: onlineStatus == StatusColor.green
-                                ? Colors.green
-                                : onlineStatus == StatusColor.red
-                                    ? Colors.red
-                                    : Colors.orange,
+                            radius: 6,
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
+                              radius: 4,
+                              backgroundColor: onlineStatus.toColor(),
+                            ),
                           ),
                         ),
-                      ),
                       if (isSelected)
                         const Positioned(
                           bottom: 1,

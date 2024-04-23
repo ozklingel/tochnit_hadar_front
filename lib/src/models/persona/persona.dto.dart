@@ -13,7 +13,8 @@ enum StatusColor {
   grey(100),
   green(200),
   orange(300),
-  red(400);
+  red(400),
+  invis(999);
 
   const StatusColor(this.value);
   final int value;
@@ -23,7 +24,9 @@ enum StatusColor {
         ? AppColors.green2
         : this == StatusColor.red
             ? AppColors.red2
-            : AppColors.yellow1;
+            : this == StatusColor.orange
+                ? AppColors.yellow1
+                : Colors.transparent;
   }
 }
 
