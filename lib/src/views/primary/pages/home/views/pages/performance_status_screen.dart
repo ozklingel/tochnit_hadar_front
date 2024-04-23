@@ -120,6 +120,7 @@ class PerformanceStatusScreen extends HookConsumerWidget {
           ),
           Expanded(
             child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               itemCount: apprentices.length,
               separatorBuilder: (context, index) => const SizedBox(height: 8),
               itemBuilder: (context, index) => ListTileWithTagsCard(
@@ -131,17 +132,22 @@ class PerformanceStatusScreen extends HookConsumerWidget {
                   'מחזור ג',
                 ],
                 onlineStatus: apprentices[index].callStatus,
-                trailing: Column(
+                trailing: Row(
                   children: [
-                    Text(
-                      '${(percent * 100).round()}%',
-                      style: percent > 75
-                          ? TextStyles.s18w400cYellow1
-                          : TextStyles.s18w400cRed1,
-                    ),
-                    const Text(
-                      'ציון',
-                      style: TextStyles.s12w400cGrey6,
+                    const SizedBox(width: 12),
+                    Column(
+                      children: [
+                        Text(
+                          '${(percent * 100).round()}%',
+                          style: percent > 75
+                              ? TextStyles.s18w400cYellow1
+                              : TextStyles.s18w400cRed1,
+                        ),
+                        const Text(
+                          'ציון',
+                          style: TextStyles.s12w400cGrey6,
+                        ),
+                      ],
                     ),
                   ],
                 ),
