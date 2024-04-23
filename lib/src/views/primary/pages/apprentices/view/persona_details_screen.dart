@@ -702,14 +702,17 @@ class _TohnitHadarTabView extends ConsumerWidget {
         ),
         DetailsCard(
           title: 'תוכנית הדר',
-          trailing: TextButton.icon(
-            onPressed: null,
-            style: TextButton.styleFrom(
-              disabledForegroundColor: AppColors.success600,
-            ),
-            icon: const Icon(Icons.check),
-            label: const Text('משלם'),
-          ),
+          trailing:
+              ((auth.valueOrNull ?? const AuthDto()).role == UserRole.melave)
+                  ? null
+                  : TextButton.icon(
+                      onPressed: null,
+                      style: TextButton.styleFrom(
+                        disabledForegroundColor: AppColors.success600,
+                      ),
+                      icon: const Icon(Icons.check),
+                      label: const Text('משלם'),
+                    ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
