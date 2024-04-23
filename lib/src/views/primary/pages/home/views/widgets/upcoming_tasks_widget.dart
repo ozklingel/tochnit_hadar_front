@@ -61,7 +61,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
               onPressed: () => const TasksRouteData().go(context),
               child: const Text(
                 'הצג הכל',
-                style: TextStyles.s14w300cGray2,
+                style: TextStyles.s14w300cBlue2,
               ),
             ),
             const SizedBox(width: 8),
