@@ -183,12 +183,12 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
                         value: true,
                         onChanged: (value) =>
                             TaskDetailsRouteData(id: e.id).push(context),
-                        title: const Text(
-                          'סבב מוסד',
+                        title: Text(
+                          e.title,
                           style: TextStyles.s18w500cGray1,
                         ),
-                        subtitle: const Text(
-                          'בני דוד מכינת עלי',
+                        subtitle: Text(
+                          e.details,
                           style: TextStyles.s16w400cGrey2,
                         ),
                         secondary: const DefaultTextStyle(
