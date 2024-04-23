@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'task.dto.f.dart';
 part 'task.dto.g.dart';
@@ -119,7 +120,20 @@ TaskType _extractTaskType(String? data) {
     case 'הזנת מחזור':
       return TaskType.hazanatMahzor;
     default:
-      Logger().d('extract task type fail', error: data);
+      const msg = 'failed to extract task type';
+      Logger().d(
+        msg,
+        error: data,
+      );
+      Sentry.captureEvent(
+        SentryEvent(
+          message: SentryMessage(
+            msg,
+            params: [data],
+          ),
+        ),
+      );
+
       return TaskType.none;
   }
 }

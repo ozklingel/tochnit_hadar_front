@@ -131,20 +131,25 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
           ListView(
             children: incompleteTasks
                 .map(
-                  (e) => CheckboxListTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    value: false,
-                    onChanged: (value) =>
-                        TaskDetailsRouteData(id: e.id).push(context),
+                  (e) => ListTile(
+                    leading: Checkbox(
+                      value: false,
+                      onChanged: (value) =>
+                          ref.read(tasksControllerProvider.notifier).edit(
+                                e.copyWith(
+                                  status: TaskStatus.done,
+                                ),
+                              ),
+                    ),
                     title: Text(
-                      e.reportEventType.name,
+                      e.title,
                       style: TextStyles.s18w500cGray1,
                     ),
                     subtitle: Text(
                       e.details,
                       style: TextStyles.s16w400cGrey2,
                     ),
-                    secondary: const DefaultTextStyle(
+                    trailing: const DefaultTextStyle(
                       style: TextStyles.s12w400cGrey5fRoboto,
                       child: Column(
                         children: [
@@ -178,11 +183,18 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
                   .map(
                     (e) => Opacity(
                       opacity: .6,
-                      child: CheckboxListTile(
-                        controlAffinity: ListTileControlAffinity.leading,
-                        value: true,
-                        onChanged: (value) =>
+                      child: ListTile(
+                        onTap: () =>
                             TaskDetailsRouteData(id: e.id).push(context),
+                        leading: Checkbox(
+                          value: true,
+                          onChanged: (value) =>
+                              ref.read(tasksControllerProvider.notifier).edit(
+                                    e.copyWith(
+                                      status: TaskStatus.todo,
+                                    ),
+                                  ),
+                        ),
                         title: Text(
                           e.title,
                           style: TextStyles.s18w500cGray1,
@@ -191,7 +203,7 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
                           e.details,
                           style: TextStyles.s16w400cGrey2,
                         ),
-                        secondary: const DefaultTextStyle(
+                        trailing: const DefaultTextStyle(
                           style: TextStyles.s12w400cGrey5fRoboto,
                           child: Column(
                             children: [
