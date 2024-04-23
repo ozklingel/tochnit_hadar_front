@@ -368,256 +368,290 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
     );
     final selectedCompound = useState(compound);
 
+    useListenable(unitController);
+    useListenable(positionOldController);
+    useListenable(positionNewController);
+
     // Logger().d(apprentice.militaryUnit);
 
-    return AnimatedSwitcher(
-      duration: Consts.defaultDurationM,
-      transitionBuilder: (child, animation) => FadeTransition(
-        opacity: animation,
-        child: SizeTransition(
-          sizeFactor: animation,
-          axis: Axis.horizontal,
-          child: ScaleTransition(
-            scale: animation,
-            child: child,
+    return Form(
+      child: AnimatedSwitcher(
+        duration: Consts.defaultDurationM,
+        transitionBuilder: (child, animation) => FadeTransition(
+          opacity: animation,
+          child: SizeTransition(
+            sizeFactor: animation,
+            axis: Axis.horizontal,
+            child: ScaleTransition(
+              scale: animation,
+              child: child,
+            ),
           ),
         ),
-      ),
-      child: isEditMode.value
-          ? Padding(
-              padding: const EdgeInsets.all(24),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    inputDecorationTheme: const InputDecorationTheme(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(36)),
-                        borderSide: BorderSide(
-                          color: AppColors.gray5,
-                          width: 2,
+        child: isEditMode.value
+            ? Padding(
+                padding: const EdgeInsets.all(24),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      inputDecorationTheme: const InputDecorationTheme(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(36)),
+                          borderSide: BorderSide(
+                            color: AppColors.gray5,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'צבא',
-                        style: TextStyles.s20w400.copyWith(
-                          color: AppColors.gray1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'צבא',
+                          style: TextStyles.s20w400.copyWith(
+                            color: AppColors.gray1,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 32),
-                      ref.watch(compoundControllerProvider).when(
-                            loading: () => const Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                            error: (error, stack) => const Center(
-                              child: Text('failed to load bases'),
-                            ),
-                            data: (compounds) => InputFieldContainer(
-                              label: 'בסיס',
-                              isRequired: true,
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton2<CompoundDto>(
-                                  hint: Text(
-                                    selectedCompound.value.isEmpty
-                                        ? 'שם הבסיס'
-                                        : selectedCompound.value.name,
+                        const SizedBox(height: 32),
+                        ref.watch(compoundControllerProvider).when(
+                              loading: () => const Center(
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
+                              error: (error, stack) => const Center(
+                                child: Text('failed to load bases'),
+                              ),
+                              data: (compounds) => InputFieldContainer(
+                                label: 'בסיס',
+                                isRequired: true,
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton2<CompoundDto>(
+                                    hint: Text(
+                                      selectedCompound.value.isEmpty
+                                          ? 'שם הבסיס'
+                                          : selectedCompound.value.name,
+                                      style: TextStyles.s16w400cGrey5,
+                                    ),
+                                    onMenuStateChange: (isOpen) {},
+                                    dropdownSearchData: DropdownSearchData(
+                                      searchController: compoundController,
+                                      searchInnerWidgetHeight: 50,
+                                      searchInnerWidget: TextField(
+                                        controller: compoundController,
+                                        decoration: const InputDecoration(
+                                          focusedBorder: UnderlineInputBorder(),
+                                          enabledBorder: InputBorder.none,
+                                          prefixIcon: Icon(Icons.search),
+                                          hintText: 'חיפוש',
+                                          hintStyle: TextStyles.s14w400,
+                                        ),
+                                      ),
+                                    ),
                                     style: TextStyles.s16w400cGrey5,
-                                  ),
-                                  onMenuStateChange: (isOpen) {},
-                                  dropdownSearchData: DropdownSearchData(
-                                    searchController: compoundController,
-                                    searchInnerWidgetHeight: 50,
-                                    searchInnerWidget: TextField(
-                                      controller: compoundController,
-                                      decoration: const InputDecoration(
-                                        focusedBorder: UnderlineInputBorder(),
-                                        enabledBorder: InputBorder.none,
-                                        prefixIcon: Icon(Icons.search),
-                                        hintText: 'חיפוש',
-                                        hintStyle: TextStyles.s14w400,
+                                    buttonStyleData: ButtonStyleData(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(36),
+                                        border: Border.all(
+                                          color: AppColors.shades300,
+                                        ),
                                       ),
+                                      elevation: 0,
+                                      padding: const EdgeInsets.only(right: 8),
                                     ),
-                                  ),
-                                  style: TextStyles.s16w400cGrey5,
-                                  buttonStyleData: ButtonStyleData(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(36),
-                                      border: Border.all(
-                                        color: AppColors.shades300,
-                                      ),
-                                    ),
-                                    elevation: 0,
-                                    padding: const EdgeInsets.only(right: 8),
-                                  ),
-                                  onChanged: (value) {
-                                    selectedCompound.value = value!;
-                                  },
-                                  dropdownStyleData: const DropdownStyleData(
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(16)),
-                                    ),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    icon: Padding(
-                                      padding: EdgeInsets.only(left: 16),
-                                      child: RotatedBox(
-                                        quarterTurns: 1,
-                                        child: Icon(
-                                          Icons.chevron_left,
-                                          color: AppColors.grey6,
+                                    onChanged: (value) {
+                                      selectedCompound.value = value!;
+                                    },
+                                    dropdownStyleData: const DropdownStyleData(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(16),
                                         ),
                                       ),
                                     ),
-                                    openMenuIcon: Padding(
-                                      padding: EdgeInsets.only(left: 16),
-                                      child: RotatedBox(
-                                        quarterTurns: 3,
-                                        child: Icon(
-                                          Icons.chevron_left,
-                                          color: AppColors.grey6,
+                                    iconStyleData: const IconStyleData(
+                                      icon: Padding(
+                                        padding: EdgeInsets.only(left: 16),
+                                        child: RotatedBox(
+                                          quarterTurns: 1,
+                                          child: Icon(
+                                            Icons.chevron_left,
+                                            color: AppColors.grey6,
+                                          ),
+                                        ),
+                                      ),
+                                      openMenuIcon: Padding(
+                                        padding: EdgeInsets.only(left: 16),
+                                        child: RotatedBox(
+                                          quarterTurns: 3,
+                                          child: Icon(
+                                            Icons.chevron_left,
+                                            color: AppColors.grey6,
+                                          ),
                                         ),
                                       ),
                                     ),
+                                    items: compounds
+                                        .map(
+                                          (e) => DropdownMenuItem(
+                                            value: e,
+                                            child: Text(e.name),
+                                          ),
+                                        )
+                                        .toList(),
                                   ),
-                                  items: compounds
-                                      .map(
-                                        (e) => DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e.name),
-                                        ),
-                                      )
-                                      .toList(),
                                 ),
                               ),
                             ),
-                          ),
-                      const SizedBox(height: 32),
-                      InputFieldContainer(
-                        label: 'שיוך יחידתי',
-                        isRequired: true,
-                        child: TextField(
-                          controller: unitController,
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      InputFieldContainer(
-                        label: 'תפקיד נוכחי',
-                        isRequired: true,
-                        child: TextField(
-                          controller: positionNewController,
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      InputFieldContainer(
-                        label: 'תפקיד קודם',
-                        isRequired: true,
-                        child: TextField(
-                          controller: positionOldController,
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: LargeFilledRoundedButton(
-                              label: 'שמירה',
-                              onPressed: () async {
-                                final result = await ref
-                                    .read(
-                                      personasControllerProvider.notifier,
-                                    )
-                                    .edit(
-                                      persona: apprentice.copyWith(
-                                        militaryCompoundId:
-                                            selectedCompound.value.id,
-                                        militaryUnit: unitController.text,
-                                        militaryPositionNew:
-                                            positionNewController.text,
-                                        militaryPositionOld:
-                                            positionOldController.text,
-                                      ),
-                                    );
+                        const SizedBox(height: 32),
+                        InputFieldContainer(
+                          label: 'שיוך יחידתי',
+                          isRequired: true,
+                          child: TextFormField(
+                            controller: unitController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'ריק';
+                              }
 
-                                if (result) {
-                                  isEditMode.value = false;
-                                } else {
-                                  Toaster.show(
-                                    'שגיאה בעת שמירת השינויים',
-                                  );
-                                }
-                              },
-                              textStyle: TextStyles.s14w500,
-                            ),
+                              return null;
+                            },
                           ),
-                          const SizedBox(width: 24),
-                          Expanded(
-                            child: LargeFilledRoundedButton(
-                              label: 'ביטול',
-                              onPressed: () => isEditMode.value = false,
-                              backgroundColor: Colors.white,
-                              foregroundColor: AppColors.blue02,
-                              textStyle: TextStyles.s14w500,
-                            ),
+                        ),
+                        const SizedBox(height: 32),
+                        InputFieldContainer(
+                          label: 'תפקיד נוכחי',
+                          isRequired: true,
+                          child: TextFormField(
+                            controller: positionNewController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'ריק';
+                              }
+
+                              return null;
+                            },
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        const SizedBox(height: 32),
+                        InputFieldContainer(
+                          label: 'תפקיד קודם',
+                          isRequired: true,
+                          child: TextFormField(
+                            controller: positionOldController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'ריק';
+                              }
+
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: LargeFilledRoundedButton(
+                                label: 'שמירה',
+                                onPressed: (unitController.text.isEmpty ||
+                                        positionOldController.text.isEmpty ||
+                                        positionNewController.text.isEmpty)
+                                    ? null
+                                    : () async {
+                                        final result = await ref
+                                            .read(
+                                              personasControllerProvider
+                                                  .notifier,
+                                            )
+                                            .edit(
+                                              persona: apprentice.copyWith(
+                                                militaryCompoundId:
+                                                    selectedCompound.value.id,
+                                                militaryUnit:
+                                                    unitController.text,
+                                                militaryPositionNew:
+                                                    positionNewController.text,
+                                                militaryPositionOld:
+                                                    positionOldController.text,
+                                              ),
+                                            );
+
+                                        if (result) {
+                                          isEditMode.value = false;
+                                        } else {
+                                          Toaster.show(
+                                            'שגיאה בעת שמירת השינויים',
+                                          );
+                                        }
+                                      },
+                                textStyle: TextStyles.s14w500,
+                              ),
+                            ),
+                            const SizedBox(width: 24),
+                            Expanded(
+                              child: LargeFilledRoundedButton(
+                                label: 'ביטול',
+                                onPressed: () => isEditMode.value = false,
+                                backgroundColor: Colors.white,
+                                foregroundColor: AppColors.blue02,
+                                textStyle: TextStyles.s14w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+              )
+            : Column(
+                children: [
+                  DetailsCard(
+                    title: 'צבא',
+                    trailing: IconButton(
+                      onPressed: () => isEditMode.value = true,
+                      icon: const Icon(FluentIcons.edit_24_regular),
+                    ),
+                    child: Column(
+                      children: [
+                        DetailsRowItem(
+                          label: 'בסיס',
+                          data: compound.name,
+                        ),
+                        const SizedBox(height: 12),
+                        DetailsRowItem(
+                          label: 'שיוך יחידתי',
+                          data: apprentice.militaryUnit,
+                        ),
+                        const SizedBox(height: 12),
+                        DetailsRowItem(
+                          label: 'תפקיד קודם',
+                          data: apprentice.militaryPositionOld,
+                        ),
+                        const SizedBox(height: 12),
+                        DetailsRowItem(
+                          label: 'תפקיד נוכחי',
+                          data: apprentice.militaryPositionNew,
+                        ),
+                        const SizedBox(height: 12),
+                        DetailsRowItem(
+                          label: 'תאריך גיוס',
+                          data: apprentice.militaryDateOfEnlistment.asDateTime
+                              .asDayMonthYearShortDot,
+                        ),
+                        const SizedBox(height: 12),
+                        DetailsRowItem(
+                          label: 'תאריך שחרור',
+                          data: apprentice.militaryDateOfDischarge.asDateTime
+                              .asDayMonthYearShortDot,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            )
-          : Column(
-              children: [
-                DetailsCard(
-                  title: 'צבא',
-                  trailing: IconButton(
-                    onPressed: () => isEditMode.value = true,
-                    icon: const Icon(FluentIcons.edit_24_regular),
-                  ),
-                  child: Column(
-                    children: [
-                      DetailsRowItem(
-                        label: 'בסיס',
-                        data: compound.name,
-                      ),
-                      const SizedBox(height: 12),
-                      DetailsRowItem(
-                        label: 'שיוך יחידתי',
-                        data: apprentice.militaryUnit,
-                      ),
-                      const SizedBox(height: 12),
-                      DetailsRowItem(
-                        label: 'תפקיד קודם',
-                        data: apprentice.militaryPositionOld,
-                      ),
-                      const SizedBox(height: 12),
-                      DetailsRowItem(
-                        label: 'תפקיד נוכחי',
-                        data: apprentice.militaryPositionNew,
-                      ),
-                      const SizedBox(height: 12),
-                      DetailsRowItem(
-                        label: 'תאריך גיוס',
-                        data: apprentice.militaryDateOfEnlistment.asDateTime
-                            .asDayMonthYearShortDot,
-                      ),
-                      const SizedBox(height: 12),
-                      DetailsRowItem(
-                        label: 'תאריך שחרור',
-                        data: apprentice.militaryDateOfDischarge.asDateTime
-                            .asDayMonthYearShortDot,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      ),
     );
   }
 }
