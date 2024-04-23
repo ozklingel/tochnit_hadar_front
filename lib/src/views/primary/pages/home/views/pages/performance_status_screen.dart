@@ -134,7 +134,7 @@ class PerformanceStatusScreen extends HookConsumerWidget {
                 onlineStatus: apprentices[index].callStatus,
                 trailing: Row(
                   children: [
-                    const SizedBox(width: 12),
+                    const Spacer(),
                     Column(
                       children: [
                         Text(

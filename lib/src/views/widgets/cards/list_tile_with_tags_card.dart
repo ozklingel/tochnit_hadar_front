@@ -127,7 +127,7 @@ class ListTileWithTagsCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (trailing != null) trailing!,
+                  if (trailing != null) Expanded(child: trailing!),
                 ],
               ),
             ),
