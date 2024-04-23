@@ -73,9 +73,43 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
         ],
         bottom: TabBar(
           controller: tabController,
-          tabs: const [
-            Tab(text: 'לביצוע'),
-            Tab(text: 'הושלמו'),
+          tabs: [
+            Tab(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'לביצוע',
+                    style: TextStyles.s14w400cGrey2,
+                  ),
+                  if (incompleteTasks.isNotEmpty) ...[
+                    const SizedBox(width: 4),
+                    const CircleAvatar(
+                      radius: 3,
+                      backgroundColor: AppColors.blue03,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            Tab(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'הושלמו',
+                    style: TextStyles.s14w400cGrey2,
+                  ),
+                  if (completeTasks.isNotEmpty) ...[
+                    const SizedBox(width: 4),
+                    const CircleAvatar(
+                      radius: 3,
+                      backgroundColor: AppColors.blue03,
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ],
         ),
       ),
