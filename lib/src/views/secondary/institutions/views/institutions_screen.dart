@@ -151,7 +151,7 @@ class InstitutionsScreen extends HookConsumerWidget {
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 children: filtered
                     .map(
                       (e) => Padding(
