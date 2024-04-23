@@ -14,12 +14,12 @@ class HomeHeader extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: SizedBox(
-        width: 340,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(16),
-          ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(16),
+        ),
+        child: SizedBox(
+          height: 140,
           child: DecoratedBox(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -31,8 +31,16 @@ class HomeHeader extends ConsumerWidget {
             ),
             child: Stack(
               children: [
-                Assets.images.homePageHeader.svg(
-                  fit: BoxFit.cover,
+                Positioned(
+                  left: MediaQuery.of(context).size.width * -0.06,
+                  right: MediaQuery.of(context).size.width * -0.06,
+                  child: Assets.images.homePageHeader.svg(
+                    fit: BoxFit.cover,
+                    // colorFilter: const ColorFilter.mode(
+                    //   Colors.red,
+                    //   BlendMode.colorBurn,
+                    // ),
+                  ),
                 ),
                 SizedBox(
                   child: Padding(
