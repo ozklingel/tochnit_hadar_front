@@ -417,79 +417,83 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                             error: (error, stack) => const Center(
                               child: Text('failed to load bases'),
                             ),
-                            data: (compounds) => DropdownButtonHideUnderline(
-                              child: DropdownButton2<CompoundDto>(
-                                hint: Text(
-                                  selectedCompound.value.isEmpty
-                                      ? 'שם הבסיס'
-                                      : selectedCompound.value.name,
+                            data: (compounds) => InputFieldContainer(
+                              label: 'בסיס',
+                              isRequired: true,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2<CompoundDto>(
+                                  hint: Text(
+                                    selectedCompound.value.isEmpty
+                                        ? 'שם הבסיס'
+                                        : selectedCompound.value.name,
+                                    style: TextStyles.s16w400cGrey5,
+                                  ),
+                                  onMenuStateChange: (isOpen) {},
+                                  dropdownSearchData: DropdownSearchData(
+                                    searchController: compoundController,
+                                    searchInnerWidgetHeight: 50,
+                                    searchInnerWidget: TextField(
+                                      controller: compoundController,
+                                      decoration: const InputDecoration(
+                                        focusedBorder: UnderlineInputBorder(),
+                                        enabledBorder: InputBorder.none,
+                                        prefixIcon: Icon(Icons.search),
+                                        hintText: 'חיפוש',
+                                        hintStyle: TextStyles.s14w400,
+                                      ),
+                                    ),
+                                  ),
                                   style: TextStyles.s16w400cGrey5,
-                                ),
-                                onMenuStateChange: (isOpen) {},
-                                dropdownSearchData: DropdownSearchData(
-                                  searchController: compoundController,
-                                  searchInnerWidgetHeight: 50,
-                                  searchInnerWidget: TextField(
-                                    controller: compoundController,
-                                    decoration: const InputDecoration(
-                                      focusedBorder: UnderlineInputBorder(),
-                                      enabledBorder: InputBorder.none,
-                                      prefixIcon: Icon(Icons.search),
-                                      hintText: 'חיפוש',
-                                      hintStyle: TextStyles.s14w400,
+                                  buttonStyleData: ButtonStyleData(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(36),
+                                      border: Border.all(
+                                        color: AppColors.shades300,
+                                      ),
+                                    ),
+                                    elevation: 0,
+                                    padding: const EdgeInsets.only(right: 8),
+                                  ),
+                                  onChanged: (value) {
+                                    selectedCompound.value = value!;
+                                  },
+                                  dropdownStyleData: const DropdownStyleData(
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(16)),
                                     ),
                                   ),
-                                ),
-                                style: TextStyles.s16w400cGrey5,
-                                buttonStyleData: ButtonStyleData(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(36),
-                                    border: Border.all(
-                                      color: AppColors.shades300,
+                                  iconStyleData: const IconStyleData(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 16),
+                                      child: RotatedBox(
+                                        quarterTurns: 1,
+                                        child: Icon(
+                                          Icons.chevron_left,
+                                          color: AppColors.grey6,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  elevation: 0,
-                                  padding: const EdgeInsets.only(right: 8),
-                                ),
-                                onChanged: (value) {
-                                  selectedCompound.value = value!;
-                                },
-                                dropdownStyleData: const DropdownStyleData(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16)),
-                                  ),
-                                ),
-                                iconStyleData: const IconStyleData(
-                                  icon: Padding(
-                                    padding: EdgeInsets.only(left: 16),
-                                    child: RotatedBox(
-                                      quarterTurns: 1,
-                                      child: Icon(
-                                        Icons.chevron_left,
-                                        color: AppColors.grey6,
+                                    openMenuIcon: Padding(
+                                      padding: EdgeInsets.only(left: 16),
+                                      child: RotatedBox(
+                                        quarterTurns: 3,
+                                        child: Icon(
+                                          Icons.chevron_left,
+                                          color: AppColors.grey6,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  openMenuIcon: Padding(
-                                    padding: EdgeInsets.only(left: 16),
-                                    child: RotatedBox(
-                                      quarterTurns: 3,
-                                      child: Icon(
-                                        Icons.chevron_left,
-                                        color: AppColors.grey6,
-                                      ),
-                                    ),
-                                  ),
+                                  items: compounds
+                                      .map(
+                                        (e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e.name),
+                                        ),
+                                      )
+                                      .toList(),
                                 ),
-                                items: compounds
-                                    .map(
-                                      (e) => DropdownMenuItem(
-                                        value: e,
-                                        child: Text(e.name),
-                                      ),
-                                    )
-                                    .toList(),
                               ),
                             ),
                           ),
