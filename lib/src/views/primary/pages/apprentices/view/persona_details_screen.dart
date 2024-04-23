@@ -136,7 +136,7 @@ class _ApprenticeDetailsScreenState
                     background: DetailsPageHeader(
                       avatar: persona.avatar,
                       name: '${persona.firstName} ${persona.lastName}',
-                      phone: persona.phone,
+                      phone: persona.phone.format,
                       onTapEditAvatar: () async {
                         final result = await FilePicker.platform.pickFiles(
                           allowMultiple: false,

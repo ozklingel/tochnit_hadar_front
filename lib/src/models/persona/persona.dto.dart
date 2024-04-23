@@ -37,6 +37,8 @@ enum Relationship {
   other,
 }
 
+typedef Phone = String;
+
 @JsonSerializable()
 @Freezed(fromJson: false)
 class PersonaDto with _$PersonaDto {
@@ -77,7 +79,7 @@ class PersonaDto with _$PersonaDto {
       defaultValue: '',
       name: 'contact1_phone',
     )
-    String contact1Phone,
+    Phone contact1Phone,
     @Default(Relationship.other)
     @JsonKey(
       name: 'contact1_relation',
@@ -107,7 +109,7 @@ class PersonaDto with _$PersonaDto {
       defaultValue: '',
       name: 'contact2_phone',
     )
-    String contact2Phone,
+    Phone contact2Phone,
     @Default(Relationship.other)
     @JsonKey(
       name: 'contact2_relation',
@@ -137,7 +139,7 @@ class PersonaDto with _$PersonaDto {
       defaultValue: '',
       name: 'contact3_phone',
     )
-    String contact3Phone,
+    Phone contact3Phone,
     @Default(Relationship.other)
     @JsonKey(
       name: 'contact3_relation',
@@ -182,7 +184,7 @@ class PersonaDto with _$PersonaDto {
       defaultValue: '',
       name: 'highSchoolRavMelamed_phone',
     )
-    String highSchoolRavMelamedPhone,
+    Phone highSchoolRavMelamedPhone,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -226,7 +228,7 @@ class PersonaDto with _$PersonaDto {
     @JsonKey(
       defaultValue: '',
     )
-    String phone,
+    Phone phone,
     @Default([])
     @JsonKey(
       name: 'reports',
@@ -250,7 +252,7 @@ class PersonaDto with _$PersonaDto {
       defaultValue: '',
       name: 'thRavMelamedYearA_phone',
     )
-    String thRavMelamedYearAPhone,
+    Phone thRavMelamedYearAPhone,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -268,7 +270,7 @@ class PersonaDto with _$PersonaDto {
       defaultValue: '',
       name: 'thRavMelamedYearB_phone',
     )
-    String thRavMelamedYearBPhone,
+    Phone thRavMelamedYearBPhone,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -485,4 +487,8 @@ extension ApprenticeX on PersonaDto {
         maritalStatus,
       ];
   bool get isEmpty => id.isEmpty;
+}
+
+extension PhoneX on Phone {
+  String get format => '0${substring(0, 2)}-${substring(2)}';
 }
