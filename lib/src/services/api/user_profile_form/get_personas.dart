@@ -22,7 +22,7 @@ class GetPersonas extends _$GetPersonas {
     }
 
     final request = await ref.watch(dioServiceProvider).get(
-          Consts.getAllPersons,
+          Consts.getAllPersonas,
           // Consts.getAllFiltered,
           // queryParameters: {
           //   'roles': filter.roles.join(','),

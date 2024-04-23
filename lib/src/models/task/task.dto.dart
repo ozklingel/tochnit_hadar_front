@@ -10,12 +10,14 @@ enum TaskType {
   meetingParents,
   meetingGroup,
   meetingPeriod,
+  meetingMatsbar,
   call,
   callParents,
   failedAttempt,
   xMessages,
   forgottenApprentices,
   baseVisit,
+  hazanatMahzor,
 }
 
 enum TaskStatus {
@@ -112,6 +114,10 @@ TaskType _extractTaskType(String? data) {
       return TaskType.forgottenApprentices;
     case 'ביקור בבסיס':
       return TaskType.baseVisit;
+    case 'ישיבת מצב”ר':
+      return TaskType.meetingMatsbar;
+    case 'הזנת מחזור':
+      return TaskType.hazanatMahzor;
     default:
       Logger().d('extract task type fail', error: data);
       return TaskType.none;

@@ -171,8 +171,10 @@ ReportEventType _extractType(String? val) {
     return ReportEventType.offlineGroupMeeting;
   } else if (val == ReportEventType.onlineMeeting.name) {
     return ReportEventType.onlineMeeting;
-  } else if (val == ReportEventType.call.name) {
+  } else if (val == ReportEventType.call.name || val == 'שיחה') {
     return ReportEventType.call;
+  } else if (val == ReportEventType.callParents.name) {
+    return ReportEventType.callParents;
   } else if (val == ReportEventType.periodInput.name) {
     return ReportEventType.periodInput;
   } else if (val == ReportEventType.recurringMeeting.name) {

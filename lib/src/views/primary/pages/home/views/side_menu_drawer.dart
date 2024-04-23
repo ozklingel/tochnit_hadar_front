@@ -85,7 +85,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     leading: const Icon(FluentIcons.map_24_regular),
                     title: const Text('מפת מיקומים'),
                     onTap: () {
-                      const ApprenticesOrUsersRouteData().go(context);
+                      const PersonasRouteData().go(context);
                     },
                   ),
                   ListTile(
@@ -119,15 +119,14 @@ class SideMenuDrawer extends ConsumerWidget {
                     leading: const Icon(FluentIcons.map_24_regular),
                     title: const Text('מפת מיקומים'),
                     onTap: () {
-                      const ApprenticesOrUsersRouteData().go(context);
+                      const PersonasRouteData().go(context);
                     },
                   ),
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.person_24_regular),
                     title: const Text('ניהול משתמשים'),
-                    onTap: () =>
-                        const ApprenticesOrUsersRouteData().go(context),
+                    onTap: () => const PersonasRouteData().go(context),
                   ),
                   ListTile(
                     dense: true,
@@ -160,15 +159,14 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('מפת מיקומים'),
                     onTap: () {
                       ref.read(usersControllerProvider.notifier).mapView(true);
-                      const ApprenticesOrUsersRouteData().go(context);
+                      const PersonasRouteData().go(context);
                     },
                   ),
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.person_24_regular),
                     title: const Text('ניהול משתמשים'),
-                    onTap: () =>
-                        const ApprenticesOrUsersRouteData().go(context),
+                    onTap: () => const PersonasRouteData().go(context),
                   ),
                   ListTile(
                     dense: true,
@@ -208,7 +206,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('מפת מיקומים'),
                     onTap: () {
                       ref.read(usersControllerProvider.notifier).mapView(true);
-                      const ApprenticesOrUsersRouteData().go(context);
+                      const PersonasRouteData().go(context);
                     },
                   ),
                   ListTile(

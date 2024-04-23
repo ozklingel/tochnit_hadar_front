@@ -20,6 +20,7 @@ part 'personas_controller.g.dart';
     GetMapsApprentices,
     DioService,
     GetFilteredUsers,
+    // GoRouterService,
   ],
 )
 class PersonasController extends _$PersonasController {
@@ -34,21 +35,25 @@ class PersonasController extends _$PersonasController {
     return apprentices;
   }
 
-  FutureOr<bool> deletePersona(String apprenticeId) async {
+  FutureOr<bool> deletePersona(String personaId) async {
     try {
-      final result = await ref.read(dioServiceProvider).put(
-            apprenticeId,
+      final result = await ref.read(dioServiceProvider).post(
+            Consts.deletePersona,
             data: jsonEncode({
-              'typeOfSet': 'user',
-              'entityId': apprenticeId,
+              'userId': personaId,
             }),
           );
 
-      if (result.data['result'] == 'sucess') {
+      if (result.data['result'] == 'success') {
+        // ref.read(goRouterServiceProvider).go('/home');
+        ref.invalidate(getMapsApprenticesProvider);
+
         return true;
       }
     } catch (e) {
-      Sentry.captureException(e);
+      Logger().e('failed to delete persona', error: e);
+      Sentry.captureException(e, stackTrace: StackTrace.current);
+      Toaster.error(e);
     }
 
     return false;

@@ -318,9 +318,18 @@ class _DeletePersonaDialog extends ConsumerWidget {
                     const SizedBox(height: 16),
                     LargeFilledRoundedButton.cancel(
                       label: 'מחק',
-                      onPressed: () => ref
-                          .read(personasControllerProvider.notifier)
-                          .deletePersona(apprenticeId),
+                      onPressed: () async {
+                        final navContext = Navigator.of(context);
+
+                        final result = await ref
+                            .read(personasControllerProvider.notifier)
+                            .deletePersona(apprenticeId);
+
+                        if (result) {
+                          navContext.pop();
+                          ref.read(goRouterServiceProvider).go('/personas');
+                        }
+                      },
                     ),
                   ],
                 ),

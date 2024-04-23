@@ -208,7 +208,7 @@ class GoRouterService extends _$GoRouterService {
     ),
     TypedStatefulShellBranch<ApprenticesBranchData>(
       routes: [
-        TypedGoRoute<ApprenticesOrUsersRouteData>(
+        TypedGoRoute<PersonasRouteData>(
           path: '/personas',
           routes: [
             TypedGoRoute<PersonaDetailsRouteData>(
@@ -515,8 +515,8 @@ class ReportDetailsRouteData extends GoRouteData {
   }
 }
 
-class ApprenticesOrUsersRouteData extends GoRouteData {
-  const ApprenticesOrUsersRouteData();
+class PersonasRouteData extends GoRouteData {
+  const PersonasRouteData();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
