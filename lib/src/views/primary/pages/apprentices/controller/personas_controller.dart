@@ -105,10 +105,47 @@ class PersonasController extends _$PersonasController {
             },
             data: jsonEncode({
               'avatar': persona.avatar,
+              // military
               'militaryCompoundId': persona.militaryCompoundId,
               'militaryUnit': persona.militaryUnit,
               'militaryPositionNew': persona.militaryPositionNew,
               'militaryPositionOld': persona.militaryPositionOld,
+              'militaryDateOfEnlistment': persona.militaryDateOfEnlistment,
+              'militaryDateOfDischarge': persona.militaryDateOfDischarge,
+              // personal general
+              'teudatZehut': persona.teudatZehut,
+              'email': persona.email,
+              'address': persona.address,
+              'marriage_status': persona.maritalStatus,
+              'phone': persona.phone,
+              // personal dates
+              'birthday': persona.dateOfBirth,
+              // personal relationships
+              'contact1_relation': persona.contact1Relationship,
+              'contact1_phone': persona.contact1Phone,
+              'contact1_email': persona.contact1Email,
+              'contact1_first_name': persona.contact1FirstName,
+              'contact1_last_name': persona.contact1LastName,
+              'contact2_relation': persona.contact2Relationship,
+              'contact2_phone': persona.contact2Phone,
+              'contact2_email': persona.contact2Email,
+              'contact2_first_name': persona.contact2FirstName,
+              'contact2_last_name': persona.contact2LastName,
+              'contact3_relation': persona.contact3Relationship,
+              'contact3_phone': persona.contact3Phone,
+              'contact3_email': persona.contact3Email,
+              'contact3_first_name': persona.contact3FirstName,
+              'contact3_last_name': persona.contact3LastName,
+              // personal high school
+              'highSchoolInstitution': persona.highSchoolInstitution,
+              'highSchoolRavMelamed_name': persona.highSchoolRavMelamedName,
+              'highSchoolRavMelamed_phone': persona.highSchoolRavMelamedPhone,
+              'highSchoolRavMelamed_email': persona.highSchoolRavMelamedEmail,
+              // personal work
+              'workStatus': persona.workStatus,
+              'workOccupation': persona.workOccupation,
+              'workPlace': persona.workPlace,
+              'workType': persona.workType,
             }),
           );
 
@@ -125,34 +162,6 @@ class PersonasController extends _$PersonasController {
 
     return false;
   }
-
-  // FutureOr<bool> editApprentice({
-  //   required ApprenticeDto apprentice,
-  // }) {
-  //   final newState = state.valueOrNull ?? [];
-
-  //   final apprenticeIndex = newState.indexWhere(
-  //     (element) => element.id == apprentice.id,
-  //   );
-
-  //   if (apprenticeIndex == -1) return false;
-
-  //   newState[apprenticeIndex] = apprentice;
-
-  //   final oldState = state.valueOrNull ?? [];
-
-  //   state = AsyncData([...newState]);
-
-  //   return Future.delayed(const Duration(milliseconds: 200)).then((_) {
-  //     if (faker.randomGenerator.boolean()) {
-  //       return true;
-  //     }
-
-  //     state = AsyncData([...oldState]);
-
-  //     return false;
-  //   });
-  // }
 
   FutureOr<List<String>?> filterUsers(FilterDto filter) async {
     _filters = filter;

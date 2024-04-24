@@ -245,7 +245,7 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
                       ),
                   const SizedBox(height: 12),
                   DropdownButtonHideUnderline(
-                    child: DropdownButton2(
+                    child: DropdownButton2<AddressRegion>(
                       value: selectedRegion.value == AddressRegion.none
                           ? null
                           : selectedRegion.value,

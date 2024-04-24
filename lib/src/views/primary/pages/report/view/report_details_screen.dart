@@ -504,7 +504,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                     label: 'סוג האירוע',
                     isRequired: true,
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
+                      child: DropdownButton2<ReportEventType>(
                         value: selectedEventType.value == ReportEventType.other
                             ? null
                             : selectedEventType.value,

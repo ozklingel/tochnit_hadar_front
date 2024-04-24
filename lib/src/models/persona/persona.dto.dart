@@ -368,10 +368,24 @@ class PersonaDto with _$PersonaDto {
       fromJson: _extractActivityScore,
     )
     int activityScore,
+    @Default(false)
+    @JsonKey(
+      name: 'paying',
+      fromJson: _extractPaying,
+    )
+    bool isPaying,
   }) = _Persona;
 
   factory PersonaDto.fromJson(Map<String, dynamic> json) =>
       _$PersonaDtoFromJson(json);
+}
+
+bool _extractPaying(String? data) {
+  if (data == 'משלם') {
+    return true;
+  }
+
+  return false;
 }
 
 int _extractActivityScore(dynamic val) {

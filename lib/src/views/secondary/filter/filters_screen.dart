@@ -1648,7 +1648,7 @@ class _RegionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
-      child: DropdownButton2(
+      child: DropdownButton2<AddressRegion>(
         hint: SizedBox(
           width: _kDropdownTextWidthLimit,
           child: Text(
@@ -1759,7 +1759,7 @@ class _CityListWidget extends StatelessWidget {
     }
 
     return DropdownButtonHideUnderline(
-      child: DropdownButton2(
+      child: DropdownButton2<String>(
         hint: SizedBox(
           width: _kDropdownTextWidthLimit,
           child: Text(
