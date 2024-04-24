@@ -56,13 +56,13 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 error: (error, stack) => IconButton(
                   onPressed: () => const NotificationRouteData().go(context),
-                  icon: const Icon(Icons.notifications_none),
+                  icon: const Icon(Icons.ring_volume),
                 ),
                 data: (notifications) => UnreadCounterBadgeWidget(
                   count: notifications.length,
                   child: IconButton(
                     onPressed: () => const NotificationRouteData().go(context),
-                    icon: const Icon(Icons.notifications_none),
+                    icon: Assets.illustrations.alarmBell.svg(),
                   ),
                 ),
               ),

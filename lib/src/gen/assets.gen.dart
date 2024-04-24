@@ -24,6 +24,10 @@ class $AssetsIconsGen {
 class $AssetsIllustrationsGen {
   const $AssetsIllustrationsGen();
 
+  /// File path: assets/illustrations/alarm_bell.svg
+  SvgGenImage get alarmBell =>
+      const SvgGenImage('assets/illustrations/alarm_bell.svg');
+
   /// File path: assets/illustrations/clap.svg
   SvgGenImage get clap => const SvgGenImage('assets/illustrations/clap.svg');
 
@@ -79,6 +83,10 @@ class $AssetsIllustrationsGen {
   SvgGenImage get thinking =>
       const SvgGenImage('assets/illustrations/thinking.svg');
 
+  /// File path: assets/illustrations/thumb_down_blue.svg
+  SvgGenImage get thumbDownBlue =>
+      const SvgGenImage('assets/illustrations/thumb_down_blue.svg');
+
   /// File path: assets/illustrations/thumbs-up-full-body.svg
   SvgGenImage get thumbsUpFullBody =>
       const SvgGenImage('assets/illustrations/thumbs-up-full-body.svg');
@@ -93,6 +101,7 @@ class $AssetsIllustrationsGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
+        alarmBell,
         clap,
         heartLoveFullBody,
         holdSign,
@@ -107,6 +116,7 @@ class $AssetsIllustrationsGen {
         thankfulHeartSignEyesOpen,
         thankfulHeartSignFullBody,
         thinking,
+        thumbDownBlue,
         thumbsUpFullBody,
         twoThumbsUp,
         vSignFullBody
@@ -193,6 +203,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/success.svg
   SvgGenImage get success => const SvgGenImage('assets/images/success.svg');
 
+  /// File path: assets/images/thumb_down_blue.png
+  AssetGenImage get thumbDownBlue =>
+      const AssetGenImage('assets/images/thumb_down_blue.png');
+
   /// File path: assets/images/vi.png
   AssetGenImage get vi => const AssetGenImage('assets/images/vi.png');
 
@@ -221,6 +235,7 @@ class $AssetsImagesGen {
         setting,
         successSmile,
         success,
+        thumbDownBlue,
         vi
       ];
 }

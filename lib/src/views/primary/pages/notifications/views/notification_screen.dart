@@ -118,7 +118,7 @@ class _SearchResultsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (messages.isEmpty) {
       return EmptyState(
-        image: Assets.illustrations.pointDown.svg(),
+        image: Assets.illustrations.thumbDownBlue.svg(),
         topText: 'אין  התראות',
         bottomText: 'התראות  שיוצרו, יופיעו כאן',
       );

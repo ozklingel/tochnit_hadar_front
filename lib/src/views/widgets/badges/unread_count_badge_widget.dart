@@ -32,7 +32,7 @@ class UnreadCounterBadgeWidget extends ConsumerWidget {
                     backgroundColor: AppColors.red1,
                     radius: 9,
                     child: Text(
-                      count.toString(),
+                      "",
                       style: TextStyles.s11w500fRoboto,
                     ),
                   ),
