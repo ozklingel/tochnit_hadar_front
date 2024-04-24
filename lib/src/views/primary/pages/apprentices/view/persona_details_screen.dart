@@ -708,8 +708,8 @@ class _TohnitHadarTabView extends ConsumerWidget {
               style: TextStyles.s12w300cGray2,
             ),
           ),
-          child: Consumer(
-            builder: (context, ref, child) {
+          child: Builder(
+            builder: (context) {
               final reports =
                   ref.watch(reportsControllerProvider).valueOrNull?.where(
                             (element) => apprentice.reportsIds
@@ -848,24 +848,39 @@ class _TohnitHadarTabView extends ConsumerWidget {
                         DateTime.parse(element.dateTime).millisecondsSinceEpoch,
                   )
                   .reversed
-                  .take(3)
+                  .take(5)
                   .map(
                     (e) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Row(
                         children: [
-                          if (e.reportEventType == ReportEventType.call)
+                          if ([
+                            ReportEventType.call,
+                            ReportEventType.callParents,
+                          ].contains(e.reportEventType))
+                            const Icon(FluentIcons.call_24_regular)
+                          else if ([
+                            ReportEventType.mosadMeetings,
+                            ReportEventType.onlineMeeting,
+                            ReportEventType.offlineMeeting,
+                            ReportEventType.recurringMeeting,
+                            ReportEventType.offlineGroupMeeting,
+                          ].contains(e.reportEventType))
                             const Icon(FluentIcons.people_24_regular)
-                          else if (e.reportEventType == ReportEventType.call)
-                            const Icon(FluentIcons.phone_24_regular)
-                          else if (e.reportEventType ==
-                              ReportEventType.fiveMessages)
-                            const Icon(FluentIcons.textbox_24_regular)
+                          else if ([
+                            ReportEventType.fiveMessages,
+                          ].contains(e.reportEventType))
+                            const Icon(FluentIcons.chat_24_regular)
                           else
                             const Icon(FluentIcons.question_24_regular),
                           const SizedBox(width: 6),
                           Text(
                             e.dateTime.asDateTime.he,
+                            style: TextStyles.s14w400cGrey5,
+                          ),
+                          const Text(', '),
+                          Text(
+                            e.dateTime.asDateTime.asDayMonth,
                             style: TextStyles.s14w400cGrey5,
                           ),
                           const Text('.'),

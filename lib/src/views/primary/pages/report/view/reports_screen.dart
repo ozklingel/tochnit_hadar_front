@@ -27,16 +27,22 @@ import 'package:skeletonizer/skeletonizer.dart';
 class ReportsScreen extends HookConsumerWidget {
   const ReportsScreen({
     super.key,
-    this.apprenticeId = '',
+    this.personaId = '',
   });
 
-  final String apprenticeId;
+  final String personaId;
 
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
-    final apprentices = ref.watch(getPersonasProvider).valueOrNull ?? [];
-    final reportsScreenController = ref.watch(reportsControllerProvider);
+    final personas = ref.watch(getPersonasProvider).valueOrNull ?? [];
+    final controller = ref.watch(reportsControllerProvider);
+    final reports = (controller.valueOrNull ?? []).where((element) {
+      if (personaId.isEmpty) {
+        return true;
+      }
+      return element.recipients.contains(personaId);
+    });
     final selectedReportIds = useState(<String>[]);
     final filters = useState(const FilterDto());
     final sortBy = useState(SortReportBy.abcAscending);
@@ -345,42 +351,31 @@ class ReportsScreen extends HookConsumerWidget {
                   ],
                 ),
               ),
-              reportsScreenController.when(
-                error: (error, stack) => SliverFillRemaining(
-                  child: Center(
-                    child: Text(reportsScreenController.error.toString()),
-                  ),
-                ),
-                loading: () => SliverFillRemaining(
-                  child: _ReporsListBody(
-                    scrollController: scrollController,
-                    reports: List.generate(
-                      10,
-                      (index) => const ReportDto(),
-                    ),
-                    isLoading: true,
-                    selectedReportIds: selectedReportIds,
-                  ),
-                ),
-                data: (reportsList) => SliverFillRemaining(
-                  child: _ReporsListBody(
-                    scrollController: scrollController,
-                    reports: reportsList
-                        .where(
-                          (element) =>
-                              element.description.toLowerCase().contains(
-                                    searchController.text.toLowerCase(),
-                                  ) ||
-                              element.reportEventType.name
-                                  .toLowerCase()
-                                  .contains(
-                                    searchController.text.toLowerCase(),
-                                  ),
+              SliverFillRemaining(
+                child: _ReporsListBody(
+                  scrollController: scrollController,
+                  isLoading: controller.isLoading,
+                  selectedReportIds: selectedReportIds,
+                  reports: controller.isLoading
+                      ? List.generate(
+                          10,
+                          (index) => ReportDto(
+                            dateTime: DateTime.now().toIso8601String(),
+                          ),
                         )
-                        .toList(),
-                    isLoading: false,
-                    selectedReportIds: selectedReportIds,
-                  ),
+                      : reports
+                          .where(
+                            (element) =>
+                                element.description.toLowerCase().contains(
+                                      searchController.text.toLowerCase(),
+                                    ) ||
+                                element.reportEventType.name
+                                    .toLowerCase()
+                                    .contains(
+                                      searchController.text.toLowerCase(),
+                                    ),
+                          )
+                          .toList(),
                 ),
               ),
             ],
@@ -412,12 +407,11 @@ class ReportsScreen extends HookConsumerWidget {
             ),
             Builder(
               builder: (context) {
-                final report = reportsScreenController.valueOrNull?.singleWhere(
-                      (element) => element.id == selectedReportIds.value.first,
-                      orElse: () => const ReportDto(),
-                    ) ??
-                    const ReportDto();
-                final recipients = apprentices.singleWhere(
+                final report = reports.singleWhere(
+                  (element) => element.id == selectedReportIds.value.first,
+                  orElse: () => const ReportDto(),
+                );
+                final recipients = personas.singleWhere(
                   (element) => report.recipients.contains(element.id),
                   orElse: () => const PersonaDto(),
                 );
@@ -510,33 +504,18 @@ class ReportsScreen extends HookConsumerWidget {
           selectedReportIds.value = [];
           return ref.refresh(getReportsProvider.future);
         },
-        child: reportsScreenController.when(
-          error: (error, stack) => CustomScrollView(
-            controller: scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              SliverFillRemaining(
-                child: Center(
-                  child: Text(reportsScreenController.error.toString()),
-                ),
-              ),
-            ],
-          ),
-          loading: () => _ReporsListBody(
-            scrollController: scrollController,
-            reports: List.generate(
-              10,
-              (index) => ReportDto(
-                dateTime: DateTime.now().toIso8601String(),
-              ),
-            ),
-            isLoading: true,
-            selectedReportIds: selectedReportIds,
-          ),
-          data: (reports) {
-            return _ReporsListBody(
-              scrollController: scrollController,
-              reports: reports
+        child: _ReporsListBody(
+          scrollController: scrollController,
+          isLoading: controller.isLoading,
+          selectedReportIds: selectedReportIds,
+          reports: controller.isLoading
+              ? List.generate(
+                  10,
+                  (index) => ReportDto(
+                    dateTime: DateTime.now().toIso8601String(),
+                  ),
+                )
+              : reports
                   .where(
                     (element) =>
                         element.description
@@ -547,10 +526,6 @@ class ReportsScreen extends HookConsumerWidget {
                             .contains(searchController.text.toLowerCase()),
                   )
                   .toList(),
-              isLoading: false,
-              selectedReportIds: selectedReportIds,
-            );
-          },
         ),
       ),
     );

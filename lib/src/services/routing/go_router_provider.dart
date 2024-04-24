@@ -432,7 +432,7 @@ class ReportsRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ReportsScreen(
-      apprenticeId: apprenticeId,
+      personaId: apprenticeId,
     );
   }
 }
