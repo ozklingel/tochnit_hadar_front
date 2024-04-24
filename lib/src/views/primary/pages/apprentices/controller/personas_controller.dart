@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
@@ -65,97 +64,14 @@ class PersonasController extends _$PersonasController {
   }) async {
     Toaster.backend();
 
-    if (apprenticeId.isEmpty) {
-      return false;
-    }
-
     return false;
   }
-
-  // }) async {
-  //   if (apprenticeId.isEmpty) {
-  //     return false;
-  //   }
-
-  //   final apprentice = state.valueOrNull?.singleWhere(
-  //         (element) => element.id == apprenticeId,
-  //         orElse: () => const PersonaDto(),
-  //       ) ??
-  //       const PersonaDto();
-
-  //   final apprenticeIndex = state.valueOrNull?.indexOf(apprentice) ?? -1;
-
-  //   if (apprenticeIndex == -1) return false;
-
-  //   final newState = state.valueOrNull ?? [];
-
-  //   newState[apprenticeIndex] = apprentice.copyWith(
-  //     events: [...apprentice.events, event],
-  //   );
-
-  //   final oldState = state.valueOrNull ?? [];
-
-  //   state = AsyncData([...newState]);
-
-  //   await Future.delayed(const Duration(milliseconds: 200));
-
-  //   if (faker.randomGenerator.boolean()) {
-  //     return true;
-  //   }
-
-  //   state = AsyncData([...oldState]);
-
-  //   return false;
-  // }
 
   FutureOr<bool> deleteEvent({
     required String apprenticeId,
     required String eventId,
   }) async {
-    final apprentice = state.valueOrNull?.singleWhere(
-          (element) => element.id == apprenticeId,
-          orElse: () => const PersonaDto(),
-        ) ??
-        const PersonaDto();
-
-    final oldState = state.valueOrNull ?? [];
-
-    final apprenticeIndex = state.valueOrNull?.indexOf(apprentice) ?? -1;
-
-    if (apprenticeIndex == -1) return false;
-
-    final newState = state.valueOrNull ?? [];
-
-    final event =
-        apprentice.events.firstWhere((element) => element.id == eventId);
-
-    final newEvents = [...apprentice.events];
-
-    final oldEventIndex = newEvents.indexOf(event);
-
-    newEvents.removeAt(oldEventIndex);
-
-    newState[apprenticeIndex] = apprentice.copyWith(
-      events: [...newEvents],
-    );
-
-    state = AsyncData([...newState]);
-
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    if (faker.randomGenerator.boolean()) {
-      return true;
-    }
-
-    // TODO(noga-dev): if old event's date changes should it be sorted?
-
-    newEvents.insert(oldEventIndex, event);
-
-    oldState[apprenticeIndex] = apprentice.copyWith(
-      events: [...newEvents],
-    );
-
-    state = AsyncData([...oldState]);
+    Toaster.backend();
 
     return false;
   }
@@ -164,48 +80,7 @@ class PersonasController extends _$PersonasController {
     required String apprenticeId,
     required EventDto event,
   }) async {
-    final apprentice = state.valueOrNull?.singleWhere(
-          (element) => element.id == apprenticeId,
-          orElse: () => const PersonaDto(),
-        ) ??
-        const PersonaDto();
-
-    final oldState = state.valueOrNull ?? [];
-
-    final apprenticeIndex = state.valueOrNull?.indexOf(apprentice) ?? -1;
-
-    if (apprenticeIndex == -1) return false;
-
-    final newState = state.valueOrNull ?? [];
-
-    final eventIndex = apprentice.events.indexWhere(
-      (element) => element.id == event.id,
-    );
-
-    if (eventIndex == -1) return false;
-
-    final newEventsList = [...apprentice.events];
-
-    newEventsList.removeAt(eventIndex);
-    newEventsList.insert(eventIndex, event);
-
-    newState[apprenticeIndex] = apprentice.copyWith(
-      events: [...newEventsList],
-    );
-
-    state = AsyncData([...newState]);
-
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    if (faker.randomGenerator.boolean()) {
-      return true;
-    }
-
-    oldState[apprenticeIndex] = apprentice.copyWith(
-      events: [...apprentice.events],
-    );
-
-    state = AsyncData([...oldState]);
+    Toaster.backend();
 
     return false;
   }
