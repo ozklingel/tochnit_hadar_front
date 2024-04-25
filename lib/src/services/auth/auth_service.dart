@@ -36,7 +36,7 @@ class AuthService extends _$AuthService {
 
       if (phone == '523301800') {
         return user.copyWith(
-          role: UserRole.melave,
+          role: UserRole.ahraiTohnit,
         );
       }
     } else {

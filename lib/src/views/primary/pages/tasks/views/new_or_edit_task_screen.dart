@@ -11,6 +11,7 @@ import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_but
 import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 class NewOrEditTaskScreen extends HookConsumerWidget {
   const NewOrEditTaskScreen({
@@ -22,17 +23,27 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final task = ref.watch(tasksControllerProvider).valueOrNull?.singleWhere(
-              orElse: () => const TaskDto(),
-              (element) => element.id == id,
-            ) ??
-        const TaskDto();
+    final task =
+        (ref.watch(tasksControllerProvider).valueOrNull ?? []).singleWhere(
+      orElse: () => const TaskDto(),
+      (element) => element.id == id,
+    );
 
-    final taskTextController =
-        useTextEditingController(text: task.reportEventType.name);
+    Logger().d(task.dateTime);
+
+    final taskTextController = useTextEditingController(
+      text: task.reportEventType == TaskType.none
+          ? ''
+          : task.reportEventType.name,
+    );
     final detailsTextController = useTextEditingController(text: task.details);
-    final frequencyController = useState(task.frequency);
-    final dateTimeController = useState(task.dateTime.asDateTime);
+    final frequencyController = useState(
+      task.frequency == TaskFrequency.unknown
+          ? TaskFrequency.once
+          : task.frequency,
+    );
+    final dateTimeController =
+        useState(task.dateTime.isEmpty ? '' : task.dateTime.asDateTime);
     useListenable(taskTextController);
     useListenable(detailsTextController);
 
