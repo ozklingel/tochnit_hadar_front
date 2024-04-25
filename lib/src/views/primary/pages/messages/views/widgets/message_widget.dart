@@ -32,11 +32,10 @@ class MessageWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final fromApprentice =
-        ref.watch(personasControllerProvider).valueOrNull?.firstWhere(
-                  (element) => element.phone == message.from,
-                  orElse: () => const PersonaDto(),
-                ) ??
-            const PersonaDto();
+        (ref.watch(personasControllerProvider).valueOrNull ?? []).firstWhere(
+      (element) => element.id == message.from,
+      orElse: () => const PersonaDto(),
+    );
 
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
@@ -60,7 +59,9 @@ class MessageWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        fromApprentice.fullName,
+                        fromApprentice.isEmpty
+                            ? 'N/A'
+                            : fromApprentice.fullName,
                         style: TextStyles.s18w600cShade09,
                       ),
                       if (isExpanded) const SizedBox(height: 16),
