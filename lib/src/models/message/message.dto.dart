@@ -105,6 +105,7 @@ MessageMethod _extractMessageMethod(String? data) {
 MessageType _extractMessageType(String? data) {
   switch (data) {
     case 'פניות_שירות':
+    case 'פניות שירות':
       return MessageType.customerService;
     case 'טיוטות':
     case 'טיוטה':

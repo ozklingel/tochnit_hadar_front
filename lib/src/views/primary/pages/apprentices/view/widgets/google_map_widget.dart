@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/geolocation/geolocation_service.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
@@ -26,6 +28,7 @@ class GoogleMapWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
     final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
     final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
     final markers = useState(<Marker>{});
@@ -134,8 +137,8 @@ class GoogleMapWidget extends HookConsumerWidget {
         Align(
           alignment: AlignmentDirectional.bottomEnd,
           child: Padding(
-            padding:
-                const EdgeInsets.all(16) + const EdgeInsets.only(bottom: 64),
+            padding: const EdgeInsets.all(16) +
+                EdgeInsets.only(bottom: auth.role == UserRole.melave ? 0 : 64),
             child: FloatingActionButton(
               heroTag: UniqueKey(),
               shape: const CircleBorder(),
