@@ -462,12 +462,17 @@ List<EventDto> _parseEvents(dynamic val) {
   const errMsg = 'MISSING EVENTS PARSE IMPLEMENTATION';
 
   if (val is List<dynamic>) {
+    if (val.isEmpty) {
+      return [];
+    }
+
     Logger().w(errMsg);
+    Sentry.captureMessage(errMsg, params: [val]);
 
     return [];
   } else if (val is String) {
     // not suposed to be here but found this during dev so putting it here
-    Sentry.captureMessage(errMsg);
+    Sentry.captureMessage(errMsg, params: [val]);
     Logger().w(errMsg);
 
     return [];

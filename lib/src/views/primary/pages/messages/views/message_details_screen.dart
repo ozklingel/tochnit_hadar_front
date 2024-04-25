@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
@@ -48,6 +49,28 @@ class MessageDetailsScreen extends HookConsumerWidget {
           PopupMenuButton(
             child: const Icon(Icons.more_vert),
             itemBuilder: (context) {
+              if (message.type == MessageType.customerService) {
+                return [
+                  PopupMenuItem(
+                    child: const Text('להתקשר'),
+                    onTap: () => launchCall(phone: message.from),
+                  ),
+                  PopupMenuItem(
+                    child: const Text('שליחת וואטסאפ'),
+                    onTap: () => launchWhatsapp(phone: message.from),
+                  ),
+                  PopupMenuItem(
+                    child: const Text('שליחת SMS'),
+                    onTap: () => launchSms(phone: [message.from]),
+                  ),
+                  PopupMenuItem(
+                    child: const Text('פרופיל אישי'),
+                    onTap: () =>
+                        PersonaDetailsRouteData(id: message.from).push(context),
+                  ),
+                ];
+              }
+
               return [
                 if (auth.role != UserRole.melave)
                   if (message.type == MessageType.draft ||
