@@ -132,6 +132,7 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
             children: incompleteTasks
                 .map(
                   (e) => ListTile(
+                    onTap: () => TaskDetailsRouteData(id: e.id).push(context),
                     leading: Checkbox(
                       value: false,
                       onChanged: (value) =>
