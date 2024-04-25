@@ -17,6 +17,14 @@ extension ReportDateTimeX on DateTime? {
   String get asDayMonthYearShortDot => DateFormat('dd.MM.yy').format(this!);
   String get asDayMonthYearShortSlash => DateFormat('dd/MM/yy').format(this!);
   String get asDayMonth => DateFormat('dd.MM').format(this!);
+  String get asTimeAgoDayCutoff {
+    if (this == null) return DateTime.now().toString();
+
+    return this!.difference(DateTime.now()) < const Duration(days: 1)
+        ? asDayMonth
+        : asTimeAgo;
+  }
+
   String get asTimeAgo {
     return format(
       this!,

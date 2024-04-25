@@ -108,23 +108,26 @@ class NotificationWidget extends ConsumerWidget {
                             style: TextStyles.s16w400cGrey2,
                           ),
                       ],
-                if (auth.valueOrNull?.role != UserRole.melave) ...[
+                      if (auth.valueOrNull?.role != UserRole.melave) ...[
                         if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "הכנסת מחזור חדש" ||message.event == "עידכון חודשי-ציון מוסדות" ||message.event == "ישיבת מוסד אשכול" ||
-                                message.event == "דוח דו שבועי-חניכים נשכחים" ||message.event == "ישיבת רכזי תוכנית" ||
+                            (message.event == "הכנסת מחזור חדש" ||
+                                message.event == "עידכון חודשי-ציון מוסדות" ||
+                                message.event == "ישיבת מוסד אשכול" ||
+                                message.event == "דוח דו שבועי-חניכים נשכחים" ||
+                                message.event == "ישיבת רכזי תוכנית" ||
                                 message.event == "דוח  חודשי- ציון מלווים"))
                           Text(
                             " ${message.event}",
                             style: TextStyles.s18w600cShade09,
                           ),
                         if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "מפגש מלווים קבוצתי" || message.event == "ישיבת מצב”ר"||
+                            (message.event == "מפגש מלווים קבוצתי" ||
+                                message.event == "ישיבת מצב”ר" ||
                                 message.event == "עשיה לטובת בוגרים"))
                           Text(
                             "הגיע הזמן ל${message.event}",
                             style: TextStyles.s18w600cShade09,
                           ),
-                    
                       ],
                     ],
                   ),
@@ -132,7 +135,7 @@ class NotificationWidget extends ConsumerWidget {
                 Column(
                   children: [
                     Text(
-                      message.dateTime.asDateTime.asTimeAgo,
+                      message.dateTime.asDateTime.asTimeAgoDayCutoff,
                       style: TextStyles.s12w400cGrey5fRoboto,
                     ),
                     if (message.dateTime.asDateTime.difference(DateTime.now()) >

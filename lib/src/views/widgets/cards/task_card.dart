@@ -83,7 +83,7 @@ class TaskCard extends ConsumerWidget {
             style: TextStyles.s18w500cGray1,
           ),
           subtitle: Text(
-            task.dateTime.asDateTime.asTimeAgo,
+            task.dateTime.asDateTime.asTimeAgoDayCutoff,
             style: TextStyles.s16w300cGray2,
           ),
         ),

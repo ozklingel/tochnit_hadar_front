@@ -89,7 +89,9 @@ class TohnitHadarTabView extends HookConsumerWidget {
                             const TextSpan(text: ', '),
                             TextSpan(text: e.dateTime.asDateTime.asDayMonth),
                             const TextSpan(text: '. '),
-                            TextSpan(text: e.dateTime.asDateTime.asTimeAgo),
+                            TextSpan(
+                              text: e.dateTime.asDateTime.asTimeAgoDayCutoff,
+                            ),
                           ],
                         ),
                       ),
@@ -188,7 +190,7 @@ class TohnitHadarTabView extends HookConsumerWidget {
                           const Text('.'),
                           const SizedBox(width: 6),
                           Text(
-                            e.dateTime.asDateTime.asTimeAgo,
+                            e.dateTime.asDateTime.asTimeAgoDayCutoff,
                             style: TextStyles.s14w400cGrey5,
                           ),
                         ],

@@ -98,7 +98,7 @@ class MessageWidget extends ConsumerWidget {
                 Column(
                   children: [
                     Text(
-                      message.dateTime.asDateTime.asTimeAgo,
+                      message.dateTime.asDateTime.asTimeAgoDayCutoff,
                       style: TextStyles.s12w400cGrey5fRoboto,
                     ),
                     if (message.dateTime.asDateTime.difference(DateTime.now()) >

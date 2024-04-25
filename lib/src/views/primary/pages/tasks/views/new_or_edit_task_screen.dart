@@ -95,7 +95,7 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                   label: Text(
                     dateTimeController.value.isAtSameMomentAs(DateTime.now())
                         ? 'הוספת תזמון'
-                        : dateTimeController.value.asTimeAgo,
+                        : dateTimeController.value.asTimeAgoDayCutoff,
                     style: TextStyles.s18w400cBlue02,
                   ),
                   icon: const Icon(
