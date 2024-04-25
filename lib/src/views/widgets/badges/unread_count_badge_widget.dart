@@ -27,7 +27,7 @@ class UnreadCounterBadgeWidget extends ConsumerWidget {
           top: -6,
           child: count < 1
               ? const SizedBox.shrink()
-              : IgnorePointer(
+              : const IgnorePointer(
                   child: CircleAvatar(
                     backgroundColor: AppColors.red1,
                     radius: 9,

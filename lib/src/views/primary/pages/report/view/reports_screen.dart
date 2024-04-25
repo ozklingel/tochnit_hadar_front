@@ -366,12 +366,15 @@ class ReportsScreen extends HookConsumerWidget {
                       : reports
                           .where(
                             (element) =>
-                                element.description.toLowerCase().contains(
-                                      searchController.text.toLowerCase(),
-                                    ) ||
-                                element.reportEventType.name
-                                    .toLowerCase()
-                                    .contains(
+                                // element.description.toLowerCase().contains(
+                                //       searchController.text.toLowerCase(),
+                                //     ) ||
+                                // element.reportEventType.name
+                                //     .toLowerCase()
+                                //     .contains(
+                                //       searchController.text.toLowerCase(),
+                                //     ) ||
+                                element.search.toLowerCase().contains(
                                       searchController.text.toLowerCase(),
                                     ),
                           )

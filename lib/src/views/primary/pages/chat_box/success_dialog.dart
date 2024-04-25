@@ -5,20 +5,22 @@ import 'package:flutter/material.dart';
 import '../../../../services/networking/http_service.dart';
 import '../../../../services/routing/go_router_provider.dart';
 
-void showFancyCustomDialog(BuildContext context,phone,contant,subject) {
-  bool wasPressed=false;
-   Timer(Duration(seconds: 3), () async {
-    if (!wasPressed){
-             await HttpService.chatBoxUrl(
-                    phone,
-                    contant,
-                    subject,
-                    context,
-                  );
-const HomeRouteData().go(context);
+void showFancyCustomDialog(BuildContext context, phone, contant, subject) {
+  bool wasPressed = false;
+  Timer(const Duration(seconds: 3), () async {
+    if (!wasPressed) {
+      await HttpService.chatBoxUrl(
+        phone,
+        contant,
+        subject,
+        context,
+      );
+      if (context.mounted) {
+        const HomeRouteData().go(context);
+      }
     }
-});
-   Size orientation = MediaQuery.of(context).size;
+  });
+  Size orientation = MediaQuery.of(context).size;
   Dialog fancyDialog = Dialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12.0),
@@ -36,7 +38,7 @@ const HomeRouteData().go(context);
             alignment: Alignment.topLeft,
             child: InkWell(
               onTap: () {
-                wasPressed=true;
+                wasPressed = true;
                 Navigator.of(context, rootNavigator: true).pop();
               },
               child: Container(
@@ -64,39 +66,44 @@ const HomeRouteData().go(context);
               ),
             ),
           ),
-           Column(
+          Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 width: double.infinity,
                 height: 30,
               ),
               Padding(
-                padding: EdgeInsets.only(top: 2, bottom: 10, left: 2, right: 2),
+                padding: const EdgeInsets.only(
+                  top: 2,
+                  bottom: 10,
+                  left: 2,
+                  right: 2,
+                ),
                 child: Image(
-                  width: orientation.width/2,
-                  height: orientation.height/2,
-                  image: AssetImage('assets/images/success-smile.png'),
+                  width: orientation.width / 2,
+                  height: orientation.height / 2,
+                  image: const AssetImage('assets/images/success-smile.png'),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: double.infinity,
                 height: 5,
               ),
-              Text(
+              const Text(
                 'פניתך נשלחה בהצלחה!',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 width: double.infinity,
                 height: 20,
               ),
-              Text(
+              const Text(
                 'נחזור אליך בהקדם',
                 style: TextStyle(
                   fontSize: 15,
                 ),
               ),
-              Text(
+              const Text(
                 'תודה',
                 style: TextStyle(
                   fontSize: 15,

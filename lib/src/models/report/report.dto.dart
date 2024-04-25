@@ -61,6 +61,17 @@ class ReportDto with _$ReportDto {
       name: 'days_from_now',
     )
     int daysFromNow,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String search,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'creation_date',
+    )
+    String creationDate,
   }) = _ReportDto;
 
   factory ReportDto.fromJson(Map<String, dynamic> json) =>

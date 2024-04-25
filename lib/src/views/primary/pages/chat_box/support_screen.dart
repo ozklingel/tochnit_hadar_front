@@ -3,10 +3,8 @@ import 'package:hadar_program/src/views/primary/pages/chat_box/success_dialog.da
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../services/auth/auth_service.dart';
-import '../../../../services/networking/http_service.dart';
 import '../../../../services/routing/go_router_provider.dart';
 import 'drop_down_widget.dart';
-import 'error_dialog.dart';
 
 class SupportScreen extends StatefulHookConsumerWidget {
   const SupportScreen({super.key});
@@ -160,11 +158,14 @@ class _SupportScreenState extends ConsumerState<SupportScreen>
                 //print(SupportScreen.contant);
                 //print(DropdownButtonExample.subject);
 
-                String result = "";
                 if (SupportScreen.contant != "" &&
                     DropdownButtonExample.subject != null) {
-                             showFancyCustomDialog(context,auth.valueOrNull!.phone,SupportScreen.contant,DropdownButtonExample.subject);
-
+                  showFancyCustomDialog(
+                    context,
+                    auth.valueOrNull!.phone,
+                    SupportScreen.contant,
+                    DropdownButtonExample.subject,
+                  );
                 }
                 // print(result);
                 // print(result);
@@ -173,11 +174,9 @@ class _SupportScreenState extends ConsumerState<SupportScreen>
                   return;
                 }
 
-          
-                  // print("in");
+                // print("in");
 
-                  // ignore: use_build_context_synchronously
-              
+                // ignore: use_build_context_synchronously
               },
               child: Text(
                 "שליחת פנייה",
