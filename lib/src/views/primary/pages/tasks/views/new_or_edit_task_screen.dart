@@ -11,7 +11,6 @@ import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_but
 import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 class NewOrEditTaskScreen extends HookConsumerWidget {
   const NewOrEditTaskScreen({
@@ -29,7 +28,7 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
       (element) => element.id == id,
     );
 
-    Logger().d(task.dateTime);
+    // Logger().d(task.dateTime);
 
     final taskTextController = useTextEditingController(
       text: task.reportEventType == TaskType.none
@@ -42,8 +41,9 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
           ? TaskFrequency.once
           : task.frequency,
     );
-    final dateTimeController =
-        useState(task.dateTime.isEmpty ? '' : task.dateTime.asDateTime);
+    final dateTimeController = useState<DateTime?>(
+      task.dateTime.isEmpty ? null : task.dateTime.asDateTime,
+    );
     useListenable(taskTextController);
     useListenable(detailsTextController);
 
@@ -104,7 +104,9 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                     dateTimeController.value = result;
                   },
                   label: Text(
-                    dateTimeController.value.isAtSameMomentAs(DateTime.now())
+                    (dateTimeController.value
+                                ?.isAtSameMomentAs(DateTime.now()) ??
+                            false)
                         ? 'הוספת תזמון'
                         : dateTimeController.value.asTimeAgoDayCutoff,
                     style: TextStyles.s18w400cBlue02,
@@ -154,7 +156,8 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                   label: 'שמירה',
                   onPressed: taskTextController.text.isEmpty ||
                           detailsTextController.text.isEmpty ||
-                          dateTimeController.value.isBefore(DateTime.now())
+                          (dateTimeController.value?.isBefore(DateTime.now()) ??
+                              false)
                       ? null
                       : () async {
                           final providerNotifier =
