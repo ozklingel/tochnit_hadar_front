@@ -70,11 +70,12 @@ class TohnitHadarTabView extends HookConsumerWidget {
           child: Builder(
             builder: (context) {
               final reports =
-                  ref.watch(reportsControllerProvider).valueOrNull?.where(
-                            (element) =>
-                                persona.reportsIds.take(3).contains(element.id),
-                          ) ??
-                      [];
+                  (ref.watch(reportsControllerProvider).valueOrNull ?? [])
+                      .where(
+                (element) => persona.reportsIds.take(3).contains(element.id),
+              );
+
+              // Logger().d(persona.reportsIds);
 
               return ListView.separated(
                 shrinkWrap: true,

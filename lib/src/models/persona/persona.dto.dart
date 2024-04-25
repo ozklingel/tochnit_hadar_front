@@ -440,10 +440,11 @@ List<String> _extractReports(dynamic val) {
     if (val is List<String>) {
       return val;
     } else {
-      const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION LIST';
-      // not suposed to be here but found this during dev so putting it here
-      Sentry.captureMessage(errMsg);
-      Logger().w('$errMsg list', error: val);
+      return val.map((e) => e.toString()).toList();
+      // const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION LIST';
+      // // not suposed to be here but found this during dev so putting it here
+      // Sentry.captureMessage(errMsg);
+      // Logger().w('$errMsg list', error: val);
     }
   } else if (val is String) {
     const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION STRING';
