@@ -31,6 +31,10 @@ class $AssetsIllustrationsGen {
   /// File path: assets/illustrations/clap.svg
   SvgGenImage get clap => const SvgGenImage('assets/illustrations/clap.svg');
 
+  /// File path: assets/illustrations/envelop.svg
+  SvgGenImage get envelop =>
+      const SvgGenImage('assets/illustrations/envelop.svg');
+
   /// File path: assets/illustrations/heart-love-full-body.svg
   SvgGenImage get heartLoveFullBody =>
       const SvgGenImage('assets/illustrations/heart-love-full-body.svg');
@@ -103,6 +107,7 @@ class $AssetsIllustrationsGen {
   List<SvgGenImage> get values => [
         alarmBell,
         clap,
+        envelop,
         heartLoveFullBody,
         holdSign,
         mobile1PopOut,

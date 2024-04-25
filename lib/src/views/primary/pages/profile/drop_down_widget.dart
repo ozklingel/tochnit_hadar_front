@@ -77,12 +77,11 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
         decoration: BoxDecoration(
           color: selectedValue == null
               ? Colors.white
               : const Color.fromRGBO(236, 242, 245, 1),
-          borderRadius: BorderRadius.circular(20.0),
           border: Border.all(
             color: Colors.black,
             style: BorderStyle.solid,

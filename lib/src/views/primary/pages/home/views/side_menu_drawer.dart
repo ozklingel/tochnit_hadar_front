@@ -11,6 +11,8 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/controller/use
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../../gen/assets.gen.dart';
+
 class SideMenuDrawer extends ConsumerWidget {
   const SideMenuDrawer({
     super.key,
@@ -90,13 +92,13 @@ class SideMenuDrawer extends ConsumerWidget {
                   ),
                   ListTile(
                     dense: true,
-                    leading: const Icon(FluentIcons.call_24_regular),
+                    leading: const Icon(FluentIcons.mail_12_regular),
                     title: const Text('פניות שירות'),
                     onTap: () => const SupportRouteData().go(context),
                   ),
                   ListTile(
                     dense: true,
-                    leading: const Icon(Icons.notifications_none),
+                    leading: Assets.illustrations.alarmBell.svg(),
                     title: const Text(' התראות'),
                     onTap: () => const NotificationRouteData().go(context),
                   ),

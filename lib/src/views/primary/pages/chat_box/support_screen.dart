@@ -163,12 +163,8 @@ class _SupportScreenState extends ConsumerState<SupportScreen>
                 String result = "";
                 if (SupportScreen.contant != "" &&
                     DropdownButtonExample.subject != null) {
-                  result = await HttpService.chatBoxUrl(
-                    auth.valueOrNull!.phone,
-                    SupportScreen.contant,
-                    DropdownButtonExample.subject,
-                    context,
-                  );
+                             showFancyCustomDialog(context,auth.valueOrNull!.phone,SupportScreen.contant,DropdownButtonExample.subject);
+
                 }
                 // print(result);
                 // print(result);
@@ -177,16 +173,11 @@ class _SupportScreenState extends ConsumerState<SupportScreen>
                   return;
                 }
 
-                if (result == "success") {
-                  // print("in");
-                  // ignore: use_build_context_synchronously
-                  showFancyCustomDialog(context);
-                } else {
+          
                   // print("in");
 
                   // ignore: use_build_context_synchronously
-                  showAlertDialog(context);
-                }
+              
               },
               child: Text(
                 "שליחת פנייה",

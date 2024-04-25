@@ -74,11 +74,12 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Container(
+        
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
         decoration: BoxDecoration(
           color: selectedValue == null
               ? Colors.white
-              : const Color.fromRGBO(236, 242, 245, 1),
+              : Colors.white10,
           borderRadius: BorderRadius.circular(20.0),
           border: Border.all(
             color: Colors.black,
@@ -90,18 +91,9 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
           data: Theme.of(context).copyWith(
             canvasColor: Colors.white,
           ),
-          child: DropdownButton2<String>(
-            iconStyleData: const IconStyleData(
-              icon: Icon(
-                Icons.expand_more_outlined,
-              ),
-              openMenuIcon: Icon(
-                Icons.expand_less_outlined,
-              ),
-              iconSize: 20,
-              iconEnabledColor: Colors.black,
-              iconDisabledColor: Colors.grey,
-            ),
+          child: DropdownButtonHideUnderline( 
+  child:DropdownButton2<String>(
+    
             isDense: true,
             hint: Text(
               " נושא",
@@ -132,7 +124,7 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
                 // print(DropdownButtonExample.subject);
               });
             },
-          ),
+          )),
         ),
       ),
     );

@@ -1,8 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../../../../services/networking/http_service.dart';
 import '../../../../services/routing/go_router_provider.dart';
 
-void showFancyCustomDialog(BuildContext context) {
+void showFancyCustomDialog(BuildContext context,phone,contant,subject) {
+  bool wasPressed=false;
+   Timer(Duration(seconds: 3), () async {
+    if (!wasPressed){
+             await HttpService.chatBoxUrl(
+                    phone,
+                    contant,
+                    subject,
+                    context,
+                  );
+const HomeRouteData().go(context);
+    }
+});
+   Size orientation = MediaQuery.of(context).size;
   Dialog fancyDialog = Dialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12.0),
@@ -11,8 +27,8 @@ void showFancyCustomDialog(BuildContext context) {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      height: 350.0,
-      width: 300.0,
+      height: double.infinity,
+      width: double.infinity,
       child: Stack(
         children: <Widget>[
           Align(
@@ -20,6 +36,7 @@ void showFancyCustomDialog(BuildContext context) {
             alignment: Alignment.topLeft,
             child: InkWell(
               onTap: () {
+                wasPressed=true;
                 Navigator.of(context, rootNavigator: true).pop();
               },
               child: Container(
@@ -47,7 +64,7 @@ void showFancyCustomDialog(BuildContext context) {
               ),
             ),
           ),
-          const Column(
+           Column(
             children: [
               SizedBox(
                 width: double.infinity,
@@ -56,8 +73,8 @@ void showFancyCustomDialog(BuildContext context) {
               Padding(
                 padding: EdgeInsets.only(top: 2, bottom: 10, left: 2, right: 2),
                 child: Image(
-                  width: 150,
-                  height: 160,
+                  width: orientation.width/2,
+                  height: orientation.height/2,
                   image: AssetImage('assets/images/success-smile.png'),
                 ),
               ),
