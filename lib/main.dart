@@ -68,10 +68,10 @@ class HadarProgram extends ConsumerWidget {
     final router = ref.watch(goRouterServiceProvider);
 
     return RequestsInspector(
-      enabled: true,
+      enabled: kDebugMode,
       hideInspectorBanner: true,
       navigatorKey: router.routerDelegate.navigatorKey,
-      showInspectorOn: ShowInspectorOn.Shaking,
+      showInspectorOn: ShowInspectorOn.Both,
       child: _EagerInitialization(
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,

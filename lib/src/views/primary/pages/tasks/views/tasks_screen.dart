@@ -189,12 +189,13 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
                             TaskDetailsRouteData(id: e.id).push(context),
                         leading: Checkbox(
                           value: true,
-                          onChanged: (value) =>
-                              ref.read(tasksControllerProvider.notifier).edit(
-                                    e.copyWith(
-                                      status: TaskStatus.todo,
-                                    ),
+                          onChanged: (value) {
+                            ref.read(tasksControllerProvider.notifier).edit(
+                                  e.copyWith(
+                                    status: TaskStatus.todo,
                                   ),
+                                );
+                          },
                         ),
                         title: Text(
                           e.title,

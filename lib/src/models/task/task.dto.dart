@@ -130,6 +130,9 @@ TaskType _extractTaskType(String? data) {
     case 'הזנת מחזור':
     case 'hazanatMahzor':
       return TaskType.hazanatMahzor;
+    case 'none':
+    case 'כומתה':
+      return TaskType.none;
     default:
       const msg = 'failed to extract task type';
       Logger().d(
