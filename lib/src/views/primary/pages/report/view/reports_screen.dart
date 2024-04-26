@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/theming/widgets.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
@@ -81,274 +82,280 @@ class ReportsScreen extends HookConsumerWidget {
                 collapsedHeight: filters.value.isEmpty ? 96 : 144,
                 automaticallyImplyLeading: false,
                 pinned: true,
-                flexibleSpace: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: 42,
-                              child: SearchBar(
-                                controller: searchController,
-                                elevation: MaterialStateProperty.all(0),
-                                padding: MaterialStateProperty.all(
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                                ),
-                                leading: const Icon(
-                                  FluentIcons.navigation_24_regular,
-                                  size: 18,
-                                ),
-                                trailing: const [
-                                  Icon(
-                                    FluentIcons.search_24_regular,
+                flexibleSpace: BottomShadowWidget(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                                height: 42,
+                                child: SearchBar(
+                                  controller: searchController,
+                                  elevation: MaterialStateProperty.all(0),
+                                  padding: MaterialStateProperty.all(
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                  ),
+                                  leading: const Icon(
+                                    FluentIcons.navigation_24_regular,
                                     size: 18,
                                   ),
-                                ],
-                                hintText: 'חיפוש',
-                                backgroundColor: MaterialStateColor.resolveWith(
-                                  (states) => AppColors.blue08,
+                                  trailing: const [
+                                    Icon(
+                                      FluentIcons.search_24_regular,
+                                      size: 18,
+                                    ),
+                                  ],
+                                  hintText: 'חיפוש',
+                                  backgroundColor:
+                                      MaterialStateColor.resolveWith(
+                                    (states) => AppColors.blue08,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Stack(
-                            children: [
-                              IconButton(
-                                onPressed: () async {
-                                  final result =
-                                      await Navigator.of(context).push(
-                                            MaterialPageRoute<FilterDto>(
-                                              builder: (context) =>
-                                                  FiltersScreen.reports(
-                                                initFilters: filters.value,
+                            const SizedBox(width: 8),
+                            Stack(
+                              children: [
+                                IconButton(
+                                  onPressed: () async {
+                                    final result =
+                                        await Navigator.of(context).push(
+                                              MaterialPageRoute<FilterDto>(
+                                                builder: (context) =>
+                                                    FiltersScreen.reports(
+                                                  initFilters: filters.value,
+                                                ),
                                               ),
-                                            ),
-                                          ) ??
-                                          const FilterDto();
+                                            ) ??
+                                            const FilterDto();
 
-                                  final request = await ref
-                                      .read(
-                                        reportsControllerProvider.notifier,
-                                      )
-                                      .filterReports(result);
+                                    final request = await ref
+                                        .read(
+                                          reportsControllerProvider.notifier,
+                                        )
+                                        .filterReports(result);
 
-                                  if (request) {
-                                    filters.value = result;
-                                  }
-                                },
-                                icon: const Icon(
-                                  FluentIcons.filter_add_20_regular,
+                                    if (request) {
+                                      filters.value = result;
+                                    }
+                                  },
+                                  icon: const Icon(
+                                    FluentIcons.filter_add_20_regular,
+                                  ),
                                 ),
-                              ),
-                              if (filters.value.isNotEmpty)
-                                Positioned(
-                                  right: 8,
-                                  top: 8,
-                                  child: IgnorePointer(
-                                    child: CircleAvatar(
-                                      backgroundColor: AppColors.red1,
-                                      radius: 7,
-                                      child: Text(
-                                        filters.value.length.toString(),
-                                        style: TextStyles.s11w500fRoboto,
+                                if (filters.value.isNotEmpty)
+                                  Positioned(
+                                    right: 8,
+                                    top: 8,
+                                    child: IgnorePointer(
+                                      child: CircleAvatar(
+                                        backgroundColor: AppColors.red1,
+                                        radius: 7,
+                                        child: Text(
+                                          filters.value.length.toString(),
+                                          style: TextStyles.s11w500fRoboto,
+                                        ),
                                       ),
                                     ),
                                   ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (filters.value.isNotEmpty)
+                        SizedBox(
+                          height: 48,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: ListView(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                ...filters.value.reportEventTypes.map(
+                                  (e) => FilterChipWidget(
+                                    text: e.name,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      roles: filters.value.roles
+                                          .where((element) => element != e.name)
+                                          .toList(),
+                                    ),
+                                  ),
                                 ),
-                            ],
+                                ...filters.value.roles.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      roles: filters.value.roles
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.years.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      years: filters.value.years
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.institutions.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      institutions: filters.value.institutions
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.periods.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      periods: filters.value.periods
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.eshkols.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      eshkols: filters.value.eshkols
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.statuses.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      statuses: filters.value.statuses
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.bases.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      bases: filters.value.bases
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.hativot.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      hativot: filters.value.hativot
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.regions.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      regions: filters.value.regions
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                ...filters.value.cities.map(
+                                  (e) => FilterChipWidget(
+                                    text: e,
+                                    onTap: () =>
+                                        filters.value = filters.value.copyWith(
+                                      cities: filters.value.cities
+                                          .where((element) => element != e)
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                              ]
+                                  .map(
+                                    (e) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                      ),
+                                      child: e,
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ),
+                      Row(
+                        children: [
+                          const SizedBox(width: 6),
+                          IconButton(
+                            onPressed: () async {
+                              final result = await showDialog<SortReportBy?>(
+                                context: context,
+                                builder: (context) => _SortByDialog(
+                                  initialVal: sortBy.value,
+                                ),
+                              );
+
+                              switch (result) {
+                                case SortReportBy.abcAscending:
+                                  sortBy.value = SortReportBy.abcAscending;
+                                  ref
+                                      .read(reportsControllerProvider.notifier)
+                                      .sortBy(SortReportBy.abcAscending);
+                                  break;
+                                case SortReportBy.timeFromCloseToFar:
+                                  sortBy.value =
+                                      SortReportBy.timeFromCloseToFar;
+                                  ref
+                                      .read(reportsControllerProvider.notifier)
+                                      .sortBy(SortReportBy.timeFromCloseToFar);
+                                  break;
+                                case SortReportBy.timeFromFarToClose:
+                                  sortBy.value =
+                                      SortReportBy.timeFromFarToClose;
+                                  ref
+                                      .read(reportsControllerProvider.notifier)
+                                      .sortBy(SortReportBy.timeFromFarToClose);
+                                  break;
+                                case null:
+                                  return;
+                              }
+                            },
+                            icon: const Icon(
+                              FluentIcons.arrow_sort_down_lines_24_regular,
+                              color: AppColors.grey2,
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    if (filters.value.isNotEmpty)
-                      SizedBox(
-                        height: 48,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: ListView(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              ...filters.value.reportEventTypes.map(
-                                (e) => FilterChipWidget(
-                                  text: e.name,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    roles: filters.value.roles
-                                        .where((element) => element != e.name)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.roles.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    roles: filters.value.roles
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.years.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    years: filters.value.years
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.institutions.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    institutions: filters.value.institutions
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.periods.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    periods: filters.value.periods
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.eshkols.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    eshkols: filters.value.eshkols
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.statuses.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    statuses: filters.value.statuses
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.bases.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    bases: filters.value.bases
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.hativot.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    hativot: filters.value.hativot
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.regions.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    regions: filters.value.regions
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                              ...filters.value.cities.map(
-                                (e) => FilterChipWidget(
-                                  text: e,
-                                  onTap: () =>
-                                      filters.value = filters.value.copyWith(
-                                    cities: filters.value.cities
-                                        .where((element) => element != e)
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                            ]
-                                .map(
-                                  (e) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                    ),
-                                    child: e,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                    Row(
-                      children: [
-                        const SizedBox(width: 6),
-                        IconButton(
-                          onPressed: () async {
-                            final result = await showDialog<SortReportBy?>(
-                              context: context,
-                              builder: (context) => _SortByDialog(
-                                initialVal: sortBy.value,
-                              ),
-                            );
-
-                            switch (result) {
-                              case SortReportBy.abcAscending:
-                                sortBy.value = SortReportBy.abcAscending;
-                                ref
-                                    .read(reportsControllerProvider.notifier)
-                                    .sortBy(SortReportBy.abcAscending);
-                                break;
-                              case SortReportBy.timeFromCloseToFar:
-                                sortBy.value = SortReportBy.timeFromCloseToFar;
-                                ref
-                                    .read(reportsControllerProvider.notifier)
-                                    .sortBy(SortReportBy.timeFromCloseToFar);
-                                break;
-                              case SortReportBy.timeFromFarToClose:
-                                sortBy.value = SortReportBy.timeFromFarToClose;
-                                ref
-                                    .read(reportsControllerProvider.notifier)
-                                    .sortBy(SortReportBy.timeFromFarToClose);
-                                break;
-                              case null:
-                                return;
-                            }
-                          },
-                          icon: const Icon(
-                            FluentIcons.arrow_sort_down_lines_24_regular,
-                            color: AppColors.grey2,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SliverFillRemaining(
