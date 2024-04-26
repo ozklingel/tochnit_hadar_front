@@ -58,15 +58,6 @@ class PersonasController extends _$PersonasController {
     return false;
   }
 
-  FutureOr<bool> addEvent({
-    required String apprenticeId,
-    required EventDto event,
-  }) async {
-    Toaster.backend();
-
-    return false;
-  }
-
   FutureOr<bool> deleteEvent({
     required String apprenticeId,
     required String eventId,

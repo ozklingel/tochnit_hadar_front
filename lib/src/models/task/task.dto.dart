@@ -65,10 +65,9 @@ class TaskDto with _$TaskDto {
     TaskStatus status,
     @Default(TaskType.none)
     @JsonKey(
-      name: 'event',
       fromJson: _extractTaskType,
     )
-    TaskType reportEventType,
+    TaskType event,
     @Default([])
     @JsonKey(
       defaultValue: [],

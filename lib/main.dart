@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:fancy_dio_inspector/fancy_dio_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +16,7 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:requests_inspector/requests_inspector.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:timeago/timeago.dart';
 
@@ -67,30 +67,36 @@ class HadarProgram extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final router = ref.watch(goRouterServiceProvider);
 
-    return _EagerInitialization(
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        routerConfig: router,
-        title: Consts.appTitle,
-        theme: appThemeLight,
-        scrollBehavior: _scrollBehavior,
-        localizationsDelegates: const [
-          GlobalWidgetsLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        locale: Consts.defaultLocale,
-        supportedLocales: const [
-          Consts.defaultLocale,
-        ],
-        builder: (context, child) => BotToastInit()(
-          context,
-          kDebugMode
-              ? CallbackShortcuts(
-                  bindings: _shortcuts(ref),
-                  child: child!,
-                )
-              : child,
+    return RequestsInspector(
+      enabled: true,
+      hideInspectorBanner: true,
+      navigatorKey: router.routerDelegate.navigatorKey,
+      showInspectorOn: ShowInspectorOn.Shaking,
+      child: _EagerInitialization(
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          routerConfig: router,
+          title: Consts.appTitle,
+          theme: appThemeLight,
+          scrollBehavior: _scrollBehavior,
+          localizationsDelegates: const [
+            GlobalWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          locale: Consts.defaultLocale,
+          supportedLocales: const [
+            Consts.defaultLocale,
+          ],
+          builder: (context, child) => BotToastInit()(
+            context,
+            kDebugMode
+                ? CallbackShortcuts(
+                    bindings: _shortcuts(ref),
+                    child: child!,
+                  )
+                : child,
+          ),
         ),
       ),
     );
@@ -112,11 +118,7 @@ class HadarProgram extends ConsumerWidget {
         LogicalKeyboardKey.keyH,
         alt: true,
       ): () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const FancyDioInspectorView(),
-          ),
-        );
+        InspectorController().showInspector();
       },
       const SingleActivator(
         LogicalKeyboardKey.numpad1,

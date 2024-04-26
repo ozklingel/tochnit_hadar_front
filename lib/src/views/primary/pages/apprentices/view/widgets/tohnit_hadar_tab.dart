@@ -10,12 +10,14 @@ import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
+import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/row_icon_button.dart';
@@ -424,6 +426,9 @@ class _EventBottomSheet extends HookConsumerWidget {
       keys: [event],
     );
 
+    useListenable(titleController);
+    useListenable(descriptionController);
+
     return BottomSheet(
       enableDrag: false,
       onClosing: () {},
@@ -473,6 +478,7 @@ class _EventBottomSheet extends HookConsumerWidget {
                               const SizedBox(height: 26),
                               InputFieldContainer(
                                 label: 'שם האירוע',
+                                isRequired: true,
                                 child: TextField(
                                   controller: titleController,
                                   decoration: InputDecoration(
@@ -576,14 +582,22 @@ class _EventBottomSheet extends HookConsumerWidget {
                         height: 60,
                         child: LargeFilledRoundedButton(
                           label: 'שמירה',
-                          onPressed: () async {
-                            await ref
-                                .read(personasControllerProvider.notifier)
-                                .addEvent(
-                                  apprenticeId: '',
-                                  event: const EventDto(),
-                                );
-                          },
+                          onPressed: titleController.text.isEmpty
+                              ? null
+                              : () async {
+                                  await ref
+                                      .read(tasksControllerProvider.notifier)
+                                      .create(
+                                        apprenticeId: apprentice.id,
+                                        task: TaskDto(
+                                          title: titleController.text,
+                                          details: descriptionController.text,
+                                          dateTime: selectedDatetime.value
+                                                  ?.toIso8601String() ??
+                                              DateTime.now().toIso8601String(),
+                                        ),
+                                      );
+                                },
 
                           // TODO (noga-dev): bring back
                           // onPressed: () async {

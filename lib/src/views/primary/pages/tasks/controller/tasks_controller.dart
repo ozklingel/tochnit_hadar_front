@@ -4,6 +4,7 @@ import 'package:hadar_program/src/services/api/tasks_form/get_tasks.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -15,6 +16,7 @@ part 'tasks_controller.g.dart';
     GetTasks,
     GoRouterService,
     DioService,
+    StorageService,
   ],
 )
 class TasksController extends _$TasksController {
@@ -25,17 +27,23 @@ class TasksController extends _$TasksController {
     return tasks;
   }
 
-  Future<bool> create(TaskDto task) async {
+  Future<bool> create({
+    required String apprenticeId,
+    required TaskDto task,
+  }) async {
     try {
       final result = await ref.read(dioServiceProvider).post(
         Consts.createTask,
         data: {
+          'userId': ref.read(storageServiceProvider.notifier).getUserPhone(),
+          'apprenticeid': apprenticeId,
           'subject': task.subject,
           'date': task.dateTime,
           'description': task.details,
-          'event': task.reportEventType.name,
+          'details': task.details,
+          'event': task.event.name,
           'frequency': task.frequency.name,
-          'title': task.reportEventType.name,
+          'title': task.title.isEmpty ? task.event.name : task.title,
           'status': task.status.name,
         },
       );
@@ -43,7 +51,8 @@ class TasksController extends _$TasksController {
       if (result.data['result'] == 'success') {
         ref.invalidate(getTasksProvider);
 
-        ref.read(goRouterServiceProvider).go('/tasks');
+        // ref.read(goRouterServiceProvider).go('/tasks');
+        ref.read(goRouterServiceProvider).pop();
 
         return true;
       }
@@ -67,9 +76,9 @@ class TasksController extends _$TasksController {
           'subject': task.subject,
           'date': task.dateTime,
           'description': task.details,
-          'event': task.reportEventType.name,
+          'event': task.event.name,
           'frequency': task.frequency.name,
-          'title': task.reportEventType.name,
+          'title': task.title.isEmpty ? task.event.name : task.title,
           'status': task.status.name,
         },
       );

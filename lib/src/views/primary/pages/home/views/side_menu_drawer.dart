@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fancy_dio_inspector/fancy_dio_inspector.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:requests_inspector/requests_inspector.dart';
 
 import '../../../../../gen/assets.gen.dart';
 
@@ -246,12 +246,8 @@ class SideMenuDrawer extends ConsumerWidget {
               ListTile(
                 dense: true,
                 leading: const Icon(FluentIcons.network_check_24_filled),
-                title: const Text('DIO HTTP'),
-                onTap: () async => await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const FancyDioInspectorView(),
-                  ),
-                ),
+                title: const Text('HTTP INSPECTOR'),
+                onTap: () async => InspectorController().showInspector(),
               ),
           ],
         ),

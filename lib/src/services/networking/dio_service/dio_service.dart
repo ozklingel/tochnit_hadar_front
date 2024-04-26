@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:fancy_dio_inspector/fancy_dio_inspector.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:logger/logger.dart';
+import 'package:requests_inspector/requests_inspector.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dio_service.g.dart';
@@ -20,7 +20,7 @@ class DioService extends _$DioService {
 
     final authToken = ref.read(storageServiceProvider.notifier).getAuthToken();
     final userPhone = ref.read(storageServiceProvider.notifier).getUserPhone();
-    
+
     //const userPhone = "506795170";
     //const userPhone = "544817610";
     //const userPhone = "543124511";
@@ -65,7 +65,7 @@ class DioService extends _$DioService {
           },
           onError: _dioErrorHandler,
         ),
-        FancyDioInterceptor(),
+        RequestsInspectorInterceptor(),
       ],
     );
 

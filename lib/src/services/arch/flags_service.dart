@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
-import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/flags/flags.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -158,7 +158,7 @@ final _tasks = List.generate(
           .toList(),
       frequency: TaskFrequency
           .values[faker.randomGenerator.integer(TaskFrequency.values.length)],
-      reportEventType: TaskType
+      event: TaskType
           .values[faker.randomGenerator.integer(TaskType.values.length)],
       dateTime: faker.date
           .dateTime(

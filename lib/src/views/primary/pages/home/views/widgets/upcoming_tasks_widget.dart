@@ -25,7 +25,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
 
     final calls = tasksScreenController
         .where(
-          (element) => element.reportEventType == TaskType.call,
+          (element) => element.event == TaskType.call,
         )
         .take(3)
         .toList();
@@ -35,7 +35,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
           (element) => [
             TaskType.meeting,
             TaskType.meetingGroup,
-          ].contains(element.reportEventType),
+          ].contains(element.event),
         )
         .take(3)
         .toList();
@@ -45,7 +45,7 @@ class UpcomingTasksWidget extends HookConsumerWidget {
           (element) => [
             TaskType.callParents,
             TaskType.meetingParents,
-          ].contains(element.reportEventType),
+          ].contains(element.event),
         )
         .take(3)
         .toList();

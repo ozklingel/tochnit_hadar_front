@@ -30,10 +30,8 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
 
     // Logger().d(task.dateTime);
 
-    final taskTextController = useTextEditingController(
-      text: task.reportEventType == TaskType.none
-          ? ''
-          : task.reportEventType.name,
+    final titleController = useTextEditingController(
+      text: task.event == TaskType.none ? '' : task.event.name,
     );
     final detailsTextController = useTextEditingController(text: task.details);
     final frequencyController = useState(
@@ -44,7 +42,7 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
     final dateTimeController = useState<DateTime?>(
       task.dateTime.isEmpty ? null : task.dateTime.asDateTime,
     );
-    useListenable(taskTextController);
+    useListenable(titleController);
     useListenable(detailsTextController);
 
     return Scaffold(
@@ -66,7 +64,7 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                 isRequired: true,
                 label: 'המשימה',
                 child: TextField(
-                  controller: taskTextController,
+                  controller: titleController,
                   decoration: const InputDecoration(
                     hintText: 'המשימה',
                     hintStyle: TextStyles.s16w400cGrey5,
@@ -154,7 +152,7 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                 height: 46,
                 child: LargeFilledRoundedButton(
                   label: 'שמירה',
-                  onPressed: taskTextController.text.isEmpty ||
+                  onPressed: titleController.text.isEmpty ||
                           detailsTextController.text.isEmpty ||
                           (dateTimeController.value?.isBefore(DateTime.now()) ??
                               false)
@@ -163,9 +161,21 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
                           final providerNotifier =
                               ref.read(tasksControllerProvider.notifier);
 
+                          final newTask = task.copyWith(
+                            dateTime:
+                                dateTimeController.value?.toIso8601String() ??
+                                    DateTime.now().toIso8601String(),
+                            title: titleController.text,
+                            details: detailsTextController.text,
+                            frequency: frequencyController.value,
+                          );
+
                           final result = task.id.isEmpty
-                              ? await providerNotifier.create(task)
-                              : await providerNotifier.edit(task);
+                              ? await providerNotifier.create(
+                                  apprenticeId: '',
+                                  task: newTask,
+                                )
+                              : await providerNotifier.edit(newTask);
 
                           if (!result) {
                             Toaster.error('error creating or updating task');

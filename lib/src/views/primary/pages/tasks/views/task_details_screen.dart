@@ -61,14 +61,14 @@ class TaskDetailsScreen extends ConsumerWidget {
                 InputFieldContainer(
                   label: 'המשימה',
                   child: Text(
-                    task.reportEventType.name,
+                    task.title.isEmpty ? '[ריק]' : task.title,
                     style: TextStyles.s14w400cGrey2,
                   ),
                 ),
                 InputFieldContainer(
                   label: 'פירוט',
                   child: Text(
-                    task.details,
+                    task.details.isEmpty ? '[ריק]' : task.details,
                     style: TextStyles.s14w400cGrey2,
                   ),
                 ),
