@@ -30,11 +30,7 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (auth.role == UserRole.melave) {
-          ref
-              .read(messagesControllerProvider.notifier)
-              .setToReadStatus(message);
-        }
+        ref.read(messagesControllerProvider.notifier).setToReadStatus(message);
 
         return null;
       },
