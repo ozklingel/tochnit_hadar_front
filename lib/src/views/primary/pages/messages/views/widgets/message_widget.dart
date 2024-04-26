@@ -4,9 +4,7 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
-import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class MessageWidget extends ConsumerWidget {
@@ -31,12 +29,6 @@ class MessageWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final fromApprentice =
-        (ref.watch(personasControllerProvider).valueOrNull ?? []).firstWhere(
-      (element) => element.id == message.from,
-      orElse: () => const PersonaDto(),
-    );
-
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
       child: Material(
@@ -59,9 +51,7 @@ class MessageWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        fromApprentice.isEmpty
-                            ? 'N/A'
-                            : fromApprentice.fullName,
+                        message.to.isEmpty ? 'N/A' : message.to.join(),
                         style: TextStyles.s18w600cShade09,
                       ),
                       if (isExpanded) const SizedBox(height: 16),

@@ -91,33 +91,45 @@ TaskType _extractTaskType(String? data) {
   switch (data) {
     case 'מפגש קבוצתי':
     case 'מפגש_קבוצתי':
+    case 'meetingGroup':
       return TaskType.meetingGroup;
     case 'מפגש מחזור':
+    case 'meetingPeriod':
       return TaskType.meetingPeriod;
     case 'שיחה':
     case 'שיחה טלפונית':
+    case 'call':
       return TaskType.call;
     case 'שיחת הורים':
     case 'שיחת_הורים':
     case 'שיחה להורים':
+    case 'callParents':
       return TaskType.callParents;
     case 'מפגש':
     case 'פגישה פיזית':
+    case 'meeting':
       return TaskType.meeting;
     case 'מפגש הורים':
     case 'מפגש_הורים':
+    case 'meetingParents':
       return TaskType.meetingParents;
     case 'נסיון כושל':
+    case 'failedAttempt':
       return TaskType.failedAttempt;
     case '6 הודעות':
+    case 'xMessages':
       return TaskType.xMessages;
     case 'חניכים נשכחים':
+    case 'forgottenApprentices':
       return TaskType.forgottenApprentices;
     case 'ביקור בבסיס':
+    case 'baseVisit':
       return TaskType.baseVisit;
     case 'ישיבת מצב”ר':
+    case 'meetingMatsbar':
       return TaskType.meetingMatsbar;
     case 'הזנת מחזור':
+    case 'hazanatMahzor':
       return TaskType.hazanatMahzor;
     default:
       const msg = 'failed to extract task type';
