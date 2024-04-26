@@ -396,10 +396,10 @@ int _extractActivityScore(dynamic val) {
   final result = int.tryParse(val);
 
   if (result == null) {
-    Logger().w('extractActivityScore');
-    Sentry.captureException(
-      Exception('failed to extract extractActivityScore'),
-    );
+    Logger().w('failed to extract extractActivityScore: null');
+    // Sentry.captureException(
+    //   Exception('failed to extract extractActivityScore'),
+    // );
 
     return 0;
   }
@@ -426,8 +426,9 @@ StatusColor _parseStatus(dynamic val) {
       return StatusColor.orange;
     default:
       Logger().w('bad status color');
-      Sentry.captureException(
-        Exception('failed to extract status color'),
+      Sentry.captureMessage(
+        'failed to extract status color',
+        params: [val],
       );
 
       return StatusColor.grey;
@@ -449,7 +450,7 @@ List<String> _extractReports(dynamic val) {
   } else if (val is String) {
     const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION STRING';
     // not suposed to be here but found this during dev so putting it here
-    Sentry.captureMessage(errMsg);
+    Sentry.captureMessage(errMsg, params: [val]);
     Logger().w(errMsg, error: val);
 
     return [];

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/core/theming/colors.dart';
-import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class UnreadCounterBadgeWidget extends ConsumerWidget {
@@ -22,7 +20,6 @@ class UnreadCounterBadgeWidget extends ConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         child,
-     
         Positioned(
           right: -4,
           top: -4,

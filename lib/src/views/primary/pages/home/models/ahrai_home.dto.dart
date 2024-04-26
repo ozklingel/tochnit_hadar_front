@@ -42,7 +42,12 @@ class AhraiHomeDto with _$AhraiHomeDto {
 
 List<(double, double)> _extractScore(List<dynamic>? data) {
   if (data == null || data.isEmpty || data.first!.isEmpty || data.length == 1) {
-    Sentry.captureException('bad backend _extractScore data');
+    Sentry.captureMessage(
+      'bad backend _extractScore data type',
+      params: [
+        data,
+      ],
+    );
 
     return [
       (0, 0),
@@ -53,7 +58,10 @@ List<(double, double)> _extractScore(List<dynamic>? data) {
   return data
       .map<(num, num)>((e) {
         if ((e as List<dynamic>).length < 2) {
-          Sentry.captureException('bad backend _extractScore data');
+          Sentry.captureMessage(
+            'bad backend _extractScore data length',
+            params: [data],
+          );
 
           return (0, 0);
         }
