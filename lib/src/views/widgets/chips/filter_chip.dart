@@ -6,18 +6,20 @@ class FilterChipWidget extends StatelessWidget {
     super.key,
     required this.text,
     required this.onTap,
+    this.isSelected = true,
   });
 
   final String text;
   final VoidCallback onTap;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: FilterChip(
-        backgroundColor: AppColors.blue06,
-        avatar: const Icon(Icons.close),
+        backgroundColor: isSelected ? AppColors.blue06 : null,
+        avatar: isSelected ? const Icon(Icons.close) : null,
         label: Text(text),
         onSelected: (val) => onTap(),
       ),

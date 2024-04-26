@@ -12,6 +12,7 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/message_widget.dart';
 import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
+import 'package:hadar_program/src/views/widgets/chips/filter_chip.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -26,6 +27,7 @@ class MessagesScreen extends HookConsumerWidget {
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
     final tabController = useTabController(initialLength: 3);
+    final filter = useState('');
 
     useListenable(searchController);
     useListenable(tabController);
@@ -97,7 +99,7 @@ class MessagesScreen extends HookConsumerWidget {
                     )
                     .toList();
 
-                final sent = msgList
+                final outgoing = msgList
                     .where(
                       (element) => element.type == MessageType.sent,
                     )
@@ -112,30 +114,88 @@ class MessagesScreen extends HookConsumerWidget {
                 return TabBarView(
                   controller: tabController,
                   children: [
-                    if (customerService.isEmpty)
-                      EmptyState(
-                        image: Assets.illustrations.pointDown.svg(),
-                        topText: 'אין פניות שירות',
-                        bottomText: 'פניות שירות מכלל המשתמשים, יופיעו כאן',
-                      )
-                    else
-                      ListView(
-                        children: customerService
-                            .map(
-                              (e) => Skeletonizer(
-                                enabled: false,
-                                child: MessageWidget.collapsed(
-                                  message: e,
-                                  hasIcon: true,
-                                  backgroundColor: e.allreadyRead
-                                      ? Colors.white
-                                      : AppColors.blue08,
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: 52,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              children: [
+                                FilterChipWidget(
+                                  text: 'בעיות נתונים',
+                                  isSelected: false,
+                                  onTap: () => filter.value = 'בעיות נתונים',
                                 ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    if (sent.isEmpty)
+                                FilterChipWidget(
+                                  text: 'תמיכה טכנית',
+                                  isSelected: false,
+                                  onTap: () => filter.value = 'תמיכה טכנית',
+                                ),
+                                FilterChipWidget(
+                                  text: 'משתמשים',
+                                  isSelected: false,
+                                  onTap: () => filter.value = 'משתמשים',
+                                ),
+                                FilterChipWidget(
+                                  text: 'אחר',
+                                  isSelected: false,
+                                  onTap: () => filter.value = 'אחר',
+                                ),
+                              ]
+                                  .map(
+                                    (e) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                      ),
+                                      child: e,
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: customerService.isEmpty
+                              ? EmptyState(
+                                  image: Assets.illustrations.pointDown.svg(),
+                                  topText: 'אין פניות שירות',
+                                  bottomText:
+                                      'פניות שירות מכלל המשתמשים, יופיעו כאן',
+                                )
+                              : ListView(
+                                  children: customerService
+                                      .where((element) {
+                                        if (filter.value.isEmpty) {
+                                          return true;
+                                        }
+
+                                        // return element.content.contains(filter.value);
+
+                                        return true;
+                                      })
+                                      .map(
+                                        (e) => Skeletonizer(
+                                          enabled: false,
+                                          child: MessageWidget.collapsed(
+                                            message: e,
+                                            hasIcon: true,
+                                            backgroundColor: e.allreadyRead
+                                                ? Colors.white
+                                                : AppColors.blue08,
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                        ),
+                      ],
+                    ),
+                    if (outgoing.isEmpty)
                       EmptyState(
                         image: Assets.illustrations.pointDown.svg(),
                         topText: 'אין הודעות יוצאות',
