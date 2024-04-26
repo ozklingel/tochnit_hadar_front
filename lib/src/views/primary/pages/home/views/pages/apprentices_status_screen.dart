@@ -8,8 +8,8 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/apprentices_status_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_messagecreen.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -28,12 +28,15 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
+    final screenController =
+        ref.watch(apprenticesStatusControllerProvider).valueOrNull ??
+            const ApprenticeStatusDto();
     final tabController = useTabController(
       initialLength: 3,
       initialIndex: initIndex,
     );
-    final selectedApprentice = useState(const PersonaDto());
+    final selectedApprenticeStatusItem =
+        useState(const ApprenticeStatusItemDto());
     final selectedDate = useState(DateTime.now());
     useListenable(tabController);
 
@@ -48,9 +51,10 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.close),
-            onPressed: () => selectedApprentice.value.id.isEmpty
+            onPressed: () => selectedApprenticeStatusItem.value.id.isEmpty
                 ? Navigator.of(context).pop()
-                : selectedApprentice.value = const PersonaDto(),
+                : selectedApprenticeStatusItem.value =
+                    const ApprenticeStatusItemDto(),
           ),
           const SizedBox(width: 8),
         ],
@@ -59,9 +63,9 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            if (selectedApprentice.value.id.isNotEmpty)
+            if (selectedApprenticeStatusItem.value.id.isNotEmpty)
               Text(
-                selectedApprentice.value.fullName,
+                selectedApprenticeStatusItem.value.name,
                 style: TextStyles.s24w500cGrey2,
               ),
             Row(
@@ -158,11 +162,11 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Text(
-                        'סה”כ 64',
+                      Text(
+                        'סה”כ ${screenController.total}',
                         style: TextStyles.s14w300cGray5,
                       ),
-                      if (selectedApprentice.value.id.isNotEmpty) ...[
+                      if (selectedApprenticeStatusItem.value.id.isNotEmpty) ...[
                         const SizedBox(width: 6),
                         const Icon(
                           FluentIcons.arrow_trending_24_regular,
@@ -173,7 +177,7 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
                       ],
                     ],
                   ),
-                  if (selectedApprentice.value.id.isNotEmpty) ...[
+                  if (selectedApprenticeStatusItem.value.id.isNotEmpty) ...[
                     const SizedBox(height: 6),
                     Row(
                       children: [
@@ -199,29 +203,27 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
                   ],
                   const SizedBox(height: 12),
                   Expanded(
-                    child: TabBarView(
-                      controller: tabController,
-                      children: [
-                        _TabView(
-                          selectedApprentice: selectedApprentice.value,
-                          apprentices: apprentices,
-                          onTap: (apprentice) =>
-                              selectedApprentice.value = apprentice,
-                        ),
-                        _TabView(
-                          selectedApprentice: selectedApprentice.value,
-                          apprentices: apprentices,
-                          onTap: (apprentice) =>
-                              selectedApprentice.value = apprentice,
-                        ),
-                        _TabView(
-                          selectedApprentice: selectedApprentice.value,
-                          apprentices: apprentices,
-                          onTap: (apprentice) =>
-                              selectedApprentice.value = apprentice,
-                        ),
-                      ],
-                    ),
+                    child: selectedApprenticeStatusItem.value.id.isEmpty
+                        ? _InstitutionsView(
+                            selectedItem: selectedApprenticeStatusItem.value,
+                            items: screenController.items,
+                            onTap: (apprentice) =>
+                                selectedApprenticeStatusItem.value = apprentice,
+                          )
+                        : TabBarView(
+                            controller: tabController,
+                            children: const [
+                              _PersonasView(
+                                personas: [],
+                              ),
+                              _PersonasView(
+                                personas: [],
+                              ),
+                              _PersonasView(
+                                personas: [],
+                              ),
+                            ],
+                          ),
                   ),
                 ],
               ),
@@ -233,86 +235,98 @@ class ApprenticesStatusScreen extends HookConsumerWidget {
   }
 }
 
-class _TabView extends StatelessWidget {
-  const _TabView({
+class _PersonasView extends StatelessWidget {
+  const _PersonasView({
     super.key,
-    required this.apprentices,
-    required this.selectedApprentice,
-    required this.onTap,
+    required this.personas,
   });
 
-  final PersonaDto selectedApprentice;
-  final List<PersonaDto> apprentices;
-  final void Function(PersonaDto apprentice) onTap;
+  final List<PersonaDto> personas;
 
   @override
   Widget build(BuildContext context) {
-    return selectedApprentice.id.isEmpty
-        ? ListView.separated(
-            itemCount: apprentices.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 6),
-            itemBuilder: (context, index) => apprentices
-                .map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                    ),
-                    child: DecoratedBox(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          Consts.defaultBoxShadow,
-                        ],
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8),
-                        ),
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: ListTile(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          onTap: () => onTap(e),
-                          title: Row(
-                            children: [
-                              Text(
-                                e.fullName,
-                                style: TextStyles.s18w500cGray1,
-                              ),
-                              const Spacer(),
-                              const Text(
-                                '12 חניכים',
-                                style: TextStyles.s14w400cGrey1,
-                              ),
-                            ],
-                          ),
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            size: 26,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-                .toList()[index],
+    return ListView(
+      children: personas
+          .map(
+            (e) => ListTileWithTagsCard(
+              avatar: e.avatar,
+              name: e.fullName,
+              onlineStatus: e.callStatus,
+              tags: const [
+                'עברו 78 ימים מהשיחה האחרונה',
+              ],
+            ),
           )
-        : ListView(
-            children: apprentices
-                .map(
-                  (e) => ListTileWithTagsCard(
-                    avatar: e.avatar,
-                    name: e.fullName,
-                    onlineStatus: e.callStatus,
-                    tags: const [
-                      'עברו 78 ימים מהשיחה האחרונה',
-                    ],
+          .toList(),
+    );
+  }
+}
+
+class _InstitutionsView extends StatelessWidget {
+  const _InstitutionsView({
+    super.key,
+    required this.items,
+    required this.selectedItem,
+    required this.onTap,
+  });
+
+  final ApprenticeStatusItemDto selectedItem;
+  final List<ApprenticeStatusItemDto> items;
+  final void Function(ApprenticeStatusItemDto apprentice) onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemCount: items.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 6),
+      itemBuilder: (context, index) => items
+          .map(
+            (e) => Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+              ),
+              child: DecoratedBox(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    Consts.defaultBoxShadow,
+                  ],
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8),
                   ),
-                )
-                .toList(),
-          );
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: ListTile(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                    ),
+                    onTap: () => onTap(e),
+                    title: Row(
+                      children: [
+                        Text(
+                          e.name,
+                          style: TextStyles.s18w500cGray1,
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${e.value} חניכים',
+                          style: TextStyles.s14w400cGrey1,
+                        ),
+                      ],
+                    ),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      size: 26,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+          .toList()[index],
+    );
   }
 }

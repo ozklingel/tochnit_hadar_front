@@ -84,6 +84,7 @@ abstract class Consts {
   static const chartsMelave = 'madadim/melave';
   static const chartsEshkol = 'madadim/eshcolCoordinator';
   static const chartsMosad = 'madadim/mosadCoordinator';
+  static const getForgotenApprentices = 'madadim/forgotenApprentices';
 
   // user profile
   // static const getAllApprentices = 'apprentice_Profile_form/myApprentices';
