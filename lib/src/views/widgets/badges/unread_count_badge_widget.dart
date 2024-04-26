@@ -20,23 +20,20 @@ class UnreadCounterBadgeWidget extends ConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         child,
-        Positioned(
-          right: -4,
-          top: -4,
-          child: AnimatedSwitcher(
-            duration: Consts.defaultDurationXL,
-            child: isLoading
-                ? const SizedBox.square(
-                    key: ValueKey('unreadCountLoadingTrue'),
-                    dimension: 14,
-                    child: Center(
-                      child: CircularProgressIndicator.adaptive(),
+              Positioned(
+          right: 10,
+          top: 10,
+          child: count < 1
+              ? const SizedBox.shrink()
+              : const IgnorePointer(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.red,
+                    radius: 3,
+                    child: Text(
+                      "",
                     ),
-                  )
-                : const SizedBox.shrink(
-                    key: ValueKey('unreadCountLoadingFalse'),
                   ),
-          ),
+                ),
         ),
       ],
     );
