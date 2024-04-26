@@ -22,22 +22,7 @@ class UnreadCounterBadgeWidget extends ConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         child,
-        Positioned(
-          right: -6,
-          top: -6,
-          child: count < 1
-              ? const SizedBox.shrink()
-              : const IgnorePointer(
-                  child: CircleAvatar(
-                    backgroundColor: AppColors.red1,
-                    radius: 9,
-                    child: Text(
-                      "",
-                      style: TextStyles.s11w500fRoboto,
-                    ),
-                  ),
-                ),
-        ),
+     
         Positioned(
           right: -4,
           top: -4,
