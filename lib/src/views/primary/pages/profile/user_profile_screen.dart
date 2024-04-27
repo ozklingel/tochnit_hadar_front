@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+import '../../../../core/enums/address_region.dart';
 import '../../../../models/persona/persona.dto.dart';
 import '../../../../services/api/impor_export/upload_file.dart';
+import '../../../../services/api/onboarding_form/city_list.dart';
 import '../../../../services/routing/go_router_provider.dart';
 import '../apprentices/controller/personas_controller.dart';
 
@@ -227,6 +230,9 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
     final user = auth.valueOrNull ?? const AuthDto();
+    final selectedCity = useState('');
+    final citySearchController = useTextEditingController();
+    final selectedRegion = useState(AddressRegion.none);
 
     final institution =
         ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
@@ -329,36 +335,227 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 32),
                       InputFieldContainer(
-                        label: ' תאריך יומהולדת',
+                        label: ' תאריך יום הולדת',
                         isRequired: true,
                         child: TextField(
                           controller: datOfBirthController,
                         ),
                       ),
                       const SizedBox(height: 32),
-                      InputFieldContainer(
+                             InputFieldContainer(
                         label: '  עיר',
                         isRequired: true,
-                        child: TextField(
-                          controller: cityController,
+                        child:     ref.watch(getCitiesListProvider).when(
+                        loading: () => const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                        error: (error, stack) => TextField(
+                          onChanged: (value) => selectedCity.value = value,
+                          decoration: const InputDecoration(
+                            hintText: 'יישוב / עיר',
+                            suffixIcon: Padding(
+                              padding: EdgeInsets.only(left: 16),
+                              child: RotatedBox(
+                                quarterTurns: 1,
+                                child: Icon(
+                                  Icons.chevron_left,
+                                  color: AppColors.grey6,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        data: (cities) => DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            hint: SizedBox(
+                              width: 240,
+                              child: Text(
+                                selectedCity.value.isEmpty
+                                    ? auth.valueOrNull!.city
+                                    : selectedCity.value,
+                                overflow: TextOverflow.fade,
+                              ),
+                            ),
+                            style: Theme.of(context)
+                                .inputDecorationTheme
+                                .hintStyle,
+                            buttonStyleData: ButtonStyleData(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(36),
+                                border: Border.all(color: Colors.black),
+                              ),
+                              elevation: 0,
+                              padding: const EdgeInsets.only(right: 8),
+                            ),
+                            dropdownSearchData: DropdownSearchData(
+                              searchController: citySearchController,
+                              searchInnerWidgetHeight: 50,
+                              searchInnerWidget: TextField(
+                                controller: citySearchController,
+                                decoration: const InputDecoration(
+                                  focusedBorder: UnderlineInputBorder(),
+                                  enabledBorder: InputBorder.none,
+                                  prefixIcon: Icon(Icons.search),
+                                  hintText: 'חיפוש',
+                                  hintStyle: TextStyles.s14w400,
+                                ),
+                              ),
+                              searchMatchFn: (item, searchValue) {
+                                return item.value
+                                    .toString()
+                                    .toLowerCase()
+                                    .trim()
+                                    .contains(searchValue.toLowerCase().trim());
+                              },
+                            ),
+                            onMenuStateChange: (isOpen) {
+                              if (!isOpen) {
+                                citySearchController.clear();
+                              }
+                            },
+                            onChanged: (value) {
+                              selectedCity.value = value!;
+                            },
+                            dropdownStyleData: const DropdownStyleData(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16)),
+                              ),
+                            ),
+                            iconStyleData: const IconStyleData(
+                              icon: Padding(
+                                padding: EdgeInsets.only(left: 16),
+                                child: RotatedBox(
+                                  quarterTurns: 1,
+                                  child: Icon(
+                                    Icons.chevron_left,
+                                    color: AppColors.grey6,
+                                  ),
+                                ),
+                              ),
+                              openMenuIcon: Padding(
+                                padding: EdgeInsets.only(left: 16),
+                                child: RotatedBox(
+                                  quarterTurns: 3,
+                                  child: Icon(
+                                    Icons.chevron_left,
+                                    color: AppColors.grey6,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            items: cities
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ),
+                                )
+                                .toList(),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                  
+                     
+                      ),
+              const SizedBox(height: 32),
                       InputFieldContainer(
                         label: '  מוסד',
                         isRequired: true,
                         child: TextField(
+                        
+                          readOnly: true,
                           controller: mosadController,
                         ),
                       ),
                       const SizedBox(height: 32),
+
                       InputFieldContainer(
                         label: '  אזור',
                         isRequired: true,
-                        child: TextField(
-                          controller: regionController,
+                        child:           DropdownButtonHideUnderline(
+                    child: DropdownButton2<AddressRegion>(
+                      value: selectedRegion.value == AddressRegion.none
+                          ? null
+                          : selectedRegion.value,
+                      hint: SizedBox(
+                              width: 240,
+                              child: Text(
+                                selectedCity.value.isEmpty
+                                    ? auth.valueOrNull!.region
+                                    : selectedCity.value,
+                                overflow: TextOverflow.fade,
+                              ),
+                            ),
+                      style: Theme.of(context).inputDecorationTheme.hintStyle,
+                      buttonStyleData: ButtonStyleData(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(36),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 15, 7, 7),
+                          ),
+                        ),
+                        elevation: 0,
+                        padding: const EdgeInsets.only(right: 8),
+                      ),
+                      onChanged: (value) =>
+                          selectedRegion.value = value ?? AddressRegion.none,
+                      dropdownStyleData: const DropdownStyleData(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
                         ),
                       ),
+                      iconStyleData: const IconStyleData(
+                        icon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 1,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                        openMenuIcon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 3,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                      ),
+                      items: [
+                        DropdownMenuItem(
+                          value: AddressRegion.center,
+                          child: Text(AddressRegion.center.name),
+                        ),
+                        DropdownMenuItem(
+                          value: AddressRegion.jerusalem,
+                          child: Text(AddressRegion.jerusalem.name),
+                        ),
+                        DropdownMenuItem(
+                          value: AddressRegion.north,
+                          child: Text(AddressRegion.north.name),
+                        ),
+                        DropdownMenuItem(
+                          value: AddressRegion.south,
+                          child: Text(AddressRegion.south.name),
+                        ),
+                        DropdownMenuItem(
+                          value: AddressRegion.yehuda,
+                          child: Text(AddressRegion.yehuda.name),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                      ),
+               
                       const SizedBox(height: 32),
                       Row(
                         children: [
@@ -388,7 +585,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                   }
                                 } catch (e) {
                                   Logger().e(
-                                    'failed to update apprentice',
+                                    'failed to update user',
                                     error: e,
                                   );
                                   Sentry.captureException(e);
