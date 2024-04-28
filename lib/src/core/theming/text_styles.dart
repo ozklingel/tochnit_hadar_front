@@ -171,6 +171,16 @@ abstract class TextStyles {
     ],
   );
 
+  static const s18w400cGreen1 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 18,
+    color: AppColors.green1,
+    height: 1,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const s18w400cRed1 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 18,
