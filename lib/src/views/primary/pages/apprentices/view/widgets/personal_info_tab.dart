@@ -252,6 +252,8 @@ class _EduSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 DetailsRowItem(
                   label: 'טלפון ר”מ',
+                  onTapData: () =>
+                      launchCall(phone: persona.highSchoolRavMelamedPhone),
                   data: persona.highSchoolRavMelamedPhone,
                 ),
               ],
