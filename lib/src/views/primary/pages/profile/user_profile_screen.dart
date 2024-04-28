@@ -269,6 +269,10 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
       text: auth.valueOrNull!.region,
       keys: [auth],
     );
+        final eshcolController = useTextEditingController(
+      text: auth.valueOrNull!.cluster,
+      keys: [auth],
+    );
 
     return AnimatedSwitcher(
       duration: Consts.defaultDurationM,
@@ -460,7 +464,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                      
                       ),
               const SizedBox(height: 32),
-                      InputFieldContainer(
+                      if (auth.valueOrNull?.role == UserRole.melave||auth.valueOrNull?.role == UserRole.rakazMosad) ...[      InputFieldContainer(
                         label: '  מוסד',
                         isRequired: true,
                         child: TextField(
@@ -468,7 +472,17 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                           readOnly: true,
                           controller: mosadController,
                         ),
-                      ),
+                      ),],
+             if (auth.valueOrNull?.role == UserRole.rakazEshkol) ...[      InputFieldContainer(
+                        label: '  מוסד',
+                        isRequired: true,
+                        child: TextField(
+                        
+                          readOnly: true,
+                          controller: eshcolController,
+                        ),
+                      ),],
+                
                       const SizedBox(height: 32),
 
                       InputFieldContainer(
@@ -706,7 +720,9 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ],
           ),
         ),
-        DetailsCard(
+        
+       if (auth.valueOrNull?.role == UserRole.melave) ...[
+             DetailsCard(
           title: ' רשימת חניכים',
           child: Builder(
             builder: (context) {
@@ -757,7 +773,8 @@ class _TohnitHadarTabView extends ConsumerWidget {
             },
           ),
         ),
-        if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[],
+        
+        ],
       ],
     );
   }
