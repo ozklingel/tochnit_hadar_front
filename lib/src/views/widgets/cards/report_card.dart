@@ -97,13 +97,13 @@ class ReportCard extends ConsumerWidget {
                       style: TextStyles.s14w400,
                       children: [
                         TextSpan(
-                          text:
-                              report.dateTime.asDateTime.asDayMonthYearShortDot,
+                          text: report
+                              .creationDate.asDateTime.asDayMonthYearShortDot,
                         ),
                         const TextSpan(text: ', '),
                         TextSpan(
                           text: format(
-                            report.dateTime.asDateTime,
+                            report.creationDate.asDateTime,
                             locale: Localizations.localeOf(
                               context,
                             ).languageCode,

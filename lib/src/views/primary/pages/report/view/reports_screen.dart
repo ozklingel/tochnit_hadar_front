@@ -1,11 +1,13 @@
 // ignore_for_file: unused_element
 
+import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/theming/widgets.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
@@ -38,12 +40,6 @@ class ReportsScreen extends HookConsumerWidget {
     final auth = ref.watch(authServiceProvider);
     final personas = ref.watch(getPersonasProvider).valueOrNull ?? [];
     final controller = ref.watch(reportsControllerProvider);
-    final reports = (controller.valueOrNull ?? []).where((element) {
-      if (personaId.isEmpty) {
-        return true;
-      }
-      return element.recipients.contains(personaId);
-    });
     final selectedReportIds = useState(<String>[]);
     final filters = useState(const FilterDto());
     final sortBy = useState(SortReportBy.abcAscending);
@@ -51,6 +47,26 @@ class ReportsScreen extends HookConsumerWidget {
     final searchController = useTextEditingController();
     final scrollController = useScrollController();
     useListenable(searchController);
+
+    var sortedReports = (controller.valueOrNull ?? []).where((element) {
+      if (personaId.isEmpty) {
+        return true;
+      }
+      return element.recipients.contains(personaId);
+    }).sorted((a, b) {
+      switch (sortBy.value) {
+        case SortReportBy.abcAscending:
+          return a.reportEventType.name.compareTo(b.reportEventType.name);
+        case SortReportBy.timeFromCloseToFar:
+          return a.creationDate.asDateTime.compareTo(b.creationDate.asDateTime);
+        default:
+          return 0;
+      }
+    });
+
+    if (sortBy.value == SortReportBy.timeFromFarToClose) {
+      sortedReports = sortedReports.reversed.toList();
+    }
 
     if (auth.valueOrNull?.role == UserRole.ahraiTohnit) {
       return Scaffold(
@@ -370,7 +386,7 @@ class ReportsScreen extends HookConsumerWidget {
                             dateTime: DateTime.now().toIso8601String(),
                           ),
                         )
-                      : reports
+                      : sortedReports
                           .where(
                             (element) =>
                                 // element.description.toLowerCase().contains(
@@ -417,7 +433,7 @@ class ReportsScreen extends HookConsumerWidget {
             ),
             Builder(
               builder: (context) {
-                final report = reports.singleWhere(
+                final report = sortedReports.singleWhere(
                   (element) => element.id == selectedReportIds.value.first,
                   orElse: () => const ReportDto(),
                 );
@@ -525,7 +541,7 @@ class ReportsScreen extends HookConsumerWidget {
                     dateTime: DateTime.now().toIso8601String(),
                   ),
                 )
-              : reports
+              : sortedReports
                   .where(
                     (element) =>
                         element.description
