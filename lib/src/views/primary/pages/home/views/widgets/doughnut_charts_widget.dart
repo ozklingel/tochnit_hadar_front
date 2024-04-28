@@ -32,8 +32,11 @@ class DoughnutChartsWidget extends StatelessWidget {
       height: 180,
       children: [
         _DoughnutChart(
-          onTap: () =>
-              const ApprenticesStatusRouteData(initIndex: 2).push(context),
+          onTap: () => const ApprenticesStatusRouteData(
+            initIndex: 2,
+            isExtended: false,
+            title: 'סטטוס חניכים',
+          ).push(context),
           title: 'מפגשים',
           data: [
             (x: 'לא תקין', y: meeetingsRed),
@@ -42,8 +45,11 @@ class DoughnutChartsWidget extends StatelessWidget {
           ],
         ),
         _DoughnutChart(
-          onTap: () =>
-              const ApprenticesStatusRouteData(initIndex: 1).push(context),
+          onTap: () => const ApprenticesStatusRouteData(
+            initIndex: 1,
+            isExtended: false,
+            title: 'סטטוס חניכים',
+          ).push(context),
           title: 'שיחות',
           data: [
             (x: 'לא תקין', y: callsRed),

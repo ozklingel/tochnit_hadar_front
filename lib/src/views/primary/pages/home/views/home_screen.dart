@@ -126,13 +126,11 @@ class _AhraiTohnitBody extends ConsumerWidget {
         ),
         PerformanceWidget(
           title: 'תפקוד מלווים',
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const PerformanceStatusScreen(
-                title: 'תפקוד מלווים',
-              ),
-            ),
-          ),
+          onTap: () => const ApprenticesStatusRouteData(
+            initIndex: 0,
+            isExtended: true,
+            title: 'סטטוס חניכים',
+          ).push(context),
           data: ahraiTohnit.melaveScore,
         ),
         PerformanceWidget(

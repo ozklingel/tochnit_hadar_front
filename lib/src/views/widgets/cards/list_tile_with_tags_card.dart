@@ -103,20 +103,17 @@ class ListTileWithTagsCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 240,
-                        child: Text(
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.54,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
                           name,
                           style: TextStyles.s18w400cGray1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      SizedBox(
-                        width: 240,
-                        child: Text(
+                        Text(
                           tags
                               .where((element) => element.isNotEmpty)
                               .join(' • '),
@@ -124,8 +121,8 @@ class ListTileWithTagsCard extends StatelessWidget {
                             color: AppColors.blue03,
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   if (trailing != null) Expanded(child: trailing!),
                 ],

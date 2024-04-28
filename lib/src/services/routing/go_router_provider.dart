@@ -645,17 +645,21 @@ class GiftRouteData extends GoRouteData {
 class ApprenticesStatusRouteData extends GoRouteData {
   const ApprenticesStatusRouteData({
     required this.initIndex,
+    required this.isExtended,
+    required this.title,
   });
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
   final int initIndex;
+  final String title;
+  final bool isExtended;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ApprenticesStatusScreen(
-      isExtended: true,
-      title: 'סטטוס חניכים',
+      isExtended: isExtended,
+      title: title,
       initIndex: initIndex,
     );
   }
