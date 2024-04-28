@@ -124,33 +124,33 @@ class _AhraiTohnitBody extends ConsumerWidget {
         ),
         PerformanceWidget(
           title: 'תפקוד מלווים',
+          data: ahraiTohnit.melaveScore,
           onTap: () => const PerformanceStatusRouteData(
             initIndex: 0,
             isExtended: true,
             title: 'סטטוס חניכים',
             subtitle: 'חניכים שלא נוצר איתם קשר מעל 100 יום',
           ).push(context),
-          data: ahraiTohnit.melaveScore,
         ),
         PerformanceWidget(
           title: 'תפקוד רכזים',
+          data: ahraiTohnit.rakazimScore,
           onTap: () => const PerformanceStatusRouteData(
             initIndex: 1,
             isExtended: false,
             title: 'תפקוד רכזים',
             subtitle: 'מלווים מכלל המוסדות',
           ).push(context),
-          data: ahraiTohnit.rakazimScore,
         ),
         PerformanceWidget(
           title: 'תפקוד רכזי אשכול',
+          data: ahraiTohnit.eshkolScore,
           onTap: () => const PerformanceStatusRouteData(
             initIndex: 1,
             isExtended: false,
             title: 'תפקוד רכזים',
             subtitle: 'מלווים מכלל המוסדות',
           ).push(context),
-          data: ahraiTohnit.eshkolScore,
         ),
         const _ForgottenApprentices(),
       ],
