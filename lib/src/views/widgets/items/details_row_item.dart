@@ -41,26 +41,27 @@ class DetailsRowItem extends StatelessWidget {
         SizedBox(
           width: dataWidth,
           child: contactName.isEmpty
-              ? onTapData == null
-                  ? Text(
+              ? Builder(
+                  builder: (context) {
+                    final child = Text(
                       data,
                       style: TextStyles.s14w400,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 4,
-                    )
-                  : Row(
-                      children: [
-                        TextButton(
-                          onPressed: onTapData,
-                          child: Text(
-                            data,
-                            style: TextStyles.s14w400,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 4,
-                          ),
-                        ),
-                      ],
-                    )
+                    );
+
+                    return onTapData == null
+                        ? child
+                        : Row(
+                            children: [
+                              TextButton(
+                                onPressed: onTapData,
+                                child: child,
+                              ),
+                            ],
+                          );
+                  },
+                )
               : Text.rich(
                   TextSpan(
                     children: [

@@ -1075,38 +1075,27 @@ class _ContactButtons extends ConsumerWidget {
           ),
         ),
         const Spacer(),
-        if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[
-          RowIconButton(
-            onPressed: () => Toaster.unimplemented(),
-            icon: const Icon(FluentIcons.edit_24_regular),
+        RowIconButton(
+          onPressed: () => launchSms(phone: [phone]),
+          icon: const Icon(FluentIcons.chat_24_regular),
+        ),
+        const SizedBox(width: 4),
+        RowIconButton(
+          icon: Assets.icons.whatsapp.svg(
+            height: 20,
           ),
-          RowIconButton(
-            onPressed: () => Toaster.unimplemented(),
-            icon: const Icon(FluentIcons.delete_24_regular),
-          ),
-        ] else ...[
-          RowIconButton(
-            onPressed: () => launchSms(phone: [phone]),
-            icon: const Icon(FluentIcons.chat_24_regular),
-          ),
-          const SizedBox(width: 4),
-          RowIconButton(
-            icon: Assets.icons.whatsapp.svg(
-              height: 20,
-            ),
-            onPressed: () => launchWhatsapp(phone: phone),
-          ),
-          const SizedBox(width: 4),
-          RowIconButton(
-            onPressed: () => launchCall(phone: phone),
-            icon: const Icon(FluentIcons.call_24_regular),
-          ),
-          const SizedBox(width: 4),
-          RowIconButton(
-            onPressed: () => launchEmail(email: email),
-            icon: const Icon(FluentIcons.mail_24_regular),
-          ),
-        ],
+          onPressed: () => launchWhatsapp(phone: phone),
+        ),
+        const SizedBox(width: 4),
+        RowIconButton(
+          onPressed: () => launchCall(phone: phone),
+          icon: const Icon(FluentIcons.call_24_regular),
+        ),
+        const SizedBox(width: 4),
+        RowIconButton(
+          onPressed: () => launchEmail(email: email),
+          icon: const Icon(FluentIcons.mail_24_regular),
+        ),
       ],
     );
   }

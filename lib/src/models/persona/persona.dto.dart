@@ -37,7 +37,26 @@ enum Relationship {
   brother,
   wife,
   husband,
-  other,
+  other;
+
+  String get name {
+    switch (this) {
+      case mother:
+        return 'אמא';
+      case Relationship.father:
+        return 'אבא';
+      case Relationship.sister:
+        return 'אחות';
+      case Relationship.brother:
+        return 'אח';
+      case Relationship.wife:
+        return 'אישה';
+      case Relationship.husband:
+        return 'בעל';
+      case Relationship.other:
+        return 'אחר';
+    }
+  }
 }
 
 typedef Phone = String;
@@ -483,22 +502,23 @@ List<EventDto> _parseEvents(dynamic val) {
 }
 
 Relationship _extractRelationship(String? val) {
-  switch (val) {
-    case 'אבא':
-      return Relationship.father;
-    case 'אמא':
-      return Relationship.mother;
-    case 'אח':
-      return Relationship.brother;
-    case 'אחות':
-      return Relationship.sister;
-    case 'בעל':
-      return Relationship.husband;
-    case 'אישה':
-      return Relationship.wife;
-    default:
-      return Relationship.other;
+  if (val == Relationship.father.name) {
+    return Relationship.father;
+  } else if (val == Relationship.mother.name) {
+    return Relationship.mother;
+  } else if (val == Relationship.brother.name) {
+    return Relationship.brother;
+  } else if (val == Relationship.sister.name) {
+    return Relationship.sister;
+  } else if (val == Relationship.husband.name) {
+    return Relationship.husband;
+  } else if (val == Relationship.wife.name) {
+    return Relationship.wife;
+  } else if (val == Relationship.other.name) {
+    return Relationship.other;
   }
+
+  return Relationship.other;
 }
 
 extension ApprenticeX on PersonaDto {
