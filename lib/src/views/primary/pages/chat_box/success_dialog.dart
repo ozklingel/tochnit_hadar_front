@@ -29,7 +29,7 @@ void showFancyCustomDialog(BuildContext context, phone, contant, subject) {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      height: double.infinity,
+      height: orientation.height*2 / 3,
       width: double.infinity,
       child: Stack(
         children: <Widget>[
