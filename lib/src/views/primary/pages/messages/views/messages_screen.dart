@@ -47,6 +47,7 @@ class MessagesScreen extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
     final msgsController = ref.watch(messagesControllerProvider);
+    final msgsControllerState = msgsController.valueOrNull ?? [];
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
     final tabController = useTabController(initialLength: 3);
@@ -54,6 +55,24 @@ class MessagesScreen extends HookConsumerWidget {
 
     useListenable(searchController);
     useListenable(tabController);
+
+    final customerService = msgsControllerState
+        .where(
+          (element) => element.type == MessageType.customerService,
+        )
+        .toList();
+
+    final outgoing = msgsControllerState
+        .where(
+          (element) => element.type == MessageType.sent,
+        )
+        .toList();
+
+    final draft = msgsControllerState
+        .where(
+          (element) => element.type == MessageType.draft,
+        )
+        .toList();
 
     switch (auth.valueOrNull?.role) {
       case UserRole.ahraiTohnit:
@@ -72,10 +91,25 @@ class MessagesScreen extends HookConsumerWidget {
             bottom: TabBar(
               controller: tabController,
               labelStyle: TextStyles.s14w400,
-              tabs: const [
-                Tab(text: 'פניות שירות'),
-                Tab(text: 'יוצאות'),
-                Tab(text: 'טיוטות'),
+              tabs: [
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('פניות שירות'),
+                      if (msgsControllerState
+                          .any((element) => !element.allreadyRead)) ...[
+                        const SizedBox(width: 4),
+                        const CircleAvatar(
+                          radius: 3,
+                          backgroundColor: AppColors.blue03,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const Tab(text: 'יוצאות'),
+                const Tab(text: 'טיוטות'),
               ],
             ),
           ),
@@ -99,106 +133,86 @@ class MessagesScreen extends HookConsumerWidget {
                   : null,
           body: RefreshIndicator.adaptive(
             onRefresh: () => ref.refresh(getMessagesProvider.future),
-            child: msgsController.when(
-              loading: () => ListView(
-                children: List.generate(
-                  10,
-                  (index) => MessageWidget.collapsed(
-                    message: MessageDto(
-                      title: 'titletitletitletitle',
-                      content: 'contentcontentcontent',
-                      dateTime: DateTime.now().toIso8601String(),
-                      attachments: ['549247615'],
-                      from: '549247615',
-                    ),
-                  ),
-                ),
-              ),
-              error: (error, stack) => Text(error.toString()),
-              data: (msgList) {
-                final customerService = msgList
-                    .where(
-                      (element) => element.type == MessageType.customerService,
-                    )
-                    .toList();
-
-                final outgoing = msgList
-                    .where(
-                      (element) => element.type == MessageType.sent,
-                    )
-                    .toList();
-
-                final draft = msgList
-                    .where(
-                      (element) => element.type == MessageType.draft,
-                    )
-                    .toList();
-
-                return TabBarView(
-                  controller: tabController,
+            child: TabBarView(
+              controller: tabController,
+              children: [
+                Column(
                   children: [
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: 52,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              children: [
-                                FilterChipWidget(
-                                  text: _MessageFilter.data.name,
-                                  isSelected:
-                                      filter.value == _MessageFilter.data,
-                                  onTap: () {
-                                    if (filter.value == _MessageFilter.data) {
-                                      filter.value = _MessageFilter.all;
-                                    } else {
-                                      filter.value = _MessageFilter.data;
-                                    }
-                                  },
-                                ),
-                                FilterChipWidget(
-                                  text: _MessageFilter.technical.name,
-                                  isSelected:
-                                      filter.value == _MessageFilter.technical,
-                                  onTap: () {
-                                    if (filter.value ==
-                                        _MessageFilter.technical) {
-                                      filter.value = _MessageFilter.all;
-                                    } else {
-                                      filter.value = _MessageFilter.technical;
-                                    }
-                                  },
-                                ),
-                                FilterChipWidget(
-                                  text: _MessageFilter.users.name,
-                                  isSelected:
-                                      filter.value == _MessageFilter.users,
-                                  onTap: () {
-                                    if (filter.value == _MessageFilter.users) {
-                                      filter.value = _MessageFilter.all;
-                                    } else {
-                                      filter.value = _MessageFilter.users;
-                                    }
-                                  },
-                                ),
-                                FilterChipWidget(
-                                  text: _MessageFilter.other.name,
-                                  isSelected:
-                                      filter.value == _MessageFilter.other,
-                                  onTap: () {
-                                    if (filter.value == _MessageFilter.other) {
-                                      filter.value = _MessageFilter.all;
-                                    } else {
-                                      filter.value = _MessageFilter.other;
-                                    }
-                                  },
-                                ),
-                              ]
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 52,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          children: msgsController.isLoading
+                              ? List.generate(
+                                  10,
+                                  (index) => MessageWidget.collapsed(
+                                    message: MessageDto(
+                                      title: 'titletitletitletitle',
+                                      content: 'contentcontentcontent',
+                                      dateTime:
+                                          DateTime.now().toIso8601String(),
+                                      attachments: ['549247615'],
+                                      from: '549247615',
+                                    ),
+                                  ),
+                                )
+                              : [
+                                  FilterChipWidget(
+                                    text: _MessageFilter.data.name,
+                                    isSelected:
+                                        filter.value == _MessageFilter.data,
+                                    onTap: () {
+                                      if (filter.value == _MessageFilter.data) {
+                                        filter.value = _MessageFilter.all;
+                                      } else {
+                                        filter.value = _MessageFilter.data;
+                                      }
+                                    },
+                                  ),
+                                  FilterChipWidget(
+                                    text: _MessageFilter.technical.name,
+                                    isSelected: filter.value ==
+                                        _MessageFilter.technical,
+                                    onTap: () {
+                                      if (filter.value ==
+                                          _MessageFilter.technical) {
+                                        filter.value = _MessageFilter.all;
+                                      } else {
+                                        filter.value = _MessageFilter.technical;
+                                      }
+                                    },
+                                  ),
+                                  FilterChipWidget(
+                                    text: _MessageFilter.users.name,
+                                    isSelected:
+                                        filter.value == _MessageFilter.users,
+                                    onTap: () {
+                                      if (filter.value ==
+                                          _MessageFilter.users) {
+                                        filter.value = _MessageFilter.all;
+                                      } else {
+                                        filter.value = _MessageFilter.users;
+                                      }
+                                    },
+                                  ),
+                                  FilterChipWidget(
+                                    text: _MessageFilter.other.name,
+                                    isSelected:
+                                        filter.value == _MessageFilter.other,
+                                    onTap: () {
+                                      if (filter.value ==
+                                          _MessageFilter.other) {
+                                        filter.value = _MessageFilter.all;
+                                      } else {
+                                        filter.value = _MessageFilter.other;
+                                      }
+                                    },
+                                  ),
+                                ]
                                   .map(
                                     (e) => Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -208,100 +222,97 @@ class MessagesScreen extends HookConsumerWidget {
                                     ),
                                   )
                                   .toList(),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: customerService.isEmpty
+                          ? EmptyState(
+                              image: Assets.illustrations.pointDown.svg(),
+                              topText: 'אין פניות שירות',
+                              bottomText:
+                                  'פניות שירות מכלל המשתמשים, יופיעו כאן',
+                            )
+                          : ListView(
+                              children: customerService
+                                  .where((element) {
+                                    if (filter.value == _MessageFilter.all) {
+                                      return true;
+                                    }
+
+                                    return element.title
+                                        .contains(filter.value.name);
+                                  })
+                                  .map(
+                                    (e) => Skeletonizer(
+                                      enabled: false,
+                                      child: MessageWidget.collapsed(
+                                        message: e,
+                                        hasIcon: true,
+                                        backgroundColor: e.allreadyRead
+                                            ? Colors.white
+                                            : AppColors.blue08,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                    ),
+                  ],
+                ),
+                if (outgoing.isEmpty)
+                  EmptyState(
+                    image: Assets.illustrations.pointDown.svg(),
+                    topText: 'אין הודעות יוצאות',
+                    bottomText: 'הודעות יוצאות שישלחו, יופיעו כאן',
+                  )
+                else
+                  ListView(
+                    children: msgsControllerState
+                        .where(
+                          (element) => element.type == MessageType.sent,
+                        )
+                        .map(
+                          (e) => Skeletonizer(
+                            enabled: false,
+                            child: MessageWidget.collapsed(
+                              message: e,
+                              hasIcon: true,
+                              backgroundColor: e.allreadyRead
+                                  ? Colors.white
+                                  : AppColors.blue08,
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: customerService.isEmpty
-                              ? EmptyState(
-                                  image: Assets.illustrations.pointDown.svg(),
-                                  topText: 'אין פניות שירות',
-                                  bottomText:
-                                      'פניות שירות מכלל המשתמשים, יופיעו כאן',
-                                )
-                              : ListView(
-                                  children: customerService
-                                      .where((element) {
-                                        if (filter.value ==
-                                            _MessageFilter.all) {
-                                          return true;
-                                        }
-
-                                        return element.title
-                                            .contains(filter.value.name);
-                                      })
-                                      .map(
-                                        (e) => Skeletonizer(
-                                          enabled: false,
-                                          child: MessageWidget.collapsed(
-                                            message: e,
-                                            hasIcon: true,
-                                            backgroundColor: e.allreadyRead
-                                                ? Colors.white
-                                                : AppColors.blue08,
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                        ),
-                      ],
-                    ),
-                    if (outgoing.isEmpty)
-                      EmptyState(
-                        image: Assets.illustrations.pointDown.svg(),
-                        topText: 'אין הודעות יוצאות',
-                        bottomText: 'הודעות יוצאות שישלחו, יופיעו כאן',
-                      )
-                    else
-                      ListView(
-                        children: msgList
-                            .where(
-                              (element) => element.type == MessageType.sent,
-                            )
-                            .map(
-                              (e) => Skeletonizer(
-                                enabled: false,
-                                child: MessageWidget.collapsed(
-                                  message: e,
-                                  hasIcon: true,
-                                  backgroundColor: e.allreadyRead
-                                      ? Colors.white
-                                      : AppColors.blue08,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    if (draft.isEmpty)
-                      EmptyState(
-                        image: Assets.illustrations.pointDown.svg(),
-                        topText: 'אין טיוטות',
-                        bottomText: 'הודעות יוצאות שלא ישלחו , יופיעו כאן',
-                      )
-                    else
-                      ListView(
-                        children: msgList
-                            .where(
-                              (element) => element.type == MessageType.draft,
-                            )
-                            .map(
-                              (e) => Skeletonizer(
-                                enabled: false,
-                                child: MessageWidget.collapsed(
-                                  message: e,
-                                  hasIcon: true,
-                                  backgroundColor: e.allreadyRead
-                                      ? Colors.white
-                                      : AppColors.blue08,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                  ],
-                );
-              },
+                        )
+                        .toList(),
+                  ),
+                if (draft.isEmpty)
+                  EmptyState(
+                    image: Assets.illustrations.pointDown.svg(),
+                    topText: 'אין טיוטות',
+                    bottomText: 'הודעות יוצאות שלא ישלחו , יופיעו כאן',
+                  )
+                else
+                  ListView(
+                    children: msgsControllerState
+                        .where(
+                          (element) => element.type == MessageType.draft,
+                        )
+                        .map(
+                          (e) => Skeletonizer(
+                            enabled: false,
+                            child: MessageWidget.collapsed(
+                              message: e,
+                              hasIcon: true,
+                              backgroundColor: e.allreadyRead
+                                  ? Colors.white
+                                  : AppColors.blue08,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+              ],
             ),
           ),
         );
@@ -322,44 +333,30 @@ class MessagesScreen extends HookConsumerWidget {
           ),
           body: RefreshIndicator.adaptive(
             onRefresh: () => ref.refresh(getMessagesProvider.future),
-            child: msgsController.when(
-              error: (error, s) => CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: [
-                  SliverFillRemaining(
-                    child: Center(
-                      child: Text(error.toString()),
-                    ),
-                  ),
-                ],
-              ),
-              loading: () => _SearchResultsBody(
-                isLoading: true,
-                messages: List.generate(
-                  10,
-                  (index) => MessageDto(
-                    title: 'titletitletitletitle',
-                    content: 'contentcontentcontent',
-                    dateTime: DateTime.now().toIso8601String(),
-                    attachments: ['attachment'],
-                    from: '549247615',
-                  ),
-                ),
-              ),
-              data: (messages) => _SearchResultsBody(
-                isLoading: false,
-                messages: messages
-                    .where(
-                      (element) =>
-                          element.content
-                              .toLowerCase()
-                              .contains(searchController.text) ||
-                          element.title
-                              .toLowerCase()
-                              .contains(searchController.text),
+            child: _SearchResultsBody(
+              isLoading: msgsController.isLoading,
+              messages: msgsController.isLoading
+                  ? List.generate(
+                      10,
+                      (index) => MessageDto(
+                        title: 'titletitletitletitle',
+                        content: 'contentcontentcontent',
+                        dateTime: DateTime.now().toIso8601String(),
+                        attachments: ['attachment'],
+                        from: '549247615',
+                      ),
                     )
-                    .toList(),
-              ),
+                  : msgsControllerState
+                      .where(
+                        (element) =>
+                            element.content
+                                .toLowerCase()
+                                .contains(searchController.text) ||
+                            element.title
+                                .toLowerCase()
+                                .contains(searchController.text),
+                      )
+                      .toList(),
             ),
           ),
         );

@@ -1061,7 +1061,7 @@ class _ContactButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final auth = ref.watch(authServiceProvider);
+    // final auth = ref.watch(authServiceProvider);
 
     return Row(
       children: [
