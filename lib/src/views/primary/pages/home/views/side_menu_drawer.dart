@@ -92,7 +92,7 @@ class SideMenuDrawer extends ConsumerWidget {
                   ),
                   ListTile(
                     dense: true,
-                    leading: const Icon(FluentIcons.mail_12_regular),
+                    leading: const Icon(FluentIcons.mail_16_regular),
                     title: const Text('פניות שירות'),
                     onTap: () => const SupportRouteData().go(context),
                   ),
