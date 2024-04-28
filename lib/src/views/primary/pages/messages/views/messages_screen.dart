@@ -17,6 +17,29 @@ import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+enum _MessageFilter {
+  data,
+  technical,
+  users,
+  other,
+  all;
+
+  String get name {
+    switch (this) {
+      case data:
+        return 'בעיות נתונים';
+      case technical:
+        return 'תמיכה טכנית';
+      case users:
+        return 'משתמשים';
+      case other:
+        return 'אחר';
+      default:
+        return 'all';
+    }
+  }
+}
+
 class MessagesScreen extends HookConsumerWidget {
   const MessagesScreen({super.key});
 
@@ -27,7 +50,7 @@ class MessagesScreen extends HookConsumerWidget {
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
     final tabController = useTabController(initialLength: 3);
-    final filter = useState('');
+    final filter = useState(_MessageFilter.all);
 
     useListenable(searchController);
     useListenable(tabController);
@@ -127,24 +150,53 @@ class MessagesScreen extends HookConsumerWidget {
                                   const EdgeInsets.symmetric(horizontal: 12),
                               children: [
                                 FilterChipWidget(
-                                  text: 'בעיות נתונים',
-                                  isSelected: false,
-                                  onTap: () => filter.value = 'בעיות נתונים',
+                                  text: _MessageFilter.data.name,
+                                  isSelected:
+                                      filter.value == _MessageFilter.data,
+                                  onTap: () {
+                                    if (filter.value == _MessageFilter.data) {
+                                      filter.value = _MessageFilter.all;
+                                    } else {
+                                      filter.value = _MessageFilter.data;
+                                    }
+                                  },
                                 ),
                                 FilterChipWidget(
-                                  text: 'תמיכה טכנית',
-                                  isSelected: false,
-                                  onTap: () => filter.value = 'תמיכה טכנית',
+                                  text: _MessageFilter.technical.name,
+                                  isSelected:
+                                      filter.value == _MessageFilter.technical,
+                                  onTap: () {
+                                    if (filter.value ==
+                                        _MessageFilter.technical) {
+                                      filter.value = _MessageFilter.all;
+                                    } else {
+                                      filter.value = _MessageFilter.technical;
+                                    }
+                                  },
                                 ),
                                 FilterChipWidget(
-                                  text: 'משתמשים',
-                                  isSelected: false,
-                                  onTap: () => filter.value = 'משתמשים',
+                                  text: _MessageFilter.users.name,
+                                  isSelected:
+                                      filter.value == _MessageFilter.users,
+                                  onTap: () {
+                                    if (filter.value == _MessageFilter.users) {
+                                      filter.value = _MessageFilter.all;
+                                    } else {
+                                      filter.value = _MessageFilter.users;
+                                    }
+                                  },
                                 ),
                                 FilterChipWidget(
-                                  text: 'אחר',
-                                  isSelected: false,
-                                  onTap: () => filter.value = 'אחר',
+                                  text: _MessageFilter.other.name,
+                                  isSelected:
+                                      filter.value == _MessageFilter.other,
+                                  onTap: () {
+                                    if (filter.value == _MessageFilter.other) {
+                                      filter.value = _MessageFilter.all;
+                                    } else {
+                                      filter.value = _MessageFilter.other;
+                                    }
+                                  },
                                 ),
                               ]
                                   .map(
@@ -170,13 +222,13 @@ class MessagesScreen extends HookConsumerWidget {
                               : ListView(
                                   children: customerService
                                       .where((element) {
-                                        if (filter.value.isEmpty) {
+                                        if (filter.value ==
+                                            _MessageFilter.all) {
                                           return true;
                                         }
 
-                                        // return element.content.contains(filter.value);
-
-                                        return true;
+                                        return element.title
+                                            .contains(filter.value.name);
                                       })
                                       .map(
                                         (e) => Skeletonizer(
