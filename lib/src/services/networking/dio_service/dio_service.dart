@@ -74,15 +74,15 @@ class DioService extends _$DioService {
 
   void _dioErrorHandler(DioException error, handler) {
     if (error.response?.statusCode == 401) {
-      // Handle 401 error without throwing an exception
-      Logger().d("Handled 401 Error Inside Interceptor");
-      // You can return a custom Response object or handle the error differently
-      handler.resolve(
-        Response(
-          requestOptions: error.requestOptions,
-          statusCode: 401,
-        ),
-      ); // Modify this as needed
+      // // Handle 401 error without throwing an exception
+      // Logger().d("Handled 401 Error Inside Interceptor");
+
+      // handler.resolve(
+      //   Response(
+      //     requestOptions: error.requestOptions,
+      //     statusCode: 401,
+      //   ),
+      // );
     } else {
       Logger().e(
         {
@@ -97,8 +97,8 @@ class DioService extends _$DioService {
       );
 
       Toaster.error(error.type.name);
-
-      handler.next(error);
     }
+
+    handler.next(error);
   }
 }

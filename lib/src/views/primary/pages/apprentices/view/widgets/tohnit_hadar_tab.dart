@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -11,6 +12,7 @@ import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
+import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -19,6 +21,7 @@ import 'package:hadar_program/src/views/primary/pages/home/controllers/events_co
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
+import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/row_icon_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -59,52 +62,52 @@ class TohnitHadarTabView extends HookConsumerWidget {
 
     return Column(
       children: [
-        DetailsCard(
-          title: 'דיווחים אחרונים',
-          trailing: TextButton(
-            onPressed: () =>
-                ReportsRouteData(apprenticeId: persona.id).push(context),
-            child: const Text(
-              'הצג הכל',
-              style: TextStyles.s12w300cGray2,
-            ),
-          ),
-          child: Builder(
-            builder: (context) {
-              final reports =
-                  (ref.watch(reportsControllerProvider).valueOrNull ?? [])
-                      .where(
-                (element) => persona.reportsIds.take(3).contains(element.id),
-              );
+        // DetailsCard(
+        //   title: 'דיווחים אחרונים',
+        //   trailing: TextButton(
+        //     onPressed: () =>
+        //         ReportsRouteData(apprenticeId: persona.id).push(context),
+        //     child: const Text(
+        //       'הצג הכל',
+        //       style: TextStyles.s12w300cGray2,
+        //     ),
+        //   ),
+        //   child: Builder(
+        //     builder: (context) {
+        //       final reports =
+        //           (ref.watch(reportsControllerProvider).valueOrNull ?? [])
+        //               .where(
+        //         (element) => persona.reportsIds.take(3).contains(element.id),
+        //       );
 
-              // Logger().d(persona.reportsIds);
+        //       // Logger().d(persona.reportsIds);
 
-              return ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => reports
-                    .map(
-                      (e) => _AnnouncementItem(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(text: e.dateTime.asDateTime.he),
-                            const TextSpan(text: ', '),
-                            TextSpan(text: e.dateTime.asDateTime.asDayMonth),
-                            const TextSpan(text: '. '),
-                            TextSpan(
-                              text: e.dateTime.asDateTime.asTimeAgoDayCutoff,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                    .toList()[index],
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemCount: reports.length,
-              );
-            },
-          ),
-        ),
+        //       return ListView.separated(
+        //         shrinkWrap: true,
+        //         physics: const NeverScrollableScrollPhysics(),
+        //         itemBuilder: (context, index) => reports
+        //             .map(
+        //               (e) => _AnnouncementItem(
+        //                 text: TextSpan(
+        //                   children: [
+        //                     TextSpan(text: e.dateTime.asDateTime.he),
+        //                     const TextSpan(text: ', '),
+        //                     TextSpan(text: e.dateTime.asDateTime.asDayMonth),
+        //                     const TextSpan(text: '. '),
+        //                     TextSpan(
+        //                       text: e.dateTime.asDateTime.asTimeAgoDayCutoff,
+        //                     ),
+        //                   ],
+        //                 ),
+        //               ),
+        //             )
+        //             .toList()[index],
+        //         separatorBuilder: (_, __) => const SizedBox(height: 12),
+        //         itemCount: reports.length,
+        //       );
+        //     },
+        //   ),
+        // ),
         _GeneralSection(
           persona: persona,
           institution: institution,
@@ -319,7 +322,25 @@ class _GeneralSection extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
+    final institutions = ref.watch(getInstitutionsProvider).valueOrNull ?? [];
     final isEditMode = useState(false);
+    final selectedInstitution = useState(
+      institutions.singleWhere(
+        (element) => element.id == persona.institutionId,
+        orElse: () => const InstitutionDto(),
+      ),
+    );
+    final selectedMahzor = useState(persona.thPeriod);
+    final ravMelamedYearAName =
+        useTextEditingController(text: persona.thRavMelamedYearAName);
+    final ravMelamedYearAPhone =
+        useTextEditingController(text: persona.thRavMelamedYearAPhone);
+    final ravMelamedYearBName =
+        useTextEditingController(text: persona.thRavMelamedYearBName);
+    final ravMelamedYearBPhone =
+        useTextEditingController(text: persona.thRavMelamedYearBPhone);
+    final isPaying = useState(persona.isPaying);
+    final matsber = useState(persona.matsber);
 
     return DetailsCard(
       title: 'תוכנית הדר',
@@ -346,15 +367,391 @@ class _GeneralSection extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: isEditMode.value
             ? [
-                const Center(child: Text('TODO')),
-                const Center(child: Text('TODO')),
-                const Center(child: Text('TODO')),
-                const Center(child: Text('TODO')),
-                const Center(child: Text('TODO')),
-                const Center(child: Text('TODO')),
-                const Center(child: Text('TODO')),
-                const Center(child: Text('TODO')),
-                const Center(child: Text('TODO')),
+                InputFieldContainer(
+                  label: 'מקום לימודים',
+                  isRequired: true,
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<InstitutionDto>(
+                      hint: Text(
+                        selectedInstitution.value.name,
+                        overflow: TextOverflow.fade,
+                      ),
+                      style: Theme.of(context).inputDecorationTheme.hintStyle,
+                      buttonStyleData: ButtonStyleData(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(36),
+                          border: Border.all(
+                            color: AppColors.shade04,
+                          ),
+                        ),
+                        elevation: 0,
+                        padding: const EdgeInsets.only(right: 8),
+                      ),
+                      onChanged: (value) => selectedInstitution.value =
+                          value ?? const InstitutionDto(),
+                      dropdownStyleData: const DropdownStyleData(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                        ),
+                      ),
+                      iconStyleData: const IconStyleData(
+                        icon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 1,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                        openMenuIcon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 3,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                      ),
+                      items: institutions
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e.name),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                InputFieldContainer(
+                  label: 'מחזור',
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      hint: Text(
+                        selectedMahzor.value,
+                        overflow: TextOverflow.fade,
+                      ),
+                      style: Theme.of(context).inputDecorationTheme.hintStyle,
+                      buttonStyleData: ButtonStyleData(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(36),
+                          border: Border.all(
+                            color: AppColors.shade04,
+                          ),
+                        ),
+                        elevation: 0,
+                        padding: const EdgeInsets.only(right: 8),
+                      ),
+                      onChanged: (value) => selectedMahzor.value = value ?? '',
+                      dropdownStyleData: const DropdownStyleData(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                        ),
+                      ),
+                      iconStyleData: const IconStyleData(
+                        icon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 1,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                        openMenuIcon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 3,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                      ),
+                      items: [
+                        'א',
+                        'ב',
+                        'ג',
+                        'ד',
+                        'ה',
+                        'ו',
+                        'ז',
+                        'ח',
+                      ]
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                InputFieldContainer(
+                  label: 'ר״מ שנה א׳',
+                  child: TextField(
+                    controller: ravMelamedYearAName,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                InputFieldContainer(
+                  label: 'מספר פלאפון ר״מ שנה א׳',
+                  child: TextField(
+                    controller: ravMelamedYearAPhone,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                InputFieldContainer(
+                  label: 'ר״מ שנה ב׳',
+                  child: TextField(
+                    controller: ravMelamedYearBName,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                InputFieldContainer(
+                  label: 'מספר פלאפון ר״מ שנה ב׳',
+                  child: TextField(
+                    controller: ravMelamedYearBPhone,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                InputFieldContainer(
+                  label: 'משלם/לא משלם',
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<bool>(
+                      hint: Text(
+                        isPaying.value ? 'משלם' : 'לא משלם',
+                        overflow: TextOverflow.fade,
+                      ),
+                      style: Theme.of(context).inputDecorationTheme.hintStyle,
+                      buttonStyleData: ButtonStyleData(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(36),
+                          border: Border.all(
+                            color: AppColors.shade04,
+                          ),
+                        ),
+                        elevation: 0,
+                        padding: const EdgeInsets.only(right: 8),
+                      ),
+                      onChanged: (value) => isPaying.value = value ?? false,
+                      dropdownStyleData: const DropdownStyleData(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                        ),
+                      ),
+                      iconStyleData: const IconStyleData(
+                        icon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 1,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                        openMenuIcon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 3,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                      ),
+                      items: const [
+                        DropdownMenuItem(
+                          value: true,
+                          child: Text('משלם'),
+                        ),
+                        DropdownMenuItem(
+                          value: false,
+                          child: Text('לא משלם'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                InputFieldContainer(
+                  label: 'מצב רוחני - מצב״ר',
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      hint: Text(
+                        matsber.value,
+                        overflow: TextOverflow.fade,
+                      ),
+                      style: Theme.of(context).inputDecorationTheme.hintStyle,
+                      buttonStyleData: ButtonStyleData(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(36),
+                          border: Border.all(
+                            color: AppColors.shade04,
+                          ),
+                        ),
+                        elevation: 0,
+                        padding: const EdgeInsets.only(right: 8),
+                      ),
+                      onChanged: (value) => matsber.value = value ?? '',
+                      dropdownStyleData: const DropdownStyleData(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                        ),
+                      ),
+                      iconStyleData: const IconStyleData(
+                        icon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 1,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                        openMenuIcon: Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: RotatedBox(
+                            quarterTurns: 3,
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: AppColors.grey6,
+                            ),
+                          ),
+                        ),
+                      ),
+                      items: [
+                        'אדוק',
+                        'מחובר',
+                        'מחובר חלקית',
+                        'בשלבי ניתוק',
+                        'מנותק',
+                      ]
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+                // const SizedBox(height: 12),
+                // InputFieldContainer(
+                //   label: 'מלווה - משויך',
+                //   child: DropdownButtonHideUnderline(
+                //     child: DropdownButton2<PersonaDto>(
+                //       hint: Text(
+                //         selectedPersona,
+                //         overflow: TextOverflow.fade,
+                //       ),
+                //       style: Theme.of(context).inputDecorationTheme.hintStyle,
+                //       buttonStyleData: ButtonStyleData(
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(36),
+                //           border: Border.all(
+                //             color: AppColors.shade04,
+                //           ),
+                //         ),
+                //         elevation: 0,
+                //         padding: const EdgeInsets.only(right: 8),
+                //       ),
+                //       onChanged: (value) => matsbar.value = value ?? '',
+                //       dropdownStyleData: const DropdownStyleData(
+                //         decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           borderRadius: BorderRadius.all(
+                //             Radius.circular(16),
+                //           ),
+                //         ),
+                //       ),
+                //       iconStyleData: const IconStyleData(
+                //         icon: Padding(
+                //           padding: EdgeInsets.only(left: 16),
+                //           child: RotatedBox(
+                //             quarterTurns: 1,
+                //             child: Icon(
+                //               Icons.chevron_left,
+                //               color: AppColors.grey6,
+                //             ),
+                //           ),
+                //         ),
+                //         openMenuIcon: Padding(
+                //           padding: EdgeInsets.only(left: 16),
+                //           child: RotatedBox(
+                //             quarterTurns: 3,
+                //             child: Icon(
+                //               Icons.chevron_left,
+                //               color: AppColors.grey6,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       items: [
+                //         'אדוק',
+                //         'מחובר',
+                //         'מחובר חלקית',
+                //         'בשלבי ניתוק',
+                //         'מנותק',
+                //       ]
+                //           .map(
+                //             (e) => DropdownMenuItem(
+                //               value: e,
+                //               child: Text(e),
+                //             ),
+                //           )
+                //           .toList(),
+                //     ),
+                //   ),
+                // ),
+                const SizedBox(height: 24),
+                AcceptCancelButtons(
+                  onPressedCancel: () => isEditMode.value = false,
+                  onPressedOk: () async {
+                    final result = await ref
+                        .read(personasControllerProvider.notifier)
+                        .edit(
+                          persona: persona.copyWith(
+                            educationalInstitution:
+                                selectedInstitution.value.name,
+                            thPeriod: selectedMahzor.value,
+                            thRavMelamedYearAName: ravMelamedYearAName.text,
+                            thRavMelamedYearAPhone: ravMelamedYearAPhone.text,
+                            thRavMelamedYearBName: ravMelamedYearBName.text,
+                            thRavMelamedYearBPhone: ravMelamedYearBPhone.text,
+                            isPaying: isPaying.value,
+                            matsber: matsber.value,
+                          ),
+                        );
+
+                    if (result) {}
+                  },
+                ),
               ]
             : [
                 DetailsRowItem(
@@ -660,26 +1057,26 @@ class _EventBottomSheet extends HookConsumerWidget {
   }
 }
 
-class _AnnouncementItem extends StatelessWidget {
-  const _AnnouncementItem({
-    required this.text,
-  });
+// class _AnnouncementItem extends StatelessWidget {
+//   const _AnnouncementItem({
+//     required this.text,
+//   });
 
-  final TextSpan text;
+//   final TextSpan text;
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Icon(FluentIcons.person_24_regular),
-        const SizedBox(width: 18),
-        Text.rich(
-          text,
-          style: TextStyles.s14w400.copyWith(
-            color: AppColors.gray5,
-          ),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: [
+//         const Icon(FluentIcons.person_24_regular),
+//         const SizedBox(width: 18),
+//         Text.rich(
+//           text,
+//           style: TextStyles.s14w400.copyWith(
+//             color: AppColors.gray5,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }

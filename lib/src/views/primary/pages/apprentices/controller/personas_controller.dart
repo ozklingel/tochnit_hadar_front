@@ -137,8 +137,19 @@ class PersonasController extends _$PersonasController {
               'workOccupation': persona.workOccupation,
               'workPlace': persona.workPlace,
               'workType': persona.workType,
+              // tohnit hadar
+              'educationalInstitution': persona.educationalInstitution,
+              'thPeriod': persona.thPeriod,
+              'thRavMelamedYearA_name': persona.thRavMelamedYearAName,
+              'thRavMelamedYearA_phone': persona.thRavMelamedYearAPhone,
+              'thRavMelamedYearB_name': persona.thRavMelamedYearBPhone,
+              'thRavMelamedYearB_phone': persona.thRavMelamedYearBPhone,
+              'paying': persona.isPaying.toString(),
+              'matsber': persona.matsber,
             }),
           );
+
+      Logger().d(result);
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getMapsApprenticesProvider);
