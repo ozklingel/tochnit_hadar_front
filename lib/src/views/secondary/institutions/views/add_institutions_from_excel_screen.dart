@@ -25,7 +25,7 @@ class AddInstitutionFromExcel extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'הוספת משתמשים',
+          'הוספת מוסד',
           style: TextStyles.s22w500cGrey2,
         ),
       ),
@@ -35,7 +35,7 @@ class AddInstitutionFromExcel extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'העלאת קובץ נתוני חניכים',
+              'העלאת קובץ נתוני מוסדות',
               style: TextStyles.s12w500cGray5,
             ),
             const SizedBox(height: 24),
