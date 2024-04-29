@@ -30,6 +30,8 @@ class GetInstitutions extends _$GetInstitutions {
         )
         .toList();
 
+    ref.keepAlive();
+
     return result;
   }
 }

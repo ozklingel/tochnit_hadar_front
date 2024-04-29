@@ -71,7 +71,7 @@ class HadarProgram extends ConsumerWidget {
       enabled: kDebugMode,
       hideInspectorBanner: true,
       navigatorKey: router.routerDelegate.navigatorKey,
-      showInspectorOn: ShowInspectorOn.Both,
+      showInspectorOn: ShowInspectorOn.Shaking,
       child: _EagerInitialization(
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,

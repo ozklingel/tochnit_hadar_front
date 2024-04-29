@@ -45,6 +45,8 @@ class GetForgottenApprentices extends _$GetForgottenApprentices {
 
     final parsed = ApprenticeStatusDto.fromJson(request.data);
 
+    ref.keepAlive();
+
     return parsed;
   }
 }

@@ -34,11 +34,6 @@ class ApprenticeStatusItemDto with _$ApprenticeStatusItemDto {
       defaultValue: '',
     )
     String id,
-    @Default('')
-    @JsonKey(
-      defaultValue: '',
-    )
-    String name,
     @Default(0)
     @JsonKey(
       defaultValue: 0,

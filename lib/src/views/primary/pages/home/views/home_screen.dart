@@ -176,7 +176,7 @@ class _ForgottenApprentices extends StatelessWidget {
               isExtended: false,
               title: 'חניכים נשכחים',
               subtitle: 'חניכים שלא נוצר איתם קשר מעל 100 יום',
-            ),
+            ).push(context),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               child: Row(
