@@ -32,7 +32,7 @@ class FilterDto with _$FilterDto {
     @Default([]) List<String> regions,
     @Default([]) List<String> cities,
     @Default([]) List<String> ramim,
-    @Default([]) List<ReportEventType> reportEventTypes,
+    @Default([]) List<Event> reportEventTypes,
   }) = _UserFilterDto;
 
   // ignore: unused_element

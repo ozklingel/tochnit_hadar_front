@@ -114,7 +114,7 @@ class ReportCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    report.reportEventType.name,
+                    report.event.name,
                     style: TextStyles.s16w400cGrey2,
                   ),
                 ],

@@ -57,7 +57,7 @@ class ChartDetailsCard extends StatelessWidget {
             children: [
               Text(
                 isPercentage
-                    ? '${(val / total * 100).toInt()}%'
+                    ? '${(val / (total == 0 ? 1 : total) * 100).toInt()}%'
                     : val.toInt().toString(),
                 style: TextStyles.s34w400cGreen,
               ),

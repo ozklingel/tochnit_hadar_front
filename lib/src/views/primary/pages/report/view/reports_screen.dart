@@ -56,7 +56,7 @@ class ReportsScreen extends HookConsumerWidget {
     }).sorted((a, b) {
       switch (sortBy.value) {
         case SortReportBy.abcAscending:
-          return a.reportEventType.name.compareTo(b.reportEventType.name);
+          return a.event.name.compareTo(b.event.name);
         case SortReportBy.timeFromCloseToFar:
           return a.creationDate.asDateTime.compareTo(b.creationDate.asDateTime);
         default:
@@ -547,7 +547,7 @@ class ReportsScreen extends HookConsumerWidget {
                         element.description
                             .toLowerCase()
                             .contains(searchController.text.toLowerCase()) ||
-                        element.reportEventType.name
+                        element.event.name
                             .toLowerCase()
                             .contains(searchController.text.toLowerCase()),
                   )

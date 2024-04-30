@@ -88,7 +88,7 @@ class ReportsController extends _$ReportsController {
                   ref.read(storageServiceProvider.notifier).getUserPhone(),
               'List_of_repored': report.recipients,
               'date': report.dateTime,
-              'event_type': report.reportEventType.name,
+              'event_type': report.event.name,
               'description': report.description,
               'attachments': report.attachments,
             }),
@@ -129,9 +129,9 @@ class ReportsController extends _$ReportsController {
           "allreadyread": false,
           'attachments': report.attachments,
           'visit_date': report.dateTime,
-          'event_type': report.reportEventType.name,
+          'event_type': report.event.name,
           'description': report.description,
-          'title': report.reportEventType.name,
+          'title': report.event.name,
         },
       );
 

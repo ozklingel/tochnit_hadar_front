@@ -668,20 +668,19 @@ class FiltersScreen extends HookConsumerWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: filter.value.reportEventTypes
-            .contains(ReportEventType.failedAttempt),
+        selected: filter.value.reportEventTypes.contains(Event.failedAttempt),
         onSelected: (val) => filter.value = filter.value.copyWith(
-          reportEventTypes: filter.value.reportEventTypes
-                  .contains(ReportEventType.failedAttempt)
-              ? [
-                  ...filter.value.reportEventTypes.where(
-                    (element) => element != ReportEventType.failedAttempt,
-                  ),
-                ]
-              : [
-                  ...filter.value.reportEventTypes,
-                  ReportEventType.failedAttempt,
-                ],
+          reportEventTypes:
+              filter.value.reportEventTypes.contains(Event.failedAttempt)
+                  ? [
+                      ...filter.value.reportEventTypes.where(
+                        (element) => element != Event.failedAttempt,
+                      ),
+                    ]
+                  : [
+                      ...filter.value.reportEventTypes,
+                      Event.failedAttempt,
+                    ],
         ),
         label: const Text('קשר שכשל'),
         labelStyle: TextStyles.s14w400cBlue2,
@@ -690,20 +689,19 @@ class FiltersScreen extends HookConsumerWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: filter.value.reportEventTypes
-            .contains(ReportEventType.offlineMeeting),
+        selected: filter.value.reportEventTypes.contains(Event.offlineMeeting),
         onSelected: (val) => filter.value = filter.value.copyWith(
-          reportEventTypes: filter.value.reportEventTypes
-                  .contains(ReportEventType.offlineMeeting)
-              ? [
-                  ...filter.value.reportEventTypes.where(
-                    (element) => element != ReportEventType.offlineMeeting,
-                  ),
-                ]
-              : [
-                  ...filter.value.reportEventTypes,
-                  ReportEventType.offlineMeeting,
-                ],
+          reportEventTypes:
+              filter.value.reportEventTypes.contains(Event.offlineMeeting)
+                  ? [
+                      ...filter.value.reportEventTypes.where(
+                        (element) => element != Event.offlineMeeting,
+                      ),
+                    ]
+                  : [
+                      ...filter.value.reportEventTypes,
+                      Event.offlineMeeting,
+                    ],
         ),
         label: const Text('מפגש'),
         labelStyle: TextStyles.s14w400cBlue2,
@@ -712,20 +710,19 @@ class FiltersScreen extends HookConsumerWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: filter.value.reportEventTypes
-            .contains(ReportEventType.onlineMeeting),
+        selected: filter.value.reportEventTypes.contains(Event.onlineMeeting),
         onSelected: (val) => filter.value = filter.value.copyWith(
-          reportEventTypes: filter.value.reportEventTypes
-                  .contains(ReportEventType.onlineMeeting)
-              ? [
-                  ...filter.value.reportEventTypes.where(
-                    (element) => element != ReportEventType.onlineMeeting,
-                  ),
-                ]
-              : [
-                  ...filter.value.reportEventTypes,
-                  ReportEventType.onlineMeeting,
-                ],
+          reportEventTypes:
+              filter.value.reportEventTypes.contains(Event.onlineMeeting)
+                  ? [
+                      ...filter.value.reportEventTypes.where(
+                        (element) => element != Event.onlineMeeting,
+                      ),
+                    ]
+                  : [
+                      ...filter.value.reportEventTypes,
+                      Event.onlineMeeting,
+                    ],
         ),
         label: const Text('זום'),
         labelStyle: TextStyles.s14w400cBlue2,
@@ -734,19 +731,18 @@ class FiltersScreen extends HookConsumerWidget {
       ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        selected: filter.value.reportEventTypes.contains(ReportEventType.call),
+        selected: filter.value.reportEventTypes.contains(Event.call),
         onSelected: (val) => filter.value = filter.value.copyWith(
-          reportEventTypes:
-              filter.value.reportEventTypes.contains(ReportEventType.call)
-                  ? [
-                      ...filter.value.reportEventTypes.where(
-                        (element) => element != ReportEventType.call,
-                      ),
-                    ]
-                  : [
-                      ...filter.value.reportEventTypes,
-                      ReportEventType.call,
-                    ],
+          reportEventTypes: filter.value.reportEventTypes.contains(Event.call)
+              ? [
+                  ...filter.value.reportEventTypes.where(
+                    (element) => element != Event.call,
+                  ),
+                ]
+              : [
+                  ...filter.value.reportEventTypes,
+                  Event.call,
+                ],
         ),
         label: const Text('שיחה'),
         labelStyle: TextStyles.s14w400cBlue2,
@@ -818,22 +814,21 @@ class FiltersScreen extends HookConsumerWidget {
                                   (states) => AppColors.blue06,
                                 ),
                                 selected: filter.value.reportEventTypes
-                                    .contains(ReportEventType.call),
+                                    .contains(Event.call),
                                 onSelected: (val) =>
                                     filter.value = filter.value.copyWith(
                                   reportEventTypes: filter
                                           .value.reportEventTypes
-                                          .contains(ReportEventType.call)
+                                          .contains(Event.call)
                                       ? [
                                           ...filter.value.reportEventTypes
                                               .where(
-                                            (element) =>
-                                                element != ReportEventType.call,
+                                            (element) => element != Event.call,
                                           ),
                                         ]
                                       : [
                                           ...filter.value.reportEventTypes,
-                                          ReportEventType.call,
+                                          Event.call,
                                         ],
                                 ),
                                 label: Row(
