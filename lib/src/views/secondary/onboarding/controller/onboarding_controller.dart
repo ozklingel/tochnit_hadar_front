@@ -1,6 +1,3 @@
-import 'dart:convert'; // Include this at the top of your file
-
-import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
@@ -84,11 +81,20 @@ class OnboardingController extends _$OnboardingController {
     );
 
     if (result.statusCode == 200) {
-      final data = json.decode(result.data);
-      final email = data['email'] as String?;
-      debugPrint('Email: $email');
-      Logger().d('Email: $email');
-      return email != null; // Return true if email is not null, false otherwise
+      final data = result.data;
+      bool hasAllDetails = [
+        data['firstName'],
+        data['lastName'],
+        data['date_of_birth'],
+        data['city'],
+        data['region'],
+      ].every((element) => element != null);
+      if (hasAllDetails) {
+        return true;
+      } else {
+        Logger().d('Missing some user details');
+        return false;
+      }
     } else {
       return false; // Return false if the API request fails
     }

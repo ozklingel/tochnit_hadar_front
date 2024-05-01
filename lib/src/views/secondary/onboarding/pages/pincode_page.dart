@@ -22,19 +22,17 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
   final void Function(bool isFirstOnboarding) onSuccess;
   final String phone;
 
+  String _platformMFA(bool isWhatsAppMFA) => isWhatsAppMFA ? 'סמס' : 'ווטסאפ';
+
   @override
   Widget build(BuildContext context, ref) {
     final pinCodeController = useTextEditingController();
     final timer = useState(_timerDuration);
     final isWhatsAppMFA = useState(false);
     final isRememberMeChecked = useState(false);
-    final buttonText = useState('שלח לי את הקוד דרך הווצאפ');
 
     void toggleMFA() {
       isWhatsAppMFA.value = !isWhatsAppMFA.value; // Toggle the state
-      buttonText.value = isWhatsAppMFA.value
-          ? 'שלח לי את הקוד דרך סמס'
-          : 'שלח לי את הקוד דרך הווצאפ';
     }
 
     useListenable(pinCodeController);
@@ -70,22 +68,15 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  if (isWhatsAppMFA.value) ...[
-                    const TextSpan(text: 'שלחנו לך דרך ווצאפ'),
-                    const TextSpan(text: '\n'),
-                    const TextSpan(text: 'למספר'),
-                  ] else ...[
-                    const TextSpan(text: 'שלחנו לך דרך סמס'),
-                    const TextSpan(text: '\n'),
-                    const TextSpan(text: 'למספר'),
-                  ],
-                  const TextSpan(text: ' '),
+                  TextSpan(
+                    text:
+                        'שלחנו לך ב${_platformMFA(!isWhatsAppMFA.value)}\n למספר ',
+                  ),
                   TextSpan(
                     text: phone,
                     style: Theme.of(context).textTheme.displayMedium!,
                   ),
-                  const TextSpan(text: '\n'),
-                  const TextSpan(text: 'יש להקיש אותו כאן למטה'),
+                  const TextSpan(text: '\nיש להקיש אותו כאן למטה'),
                 ],
               ),
               textAlign: TextAlign.center,
@@ -201,15 +192,21 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
             ),
             TextButton(
               onPressed: () async {
-                await ref
-                    .read(onboardingControllerProvider.notifier)
-                    .getOtpWhatsapp(phone: phone);
+                if (isWhatsAppMFA.value) {
+                  await ref
+                      .read(onboardingControllerProvider.notifier)
+                      .getOtp(phone: phone);
+                } else {
+                  await ref
+                      .read(onboardingControllerProvider.notifier)
+                      .getOtpWhatsapp(phone: phone);
+                }
                 timer.value = _timerDuration;
                 pinCodeController.text = '';
                 toggleMFA();
               },
               child: Text(
-                buttonText.value,
+                'שלחו לי קוד ב${_platformMFA(isWhatsAppMFA.value)}',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                       color: AppColors.blue02,
