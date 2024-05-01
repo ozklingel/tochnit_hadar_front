@@ -214,6 +214,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/success.svg
   SvgGenImage get success => const SvgGenImage('assets/images/success.svg');
 
+  /// File path: assets/images/thinking.png
+  AssetGenImage get thinking =>
+      const AssetGenImage('assets/images/thinking.png');
+
   /// File path: assets/images/thumb_down_blue.png
   AssetGenImage get thumbDownBlue =>
       const AssetGenImage('assets/images/thumb_down_blue.png');
@@ -248,6 +252,7 @@ class $AssetsImagesGen {
         splash,
         successSmile,
         success,
+        thinking,
         thumbDownBlue,
         vi
       ];

@@ -17,9 +17,11 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
     super.key,
     required this.onSuccess,
     required this.phone,
+    this.onFailure,
   });
 
   final void Function(bool isFirstOnboarding) onSuccess;
+  final void Function(BuildContext context, String phone)? onFailure;
   final String phone;
 
   String _platformMFA(bool isWhatsAppMFA) => isWhatsAppMFA ? 'סמס' : 'ווטסאפ';
@@ -125,17 +127,6 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                     const SizedBox(
                       height: 0,
                     ), // Use this to adjust the vertical space between the PinCodeTextField and the Text widget
-
-                    Center(
-                      // Centers the text horizontally
-                      child: hasError.state
-                          ? const Text(
-                              "קוד אימות שגוי, רוצה לנסות שוב?",
-                              textDirection: TextDirection.rtl,
-                              style: TextStyle(color: Colors.red, fontSize: 11),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
                   ],
                 ),
               ),
@@ -231,16 +222,11 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                         // Try replacing the use of the deprecated member with the replacement.
                         // ignore: deprecated_member_use
                         ref.read(pinErrorProvider.state).state = true;
-                        // // ignore: use_build_context_synchronously
-                        // showDialog(
-                        //   // ignore: use_build_context_synchronously
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return const AlertDialog.adaptive(
-                        //       content: Text('תקלה'),
-                        //     );
-                        //   },
-                        // );
+                        onFailure?.call(
+                          // ignore: use_build_context_synchronously
+                          context,
+                          'קוד האימות שהוזן שגוי, רוצה לנסות שוב?',
+                        );
                       } else {
                         onSuccess(result.isFirstOnboarding);
                       }
