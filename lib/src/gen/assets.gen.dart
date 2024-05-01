@@ -155,6 +155,9 @@ class $AssetsImagesGen {
   SvgGenImage get homePageHeader =>
       const SvgGenImage('assets/images/home-page-header.svg');
 
+  /// File path: assets/images/loader.gif
+  AssetGenImage get loader => const AssetGenImage('assets/images/loader.gif');
+
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
@@ -201,6 +204,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/setting.png
   AssetGenImage get setting => const AssetGenImage('assets/images/setting.png');
 
+  /// File path: assets/images/splash.gif
+  AssetGenImage get splash => const AssetGenImage('assets/images/splash.gif');
+
   /// File path: assets/images/success-smile.png
   AssetGenImage get successSmile =>
       const AssetGenImage('assets/images/success-smile.png');
@@ -224,6 +230,7 @@ class $AssetsImagesGen {
         envalop,
         exit,
         homePageHeader,
+        loader,
         logo,
         logomark,
         madad,
@@ -238,6 +245,7 @@ class $AssetsImagesGen {
         person,
         person2,
         setting,
+        splash,
         successSmile,
         success,
         thumbDownBlue,
