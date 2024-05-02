@@ -194,7 +194,6 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                         const SizedBox(height: 32),
                         InputFieldContainer(
                           label: 'שיוך יחידתי',
-                          isRequired: true,
                           child: TextFormField(
                             controller: unitController,
                             validator: (value) {
@@ -209,7 +208,6 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                         const SizedBox(height: 32),
                         InputFieldContainer(
                           label: 'תפקיד נוכחי',
-                          isRequired: true,
                           child: TextFormField(
                             controller: positionNewController,
                             validator: (value) {
@@ -224,7 +222,6 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                         const SizedBox(height: 32),
                         InputFieldContainer(
                           label: 'תפקיד קודם',
-                          isRequired: true,
                           child: TextFormField(
                             controller: positionOldController,
                             validator: (value) {
@@ -281,7 +278,6 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                         const SizedBox(height: 32),
                         InputFieldContainer(
                           label: 'תאריך שחרור',
-                          isRequired: true,
                           child: InkWell(
                             onTap: () async {
                               final newDate = await showDatePicker(
