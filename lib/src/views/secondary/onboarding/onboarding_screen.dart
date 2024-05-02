@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/secondary/onboarding/pages/logo_page.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/pages/personal_details_page.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/pages/phone_page.dart';
 import 'package:hadar_program/src/views/secondary/onboarding/pages/pincode_page.dart';
@@ -45,7 +44,7 @@ class OnboardingScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final pageController = usePageController(initialPage: isOnboarding ? 4 : 0);
+    final pageController = usePageController(initialPage: isOnboarding ? 3 : 0);
     final phoneController = useState('');
 
     return Scaffold(
@@ -57,13 +56,7 @@ class OnboardingScreen extends HookConsumerWidget {
               ? const AlwaysScrollableScrollPhysics()
               : const NeverScrollableScrollPhysics(),
           children: [
-            OnboardingPage0Logo(
-              onLoaded: () => pageController.nextPage(
-                duration: Consts.defaultDurationM,
-                curve: Curves.linear,
-              ),
-            ),
-            OnboardingPage1Phone(
+            OnboardingPagePhone(
               onSuccess: (phone) {
                 pageController.nextPage(
                   duration: Consts.defaultDurationM,
@@ -73,7 +66,7 @@ class OnboardingScreen extends HookConsumerWidget {
               },
               onFailure: _showErrorDialog,
             ),
-            OnboardingPage2PinCode(
+            OnboardingPagePinCode(
               onSuccess: (isFirstOnboarding) {
                 pageController.nextPage(
                   duration: Consts.defaultDurationM,
@@ -92,13 +85,13 @@ class OnboardingScreen extends HookConsumerWidget {
               onFailure: _showErrorDialog,
               phone: phoneController.value,
             ),
-            OnboardingSuccessPage.page3otpSuccess(
+            OnboardingSuccessPage.otpSuccess(
               onLoaded: () => pageController.nextPage(
                 duration: Consts.defaultDurationM,
                 curve: Curves.linear,
               ),
             ),
-            OnboardingPage4PersonalDetails(
+            OnboardingPagePersonalDetails(
               onSuccess: () {
                 pageController.nextPage(
                   duration: Consts.defaultDurationM,
@@ -106,7 +99,7 @@ class OnboardingScreen extends HookConsumerWidget {
                 );
               },
             ),
-            OnboardingSuccessPage.page4lastPage(
+            OnboardingSuccessPage.lastPage(
               onLoaded: () {
                 pageController.nextPage(
                   duration: Consts.defaultDurationM,

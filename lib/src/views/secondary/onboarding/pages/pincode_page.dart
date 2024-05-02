@@ -12,8 +12,8 @@ const _kPinCodeLength = 6;
 const _timerDuration = 60;
 final pinErrorProvider = StateProvider<bool>((ref) => false);
 
-class OnboardingPage2PinCode extends HookConsumerWidget {
-  const OnboardingPage2PinCode({
+class OnboardingPagePinCode extends HookConsumerWidget {
+  const OnboardingPagePinCode({
     super.key,
     required this.onSuccess,
     required this.phone,
@@ -24,7 +24,7 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
   final void Function(BuildContext context, String phone)? onFailure;
   final String phone;
 
-  String _platformMFA(bool isWhatsAppMFA) => isWhatsAppMFA ? 'סמס' : 'ווטסאפ';
+  String _platformMFA(bool isWhatsAppMFA) => isWhatsAppMFA ? 'סמס' : 'whatsapp';
 
   @override
   Widget build(BuildContext context, ref) {
@@ -72,7 +72,7 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                 children: [
                   TextSpan(
                     text:
-                        'שלחנו לך ב${_platformMFA(!isWhatsAppMFA.value)}\n למספר ',
+                        'שלחנו לך דרך ${_platformMFA(!isWhatsAppMFA.value)}\n למספר ',
                   ),
                   TextSpan(
                     text: phone,
@@ -197,7 +197,7 @@ class OnboardingPage2PinCode extends HookConsumerWidget {
                 toggleMFA();
               },
               child: Text(
-                'שלחו לי קוד ב${_platformMFA(isWhatsAppMFA.value)}',
+                'שלחו לי קוד דרך ${_platformMFA(isWhatsAppMFA.value)}',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                       color: AppColors.blue02,

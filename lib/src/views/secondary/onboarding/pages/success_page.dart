@@ -5,13 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 
 class OnboardingSuccessPage extends HookWidget {
-  const OnboardingSuccessPage.page3otpSuccess({
+  const OnboardingSuccessPage.otpSuccess({
     super.key,
     required this.onLoaded,
   })  : topText = 'זיהינו אותך בהצלחה!',
         bottomText = 'מיד נעבור לשלב קצר של הגדרות ראשונית של האפליקציה ';
 
-  const OnboardingSuccessPage.page4lastPage({
+  const OnboardingSuccessPage.lastPage({
     super.key,
     required this.onLoaded,
   })  : topText = 'יופי, סיימנו!',

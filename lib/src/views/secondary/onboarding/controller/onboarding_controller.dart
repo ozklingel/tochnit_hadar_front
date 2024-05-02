@@ -1,4 +1,5 @@
 import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:intl/intl.dart';
@@ -81,14 +82,11 @@ class OnboardingController extends _$OnboardingController {
     );
 
     if (result.statusCode == 200) {
-      final data = result.data;
-      bool hasAllDetails = [
-        data['firstName'],
-        data['lastName'],
-        data['date_of_birth'],
-        data['city'],
-        data['region'],
-      ].every((element) => element != null);
+      final auth = AuthDto.fromJson(result.data);
+      final hasAllDetails = auth.fullName.isNotEmpty &&
+          auth.dateOfBirth.isNotEmpty &&
+          auth.city.isNotEmpty &&
+          auth.region.isNotEmpty;
       if (hasAllDetails) {
         return true;
       } else {

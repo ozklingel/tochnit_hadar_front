@@ -12,8 +12,8 @@ import 'package:hadar_program/src/views/secondary/onboarding/controller/onboardi
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class OnboardingPage4PersonalDetails extends HookConsumerWidget {
-  const OnboardingPage4PersonalDetails({
+class OnboardingPagePersonalDetails extends HookConsumerWidget {
+  const OnboardingPagePersonalDetails({
     super.key,
     required this.onSuccess,
   });
@@ -37,7 +37,9 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
           ref.read(onboardingControllerProvider.notifier).verifyRegistered(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(); // Show a loading indicator while waiting for the result
+          return Center(
+            child: SizedBox(height: 100, child: Assets.images.loader.image()),
+          );
         } else if (!snapshot.hasError && snapshot.hasData && snapshot.data!) {
           onSuccess();
           return Container(); // Return an empty container or your desired next screen widget
@@ -250,7 +252,10 @@ class OnboardingPage4PersonalDetails extends HookConsumerWidget {
                           ? null
                           : selectedRegion.value,
                       hint: const Text('אזור מגורים'),
-                      style: Theme.of(context).inputDecorationTheme.hintStyle,
+                      style: Theme.of(context)
+                          .inputDecorationTheme
+                          .hintStyle!
+                          .copyWith(color: Theme.of(context).hintColor),
                       buttonStyleData: ButtonStyleData(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(36),
