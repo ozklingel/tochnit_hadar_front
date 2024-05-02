@@ -74,7 +74,6 @@ class _WorkSection extends HookConsumerWidget {
             ? [
                 InputFieldContainer(
                   label: 'סטטוס',
-                  isRequired: true,
                   child: TextField(
                     controller: workStatus,
                   ),
@@ -82,7 +81,6 @@ class _WorkSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'עיסוק',
-                  isRequired: true,
                   child: TextField(
                     controller: workOccupation,
                   ),
@@ -90,7 +88,6 @@ class _WorkSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'סוג עבודה',
-                  isRequired: true,
                   child: TextField(
                     controller: workType,
                   ),
@@ -98,7 +95,6 @@ class _WorkSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'מקום עבודה',
-                  isRequired: true,
                   child: TextField(
                     controller: workPlace,
                   ),
