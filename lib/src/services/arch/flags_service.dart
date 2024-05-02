@@ -96,7 +96,7 @@ final _reports = List.generate(
       id: faker.guid.guid(),
       description: faker.lorem.sentence(),
       recipients: _apprentices.map((e) => e.id).toList(),
-      reportEventType: ReportEventType.values[Random().nextInt(6)],
+      event: Event.values[Random().nextInt(6)],
       attachments: List.generate(
         11,
         (index) => faker.image.image(height: 100, width: 100),

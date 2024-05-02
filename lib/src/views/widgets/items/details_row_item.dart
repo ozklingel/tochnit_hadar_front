@@ -12,6 +12,7 @@ class DetailsRowItem extends StatelessWidget {
     this.contactName = '',
     this.contactPhone = '',
     this.onTapPhone,
+    this.onTapData,
   });
 
   final String label;
@@ -21,6 +22,7 @@ class DetailsRowItem extends StatelessWidget {
   final String contactName;
   final String contactPhone;
   final VoidCallback? onTapPhone;
+  final VoidCallback? onTapData;
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +41,26 @@ class DetailsRowItem extends StatelessWidget {
         SizedBox(
           width: dataWidth,
           child: contactName.isEmpty
-              ? Text(
-                  data,
-                  style: TextStyles.s14w400,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 4,
+              ? Builder(
+                  builder: (context) {
+                    final child = Text(
+                      data,
+                      style: TextStyles.s14w400,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                    );
+
+                    return onTapData == null
+                        ? child
+                        : Row(
+                            children: [
+                              TextButton(
+                                onPressed: onTapData,
+                                child: child,
+                              ),
+                            ],
+                          );
+                  },
                 )
               : Text.rich(
                   TextSpan(

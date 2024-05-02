@@ -209,9 +209,17 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
         onPressed: () async {
           final navContext = Navigator.of(context);
 
-          final result = await ref
-              .read(institutionsControllerProvider.notifier)
-              .create(institution);
+          final result =
+              await ref.read(institutionsControllerProvider.notifier).create(
+                    institution.copyWith(
+                      name: name.text,
+                      rakazPhoneNumber: phone.text,
+                      adminName: rakazName.text,
+                      adminPhoneNumber: rakazPhone.text,
+                      roshMehinaName: roshMehina.text,
+                      roshMehinaPhoneNumber: roshPhoneNumber.text,
+                    ),
+                  );
 
           if (result) {
             Toaster.show('Success');

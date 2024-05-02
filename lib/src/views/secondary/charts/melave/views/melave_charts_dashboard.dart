@@ -29,8 +29,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
       CircularProgressGauge(val: controller.melaveScore / 100),
       LinearProgressChartCard(
         title: 'שיחות',
-        val: controller.oldVisitCalls,
-        total: controller.apprenticesCount,
+        val: controller.visitCalls,
+        total: controller.numOfApprentices,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const MelaveCallsChartPage(),
@@ -39,8 +39,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
       ),
       LinearProgressChartCard(
         title: 'מפגשים',
-        val: controller.oldVisitMeeting,
-        total: controller.apprenticesCount,
+        val: controller.visitMeetings,
+        total: controller.numOfApprentices,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const MelaveMeetingsChartPage(),
@@ -51,8 +51,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
         label: 'מפגש מלווים מקצועי',
         details: 'מפגשים שבוצעו ברבעון הנוכחי',
         timestamp: '2 רבעונים',
-        val: controller.sadnaScore,
-        total: controller.apprenticesCount,
+        val: controller.sadnaTodo,
+        total: controller.sadnaDone,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const MelaveProfessionalMeetingChartPage(),
@@ -63,8 +63,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
         label: 'כנס מלווים שנתי',
         details: 'מפגשים שבוצעו ברבעון הנוכחי',
         timestamp: '2 שנים',
-        val: controller.kenesScore,
-        total: controller.apprenticesCount,
+        val: controller.kenesTwoYear,
+        total: controller.newVisitKenes,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const MelaveConferenceMeetingChartPage(),
@@ -73,8 +73,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
       ),
       LinearProgressChartCard(
         title: 'שיחות היכרות הורים',
-        val: controller.noVisitHorim,
-        total: controller.apprenticesCount,
+        val: controller.visitCalls,
+        total: controller.visitCalls,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const MelaveCallParentsChartPage(),
@@ -84,8 +84,8 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
       ChartDetailsCard.absolute(
         label: 'חניכים ‘נשכחים’',
         details: 'מספר חניכים שלא נוצר איתם קשר מעל 100 יום',
-        val: controller.forgottenApprenticeCount,
-        total: controller.apprenticesCount,
+        val: controller.forgottenApprenticeLength,
+        total: controller.numOfApprentices,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const MelaveForgottenApprenticesChartPage(),
@@ -95,7 +95,7 @@ class MelaveChartsDashboardScreen extends HookConsumerWidget {
       LinearProgressChartCard(
         title: 'ביקורים בבסיס',
         val: controller.newVisitMeetingArmy,
-        total: controller.apprenticesCount,
+        total: controller.numOfApprentices,
         timestamp: 'עברו 2 רבעונים',
       ),
     ];

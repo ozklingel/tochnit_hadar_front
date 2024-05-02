@@ -8,8 +8,6 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/ahrai_home_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/notifications_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/models/ahrai_home.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/pages/apprentices_status_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/pages/performance_status_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/side_menu_drawer.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/doughnut_charts_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/home_header.dart';
@@ -126,36 +124,33 @@ class _AhraiTohnitBody extends ConsumerWidget {
         ),
         PerformanceWidget(
           title: 'תפקוד מלווים',
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const PerformanceStatusScreen(
-                title: 'תפקוד מלווים',
-              ),
-            ),
-          ),
           data: ahraiTohnit.melaveScore,
+          onTap: () => const PerformanceStatusRouteData(
+            initIndex: 0,
+            isExtended: true,
+            title: 'סטטוס חניכים',
+            subtitle: 'חניכים שלא נוצר איתם קשר מעל 100 יום',
+          ).push(context),
         ),
         PerformanceWidget(
           title: 'תפקוד רכזים',
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const PerformanceStatusScreen(
-                title: 'תפקוד רכזים',
-              ),
-            ),
-          ),
           data: ahraiTohnit.rakazimScore,
+          onTap: () => const PerformanceStatusRouteData(
+            initIndex: 1,
+            isExtended: false,
+            title: 'תפקוד רכזים',
+            subtitle: 'מלווים מכלל המוסדות',
+          ).push(context),
         ),
         PerformanceWidget(
           title: 'תפקוד רכזי אשכול',
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const PerformanceStatusScreen(
-                title: 'תפקוד רכזים',
-              ),
-            ),
-          ),
           data: ahraiTohnit.eshkolScore,
+          onTap: () => const PerformanceStatusRouteData(
+            initIndex: 1,
+            isExtended: false,
+            title: 'תפקוד רכזים',
+            subtitle: 'מלווים מכלל המוסדות',
+          ).push(context),
         ),
         const _ForgottenApprentices(),
       ],
@@ -176,15 +171,12 @@ class _ForgottenApprentices extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: Consts.borderRadius24,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const ApprenticesStatusScreen(
-                  isExtended: false,
-                  title: 'חניכים נשכחים',
-                  initIndex: 0,
-                ),
-              ),
-            ),
+            onTap: () => const PerformanceStatusRouteData(
+              initIndex: 0,
+              isExtended: false,
+              title: 'חניכים נשכחים',
+              subtitle: 'חניכים שלא נוצר איתם קשר מעל 100 יום',
+            ).push(context),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               child: Row(

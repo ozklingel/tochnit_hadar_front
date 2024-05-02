@@ -3,219 +3,408 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/home/controllers/performance_status_controller.dart';
+import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
+import 'package:hadar_program/src/views/primary/pages/home/controllers/apprentices_status_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_messagecreen.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 class PerformanceStatusScreen extends HookConsumerWidget {
   const PerformanceStatusScreen({
     super.key,
     required this.title,
+    required this.subtitle,
+    required this.isExtended,
+    required this.initIndex,
   });
 
   final String title;
+  final String subtitle;
+  final bool isExtended;
+  final int initIndex;
 
   @override
   Widget build(BuildContext context, ref) {
-    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
+    final screenController =
+        ref.watch(apprenticesStatusControllerProvider).valueOrNull ??
+            const ApprenticeStatusDto();
+    final institutions = ref.watch(getInstitutionsProvider).valueOrNull ?? [];
+    final personas = ref.watch(getPersonasProvider).valueOrNull ?? [];
+    final tabController = useTabController(
+      initialLength: 3,
+      initialIndex: initIndex,
+    );
+    final selectedApprenticeStatusItem =
+        useState(const ApprenticeStatusItemDto());
     final selectedDate = useState(DateTime.now());
+    useListenable(tabController);
 
-    const percent = .76;
+    final selectedInstitution = institutions.singleWhere(
+      (element) => element.id == selectedApprenticeStatusItem.value.id,
+      orElse: () => const InstitutionDto(),
+    );
+
+    final selectedPersonas = personas
+        .where((element) => element.institutionId == selectedInstitution.id)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        centerTitle: true,
+        centerTitle: false,
         title: Text(
           title,
           style: TextStyles.s20w500,
         ),
         actions: [
           IconButton(
-            onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(Icons.close),
+            onPressed: () => selectedApprenticeStatusItem.value.id.isEmpty
+                ? Navigator.of(context).pop()
+                : selectedApprenticeStatusItem.value =
+                    const ApprenticeStatusItemDto(),
           ),
           const SizedBox(width: 8),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              TextButton(
-                onPressed: () => ref
-                    .read(performanceStatusControllerProvider.notifier)
-                    .export(),
-                child: const Text(
-                  'ייצוא לאקסל',
-                  style: TextStyles.s14w400cBlue2,
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            if (selectedApprenticeStatusItem.value.id.isNotEmpty)
+              Text(
+                selectedInstitution.name,
+                style: TextStyles.s24w500cGrey2,
               ),
-              const Spacer(),
-              TextButton.icon(
-                onPressed: () => showDatePicker(
-                  context: context,
-                  firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                  lastDate: DateTime.now(),
+            Row(
+              children: [
+                TextButton(
+                  onPressed: () => ref
+                      .read(apprenticesStatusControllerProvider.notifier)
+                      .export(),
+                  child: const Text(
+                    'ייצוא לאקסל',
+                    style: TextStyles.s14w400cBlue2,
+                  ),
                 ),
-                style: TextButton.styleFrom(),
-                icon: Text(
-                  selectedDate.value.asDayMonthYearShortSlash,
-                  style: TextStyles.s14w300cGray2,
+                const Spacer(),
+                TextButton.icon(
+                  onPressed: () => showDatePicker(
+                    context: context,
+                    firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+                    lastDate: DateTime.now(),
+                  ),
+                  style: TextButton.styleFrom(),
+                  icon: Text(
+                    selectedDate.value.asDayMonthYearShortSlash,
+                    style: TextStyles.s14w300cGray2,
+                  ),
+                  label: const RotatedBox(
+                    quarterTurns: 1,
+                    child: Icon(Icons.chevron_left),
+                  ),
                 ),
-                label: const RotatedBox(
-                  quarterTurns: 1,
-                  child: Icon(Icons.chevron_left),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: LayoutBuilder(
-                    builder: (context, constaints) {
-                      return SizedBox(
-                        width: constaints.maxWidth,
-                        child: SearchBar(
-                          elevation: MaterialStateProperty.all(0),
-                          backgroundColor: MaterialStateColor.resolveWith(
-                            (states) => AppColors.blue07,
+              ],
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (isExtended)
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors.shades300,
+                        ),
+                        borderRadius: BorderRadius.circular(36),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: TabBar(
+                          controller: tabController,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          labelStyle: TextStyles.s16w500cBlue2,
+                          unselectedLabelStyle: TextStyles.s16w400cGrey2,
+                          splashBorderRadius: BorderRadius.circular(36),
+                          labelPadding:
+                              const EdgeInsets.symmetric(horizontal: 12),
+                          indicator: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: AppColors.blue06,
                           ),
-                          padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(horizontal: 20),
-                          ),
-                          leading: const Icon(Icons.menu),
-                          hintText: 'חיפוש',
-                          trailing: const [
-                            Icon(Icons.search),
+                          tabs: const [
+                            Tab(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text("כללי"),
+                              ),
+                            ),
+                            Tab(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text("שיחות"),
+                              ),
+                            ),
+                            Tab(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text("מפגשים"),
+                              ),
+                            ),
                           ],
                         ),
-                      );
-                    },
+                      ),
+                    ),
+                  const SizedBox(height: 12),
+                  Text(
+                    isExtended
+                        ? tabController.index == 0
+                            ? 'חניכים עם ציון כללי- לא תקין'
+                            : tabController.index == 1
+                                ? 'חניכים שעברו מעל 45 יום משיחה איתם'
+                                : 'חניכים שעברו מעל 60 יום ממפגש איתם'
+                        : subtitle,
+                    style: TextStyles.s16w500cGrey2,
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: IconButton(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => const _SortDialog(),
-                  ),
-                  icon: const Icon(
-                    FluentIcons.arrow_sort_down_lines_24_regular,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              itemCount: apprentices.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 8),
-              itemBuilder: (context, index) => ListTileWithTagsCard(
-                avatar: apprentices[index].avatar,
-                name: apprentices[index].fullName,
-                tags: const [
-                  'מלווה',
-                  'בני דוד עלי',
-                  'מחזור ג',
-                ],
-                onlineStatus: apprentices[index].callStatus,
-                trailing: Row(
-                  children: [
-                    const Spacer(),
-                    Column(
+                  const SizedBox(height: 6),
+                  if (selectedPersonas.isNotEmpty)
+                    Row(
                       children: [
                         Text(
-                          '${(percent * 100).round()}%',
-                          style: percent > 75
-                              ? TextStyles.s18w400cYellow1
-                              : TextStyles.s18w400cRed1,
+                          'סה”כ ${screenController.total}',
+                          style: TextStyles.s14w300cGray5,
                         ),
-                        const Text(
-                          'ציון',
-                          style: TextStyles.s12w400cGrey6,
-                        ),
+                        if (selectedApprenticeStatusItem
+                            .value.id.isNotEmpty) ...[
+                          const SizedBox(width: 6),
+                          const Icon(
+                            FluentIcons.arrow_trending_24_regular,
+                            color: AppColors.green1,
+                          ),
+                          const SizedBox(width: 2),
+                          const Text('2%'),
+                        ],
                       ],
                     ),
-                  ],
-                ),
+                  Expanded(
+                    child: selectedApprenticeStatusItem.value.id.isEmpty
+                        ? _InstitutionsView(
+                            selectedItem: selectedApprenticeStatusItem.value,
+                            institutions: institutions,
+                            items: screenController.items,
+                            onTap: (apprentice) =>
+                                selectedApprenticeStatusItem.value = apprentice,
+                          )
+                        : TabBarView(
+                            controller: tabController,
+                            children: [
+                              _PersonasView(
+                                id: selectedApprenticeStatusItem.value.id,
+                                personas: selectedPersonas,
+                              ),
+                              _PersonasView(
+                                id: selectedApprenticeStatusItem.value.id,
+                                personas: selectedPersonas,
+                              ),
+                              _PersonasView(
+                                id: selectedApprenticeStatusItem.value.id,
+                                personas: selectedPersonas,
+                              ),
+                            ],
+                          ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class _SortDialog extends HookWidget {
-  const _SortDialog({
+class _PersonasView extends HookWidget {
+  const _PersonasView({
     super.key,
+    required this.id,
+    required this.personas,
   });
+
+  final String id;
+  final List<PersonaDto> personas;
 
   @override
   Widget build(BuildContext context) {
-    final selectedVal = useState('');
+    final selectedPersonas = useState(<PersonaDto>[]);
 
-    return Dialog(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-      ),
-      child: SizedBox(
-        height: 220,
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    Logger().d(selectedPersonas.value.length);
+
+    return personas.isEmpty
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Assets.illustrations.thankfulHeartSignEyesOpen.svg(
+                height: MediaQuery.of(context).size.height * 0.5,
+              ),
               const Text(
-                'מיין לפי',
-                style: TextStyles.s16w400cGrey5,
+                'אין חניכים נשכחים - שעברו 100 יום מאינטראקציה איתם ',
+                style: TextStyles.s20w500cGrey2,
+                textAlign: TextAlign.center,
               ),
-              const Spacer(),
-              RadioListTile(
-                value: 'h2l',
-                groupValue: selectedVal.value,
-                onChanged: (val) => selectedVal.value = val!,
-                title: const Text(
-                  'ציון: מהנמוך אל הגבוה',
-                  style: TextStyles.s16w400cGrey2,
+              const SizedBox(height: 12),
+              const Text(
+                'חניכים שעברו 100 יום מאינטראקציה איתם, יופיעו כאן',
+                style: TextStyles.s14w400cGrey1,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          )
+        : Column(
+            children: [
+              if (id.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: AppColors.blue04,
+                        ),
+                      ),
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SendStatusMessagecreen(),
+                        ),
+                      ),
+                      child: const Text(
+                        'שליחת הודעה ',
+                        style: TextStyles.s14w300cBlue2,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              RadioListTile(
-                value: 'l2h',
-                groupValue: selectedVal.value,
-                onChanged: (val) => selectedVal.value = val!,
-                title: const Text(
-                  'ציון: מהגבוה אל הנמוך',
-                  style: TextStyles.s16w400cGrey2,
-                ),
-              ),
-              RadioListTile(
-                value: 'abc',
-                groupValue: selectedVal.value,
-                onChanged: (val) => selectedVal.value = val!,
-                title: const Text(
-                  'א-ב',
-                  style: TextStyles.s16w400cGrey2,
+              ],
+              const SizedBox(height: 12),
+              Expanded(
+                child: ListView(
+                  children: personas.map(
+                    (e) {
+                      void selectPersona() {
+                        if (selectedPersonas.value.contains(e)) {
+                          selectedPersonas.value = [
+                            ...selectedPersonas.value
+                                .where((element) => element.id != e.id),
+                          ];
+                        } else {
+                          selectedPersonas.value = [
+                            ...selectedPersonas.value,
+                            e,
+                          ];
+                        }
+                      }
+
+                      return ListTileWithTagsCard(
+                        avatar: e.avatar,
+                        name: e.fullName,
+                        isSelected: selectedPersonas.value.contains(e),
+                        onLongPress: selectPersona,
+                        onTap: selectPersona,
+                        tags: const [
+                          'עברו 78 ימים מהשיחה האחרונה',
+                        ],
+                      );
+                    },
+                  ).toList(),
                 ),
               ),
             ],
-          ),
-        ),
-      ),
+          );
+  }
+}
+
+class _InstitutionsView extends StatelessWidget {
+  const _InstitutionsView({
+    super.key,
+    required this.items,
+    required this.institutions,
+    required this.selectedItem,
+    required this.onTap,
+  });
+
+  final ApprenticeStatusItemDto selectedItem;
+  final List<ApprenticeStatusItemDto> items;
+  final List<InstitutionDto> institutions;
+  final void Function(ApprenticeStatusItemDto apprentice) onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemCount: items.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 6),
+      itemBuilder: (context, index) => items
+          .map(
+            (e) => Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+              ),
+              child: DecoratedBox(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    Consts.defaultBoxShadow,
+                  ],
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8),
+                  ),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: ListTile(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                    ),
+                    onTap: () => onTap(e),
+                    title: Row(
+                      children: [
+                        Text(
+                          institutions
+                              .singleWhere(
+                                (element) => element.id == e.id,
+                                orElse: () => const InstitutionDto(),
+                              )
+                              .name,
+                          style: TextStyles.s18w500cGray1,
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${e.value} חניכים',
+                          style: TextStyles.s14w400cGrey1,
+                        ),
+                      ],
+                    ),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      size: 26,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+          .toList()[index],
     );
   }
 }

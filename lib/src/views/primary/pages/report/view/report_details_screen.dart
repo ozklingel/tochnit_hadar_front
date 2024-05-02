@@ -68,7 +68,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
           .where((element) => report.recipients.contains(element.id))
           .toList(),
     );
-    final selectedEventType = useState(report.reportEventType);
+    final selectedEventType = useState(report.event);
     final uploadedFiles = useState(<String>[]);
     final isUploadInProgress = useState(<Key>[]);
     final filters = useState(const FilterDto());
@@ -124,7 +124,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'סוג האירוע',
-                data: report.reportEventType.name,
+                data: report.event.name,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
@@ -504,8 +504,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                     label: 'סוג האירוע',
                     isRequired: true,
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<ReportEventType>(
-                        value: selectedEventType.value == ReportEventType.other
+                      child: DropdownButton2<Event>(
+                        value: selectedEventType.value == Event.other
                             ? null
                             : selectedEventType.value,
                         hint: const Text('בחירת סוג האירוע'),
@@ -520,8 +520,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                           elevation: 0,
                           padding: const EdgeInsets.only(right: 8),
                         ),
-                        onChanged: (value) => selectedEventType.value =
-                            value ?? ReportEventType.other,
+                        onChanged: (value) =>
+                            selectedEventType.value = value ?? Event.other,
                         dropdownStyleData: const DropdownStyleData(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -549,8 +549,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             ),
                           ),
                         ),
-                        items: ReportEventType.values
-                            .where((x) => x != ReportEventType.other)
+                        items: Event.values
+                            .where((x) => x != Event.other)
                             .where((x) {
                               switch (role) {
                                 case UserRole.melave:
@@ -690,8 +690,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                       Expanded(
                         child: LargeFilledRoundedButton(
                           label: reportId.isEmpty ? 'דיווח' : 'שמירה',
-                          onPressed: selectedEventType.value ==
-                                      ReportEventType.other ||
+                          onPressed: selectedEventType.value == Event.other ||
                                   selectedDatetime.value == null ||
                                   selectedApprentices.value.isEmpty
                               ? null
@@ -707,7 +706,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                     recipients: selectedApprentices.value
                                         .map((e) => e.id)
                                         .toList(),
-                                    reportEventType: selectedEventType.value,
+                                    event: selectedEventType.value,
                                   );
 
                                   final result = reportId.isEmpty || isDupe

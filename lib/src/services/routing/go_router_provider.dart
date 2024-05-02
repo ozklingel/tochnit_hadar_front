@@ -10,7 +10,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/view/persona_d
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/personas_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/gift_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/home_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/pages/apprentices_status_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/performance_status_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/messages_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/new_or_edit_message_screen.dart';
@@ -148,8 +148,8 @@ class GoRouterService extends _$GoRouterService {
             TypedGoRoute<GiftRouteData>(
               path: 'gift/:id',
             ),
-            TypedGoRoute<ApprenticesStatusRouteData>(
-              path: 'apprentices-status',
+            TypedGoRoute<PerformanceStatusRouteData>(
+              path: 'performance',
             ),
             TypedGoRoute<ChartsRouteData>(
               path: 'charts',
@@ -642,21 +642,28 @@ class GiftRouteData extends GoRouteData {
   }
 }
 
-class ApprenticesStatusRouteData extends GoRouteData {
-  const ApprenticesStatusRouteData({
+class PerformanceStatusRouteData extends GoRouteData {
+  const PerformanceStatusRouteData({
     required this.initIndex,
+    required this.isExtended,
+    required this.title,
+    required this.subtitle,
   });
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
+  final String title;
+  final String subtitle;
   final int initIndex;
+  final bool isExtended;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return ApprenticesStatusScreen(
-      isExtended: true,
-      title: 'סטטוס חניכים',
+    return PerformanceStatusScreen(
+      isExtended: isExtended,
+      title: title,
       initIndex: initIndex,
+      subtitle: subtitle,
     );
   }
 }

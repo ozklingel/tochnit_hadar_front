@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hadar_program/src/views/widgets/loading_widget.dart';
+import 'package:hadar_program/src/gen/assets.gen.dart';
 
 class OnboardingSuccessPage extends HookWidget {
   const OnboardingSuccessPage.page3otpSuccess({
@@ -39,7 +39,10 @@ class OnboardingSuccessPage extends HookWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const LoadingWidget(),
+        SizedBox(
+          height: 100,
+          child: Assets.images.loader.image(),
+        ),
         const SizedBox(height: 24),
         Text(
           topText,
