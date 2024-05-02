@@ -194,7 +194,6 @@ class _EduSection extends HookConsumerWidget {
             ? [
                 InputFieldContainer(
                   label: 'מוסד לימודים',
-                  isRequired: true,
                   child: TextField(
                     controller: institution,
                   ),
@@ -202,7 +201,6 @@ class _EduSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'שם ר”מ',
-                  isRequired: true,
                   child: TextField(
                     controller: ravMelamedName,
                   ),
@@ -210,7 +208,6 @@ class _EduSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'טלפון ר”מ',
-                  isRequired: true,
                   child: TextField(
                     controller: ravMelamedPhone,
                   ),
