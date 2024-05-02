@@ -20,7 +20,7 @@ void showFancyCustomDialog(BuildContext context, phone, contant, subject) {
       }
     }
   });
-  Size orientation = MediaQuery.of(context).size;
+  Size size = MediaQuery.of(context).size;
   Dialog fancyDialog = Dialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12.0),
@@ -29,10 +29,13 @@ void showFancyCustomDialog(BuildContext context, phone, contant, subject) {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      height: orientation.height*2 / 3,
+      height: size.height*2 / 3,
       width: double.infinity,
       child: Stack(
         children: <Widget>[
+          Padding(
+  padding: EdgeInsets.all(16.0),
+  child:
           Align(
             // These values are based on trial & error method
             alignment: Alignment.topLeft,
@@ -52,7 +55,7 @@ void showFancyCustomDialog(BuildContext context, phone, contant, subject) {
               ),
             ),
           ),
-          Align(
+         ), Align(
             // These values are based on trial & error method
             alignment: Alignment.bottomLeft,
             child: InkWell(
@@ -80,8 +83,8 @@ void showFancyCustomDialog(BuildContext context, phone, contant, subject) {
                   right: 2,
                 ),
                 child: Image(
-                  width: orientation.width / 2,
-                  height: orientation.height / 2,
+                  width: size.width *2/ 3,
+                  height: size.height *4/ 10,
                   image: const AssetImage('assets/images/success-smile.png'),
                 ),
               ),
