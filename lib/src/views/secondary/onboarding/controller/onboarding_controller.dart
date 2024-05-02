@@ -88,6 +88,10 @@ class OnboardingController extends _$OnboardingController {
           auth.city.isNotEmpty &&
           auth.region.isNotEmpty;
       if (hasAllDetails) {
+        await ref.read(storageServiceProvider).requireValue.setBool(
+              Consts.isFirstOnboardingKey,
+              false,
+            );
         return true;
       } else {
         Logger().d('Missing some user details');
