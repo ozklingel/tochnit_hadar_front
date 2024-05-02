@@ -29,33 +29,33 @@ void showFancyCustomDialog(BuildContext context, phone, contant, subject) {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      height: size.height*2 / 3,
+      height: size.height * 2 / 3,
       width: double.infinity,
       child: Stack(
         children: <Widget>[
           Padding(
-  padding: EdgeInsets.all(16.0),
-  child:
-          Align(
-            // These values are based on trial & error method
-            alignment: Alignment.topLeft,
-            child: InkWell(
-              onTap: () {
-                wasPressed = true;
-                Navigator.of(context, rootNavigator: true).pop();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.black,
+            padding: const EdgeInsets.all(16.0),
+            child: Align(
+              // These values are based on trial & error method
+              alignment: Alignment.topLeft,
+              child: InkWell(
+                onTap: () {
+                  wasPressed = true;
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
           ),
-         ), Align(
+          Align(
             // These values are based on trial & error method
             alignment: Alignment.bottomLeft,
             child: InkWell(
@@ -83,8 +83,8 @@ void showFancyCustomDialog(BuildContext context, phone, contant, subject) {
                   right: 2,
                 ),
                 child: Image(
-                  width: size.width *2/ 3,
-                  height: size.height *4/ 10,
+                  width: size.width * 2 / 3,
+                  height: size.height * 4 / 10,
                   image: const AssetImage('assets/images/success-smile.png'),
                 ),
               ),

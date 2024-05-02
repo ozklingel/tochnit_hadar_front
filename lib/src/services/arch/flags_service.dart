@@ -156,8 +156,10 @@ final _tasks = List.generate(
           .take(faker.randomGenerator.integer(5))
           .map((e) => e.id)
           .toList(),
-      frequency: TaskFrequency
-          .values[faker.randomGenerator.integer(TaskFrequency.values.length)],
+      frequencyMeta: TaskFrequencyMeta.values[
+          faker.randomGenerator.integer(TaskFrequencyMeta.values.length)],
+      frequencyEnd: TaskFrequencyEnd.values[
+          faker.randomGenerator.integer(TaskFrequencyEnd.values.length)],
       event: TaskType
           .values[faker.randomGenerator.integer(TaskType.values.length)],
       dateTime: faker.date

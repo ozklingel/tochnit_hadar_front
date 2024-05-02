@@ -279,18 +279,21 @@ class _FamilySection extends HookConsumerWidget {
     final contact1LastName =
         useTextEditingController(text: persona.contact1LastName);
     final contact1Phone = useTextEditingController(text: persona.contact1Phone);
+    final contact1Email = useTextEditingController(text: persona.contact1Email);
     final contact2Relationship = useState(persona.contact2Relationship);
     final contact2FirstName =
         useTextEditingController(text: persona.contact2FirstName);
     final contact2LastName =
         useTextEditingController(text: persona.contact2LastName);
     final contact2Phone = useTextEditingController(text: persona.contact2Phone);
+    final contact2Email = useTextEditingController(text: persona.contact2Email);
     final contact3Relationship = useState(persona.contact3Relationship);
     final contact3FirstName =
         useTextEditingController(text: persona.contact3FirstName);
     final contact3LastName =
         useTextEditingController(text: persona.contact3LastName);
     final contact3Phone = useTextEditingController(text: persona.contact3Phone);
+    final contact3Email = useTextEditingController(text: persona.contact3Email);
 
     return DetailsCard(
       title: 'משפחה',
@@ -392,6 +395,13 @@ class _FamilySection extends HookConsumerWidget {
                       controller: contact1Phone,
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  InputFieldContainer(
+                    label: 'איש קשר 1 - אימייל',
+                    child: TextField(
+                      controller: contact1Email,
+                    ),
+                  ),
                 ],
                 const SizedBox(height: 16),
                 ...[
@@ -483,6 +493,13 @@ class _FamilySection extends HookConsumerWidget {
                       controller: contact2Phone,
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  InputFieldContainer(
+                    label: 'איש קשר 2 - אימייל',
+                    child: TextField(
+                      controller: contact2Email,
+                    ),
+                  ),
                 ],
                 const SizedBox(height: 16),
                 ...[
@@ -572,6 +589,13 @@ class _FamilySection extends HookConsumerWidget {
                     label: 'איש קשר 3 - טלפון',
                     child: TextField(
                       controller: contact2Phone,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  InputFieldContainer(
+                    label: 'איש קשר 3 - אימייל',
+                    child: TextField(
+                      controller: contact3Email,
                     ),
                   ),
                 ],

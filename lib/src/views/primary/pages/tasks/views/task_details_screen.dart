@@ -83,7 +83,7 @@ class TaskDetailsScreen extends ConsumerWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        task.frequency.name,
+                        task.frequencyMeta.name,
                         style: TextStyles.s14w400cGrey2,
                       ),
                     ),

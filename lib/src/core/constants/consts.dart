@@ -24,10 +24,12 @@ abstract class Consts {
   static const getAllCities = 'onboarding_form/get_CitiesDB';
 
   // messages
-  static const getAllMessages = 'messegaes_form/getAll';
-  static const setMessagesWasRead = 'messegaes_form/setWasRead';
-  static const addMessage = 'messegaes_form/add';
-  static const deleteMessage = 'messegaes_form/delete';
+  static const messagesApiEndpoint = 'messegaes_form/';
+  static const getAllMessages = '${messagesApiEndpoint}getAll';
+  static const setMessagesWasRead = '${messagesApiEndpoint}setWasRead';
+  static const addMessage = '${messagesApiEndpoint}add';
+  static const deleteMessage = '${messagesApiEndpoint}delete';
+  static const msgSendPerPersona = '${messagesApiEndpoint}send_per_persona';
 
   // homepage
   static const getHomePageInitMaster = '/homepage_form/initMaster';

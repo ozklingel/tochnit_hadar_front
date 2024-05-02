@@ -90,64 +90,65 @@ class PersonasController extends _$PersonasController {
       }
 
       final result = await ref.read(dioServiceProvider).put(
-            Consts.updateApprentice,
-            queryParameters: {
-              'apprenticetId': persona.id,
-            },
-            data: jsonEncode({
-              'avatar': persona.avatar,
-              // military
-              'militaryCompoundId': persona.militaryCompoundId,
-              'militaryUnit': persona.militaryUnit,
-              'militaryPositionNew': persona.militaryPositionNew,
-              'militaryPositionOld': persona.militaryPositionOld,
-              'militaryDateOfEnlistment': persona.militaryDateOfEnlistment,
-              'militaryDateOfDischarge': persona.militaryDateOfDischarge,
-              // personal general
-              'teudatZehut': persona.teudatZehut,
-              'email': persona.email,
-              'address': persona.address,
-              'marriage_status': persona.maritalStatus,
-              'phone': persona.phone,
-              // personal dates
-              'birthday': persona.dateOfBirth,
-              // personal relationships
-              'contact1_relation': persona.contact1Relationship.name,
-              'contact1_phone': persona.contact1Phone,
-              'contact1_email': persona.contact1Email,
-              'contact1_first_name': persona.contact1FirstName,
-              'contact1_last_name': persona.contact1LastName,
-              'contact2_relation': persona.contact2Relationship.name,
-              'contact2_phone': persona.contact2Phone,
-              'contact2_email': persona.contact2Email,
-              'contact2_first_name': persona.contact2FirstName,
-              'contact2_last_name': persona.contact2LastName,
-              'contact3_relation': persona.contact3Relationship.name,
-              'contact3_phone': persona.contact3Phone,
-              'contact3_email': persona.contact3Email,
-              'contact3_first_name': persona.contact3FirstName,
-              'contact3_last_name': persona.contact3LastName,
-              // personal high school
-              'highSchoolInstitution': persona.highSchoolInstitution,
-              'highSchoolRavMelamed_name': persona.highSchoolRavMelamedName,
-              'highSchoolRavMelamed_phone': persona.highSchoolRavMelamedPhone,
-              'highSchoolRavMelamed_email': persona.highSchoolRavMelamedEmail,
-              // personal work
-              'workStatus': persona.workStatus,
-              'workOccupation': persona.workOccupation,
-              'workPlace': persona.workPlace,
-              'workType': persona.workType,
-              // tohnit hadar
-              'educationalInstitution': persona.educationalInstitution,
-              'thPeriod': persona.thPeriod,
-              'thRavMelamedYearA_name': persona.thRavMelamedYearAName,
-              'thRavMelamedYearA_phone': persona.thRavMelamedYearAPhone,
-              'thRavMelamedYearB_name': persona.thRavMelamedYearBPhone,
-              'thRavMelamedYearB_phone': persona.thRavMelamedYearBPhone,
-              'paying': persona.isPaying.toString(),
-              'matsber': persona.matsber,
-            }),
-          );
+        Consts.updateApprentice,
+        queryParameters: {
+          'apprenticetId': persona.id,
+        },
+        data: {
+          'avatar': persona.avatar,
+          // military
+          'militaryCompoundId': persona.militaryCompoundId,
+          'militaryUnit': persona.militaryUnit,
+          'militaryPositionNew': persona.militaryPositionNew,
+          'militaryPositionOld': persona.militaryPositionOld,
+          'militaryDateOfEnlistment': persona.militaryDateOfEnlistment,
+          'militaryDateOfDischarge': persona.militaryDateOfDischarge,
+          // personal general
+          'teudatZehut': persona.teudatZehut,
+          'email': persona.email,
+          //! TODO(OZ): this field won't update
+          'address': persona.address,
+          'marriage_status': persona.maritalStatus,
+          'phone': persona.phone,
+          // personal dates
+          'birthday': persona.dateOfBirth,
+          // personal relationships
+          'contact1_relation': persona.contact1Relationship.name,
+          'contact1_phone': persona.contact1Phone,
+          'contact1_email': persona.contact1Email,
+          'contact1_first_name': persona.contact1FirstName,
+          'contact1_last_name': persona.contact1LastName,
+          'contact2_relation': persona.contact2Relationship.name,
+          'contact2_phone': persona.contact2Phone,
+          'contact2_email': persona.contact2Email,
+          'contact2_first_name': persona.contact2FirstName,
+          'contact2_last_name': persona.contact2LastName,
+          'contact3_relation': persona.contact3Relationship.name,
+          'contact3_phone': persona.contact3Phone,
+          'contact3_email': persona.contact3Email,
+          'contact3_first_name': persona.contact3FirstName,
+          'contact3_last_name': persona.contact3LastName,
+          // personal high school
+          'highSchoolInstitution': persona.highSchoolInstitution,
+          'highSchoolRavMelamed_name': persona.highSchoolRavMelamedName,
+          'highSchoolRavMelamed_phone': persona.highSchoolRavMelamedPhone,
+          'highSchoolRavMelamed_email': persona.highSchoolRavMelamedEmail,
+          // personal work
+          'workStatus': persona.workStatus,
+          'workOccupation': persona.workOccupation,
+          'workPlace': persona.workPlace,
+          'workType': persona.workType,
+          // tohnit hadar
+          'educationalInstitution': persona.educationalInstitution,
+          'thPeriod': persona.thPeriod,
+          'thRavMelamedYearA_name': persona.thRavMelamedYearAName,
+          'thRavMelamedYearA_phone': persona.thRavMelamedYearAPhone,
+          'thRavMelamedYearB_name': persona.thRavMelamedYearBPhone,
+          'thRavMelamedYearB_phone': persona.thRavMelamedYearBPhone,
+          'paying': persona.isPaying.toString(),
+          'matsber': persona.matsber,
+        },
+      );
 
       Logger().d(result);
 

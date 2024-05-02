@@ -27,7 +27,7 @@ enum TaskStatus {
   done,
 }
 
-enum TaskFrequency {
+enum TaskFrequencyMeta {
   once,
   daily,
   weekly,
@@ -35,6 +35,35 @@ enum TaskFrequency {
   yearly,
   custom,
   unknown,
+}
+
+enum TaskFrequencyEnd {
+  once,
+  forever,
+  one,
+  two,
+  three,
+  four,
+  unknown;
+
+  String get name {
+    switch (this) {
+      case once:
+        return 'once';
+      case forever:
+        return 'forever';
+      case one:
+        return '1';
+      case two:
+        return '2';
+      case three:
+        return '3';
+      case four:
+        return '4';
+      default:
+        return 'unknown';
+    }
+  }
 }
 
 @JsonSerializable()
@@ -57,9 +86,18 @@ class TaskDto with _$TaskDto {
       defaultValue: '',
     )
     String title,
-    @Default(TaskFrequency.unknown)
-    @JsonKey(fromJson: _extractFrequency)
-    TaskFrequency frequency,
+    @Default(TaskFrequencyMeta.unknown)
+    @JsonKey(
+      fromJson: _extractFrequencyMeta,
+      name: 'frequency_meta',
+    )
+    TaskFrequencyMeta frequencyMeta,
+    @Default(TaskFrequencyEnd.unknown)
+    @JsonKey(
+      fromJson: _extractFrequencyEnd,
+      name: 'frequency_end',
+    )
+    TaskFrequencyEnd frequencyEnd,
     @Default(TaskStatus.unknown)
     @JsonKey(fromJson: _extractStatus)
     TaskStatus status,
@@ -152,22 +190,41 @@ TaskType _extractTaskType(String? data) {
   }
 }
 
-TaskFrequency _extractFrequency(String? data) {
+TaskFrequencyMeta _extractFrequencyMeta(String? data) {
   switch (data) {
     case 'once':
-      return TaskFrequency.once;
+      return TaskFrequencyMeta.once;
     case 'daily':
-      return TaskFrequency.daily;
+      return TaskFrequencyMeta.daily;
     case 'weekly':
-      return TaskFrequency.weekly;
+      return TaskFrequencyMeta.weekly;
     case 'monthly':
-      return TaskFrequency.monthly;
+      return TaskFrequencyMeta.monthly;
     case 'yearly':
-      return TaskFrequency.yearly;
+      return TaskFrequencyMeta.yearly;
     case 'custom':
-      return TaskFrequency.custom;
+      return TaskFrequencyMeta.custom;
     default:
-      return TaskFrequency.unknown;
+      return TaskFrequencyMeta.unknown;
+  }
+}
+
+TaskFrequencyEnd _extractFrequencyEnd(String? data) {
+  switch (data) {
+    case 'forever':
+      return TaskFrequencyEnd.forever;
+    case '1':
+      return TaskFrequencyEnd.one;
+    case '2':
+      return TaskFrequencyEnd.two;
+    case '3':
+      return TaskFrequencyEnd.three;
+    case '4':
+      return TaskFrequencyEnd.four;
+    case 'once':
+      return TaskFrequencyEnd.once;
+    default:
+      return TaskFrequencyEnd.unknown;
   }
 }
 
