@@ -106,6 +106,7 @@ class _WorkSection extends HookConsumerWidget {
                 const SizedBox(height: 24),
                 AcceptCancelButtons(
                   onPressedCancel: () => isEditMode.value = false,
+                  okText: 'שמירה',
                   onPressedOk: () async {
                     final result = await ref
                         .read(personasControllerProvider.notifier)
@@ -217,6 +218,7 @@ class _EduSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 AcceptCancelButtons(
                   onPressedCancel: () => isEditMode.value = false,
+                  okText: 'שמירה',
                   onPressedOk: (institution.text.isEmpty ||
                           ravMelamedName.text.isEmpty ||
                           ravMelamedPhone.text.isEmpty)
@@ -602,6 +604,7 @@ class _FamilySection extends HookConsumerWidget {
                 const SizedBox(height: 24),
                 AcceptCancelButtons(
                   onPressedCancel: () => isEditMode.value = false,
+                  okText: 'שמירה',
                   onPressedOk: () async {
                     final result = await ref
                         .read(
@@ -739,6 +742,7 @@ class _DatesSection extends HookConsumerWidget {
                 const SizedBox(height: 24),
                 AcceptCancelButtons(
                   onPressedCancel: () => isEditMode.value = false,
+                  okText: 'שמירה',
                   onPressedOk: () async {
                     final result = await ref
                         .read(personasControllerProvider.notifier)
@@ -965,6 +969,7 @@ class _GeneralSection extends HookConsumerWidget {
                 const SizedBox(height: 24),
                 AcceptCancelButtons(
                   onPressedCancel: () => isEditMode.value = false,
+                  okText: 'שמירה',
                   onPressedOk: (tzController.text.isEmpty ||
                           emailController.text.isEmpty ||
                           cityController.value.isEmpty ||

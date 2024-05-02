@@ -734,6 +734,7 @@ class _GeneralSection extends HookConsumerWidget {
                 const SizedBox(height: 24),
                 AcceptCancelButtons(
                   onPressedCancel: () => isEditMode.value = false,
+                  okText: 'שמירה',
                   onPressedOk: () async {
                     final result = await ref
                         .read(personasControllerProvider.notifier)
