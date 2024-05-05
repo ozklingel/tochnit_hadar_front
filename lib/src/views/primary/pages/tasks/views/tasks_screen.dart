@@ -7,6 +7,7 @@ import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -233,6 +234,12 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
 class _MelaveTasksBody extends HookConsumerWidget {
   const _MelaveTasksBody();
 
+  String _tabIndexToEventType(int index) => switch (index) {
+        0 => Event.call.name,
+        2 => Event.callParents.name,
+        _ => Event.other.name,
+      };
+
   @override
   Widget build(BuildContext context, ref) {
     final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
@@ -430,6 +437,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                       child: const Text('דיווח'),
                       onTap: () => ReportNewRouteData(
                         initRecipients: [selectedApprentice.id],
+                        eventType: _tabIndexToEventType(tabController.index),
                       ).push(context),
                     ),
                     PopupMenuItem(
@@ -470,6 +478,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                       child: const Text('דיווח'),
                       onTap: () => ReportNewRouteData(
                         initRecipients: [selectedPersona.id],
+                        eventType: _tabIndexToEventType(tabController.index),
                       ).push(context),
                     ),
                     PopupMenuItem(
@@ -518,9 +527,10 @@ class _MelaveTasksBody extends HookConsumerWidget {
                   onPressed: () => ReportNewRouteData(
                     initRecipients:
                         selectedApprentices.map((e) => e.id).toList(),
+                    eventType: _tabIndexToEventType(tabController.index),
                   ).push(context),
                   icon: const Icon(
-                    FluentIcons.clipboard_24_regular,
+                    FluentIcons.clipboard_task_24_regular,
                   ),
                 );
               },
