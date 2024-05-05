@@ -111,31 +111,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
                             style: TextStyles.s16w400cGrey2,
                           ),
                           const Spacer(),
-                          if (selectedPersonas.value.length == 1)
-                            if (auth.role == UserRole.melave) ...[
-                              IconButton(
-                                onPressed: () => NewMessageRouteData(
-                                  initRecpients: selectedPersonas.value
-                                      .map((e) => e.id)
-                                      .toList(),
-                                ).push(context),
-                                icon: const Icon(FluentIcons.mail_24_regular),
-                              ),
-                              IconButton(
-                                onPressed: () => ReportNewRouteData(
-                                  initRecipients: selectedPersonas.value
-                                      .map((e) => e.id)
-                                      .toList(),
-                                ).push(context),
-                                icon: const Icon(
-                                  FluentIcons.clipboard_task_24_regular,
-                                ),
-                              ),
-                              PersonaCardPopupMoreVerticalWidget(
-                                personas: selectedPersonas.value,
-                                showCall: false,
-                              ),
-                            ] else ...[
+                          if (selectedPersonas.value.length == 1) ...[
                               IconButton(
                                 onPressed: () => launchSms(
                                   phone: selectedPersonas.value
@@ -156,7 +132,8 @@ class CompoundBottomSheet extends HookConsumerWidget {
                               ),
                               PersonaCardPopupMoreVerticalWidget(
                                 personas: selectedPersonas.value,
-                                showCall: false,
+                                showCall: true,
+                                showMsg: false,
                               ),
                             ]
                           else if (selectedPersonas.value.length > 1)
@@ -193,6 +170,7 @@ class CompoundBottomSheet extends HookConsumerWidget {
                               PersonaCardPopupMoreVerticalWidget(
                                 personas: selectedPersonas.value,
                                 showCall: false,
+                                showMsg: false,
                               ),
                             ],
                         ],

@@ -435,7 +435,8 @@ class PersonasScreen extends HookConsumerWidget {
                                 ),
                                 const SizedBox(width: 6),
                                 const Spacer(),
-                                if (selectedPersonas.value.isNotEmpty) ...[
+                                if (selectedPersonas.value.isNotEmpty &&
+                                    (auth.valueOrNull ?? const AuthDto()).role != UserRole.melave)
                                   IconButton(
                                     onPressed: () =>
                                         selectedPersonas.value.length > 1
@@ -454,6 +455,7 @@ class PersonasScreen extends HookConsumerWidget {
                                       FluentIcons.chat_24_regular,
                                     ),
                                   ),
+                                if (selectedPersonas.value.isNotEmpty)
                                   IconButton(
                                     onPressed: () => ReportNewRouteData(
                                       initRecipients: selectedPersonas.value
@@ -464,8 +466,7 @@ class PersonasScreen extends HookConsumerWidget {
                                       FluentIcons.clipboard_task_24_regular,
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
-                                ],
+                                const SizedBox(width: 12),
                               ],
                             ),
                           ),
