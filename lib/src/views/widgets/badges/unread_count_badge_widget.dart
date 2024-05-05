@@ -15,26 +15,10 @@ class UnreadCounterBadgeWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        child,
-        Positioned(
-          right: 10,
-          top: 10,
-          child: count < 1
-              ? const SizedBox.shrink()
-              : const IgnorePointer(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 3,
-                    child: Text(
-                      "",
-                    ),
-                  ),
-                ),
-        ),
-      ],
+    return Badge(
+      isLabelVisible: count > 0,
+      label: Text(count.toString()),
+      child: child,
     );
   }
 }
