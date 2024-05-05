@@ -37,7 +37,7 @@ class OnboardingPagePersonalDetails extends HookConsumerWidget {
         if (snapshot.connectionState == ConnectionState.waiting ||
             cities.isLoading) {
           return Center(
-            child: SizedBox(height: 150, child: Assets.images.loader.image()),
+            child: SizedBox(height: 100, child: Assets.images.loader.image()),
           );
         } else if (!snapshot.hasError && snapshot.hasData && snapshot.data!) {
           onSuccess();
