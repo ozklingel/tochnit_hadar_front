@@ -82,24 +82,28 @@ class OnboardingController extends _$OnboardingController {
     );
 
     if (result.statusCode == 200) {
-      final auth = AuthDto.fromJson(result.data);
-      final hasAllDetails = auth.fullName.isNotEmpty &&
-          auth.dateOfBirth.isNotEmpty &&
-          auth.city.isNotEmpty &&
-          auth.region.isNotEmpty;
-      if (hasAllDetails) {
-        await ref.read(storageServiceProvider).requireValue.setBool(
-              Consts.isFirstOnboardingKey,
-              false,
-            );
-        return true;
-      } else {
-        Logger().d('Missing some user details');
+      try {
+        final auth = AuthDto.fromJson(result.data);
+        final hasAllDetails = auth.fullName.isNotEmpty &&
+            auth.dateOfBirth.isNotEmpty &&
+            auth.city.isNotEmpty &&
+            auth.region.isNotEmpty;
+        if (hasAllDetails) {
+          await ref.read(storageServiceProvider).requireValue.setBool(
+                Consts.isFirstOnboardingKey,
+                false,
+              );
+          return true;
+        } else {
+          Logger().d('Missing some user details');
+          return false;
+        }
+      } catch (e) {
+        Logger().d('Error parsing user details', error: e);
         return false;
       }
-    } else {
-      return false; // Return false if the API request fails
     }
+    return false;
   }
 
   Future<({bool isResponseSuccess, bool isFirstOnboarding})> verifyOtp({

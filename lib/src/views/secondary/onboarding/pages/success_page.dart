@@ -40,7 +40,7 @@ class OnboardingSuccessPage extends HookWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          height: 100,
+          height: 150,
           child: Assets.images.loader.image(),
         ),
         const SizedBox(height: 24),

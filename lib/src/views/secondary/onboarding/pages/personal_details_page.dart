@@ -27,18 +27,17 @@ class OnboardingPagePersonalDetails extends HookConsumerWidget {
     final selectedCity = useState('');
     final selectedRegion = useState(AddressRegion.none);
     final isTermsOfServiceAccepted = useState(false);
-    // final isTermsOfServiceAccepted = useState(false);
-    // final isTermsOfServiceAccepted = useState(false);
-    // final isTermsOfServiceAccepted = useState(false);
 
     final citySearchController = useTextEditingController();
+    final cities = ref.watch(getCitiesListProvider);
     return FutureBuilder<bool>(
       future:
           ref.read(onboardingControllerProvider.notifier).verifyRegistered(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            cities.isLoading) {
           return Center(
-            child: SizedBox(height: 100, child: Assets.images.loader.image()),
+            child: SizedBox(height: 150, child: Assets.images.loader.image()),
           );
         } else if (!snapshot.hasError && snapshot.hasData && snapshot.data!) {
           onSuccess();
@@ -134,117 +133,94 @@ class OnboardingPagePersonalDetails extends HookConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  ref.watch(getCitiesListProvider).when(
-                        loading: () => const Center(
-                          child: CircularProgressIndicator.adaptive(),
+                  if (cities.hasValue)
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        hint: SizedBox(
+                          width: 240,
+                          child: Text(
+                            selectedCity.value.isEmpty
+                                ? 'יישוב / עיר'
+                                : selectedCity.value,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                        error: (error, stack) => TextField(
-                          onChanged: (value) => selectedCity.value = value,
-                          decoration: const InputDecoration(
-                            hintText: 'יישוב / עיר',
-                            suffixIcon: Padding(
-                              padding: EdgeInsets.only(left: 16),
-                              child: RotatedBox(
-                                quarterTurns: 1,
-                                child: Icon(
-                                  Icons.chevron_left,
-                                  color: AppColors.grey6,
-                                ),
+                        style: Theme.of(context).inputDecorationTheme.hintStyle,
+                        buttonStyleData: ButtonStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(36),
+                            border: Border.all(color: AppColors.shade04),
+                          ),
+                          elevation: 0,
+                          padding: const EdgeInsets.only(right: 8),
+                        ),
+                        dropdownSearchData: DropdownSearchData(
+                          searchController: citySearchController,
+                          searchInnerWidgetHeight: 50,
+                          searchInnerWidget: TextField(
+                            controller: citySearchController,
+                            decoration: const InputDecoration(
+                              focusedBorder: UnderlineInputBorder(),
+                              enabledBorder: InputBorder.none,
+                              prefixIcon: Icon(Icons.search),
+                              hintText: 'חיפוש',
+                              hintStyle: TextStyles.s14w400,
+                            ),
+                          ),
+                          searchMatchFn: (item, searchValue) {
+                            return item.value
+                                .toString()
+                                .toLowerCase()
+                                .trim()
+                                .contains(searchValue.toLowerCase().trim());
+                          },
+                        ),
+                        onMenuStateChange: (isOpen) {
+                          if (!isOpen) {
+                            citySearchController.clear();
+                          }
+                        },
+                        onChanged: (value) {
+                          selectedCity.value = value!;
+                        },
+                        dropdownStyleData: const DropdownStyleData(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: RotatedBox(
+                              quarterTurns: 1,
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: AppColors.grey6,
+                              ),
+                            ),
+                          ),
+                          openMenuIcon: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: RotatedBox(
+                              quarterTurns: 3,
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: AppColors.grey6,
                               ),
                             ),
                           ),
                         ),
-                        data: (cities) => DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            hint: SizedBox(
-                              width: 240,
-                              child: Text(
-                                selectedCity.value.isEmpty
-                                    ? 'יישוב / עיר'
-                                    : selectedCity.value,
-                                overflow: TextOverflow.fade,
+                        items: (cities.value ?? [])
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
                               ),
-                            ),
-                            style: Theme.of(context)
-                                .inputDecorationTheme
-                                .hintStyle,
-                            buttonStyleData: ButtonStyleData(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(36),
-                                border: Border.all(color: AppColors.shade04),
-                              ),
-                              elevation: 0,
-                              padding: const EdgeInsets.only(right: 8),
-                            ),
-                            dropdownSearchData: DropdownSearchData(
-                              searchController: citySearchController,
-                              searchInnerWidgetHeight: 50,
-                              searchInnerWidget: TextField(
-                                controller: citySearchController,
-                                decoration: const InputDecoration(
-                                  focusedBorder: UnderlineInputBorder(),
-                                  enabledBorder: InputBorder.none,
-                                  prefixIcon: Icon(Icons.search),
-                                  hintText: 'חיפוש',
-                                  hintStyle: TextStyles.s14w400,
-                                ),
-                              ),
-                              searchMatchFn: (item, searchValue) {
-                                return item.value
-                                    .toString()
-                                    .toLowerCase()
-                                    .trim()
-                                    .contains(searchValue.toLowerCase().trim());
-                              },
-                            ),
-                            onMenuStateChange: (isOpen) {
-                              if (!isOpen) {
-                                citySearchController.clear();
-                              }
-                            },
-                            onChanged: (value) {
-                              selectedCity.value = value!;
-                            },
-                            dropdownStyleData: const DropdownStyleData(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(16)),
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 1,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
-                                  ),
-                                ),
-                              ),
-                              openMenuIcon: Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 3,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            items: cities
-                                .map(
-                                  (e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
+                            )
+                            .toList(),
                       ),
+                    ),
                   const SizedBox(height: 12),
                   DropdownButtonHideUnderline(
                     child: DropdownButton2<AddressRegion>(
