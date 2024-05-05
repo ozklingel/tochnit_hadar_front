@@ -39,12 +39,14 @@ class ReportDetailsScreen extends HookConsumerWidget {
     required this.isReadOnly,
     required this.initRecipients,
     required this.isDupe,
+    this.eventType,
   });
 
   final String reportId;
   final bool isReadOnly;
   final List<String> initRecipients;
   final bool isDupe;
+  final String? eventType;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -68,7 +70,9 @@ class ReportDetailsScreen extends HookConsumerWidget {
           .where((element) => report.recipients.contains(element.id))
           .toList(),
     );
-    final selectedEventType = useState(report.event);
+    final reportEvent =
+        eventType != null ? Event.values.byName(eventType!) : report.event;
+    final selectedEventType = useState(reportEvent);
     final uploadedFiles = useState(<String>[]);
     final isUploadInProgress = useState(<Key>[]);
     final filters = useState(const FilterDto());

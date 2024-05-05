@@ -61,7 +61,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
               )
             : title,
       ),
-      actions: isSearchOpen.value ? [] : actions,
+      actions: actions,
       bottom: bottom,
     );
   }

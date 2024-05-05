@@ -440,9 +440,11 @@ class ReportsRouteData extends GoRouteData {
 class ReportNewRouteData extends GoRouteData {
   const ReportNewRouteData({
     this.initRecipients = const [],
+    this.eventType,
   });
 
   final List<String> initRecipients;
+  final String? eventType;
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
@@ -453,6 +455,7 @@ class ReportNewRouteData extends GoRouteData {
       isReadOnly: false,
       initRecipients: initRecipients,
       isDupe: false,
+      eventType: eventType,
     );
   }
 }
