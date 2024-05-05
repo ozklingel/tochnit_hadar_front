@@ -80,7 +80,8 @@ class UsersController extends _$UsersController {
       case Sort.inactiveToActive:
         state = AsyncData(
           state.requireValue.copyWith(
-            users: state.requireValue.users.reversed.toList(),
+            users: state.requireValue.users
+                .sortedBy<num>((element) => element.activityScore).reversed.toList(),
           ),
         );
         break;

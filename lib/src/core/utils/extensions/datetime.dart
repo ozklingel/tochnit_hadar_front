@@ -20,9 +20,9 @@ extension ReportDateTimeX on DateTime? {
   String get asTimeAgoDayCutoff {
     if (this == null) return DateTime.now().asDayMonthYearShortSlash.toString();
 
-    return this!.difference(DateTime.now()) < const Duration(days: 1)
-        ? asDayMonth
-        : asTimeAgo;
+    return DateTime.now().difference(this!) < const Duration(days: 1)
+        ? asTimeAgo
+        : asDayMonth;
   }
 
   String get asTimeAgo {

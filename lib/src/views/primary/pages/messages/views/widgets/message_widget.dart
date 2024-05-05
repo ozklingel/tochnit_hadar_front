@@ -91,8 +91,7 @@ class MessageWidget extends ConsumerWidget {
                       message.dateTime.asDateTime.asTimeAgoDayCutoff,
                       style: TextStyles.s12w400cGrey5fRoboto,
                     ),
-                    if (message.dateTime.asDateTime.difference(DateTime.now()) >
-                        Duration.zero) ...[
+                    if (DateTime.now().difference(message.dateTime.asDateTime) < const Duration(seconds: 5)) ...[
                       const SizedBox(height: 12),
                       const Icon(
                         FluentIcons.clock_24_regular,
