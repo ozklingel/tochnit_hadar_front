@@ -8,9 +8,9 @@ import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
-import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/cards/task_card.dart';
@@ -236,7 +236,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
-    final apprentices = ref.watch(getPersonasProvider).valueOrNull ?? [];
+    final apprentices = ref.watch(personasControllerProvider).valueOrNull ?? [];
     final tabController = useTabController(initialLength: 3);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
