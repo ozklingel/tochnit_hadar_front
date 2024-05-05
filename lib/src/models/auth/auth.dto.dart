@@ -124,13 +124,13 @@ List<String> _parseApprentices(List<dynamic> apprentices) {
 }
 
 UserRole _extractUserRole(dynamic role) {
-  if (role == null) {
+  if (role == null || role.isEmpty || role is! List) {
     Logger().w('empty user role');
     Sentry.captureException(Exception('failed to extract role from string'));
     return UserRole.other;
   }
 
-  final roleIndex = int.tryParse(role);
+  final roleIndex = int.tryParse(role.first.toString());
 
   if (roleIndex == null) {
     Logger().w('bad user role index');
