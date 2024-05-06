@@ -20,6 +20,7 @@ import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
@@ -40,6 +41,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     required this.initRecipients,
     required this.isDupe,
     this.eventType,
+    this.taskIds,
   });
 
   final String reportId;
@@ -47,6 +49,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
   final List<String> initRecipients;
   final bool isDupe;
   final String? eventType;
+  final List<String>? taskIds;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -720,6 +723,10 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                         )
                                       : await controllerNotifier
                                           .edit(processedReport);
+
+                                  ref
+                                      .read(tasksControllerProvider.notifier)
+                                      .deleteMany(taskIds);
 
                                   if (result && context.mounted) {
                                     final dialog = await showDialog<bool>(

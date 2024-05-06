@@ -234,12 +234,6 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
 class _MelaveTasksBody extends HookConsumerWidget {
   const _MelaveTasksBody();
 
-  String _tabIndexToEventType(int index) => switch (index) {
-        0 => Event.call.enumName,
-        2 => Event.callParents.enumName,
-        _ => Event.other.enumName,
-      };
-
   @override
   Widget build(BuildContext context, ref) {
     final tasks = ref.watch(tasksControllerProvider).valueOrNull ?? [];
@@ -252,6 +246,26 @@ class _MelaveTasksBody extends HookConsumerWidget {
     final selectedParents = useState(<TaskDto>[]);
     useListenable(searchController);
     useListenable(tabController);
+
+    List<TaskDto> viewedSelectedTasks(int tabIndex) => switch (tabIndex) {
+          0 => selectedCalls.value,
+          1 => selectedMeetings.value,
+          2 => selectedParents.value,
+          _ => throw ArgumentError('bad index'),
+        };
+
+    ReportNewRouteData routeToReport(int tabIndex, List<String> recipients) {
+      final eventType = switch (tabIndex) {
+        0 => Event.call.enumName,
+        2 => Event.callParents.enumName,
+        _ => Event.other.enumName,
+      };
+      return ReportNewRouteData(
+        initRecipients: recipients,
+        eventType: eventType,
+        taskIds: viewedSelectedTasks(tabIndex).map((e) => e.id).toList(),
+      );
+    }
 
     final filteredList = tasks.where(
       (element) => apprentices
@@ -349,9 +363,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
         isSearchOpen: isSearchOpen,
         controller: searchController,
         actions: [
-          if ((tabController.index == 0 && selectedCalls.value.length < 2) ||
-              (tabController.index == 1 && selectedMeetings.value.length < 2) ||
-              (tabController.index == 2 && selectedParents.value.length < 2))
+          if (viewedSelectedTasks(tabController.index).length < 2)
             IconButton(
               onPressed: () => isSearchOpen.value = true,
               icon: const Icon(FluentIcons.search_24_regular),
@@ -435,9 +447,9 @@ class _MelaveTasksBody extends HookConsumerWidget {
                       ),
                     PopupMenuItem(
                       child: const Text('דיווח'),
-                      onTap: () => ReportNewRouteData(
-                        initRecipients: [selectedApprentice.id],
-                        eventType: _tabIndexToEventType(tabController.index),
+                      onTap: () => routeToReport(
+                        tabController.index,
+                        [selectedApprentice.id],
                       ).push(context),
                     ),
                     PopupMenuItem(
@@ -476,9 +488,9 @@ class _MelaveTasksBody extends HookConsumerWidget {
                     ),
                     PopupMenuItem(
                       child: const Text('דיווח'),
-                      onTap: () => ReportNewRouteData(
-                        initRecipients: [selectedPersona.id],
-                        eventType: _tabIndexToEventType(tabController.index),
+                      onTap: () => routeToReport(
+                        tabController.index,
+                        [selectedPersona.id],
                       ).push(context),
                     ),
                     PopupMenuItem(
@@ -491,43 +503,20 @@ class _MelaveTasksBody extends HookConsumerWidget {
                 );
               },
             )
-          else if ((tabController.index == 0 &&
-                  selectedCalls.value.length > 1) ||
-              (tabController.index == 1 && selectedMeetings.value.length > 1) ||
-              (tabController.index == 2 && selectedParents.value.length > 1))
+          else if (viewedSelectedTasks(tabController.index).length > 1)
             Builder(
               builder: (context) {
                 final selectedApprentices = apprentices.where(
-                  (element) {
-                    return tabController.index == 0
-                        ? selectedCalls.value
-                            .map((e) => e.subject)
-                            .expand((element) => element)
-                            .contains(element.id)
-                        : tabController.index == 1
-                            ? selectedMeetings.value
-                                .map((e) => e.subject)
-                                .expand((element) => element)
-                                .contains(element.id)
-                            : selectedParents.value
-                                .map((e) => e.subject)
-                                .expand((element) => element)
-                                .contains(element.id);
-                  },
+                  (element) => viewedSelectedTasks(tabController.index)
+                      .map((e) => e.subject)
+                      .expand((element) => element)
+                      .contains(element.id),
                 );
 
-                // Logger().d(
-                //   selectedMeetings.value
-                //       .map((e) => e.apprenticeIds)
-                //       .expand((element) => element),
-                //   error: apprentices.length,
-                // );
-
                 return IconButton(
-                  onPressed: () => ReportNewRouteData(
-                    initRecipients:
-                        selectedApprentices.map((e) => e.id).toList(),
-                    eventType: _tabIndexToEventType(tabController.index),
+                  onPressed: () => routeToReport(
+                    tabController.index,
+                    selectedApprentices.map((e) => e.id).toList(),
                   ).push(context),
                   icon: const Icon(
                     FluentIcons.clipboard_task_24_regular,

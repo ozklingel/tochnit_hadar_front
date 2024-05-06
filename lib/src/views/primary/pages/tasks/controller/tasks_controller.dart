@@ -125,4 +125,33 @@ class TasksController extends _$TasksController {
 
     return false;
   }
+
+  Future<bool> deleteMany(List<String>? taskIds) async {
+    if (taskIds == null || taskIds.isEmpty) return false;
+    if (state is! AsyncData || state.value == null) return false;
+
+    final tasks =
+        state.value!.where((element) => taskIds.contains(element.id)).toList();
+    try {
+      for (var task in tasks) {
+        print('deleting task: ${task.id}');
+        final result = await ref.read(dioServiceProvider).post(
+          Consts.deleteTask,
+          data: {
+            'taskId': task.id,
+          },
+        );
+        if (result.data['result'] != 'success') return false;
+      }
+
+      ref.invalidate(getTasksProvider);
+      return true;
+    } catch (e) {
+      Logger().e('failed to delete tasks', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return false;
+  }
 }
