@@ -110,6 +110,8 @@ enum Event {
 
   final int val;
 
+  String get enumName => toString().split('.').last;
+
   String get name {
     switch (this) {
       case Event.offlineMeeting:

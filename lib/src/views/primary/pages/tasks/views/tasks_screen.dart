@@ -235,9 +235,9 @@ class _MelaveTasksBody extends HookConsumerWidget {
   const _MelaveTasksBody();
 
   String _tabIndexToEventType(int index) => switch (index) {
-        0 => Event.call.name,
-        2 => Event.callParents.name,
-        _ => Event.other.name,
+        0 => Event.call.enumName,
+        2 => Event.callParents.enumName,
+        _ => Event.other.enumName,
       };
 
   @override
