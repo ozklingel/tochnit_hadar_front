@@ -8,6 +8,7 @@ import 'package:hadar_program/src/services/api/home_page/get_init_master.dart';
 import 'package:hadar_program/src/services/api/reports_form/filter_recipients.dart';
 import 'package:hadar_program/src/services/api/reports_form/filter_reports.dart';
 import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
+import 'package:hadar_program/src/services/api/tasks_form/get_tasks.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -27,6 +28,8 @@ enum SortReportBy {
 @Riverpod(
   dependencies: [
     GetReports,
+    GetTasks,
+    GetInitMaster,
     DioService,
     GoRouterService,
     StorageService,
@@ -97,6 +100,7 @@ class ReportsController extends _$ReportsController {
       if (result.data['result'] == 'success') {
         ref.invalidate(getReportsProvider);
         ref.invalidate(getInitMasterProvider);
+        ref.invalidate(getTasksProvider);
 
         // if (redirect) {
         //   ref.read(goRouterServiceProvider).go('/reports');
@@ -137,6 +141,7 @@ class ReportsController extends _$ReportsController {
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getReportsProvider);
+        ref.invalidate(getTasksProvider);
 
         ref.read(goRouterServiceProvider).go('/reports');
 
