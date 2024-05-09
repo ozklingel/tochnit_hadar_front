@@ -437,7 +437,7 @@ class ReportsScreen extends HookConsumerWidget {
                   (element) => element.id == selectedReportIds.value.first,
                   orElse: () => const ReportDto(),
                 );
-                final recipients = personas.singleWhere(
+                final recipient = personas.singleWhere(
                   (element) => report.recipients.contains(element.id),
                   orElse: () => const PersonaDto(),
                 );
@@ -481,11 +481,12 @@ class ReportsScreen extends HookConsumerWidget {
                         }
                       },
                     ),
-                    PopupMenuItem(
-                      child: const Text('פרופיל אישי'),
-                      onTap: () => PersonaDetailsRouteData(id: recipients.id)
-                          .push(context),
-                    ),
+                    if (recipient.id.isNotEmpty)
+                      PopupMenuItem(
+                        child: const Text('פרופיל אישי'),
+                        onTap: () => PersonaDetailsRouteData(id: recipient.id)
+                            .push(context),
+                      ),
                   ],
                 );
               },
