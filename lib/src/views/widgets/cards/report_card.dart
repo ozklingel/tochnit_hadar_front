@@ -23,6 +23,9 @@ class ReportCard extends ConsumerWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
+  String _reportDate() =>
+      report.creationDate == 'None' ? report.dateTime : report.creationDate;
+
   @override
   Widget build(BuildContext context, ref) {
     final apprentices = (ref
@@ -80,9 +83,7 @@ class ReportCard extends ConsumerWidget {
                         width: 264,
                         child: Text(
                           apprentices
-                              .map(
-                                (a) => '${a.firstName} ${a.lastName}',
-                              )
+                              .map((a) => '${a.firstName} ${a.lastName}')
                               .join(', '),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -92,25 +93,14 @@ class ReportCard extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Text.rich(
-                    TextSpan(
-                      style: TextStyles.s14w400,
-                      children: [
-                        TextSpan(
-                          text: report
-                              .creationDate.asDateTime.asDayMonthYearShortDot,
-                        ),
-                        const TextSpan(text: ', '),
-                        TextSpan(
-                          text: format(
-                            report.creationDate.asDateTime,
-                            locale: Localizations.localeOf(
-                              context,
-                            ).languageCode,
-                          ),
-                        ),
-                      ],
-                    ),
+                  Text(
+                    '${_reportDate().asDateTime.asDayMonthYearShortDot}, ${format(
+                      _reportDate().asDateTime,
+                      locale: Localizations.localeOf(
+                        context,
+                      ).languageCode,
+                    )}',
+                    style: TextStyles.s14w400,
                   ),
                   const SizedBox(height: 8),
                   Text(
