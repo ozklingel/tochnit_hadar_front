@@ -21,6 +21,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class TasksScreen extends ConsumerWidget {
   const TasksScreen({super.key});
 
+  static const path = '/tasks';
+
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
@@ -246,6 +248,13 @@ class _MelaveTasksBody extends HookConsumerWidget {
     final selectedParents = useState(<TaskDto>[]);
     useListenable(searchController);
     useListenable(tabController);
+
+    final goRouter = ref.watch(goRouterServiceProvider);
+    if (goRouter.routeInformationProvider.value.uri.path != TasksScreen.path) {
+      selectedCalls.value = [];
+      selectedMeetings.value = [];
+      selectedParents.value = [];
+    }
 
     List<TaskDto> viewedSelectedTasks(int tabIndex) => switch (tabIndex) {
           0 => selectedCalls.value,

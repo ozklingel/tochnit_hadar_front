@@ -5,6 +5,7 @@ import 'package:hadar_program/src/services/networking/dio_service/dio_service.da
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/views/tasks_screen.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -52,7 +53,7 @@ class TasksController extends _$TasksController {
       if (result.data['result'] == 'success') {
         ref.invalidate(getTasksProvider);
 
-        // ref.read(goRouterServiceProvider).go('/tasks');
+        // ref.read(goRouterServiceProvider).go(TasksScreen.path);
         ref.read(goRouterServiceProvider).pop();
 
         return true;
@@ -88,7 +89,7 @@ class TasksController extends _$TasksController {
       if (result.data['result'] == 'success') {
         ref.invalidate(getTasksProvider);
 
-        ref.read(goRouterServiceProvider).go('/tasks');
+        ref.read(goRouterServiceProvider).go(TasksScreen.path);
 
         return true;
       }

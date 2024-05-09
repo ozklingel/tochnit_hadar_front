@@ -102,7 +102,7 @@ class GoRouterService extends _$GoRouterService {
     TypedStatefulShellBranch<TasksBranchData>(
       routes: [
         TypedGoRoute<TasksRouteData>(
-          path: '/tasks',
+          path: TasksScreen.path,
           routes: [
             TypedGoRoute<NewTaskRouteData>(
               path: 'new',
