@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SearchAppBar({
@@ -43,7 +44,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
                 leading: IconButton(
                   onPressed: () => isSearchOpen.value = false,
                   icon: const Icon(
-                    FluentIcons.arrow_left_24_regular,
+                    FluentIcons.backspace_24_regular,
                     color: AppColors.gray2,
                   ),
                 ),
@@ -60,6 +61,13 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ],
               )
             : title,
+      ),
+      leading: IconButton(
+        onPressed: () => const HomeRouteData().go(context),
+        icon: const Icon(
+          FluentIcons.arrow_left_24_regular,
+          color: AppColors.gray2,
+        ),
       ),
       actions: actions,
       bottom: bottom,
