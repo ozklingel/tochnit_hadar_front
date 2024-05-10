@@ -42,6 +42,7 @@ abstract class Consts {
 
   // notifications
   static const getAllNotifications = 'notification_form/getAll';
+  static const addNotification = 'notification_form/add1';
   static const setNotificationWasRead = 'notification_form/setWasRead';
 
   // tasks

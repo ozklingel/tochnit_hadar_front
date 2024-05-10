@@ -71,7 +71,6 @@ class ReportsScreen extends HookConsumerWidget {
     if (auth.valueOrNull?.role == UserRole.ahraiTohnit) {
       return Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           title: const Text('דיווחים'),
         ),
         floatingActionButton: FloatingActionButton(

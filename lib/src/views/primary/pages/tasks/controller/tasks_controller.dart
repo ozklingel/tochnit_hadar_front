@@ -135,13 +135,14 @@ class TasksController extends _$TasksController {
         state.value!.where((element) => taskIds.contains(element.id)).toList();
     try {
       for (var task in tasks) {
-        print('deleting task: ${task.id}');
+        Logger().d('deleting task: ${task.id}');
         final result = await ref.read(dioServiceProvider).post(
           Consts.deleteTask,
           data: {
             'taskId': task.id,
           },
         );
+
         if (result.data['result'] != 'success') return false;
       }
 

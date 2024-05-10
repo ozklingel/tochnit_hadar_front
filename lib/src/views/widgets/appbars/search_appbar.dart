@@ -11,6 +11,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.isSearchOpen,
     required this.controller,
     required this.actions,
+    this.automaticallyImplyLeading = false,
     this.bottom,
   });
 
@@ -19,11 +20,12 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextEditingController controller;
   final List<Widget> actions;
   final PreferredSizeWidget? bottom;
+  final bool automaticallyImplyLeading;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: automaticallyImplyLeading,
       centerTitle: true,
       title: AnimatedSwitcher(
         duration: Consts.defaultDurationM,

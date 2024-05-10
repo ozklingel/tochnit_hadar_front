@@ -15,7 +15,7 @@ class EventDto with _$EventDto {
     @Default('')
     @JsonKey(
       defaultValue: '',
-      name: 'event',
+      // name: 'event',
     )
     String title,
     @Default('')

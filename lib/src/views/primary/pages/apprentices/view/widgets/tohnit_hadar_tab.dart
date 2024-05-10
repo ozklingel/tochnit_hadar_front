@@ -11,7 +11,6 @@ import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
-import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -19,7 +18,6 @@ import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -211,6 +209,7 @@ class TohnitHadarTabView extends HookConsumerWidget {
         DetailsCard(
           title: 'אירועים',
           trailing: IconButton(
+            icon: const Icon(FluentIcons.add_circle_24_regular),
             onPressed: () async {
               await showModalBottomSheet(
                 context: context,
@@ -223,7 +222,6 @@ class TohnitHadarTabView extends HookConsumerWidget {
                 },
               );
             },
-            icon: const Icon(FluentIcons.add_circle_24_regular),
           ),
           child: persona.events.isEmpty
               ? const Text(
@@ -232,8 +230,9 @@ class TohnitHadarTabView extends HookConsumerWidget {
                 )
               : Builder(
                   builder: (context) {
-                    // TODO(noga-dev) bring back
                     final children = persona.events
+                        .sortedBy((element) => element.datetime)
+                        .reversed
                         .take(3)
                         .map(
                           (e) => Row(
@@ -241,14 +240,14 @@ class TohnitHadarTabView extends HookConsumerWidget {
                               SizedBox(
                                 width: 100,
                                 child: Text(
-                                  'e.title',
+                                  e.title,
                                   style: TextStyles.s14w400.copyWith(
                                     color: AppColors.gray5,
                                   ),
                                 ),
                               ),
                               Text(
-                                'e.dateTime.asDateTime.asDayMonthYearShortDot',
+                                e.datetime.asDateTime.asDayMonthYearShortDot,
                                 style: TextStyles.s14w400.copyWith(
                                   color: AppColors.gray2,
                                 ),
@@ -985,18 +984,25 @@ class _EventBottomSheet extends HookConsumerWidget {
                           onPressed: titleController.text.isEmpty
                               ? null
                               : () async {
-                                  await ref
-                                      .read(tasksControllerProvider.notifier)
-                                      .create(
+                                  final navContext = Navigator.of(context);
+
+                                  final result = await ref
+                                      .read(personasControllerProvider.notifier)
+                                      .addEvent(
                                         apprenticeId: apprentice.id,
-                                        task: TaskDto(
+                                        event: EventDto(
                                           title: titleController.text,
-                                          details: descriptionController.text,
-                                          dateTime: selectedDatetime.value
+                                          description:
+                                              descriptionController.text,
+                                          datetime: selectedDatetime.value
                                                   ?.toIso8601String() ??
                                               DateTime.now().toIso8601String(),
                                         ),
                                       );
+
+                                  if (result) {
+                                    navContext.pop();
+                                  }
                                 },
 
                           // TODO (noga-dev): bring back
