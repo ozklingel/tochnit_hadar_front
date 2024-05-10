@@ -76,7 +76,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     final reportEvent =
         eventType != null ? Event.values.byName(eventType!) : report.event;
     final selectedEventType = useState(reportEvent);
-    final uploadedFiles = useState(<String>[]);
+    final uploadedFiles = useState(report.attachments);
     final isUploadInProgress = useState(<Key>[]);
     final filters = useState(const FilterDto());
 
@@ -612,6 +612,11 @@ class ReportDetailsScreen extends HookConsumerWidget {
                   if (uploadedFiles.value.isNotEmpty)
                     _AttachmentsWidget(
                       attachments: uploadedFiles.value,
+                      onDelete: (index) => uploadedFiles.value = [
+                        ...uploadedFiles.value.where(
+                          (element) => element != uploadedFiles.value[index],
+                        ),
+                      ],
                     ),
                   Align(
                     alignment: Alignment.centerRight,
@@ -636,20 +641,6 @@ class ReportDetailsScreen extends HookConsumerWidget {
                             allowMultiple: false,
                             withData: true,
                           );
-
-                          // if (result == null) {
-                          //   return;
-                          // }
-
-                          // if (result.paths.length > 1) {
-                          //   Toaster.error('too many');
-                          //   return;
-                          // }
-
-                          // TODO(noga-dev): upload files to backend storage then save the urls in the report
-                          // ignore: unused_local_variable
-                          // final files =
-                          //     result.paths.map((path) => File(path!)).toList();
 
                           if (result != null) {
                             final uploadFileLocation = await ref.read(
@@ -778,9 +769,11 @@ class _AttachmentsWidget extends StatelessWidget {
   const _AttachmentsWidget({
     super.key,
     required this.attachments,
+    this.onDelete,
   });
 
   final List<String> attachments;
+  final void Function(int index)? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -788,29 +781,71 @@ class _AttachmentsWidget extends StatelessWidget {
       return const Text('אין תמונות');
     }
 
-    return SizedBox(
-      height: 140,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: attachments
-            .map(
-              (e) => CachedNetworkImage(
+    final imageList = attachments
+        .map(
+          (e) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              child: CachedNetworkImage(
                 imageUrl: e,
-                placeholder: (context, url) => const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    child: ColoredBox(
-                      color: Color(0xFFD9D9D9),
-                      child: SizedBox.square(
-                        dimension: 120,
-                      ),
-                    ),
-                  ),
+                placeholder: (_, __) => const ColoredBox(
+                  color: Color(0xFFD9D9D9),
+                  child: SizedBox.square(dimension: 120),
                 ),
               ),
-            )
-            .toList(),
+            ),
+          ),
+        )
+        .toList();
+
+    return SizedBox(
+      height: 140,
+      child: GestureDetector(
+        child: Stack(
+          children: [
+            ListView(
+              scrollDirection: Axis.horizontal,
+              children: imageList,
+            ),
+            const Icon(
+              FluentIcons.zoom_in_24_regular,
+              color: AppColors.grey5,
+            ),
+          ],
+        ),
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) => Dialog(
+            backgroundColor: Colors.transparent,
+            child: SizedBox(
+              height: 300,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: imageList.length,
+                itemBuilder: (context, index) => Stack(
+                  children: [
+                    imageList[index],
+                    if (onDelete != null)
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          onPressed: () {
+                            onDelete!(index);
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(
+                            FluentIcons.delete_24_regular,
+                            color: AppColors.gray5,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

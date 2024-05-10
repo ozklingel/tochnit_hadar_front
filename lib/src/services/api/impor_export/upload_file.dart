@@ -15,18 +15,14 @@ part 'upload_file.g.dart';
 class UploadFile extends _$UploadFile {
   @override
   Future<String> build(PlatformFile file) async {
-    // final fileName = file.path.split('/').last;
-
     if (file.bytes == null) {
       throw ArgumentError('missing param bytes');
     }
 
-    // Logger().d('upload file', error: file.bytes!.toList().length);
-
     final formData = FormData.fromMap({
       "file": MultipartFile.fromBytes(
         file.bytes!.toList(),
-        filename: file.path,
+        filename: file.name,
         contentType: MediaType.parse('multipart/form-data'),
       ),
     });
