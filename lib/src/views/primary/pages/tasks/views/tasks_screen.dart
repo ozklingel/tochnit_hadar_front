@@ -614,7 +614,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                 itemCount: calls.length,
                 itemBuilder: (context, index) => calls[index],
               ),
-            if (tabController.index == 0 &&
+            if (tabController.index == 1 &&
                 searchController.text.isNotEmpty &&
                 meetings.isEmpty)
               Text('לא נמצאו תוצאות עבור ${searchController.text}')
@@ -631,7 +631,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
                 itemCount: meetings.length,
                 itemBuilder: (context, index) => meetings[index],
               ),
-            if (tabController.index == 0 &&
+            if (tabController.index == 2 &&
                 searchController.text.isNotEmpty &&
                 parents.isEmpty)
               Text('לא נמצאו תוצאות עבור ${searchController.text}')
@@ -639,7 +639,7 @@ class _MelaveTasksBody extends HookConsumerWidget {
               EmptyState(
                 image: Assets.illustrations.clap.svg(),
                 topText: 'איזה יופי!',
-                bottomText: 'אין שיחות לבצע',
+                bottomText: 'אין שיחות הורים לבצע',
               )
             else
               ListView.builder(
