@@ -28,8 +28,6 @@ enum SortReportBy {
 @Riverpod(
   dependencies: [
     GetReports,
-    GetTasks,
-    GetInitMaster,
     DioService,
     GoRouterService,
     StorageService,

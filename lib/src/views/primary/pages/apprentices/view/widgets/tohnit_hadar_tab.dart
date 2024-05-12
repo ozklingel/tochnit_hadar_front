@@ -216,7 +216,7 @@ class TohnitHadarTabView extends HookConsumerWidget {
                 enableDrag: false,
                 builder: (context) {
                   return _EventBottomSheet(
-                    apprentice: persona,
+                    persona: persona,
                     event: events.firstOrNull ?? const EventDto(),
                   );
                 },
@@ -255,17 +255,17 @@ class TohnitHadarTabView extends HookConsumerWidget {
                               const Spacer(),
                               Row(
                                 children: [
-                                  // _RowIconButton(
-                                  //   onPressed: () => showModalBottomSheet(
-                                  //     context: context,
-                                  //     builder: (context) => _EventBottomSheet(
-                                  //       apprentice: apprentice,
-                                  //       event: e,
-                                  //     ),
-                                  //   ),
-                                  //   icon:
-                                  //       const Icon(FluentIcons.edit_24_regular),
-                                  // ),
+                                  RowIconButton(
+                                    onPressed: () => showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) => _EventBottomSheet(
+                                        persona: persona,
+                                        event: e,
+                                      ),
+                                    ),
+                                    icon:
+                                        const Icon(FluentIcons.edit_24_regular),
+                                  ),
                                   const SizedBox(width: 4),
                                   RowIconButton(
                                     onPressed: () async {
@@ -273,10 +273,7 @@ class TohnitHadarTabView extends HookConsumerWidget {
                                           .read(
                                             personasControllerProvider.notifier,
                                           )
-                                          .deleteEvent(
-                                            apprenticeId: persona.id,
-                                            eventId: e.id,
-                                          );
+                                          .deleteEvent(eventId: e.id);
 
                                       if (!result) {
                                         Toaster.error(
@@ -806,11 +803,11 @@ class _GeneralSection extends HookConsumerWidget {
 
 class _EventBottomSheet extends HookConsumerWidget {
   const _EventBottomSheet({
-    required this.apprentice,
+    required this.persona,
     required this.event,
   });
 
-  final PersonaDto apprentice;
+  final PersonaDto persona;
   final EventDto event;
 
   @override
@@ -985,20 +982,26 @@ class _EventBottomSheet extends HookConsumerWidget {
                               ? null
                               : () async {
                                   final navContext = Navigator.of(context);
+                                  final notifier = ref.read(
+                                    personasControllerProvider.notifier,
+                                  );
+                                  final newEvent = event.copyWith(
+                                    title: titleController.text,
+                                    description: descriptionController.text,
+                                    datetime: selectedDatetime.value
+                                            ?.toIso8601String() ??
+                                        DateTime.now().toIso8601String(),
+                                  );
 
-                                  final result = await ref
-                                      .read(personasControllerProvider.notifier)
-                                      .addEvent(
-                                        apprenticeId: apprentice.id,
-                                        event: EventDto(
-                                          title: titleController.text,
-                                          description:
-                                              descriptionController.text,
-                                          datetime: selectedDatetime.value
-                                                  ?.toIso8601String() ??
-                                              DateTime.now().toIso8601String(),
-                                        ),
-                                      );
+                                  final result = event.id.isEmpty
+                                      ? await notifier.addEvent(
+                                          apprenticeId: persona.id,
+                                          event: newEvent,
+                                        )
+                                      : await notifier.editEvent(
+                                          apprenticeId: persona.id,
+                                          event: newEvent,
+                                        );
 
                                   if (result) {
                                     navContext.pop();

@@ -21,8 +21,8 @@ part 'personas_controller.g.dart';
     GetMapsApprentices,
     DioService,
     GetFilteredUsers,
-    GetPersonas,
     GetMapsApprentices,
+    StorageService,
     // GoRouterService,
   ],
 )
@@ -98,10 +98,27 @@ class PersonasController extends _$PersonasController {
   }
 
   FutureOr<bool> deleteEvent({
-    required String apprenticeId,
     required String eventId,
   }) async {
-    Toaster.backend();
+    try {
+      final req = await ref.read(dioServiceProvider).post(
+        Consts.deleteNotification,
+        data: {
+          'NotificationId': eventId,
+        },
+      );
+
+      if (req.data['result'] == 'success') {
+        ref.invalidate(getPersonasProvider);
+        ref.invalidate(getMapsApprenticesProvider);
+
+        return true;
+      }
+    } catch (e) {
+      Logger().e('failed to delete event', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
 
     return false;
   }
@@ -110,7 +127,37 @@ class PersonasController extends _$PersonasController {
     required String apprenticeId,
     required EventDto event,
   }) async {
-    Toaster.backend();
+    try {
+      final req = await ref.read(dioServiceProvider).put(
+        Consts.updateNotification,
+        queryParameters: {
+          'NotificationId': event.id,
+        },
+        data: {
+          // 'userId': ref.read(storageServiceProvider.notifier).getUserPhone(),
+          'apprenticeId': apprenticeId,
+          'date': event.datetime,
+          'details': event.description,
+          'event': event.title,
+          'frequency': 'frequency',
+          "numOfLinesDisplay": 2,
+          // this is due to backend bug
+          'subject': apprenticeId,
+          "title": event.title,
+        },
+      );
+
+      if (req.data['result'] == 'success') {
+        ref.invalidate(getPersonasProvider);
+        ref.invalidate(getMapsApprenticesProvider);
+
+        return true;
+      }
+    } catch (e) {
+      Logger().e('failed to edit event', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
 
     return false;
   }
