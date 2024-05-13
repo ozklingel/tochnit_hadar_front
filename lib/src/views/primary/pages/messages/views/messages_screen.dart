@@ -354,7 +354,12 @@ class MessagesScreen extends HookConsumerWidget {
                                 .contains(searchController.text) ||
                             element.title
                                 .toLowerCase()
-                                .contains(searchController.text),
+                                .contains(searchController.text) ||
+                            element.to.any(
+                              (element) => element
+                                  .toLowerCase()
+                                  .contains(searchController.text),
+                            ),
                       )
                       .toList(),
             ),
