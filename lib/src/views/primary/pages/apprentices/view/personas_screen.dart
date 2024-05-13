@@ -110,114 +110,81 @@ class PersonasScreen extends HookConsumerWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: SizedBox(
-                                  height: 56,
-                                  child: (screenController
-                                              .valueOrNull?.isMapOpen ??
-                                          false)
-                                      ? AppBar(
-                                          title: const Text(
-                                            'מפת חניכים',
-                                            style: TextStyles.s22w500cGrey2,
-                                          ),
-                                          actions: [
-                                            IconButton(
-                                              onPressed: () async {
-                                                ref
-                                                    .read(
-                                                      usersControllerProvider
-                                                          .notifier,
-                                                    )
-                                                    .mapView(false);
-                                                isSearchOpen.value = true;
-                                              },
-                                              icon: const Icon(
-                                                FluentIcons.search_24_regular,
-                                              ),
-                                            ),
-                                          ],
-                                          bottom: PreferredSize(
-                                            preferredSize:
-                                                const Size.fromHeight(24),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  '${filteredUsers.length} משתמשים',
-                                                  style:
-                                                      TextStyles.s14w400cGrey5,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      : SearchAppBar(
-                                          controller: searchController,
-                                          isSearchOpen: isSearchOpen,
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              IconButton(
-                                                onPressed: () =>
-                                                    isSearchOpen.value = true,
-                                                icon: const Icon(
-                                                  FluentIcons.search_24_regular,
-                                                ),
-                                              ),
-                                              if (auth.valueOrNull?.role ==
-                                                  UserRole.melave)
-                                                const Text(
-                                                  'חניכים',
-                                                  style:
-                                                      TextStyles.s22w500cGrey2,
-                                                )
-                                              else
-                                                const Text(
-                                                  'משתמשים וחניכים',
-                                                  style:
-                                                      TextStyles.s22w500cGrey2,
-                                                ),
-                                              const SizedBox(),
-                                            ],
-                                          ),
-                                          actions: const [],
+                          child: SizedBox(
+                            height: 56,
+                            child: (screenController.valueOrNull?.isMapOpen ??
+                                    false)
+                                ? AppBar(
+                                    title: const Text(
+                                      'מפת חניכים',
+                                      style: TextStyles.s22w500cGrey2,
+                                    ),
+                                    actions: [
+                                      IconButton(
+                                        onPressed: () async {
+                                          ref
+                                              .read(
+                                                usersControllerProvider
+                                                    .notifier,
+                                              )
+                                              .mapView(false);
+                                          isSearchOpen.value = true;
+                                        },
+                                        icon: const Icon(
+                                          FluentIcons.search_24_regular,
                                         ),
-                                  // SearchAppBar(
-                                  //   elevation: MaterialStateProperty.all(0),
-                                  //   backgroundColor: MaterialStateColor.resolveWith(
-                                  //     (states) => AppColors.blue08,
-                                  //   ),
-                                  //   padding: MaterialStateProperty.all(
-                                  //     const EdgeInsets.symmetric(horizontal: 16),
-                                  //   ),
-                                  //   leading: const Icon(
-                                  //     FluentIcons.line_horizontal_3_20_filled,
-                                  //   ),
-                                  //   trailing: const [
-                                  //     Icon(
-                                  //       FluentIcons.search_24_filled,
-                                  //       size: 20,
-                                  //     ),
-                                  //   ],
-                                  //   hintText: 'חיפוש',
-                                  //   hintStyle: MaterialStateProperty.all(
-                                  //     TextStyles.s16w400cGrey2,
-                                  //   ),
-                                  // ),
-                                ),
-                              ),
-                              if (!(screenController.valueOrNull?.isMapOpen ??
-                                  false)) ...[
-                                const SizedBox(width: 6),
-                                Stack(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () async {
-                                        final result =
-                                            await Navigator.of(context).push(
+                                      ),
+                                    ],
+                                    bottom: PreferredSize(
+                                      preferredSize: const Size.fromHeight(24),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            '${filteredUsers.length} משתמשים',
+                                            style: TextStyles.s14w400cGrey5,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : SearchAppBar(
+                                    controller: searchController,
+                                    isSearchOpen: isSearchOpen,
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () =>
+                                              isSearchOpen.value = true,
+                                          icon: const Icon(
+                                            FluentIcons.search_24_regular,
+                                          ),
+                                        ),
+                                        Text(
+                                          auth.valueOrNull?.role ==
+                                                  UserRole.melave
+                                              ? 'חניכים'
+                                              : 'משתמשים וחניכים',
+                                          style: TextStyles.s22w500cGrey2,
+                                        ),
+                                        const SizedBox(),
+                                      ],
+                                    ),
+                                    actions: [
+                                      Badge(
+                                        isLabelVisible:
+                                            filters.value.isNotEmpty,
+                                        offset: const Offset(2, 2),
+                                        label: Text(
+                                          filters.value.length.toString(),
+                                          style: TextStyles.s11w500fRoboto,
+                                        ),
+                                        child: IconButton(
+                                          onPressed: () async {
+                                            final result = await Navigator.of(
+                                                  context,
+                                                ).push(
                                                   MaterialPageRoute<FilterDto>(
                                                     builder: (ctx) =>
                                                         FiltersScreen.users(
@@ -229,42 +196,26 @@ class PersonasScreen extends HookConsumerWidget {
                                                 ) ??
                                                 const FilterDto();
 
-                                        final request = await ref
-                                            .read(
-                                              personasControllerProvider
-                                                  .notifier,
-                                            )
-                                            .filterUsers(result);
+                                            final request = await ref
+                                                .read(
+                                                  personasControllerProvider
+                                                      .notifier,
+                                                )
+                                                .filterUsers(result);
 
-                                        filtersResult.value = request;
+                                            filtersResult.value = request;
 
-                                        if (request != null) {
-                                          filters.value = result;
-                                        }
-                                      },
-                                      icon: const Icon(
-                                        FluentIcons.filter_add_20_regular,
-                                      ),
-                                    ),
-                                    if (filters.value.length > 0)
-                                      Positioned(
-                                        right: 8,
-                                        top: 8,
-                                        child: IgnorePointer(
-                                          child: CircleAvatar(
-                                            backgroundColor: AppColors.red1,
-                                            radius: 7,
-                                            child: Text(
-                                              filters.value.length.toString(),
-                                              style: TextStyles.s11w500fRoboto,
-                                            ),
+                                            if (request != null) {
+                                              filters.value = result;
+                                            }
+                                          },
+                                          icon: const Icon(
+                                            FluentIcons.filter_add_20_regular,
                                           ),
                                         ),
                                       ),
-                                  ],
-                                ),
-                              ],
-                            ],
+                                    ],
+                                  ),
                           ),
                         ),
                         if (filters.value.isNotEmpty) ...[
@@ -436,7 +387,9 @@ class PersonasScreen extends HookConsumerWidget {
                                 const SizedBox(width: 6),
                                 const Spacer(),
                                 if (selectedPersonas.value.isNotEmpty &&
-                                    (auth.valueOrNull ?? const AuthDto()).role != UserRole.melave)
+                                    (auth.valueOrNull ?? const AuthDto())
+                                            .role !=
+                                        UserRole.melave)
                                   IconButton(
                                     onPressed: () =>
                                         selectedPersonas.value.length > 1
