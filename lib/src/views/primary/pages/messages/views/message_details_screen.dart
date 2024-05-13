@@ -28,6 +28,9 @@ class MessageDetailsScreen extends HookConsumerWidget {
       orElse: () => const MessageDto(),
     );
 
+    final isEditable = message.type == MessageType.draft ||
+        message.dateTime.asDateTime.isAfter(DateTime.now());
+
     useEffect(
       () {
         ref.read(messagesControllerProvider.notifier).setToReadStatus(message);
@@ -44,66 +47,54 @@ class MessageDetailsScreen extends HookConsumerWidget {
         actions: [
           PopupMenuButton(
             child: const Icon(Icons.more_vert),
-            itemBuilder: (context) {
-              if (message.type == MessageType.customerService) {
-                return [
+            itemBuilder: (context) => [
+              if (message.type == MessageType.customerService &&
+                  RegExp(r'^5\d{8}$').hasMatch(message.from)) ...[
+                PopupMenuItem(
+                  child: const Text('להתקשר'),
+                  onTap: () => launchCall(phone: message.from),
+                ),
+                PopupMenuItem(
+                  child: const Text('שליחת וואטסאפ'),
+                  onTap: () => launchWhatsapp(phone: message.from),
+                ),
+                PopupMenuItem(
+                  child: const Text('שליחת SMS'),
+                  onTap: () => launchSms(phone: [message.from]),
+                ),
+              ],
+              if (auth.role != UserRole.melave) ...[
+                if (isEditable)
                   PopupMenuItem(
-                    child: const Text('להתקשר'),
-                    onTap: () => launchCall(phone: message.from),
-                  ),
-                  PopupMenuItem(
-                    child: const Text('שליחת וואטסאפ'),
-                    onTap: () => launchWhatsapp(phone: message.from),
-                  ),
-                  PopupMenuItem(
-                    child: const Text('שליחת SMS'),
-                    onTap: () => launchSms(phone: [message.from]),
-                  ),
-                  PopupMenuItem(
-                    child: const Text('פרופיל אישי'),
+                    child: const Text('עריכה'),
                     onTap: () =>
-                        PersonaDetailsRouteData(id: message.from).push(context),
+                        EditMessageRouteData(id: id).pushReplacement(context),
                   ),
-                ];
-              }
+                PopupMenuItem(
+                  child: const Text('שכפול'),
+                  onTap: () =>
+                      DupeMessageRouteData(id: id).pushReplacement(context),
+                ),
+              ],
+              if (auth.role == UserRole.melave || isEditable)
+                PopupMenuItem(
+                  value: 'delete',
+                  child: const Text('מחיקה'),
+                  onTap: () async {
+                    final navContext = Navigator.of(context);
 
-              return [
-                if (auth.role != UserRole.melave)
-                  if (message.type == MessageType.draft ||
-                      message.dateTime.asDateTime.isAfter(DateTime.now()))
-                    PopupMenuItem(
-                      child: const Text('עריכה'),
-                      onTap: () =>
-                          EditMessageRouteData(id: id).pushReplacement(context),
-                    ),
-                if (auth.role != UserRole.melave)
-                  PopupMenuItem(
-                    child: const Text('שכפול'),
-                    onTap: () =>
-                        DupeMessageRouteData(id: id).pushReplacement(context),
-                  ),
-                if (auth.role == UserRole.melave ||
-                    message.type == MessageType.draft ||
-                    message.dateTime.asDateTime.isAfter(DateTime.now()))
-                  PopupMenuItem(
-                    value: 'delete',
-                    child: const Text('מחיקה'),
-                    onTap: () async {
-                      final navContext = Navigator.of(context);
+                    final result = await ref
+                        .read(messagesControllerProvider.notifier)
+                        .deleteMessage(id);
 
-                      final result = await ref
-                          .read(messagesControllerProvider.notifier)
-                          .deleteMessage(id);
-
-                      if (result) {
-                        navContext.pop();
-                      } else {
-                        Logger().w('failed to pop on deleted msg');
-                      }
-                    },
-                  ),
-              ];
-            },
+                    if (result) {
+                      navContext.pop();
+                    } else {
+                      Logger().w('failed to pop on deleted msg');
+                    }
+                  },
+                ),
+            ],
           ),
           const SizedBox(width: 16),
         ],
