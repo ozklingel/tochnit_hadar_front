@@ -721,22 +721,21 @@ class ReportDetailsScreen extends HookConsumerWidget {
 
                                   if (result && context.mounted) {
                                     final dialog = await showDialog<bool>(
-                                          context: context,
-                                          builder: (context) =>
-                                              const SuccessDialog(
-                                            msg: 'הדיווח הושלם בהצלחה!',
-                                          ),
-                                        ) ??
-                                        false;
+                                      context: context,
+                                      builder: (context) => const SuccessDialog(
+                                        msg: 'הדיווח הושלם בהצלחה!',
+                                      ),
+                                    ).timeout(
+                                      const Duration(seconds: 2),
+                                      onTimeout: () => true,
+                                    );
 
                                     if (!context.mounted) {
                                       return;
                                     }
 
-                                    if (dialog) {
+                                    if (dialog ?? false) {
                                       const HomeRouteData().go(context);
-                                    } else {
-                                      const ReportsRouteData().go(context);
                                     }
                                   }
                                 },
