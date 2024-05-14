@@ -25,14 +25,14 @@ class GetFilteredUsers extends _$GetFilteredUsers {
       Consts.getAllFiltered,
       queryParameters: {
         'roles': filter.roles.join(','),
-        'hativa': filter.hativot,
-        'years': filter.years,
-        'preiods': filter.periods,
-        'statuses': filter.statuses,
-        'bases': filter.bases,
-        'region': filter.regions,
-        'eshcols': filter.eshkols,
-        'city': filter.cities,
+        if (filter.hativot.isNotEmpty) 'hativa': filter.hativot,
+        if (filter.years.isNotEmpty) 'years': filter.years.join(','),
+        if (filter.periods.isNotEmpty) 'preiods': filter.periods,
+        if (filter.statuses.isNotEmpty) 'statuses': filter.statuses.join(','),
+        if (filter.bases.isNotEmpty) 'bases': filter.bases,
+        if (filter.regions.isNotEmpty) 'region': filter.regions,
+        if (filter.eshkols.isNotEmpty) 'eshcols': filter.eshkols,
+        if (filter.cities.isNotEmpty) 'city': filter.cities,
       },
     );
 

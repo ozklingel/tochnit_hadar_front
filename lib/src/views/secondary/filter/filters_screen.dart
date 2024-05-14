@@ -21,6 +21,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 const _kDropdownTextWidthLimit = 260.0;
 
+String _engToHebLetter(String letter) => String.fromCharCode(
+      ('א'.codeUnitAt(0)) + letter.codeUnitAt(0) - 'a'.codeUnitAt(0),
+    );
+
 enum _YearInProgram {
   a,
   b,
@@ -31,26 +35,7 @@ enum _YearInProgram {
   g,
   h;
 
-  String get name {
-    switch (this) {
-      case a:
-        return 'א';
-      case b:
-        return 'ב';
-      case c:
-        return 'ג';
-      case d:
-        return 'ד';
-      case e:
-        return 'ה';
-      case f:
-        return 'ו';
-      case g:
-        return 'ז';
-      case h:
-        return 'ח';
-    }
-  }
+  String get name => _engToHebLetter(toString().split('.').last);
 }
 
 enum _RamimYear {
@@ -61,25 +46,10 @@ enum _RamimYear {
   e,
   f;
 
-  String get name {
-    switch (this) {
-      case a:
-        return 'א';
-      case b:
-        return 'ב';
-      case c:
-        return 'ג';
-      case d:
-        return 'ד';
-      case e:
-        return 'ה';
-      case f:
-        return 'ו';
-    }
-  }
+  String get name => _engToHebLetter(toString().split('.').last);
 }
 
-enum _RoleInProgram {
+enum RoleInProgram {
   rakazMosad,
   melavim,
   hanihim,
@@ -127,9 +97,16 @@ enum _StatusInProgram {
 
 enum _FilterType {
   users,
-  intitutions,
+  institutions,
   reports,
-  reportGroup,
+  reportGroup;
+
+  String get actionLabel => switch (this) {
+        users => 'הוספת קבוצת נמענים',
+        institutions => 'סנן משתמשים לפי',
+        reports => 'הצג דיווחים לפי',
+        reportGroup => 'הוספת קבוצת משתתפים',
+      };
 }
 
 class FiltersScreen extends HookConsumerWidget {
@@ -141,7 +118,7 @@ class FiltersScreen extends HookConsumerWidget {
   const FiltersScreen.institutionUsers({
     super.key,
     required this.initFilters,
-  }) : filterType = _FilterType.intitutions;
+  }) : filterType = _FilterType.institutions;
 
   const FiltersScreen.reports({
     super.key,
@@ -169,603 +146,150 @@ class FiltersScreen extends HookConsumerWidget {
     final citySearchController = useTextEditingController();
     final dateRange = useState<DateTimeRange?>(null);
 
-    final ramim = [
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.ramim.contains(_RamimYear.a.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          ramim: filter.value.ramim.contains(_RamimYear.a.name)
-              ? [
-                  ...filter.value.ramim.where(
-                    (element) => element != _RamimYear.a.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.ramim,
-                  _RamimYear.a.name,
-                ],
-        ),
-        label: Text(_RamimYear.a.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.ramim.contains(_RamimYear.b.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          ramim: filter.value.ramim.contains(_RamimYear.b.name)
-              ? [
-                  ...filter.value.ramim.where(
-                    (element) => element != _RamimYear.b.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.ramim,
-                  _RamimYear.b.name,
-                ],
-        ),
-        label: Text(_RamimYear.b.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.ramim.contains(_RamimYear.c.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          ramim: filter.value.ramim.contains(_RamimYear.c.name)
-              ? [
-                  ...filter.value.ramim.where(
-                    (element) => element != _RamimYear.c.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.ramim,
-                  _RamimYear.c.name,
-                ],
-        ),
-        label: Text(_RamimYear.c.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.ramim.contains(_RamimYear.d.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          ramim: filter.value.ramim.contains(_RamimYear.d.name)
-              ? [
-                  ...filter.value.ramim.where(
-                    (element) => element != _RamimYear.d.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.ramim,
-                  _RamimYear.d.name,
-                ],
-        ),
-        label: Text(_RamimYear.d.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.ramim.contains(_RamimYear.e.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          ramim: filter.value.ramim.contains(_RamimYear.e.name)
-              ? [
-                  ...filter.value.ramim.where(
-                    (element) => element != _RamimYear.e.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.ramim,
-                  _RamimYear.e.name,
-                ],
-        ),
-        label: Text(_RamimYear.e.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.ramim.contains(_RamimYear.f.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          ramim: filter.value.ramim.contains(_RamimYear.f.name)
-              ? [
-                  ...filter.value.ramim.where(
-                    (element) => element != _RamimYear.f.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.ramim,
-                  _RamimYear.f.name,
-                ],
-        ),
-        label: Text(_RamimYear.f.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-    ];
+    final ramim = _RamimYear.values
+        .map(
+          (ramimYear) => ChoiceChip(
+            showCheckmark: false,
+            selectedColor: AppColors.blue06,
+            selected: filter.value.ramim.contains(ramimYear.name),
+            onSelected: (val) => filter.value = filter.value.copyWith(
+              ramim: filter.value.ramim.contains(ramimYear.name)
+                  ? [
+                      ...filter.value.ramim.where(
+                        (element) => element != ramimYear.name,
+                      ),
+                    ]
+                  : [
+                      ...filter.value.ramim,
+                      ramimYear.name,
+                    ],
+            ),
+            label: Text(ramimYear.name),
+            labelStyle: TextStyles.s14w400cBlue2,
+            side: const BorderSide(color: AppColors.blue06),
+          ),
+        )
+        .toList();
 
-    final years = [
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.years.contains(_YearInProgram.a.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          years: filter.value.years.contains(_YearInProgram.a.name)
-              ? [
-                  ...filter.value.years.where(
-                    (element) => element != _YearInProgram.a.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.years,
-                  _YearInProgram.a.name,
-                ],
-        ),
-        label: Text(_YearInProgram.a.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.years.contains(_YearInProgram.b.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          years: filter.value.years.contains(_YearInProgram.b.name)
-              ? [
-                  ...filter.value.years.where(
-                    (element) => element != _YearInProgram.b.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.years,
-                  _YearInProgram.b.name,
-                ],
-        ),
-        label: Text(_YearInProgram.b.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.years.contains(_YearInProgram.c.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          years: filter.value.years.contains(_YearInProgram.c.name)
-              ? [
-                  ...filter.value.years.where(
-                    (element) => element != _YearInProgram.c.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.years,
-                  _YearInProgram.c.name,
-                ],
-        ),
-        label: Text(_YearInProgram.c.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.years.contains(_YearInProgram.d.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          years: filter.value.years.contains(_YearInProgram.d.name)
-              ? [
-                  ...filter.value.years.where(
-                    (element) => element != _YearInProgram.d.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.years,
-                  _YearInProgram.d.name,
-                ],
-        ),
-        label: Text(_YearInProgram.d.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.years.contains(_YearInProgram.e.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          years: filter.value.years.contains(_YearInProgram.e.name)
-              ? [
-                  ...filter.value.years.where(
-                    (element) => element != _YearInProgram.e.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.years,
-                  _YearInProgram.e.name,
-                ],
-        ),
-        label: Text(_YearInProgram.e.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.years.contains(_YearInProgram.f.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          years: filter.value.years.contains(_YearInProgram.f.name)
-              ? [
-                  ...filter.value.years.where(
-                    (element) => element != _YearInProgram.f.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.years,
-                  _YearInProgram.f.name,
-                ],
-        ),
-        label: Text(_YearInProgram.f.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.years.contains(_YearInProgram.g.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          years: filter.value.years.contains(_YearInProgram.g.name)
-              ? [
-                  ...filter.value.years.where(
-                    (element) => element != _YearInProgram.g.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.years,
-                  _YearInProgram.g.name,
-                ],
-        ),
-        label: Text(_YearInProgram.g.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.years.contains(_YearInProgram.h.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          years: filter.value.years.contains(_YearInProgram.h.name)
-              ? [
-                  ...filter.value.years.where(
-                    (element) => element != _YearInProgram.h.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.years,
-                  _YearInProgram.h.name,
-                ],
-        ),
-        label: Text(_YearInProgram.h.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-    ];
+    final years = _YearInProgram.values
+        .map(
+          (year) => ChoiceChip(
+            showCheckmark: false,
+            selectedColor: AppColors.blue06,
+            selected: filter.value.years.contains(year.name),
+            onSelected: (val) => filter.value = filter.value.copyWith(
+              years: filter.value.years.contains(year.name)
+                  ? [
+                      ...filter.value.years.where(
+                        (element) => element != year.name,
+                      ),
+                    ]
+                  : [
+                      ...filter.value.years,
+                      year.name,
+                    ],
+            ),
+            label: Text(year.name),
+            labelStyle: TextStyles.s14w400cBlue2,
+            side: const BorderSide(color: AppColors.blue06),
+          ),
+        )
+        .toList();
 
-    final roles = [
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.roles.contains(_RoleInProgram.rakazMosad.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          roles: filter.value.roles.contains(_RoleInProgram.rakazMosad.name)
-              ? [
-                  ...filter.value.roles.where(
-                    (element) => element != _RoleInProgram.rakazMosad.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.roles,
-                  _RoleInProgram.rakazMosad.name,
-                ],
-        ),
-        label: Text(_RoleInProgram.rakazMosad.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.roles.contains(_RoleInProgram.melavim.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          roles: filter.value.roles.contains(_RoleInProgram.melavim.name)
-              ? [
-                  ...filter.value.roles.where(
-                    (element) => element != _RoleInProgram.melavim.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.roles,
-                  _RoleInProgram.melavim.name,
-                ],
-        ),
-        label: Text(_RoleInProgram.melavim.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.roles.contains(_RoleInProgram.hanihim.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          roles: filter.value.roles.contains(_RoleInProgram.hanihim.name)
-              ? [
-                  ...filter.value.roles.where(
-                    (element) => element != _RoleInProgram.hanihim.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.roles,
-                  _RoleInProgram.hanihim.name,
-                ],
-        ),
-        label: Text(_RoleInProgram.hanihim.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.roles.contains(_RoleInProgram.roshMosad.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          roles: filter.value.roles.contains(_RoleInProgram.roshMosad.name)
-              ? [
-                  ...filter.value.roles.where(
-                    (element) => element != _RoleInProgram.roshMosad.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.roles,
-                  _RoleInProgram.roshMosad.name,
-                ],
-        ),
-        label: Text(_RoleInProgram.roshMosad.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-    ];
+    final roles = RoleInProgram.values
+        .map(
+          (role) => ChoiceChip(
+            showCheckmark: false,
+            selectedColor: AppColors.blue06,
+            selected: filter.value.roles.contains(role.name),
+            onSelected: (val) => filter.value = filter.value.copyWith(
+              roles: filter.value.roles.contains(role.name)
+                  ? [
+                      ...filter.value.roles.where(
+                        (element) => element != role.name,
+                      ),
+                    ]
+                  : [
+                      ...filter.value.roles,
+                      role.name,
+                    ],
+            ),
+            label: Text(role.name),
+            labelStyle: TextStyles.s14w400cBlue2,
+            side: const BorderSide(color: AppColors.blue06),
+          ),
+        )
+        .toList();
 
-    final statuses = [
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.statuses.contains(_StatusInProgram.married.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          statuses:
-              filter.value.statuses.contains(_StatusInProgram.married.name)
+    final statuses = _StatusInProgram.values
+        .map(
+          (status) => ChoiceChip(
+            showCheckmark: false,
+            selectedColor: AppColors.blue06,
+            selected: filter.value.statuses.contains(status.name),
+            onSelected: (val) => filter.value = filter.value.copyWith(
+              statuses: filter.value.statuses.contains(status.name)
                   ? [
                       ...filter.value.statuses.where(
-                        (element) => element != _StatusInProgram.married.name,
+                        (element) => element != status.name,
                       ),
                     ]
                   : [
                       ...filter.value.statuses,
-                      _StatusInProgram.married.name,
+                      status.name,
                     ],
-        ),
-        label: Text(_StatusInProgram.married.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.statuses.contains(_StatusInProgram.single.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          statuses: filter.value.statuses.contains(_StatusInProgram.single.name)
-              ? [
-                  ...filter.value.statuses.where(
-                    (element) => element != _StatusInProgram.single.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.statuses,
-                  _StatusInProgram.single.name,
-                ],
-        ),
-        label: Text(_StatusInProgram.single.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.statuses.contains(_StatusInProgram.inArmy.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          statuses: filter.value.statuses.contains(_StatusInProgram.inArmy.name)
-              ? [
-                  ...filter.value.statuses.where(
-                    (element) => element != _StatusInProgram.inArmy.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.statuses,
-                  _StatusInProgram.inArmy.name,
-                ],
-        ),
-        label: Text(_StatusInProgram.inArmy.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.statuses.contains(_StatusInProgram.sadir.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          statuses: filter.value.statuses.contains(_StatusInProgram.sadir.name)
-              ? [
-                  ...filter.value.statuses.where(
-                    (element) => element != _StatusInProgram.sadir.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.statuses,
-                  _StatusInProgram.sadir.name,
-                ],
-        ),
-        label: const Text('סדיר'),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.statuses.contains(_StatusInProgram.keva.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          statuses: filter.value.statuses.contains(_StatusInProgram.keva.name)
-              ? [
-                  ...filter.value.statuses.where(
-                    (element) => element != _StatusInProgram.keva.name,
-                  ),
-                ]
-              : [
-                  ...filter.value.statuses,
-                  _StatusInProgram.keva.name,
-                ],
-        ),
-        label: Text(_StatusInProgram.keva.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected:
-            filter.value.statuses.contains(_StatusInProgram.released.name),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          statuses:
-              filter.value.statuses.contains(_StatusInProgram.released.name)
-                  ? [
-                      ...filter.value.statuses.where(
-                        (element) => element != _StatusInProgram.released.name,
-                      ),
-                    ]
-                  : [
-                      ...filter.value.statuses,
-                      _StatusInProgram.released.name,
-                    ],
-        ),
-        label: Text(_StatusInProgram.released.name),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-    ];
+            ),
+            label: Text(status.name),
+            labelStyle: TextStyles.s14w400cBlue2,
+            side: const BorderSide(color: AppColors.blue06),
+          ),
+        )
+        .toList();
+
+    String reportLabel(Event event) => switch (event) {
+          Event.failedAttempt => 'ניסיון שכשל',
+          Event.offlineMeeting => 'מפגש',
+          Event.onlineMeeting => 'זום',
+          Event.call => 'שיחה',
+          _ => throw 'Unknown event type',
+        };
 
     final reportTypes = [
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.reportEventTypes.contains(Event.failedAttempt),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          reportEventTypes:
-              filter.value.reportEventTypes.contains(Event.failedAttempt)
+      Event.failedAttempt,
+      Event.offlineMeeting,
+      Event.onlineMeeting,
+      Event.call,
+    ]
+        .map(
+          (event) => ChoiceChip(
+            showCheckmark: false,
+            selectedColor: AppColors.blue06,
+            selected: filter.value.reportEventTypes.contains(event),
+            onSelected: (val) => filter.value = filter.value.copyWith(
+              reportEventTypes: filter.value.reportEventTypes.contains(event)
                   ? [
                       ...filter.value.reportEventTypes.where(
-                        (element) => element != Event.failedAttempt,
+                        (element) => element != event,
                       ),
                     ]
                   : [
                       ...filter.value.reportEventTypes,
-                      Event.failedAttempt,
+                      event,
                     ],
-        ),
-        label: const Text('קשר שכשל'),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.reportEventTypes.contains(Event.offlineMeeting),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          reportEventTypes:
-              filter.value.reportEventTypes.contains(Event.offlineMeeting)
-                  ? [
-                      ...filter.value.reportEventTypes.where(
-                        (element) => element != Event.offlineMeeting,
-                      ),
-                    ]
-                  : [
-                      ...filter.value.reportEventTypes,
-                      Event.offlineMeeting,
-                    ],
-        ),
-        label: const Text('מפגש'),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.reportEventTypes.contains(Event.onlineMeeting),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          reportEventTypes:
-              filter.value.reportEventTypes.contains(Event.onlineMeeting)
-                  ? [
-                      ...filter.value.reportEventTypes.where(
-                        (element) => element != Event.onlineMeeting,
-                      ),
-                    ]
-                  : [
-                      ...filter.value.reportEventTypes,
-                      Event.onlineMeeting,
-                    ],
-        ),
-        label: const Text('זום'),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-      ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        selected: filter.value.reportEventTypes.contains(Event.call),
-        onSelected: (val) => filter.value = filter.value.copyWith(
-          reportEventTypes: filter.value.reportEventTypes.contains(Event.call)
-              ? [
-                  ...filter.value.reportEventTypes.where(
-                    (element) => element != Event.call,
-                  ),
-                ]
-              : [
-                  ...filter.value.reportEventTypes,
-                  Event.call,
-                ],
-        ),
-        label: const Text('שיחה'),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(color: AppColors.blue06),
-      ),
-    ];
+            ),
+            label: Text(reportLabel(event)),
+            labelStyle: TextStyles.s14w400cBlue2,
+            side: const BorderSide(color: AppColors.blue06),
+          ),
+        )
+        .toList();
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: false,
-          title: Text(
-            filterType == _FilterType.users
-                ? 'הוספת קבוצת נמענים'
-                : filterType == _FilterType.intitutions
-                    ? 'סנן משתמשים לפי'
-                    : filterType == _FilterType.reports
-                        ? 'הצג דיווחים לפי'
-                        : filterType == _FilterType.reportGroup
-                            ? 'הוספת קבוצת משתתפים'
-                            : 'error',
-          ),
+          title: Text(filterType.actionLabel),
           actions: [
             IconButton(
               onPressed: () => Navigator.of(context).pop(),

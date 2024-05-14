@@ -52,6 +52,22 @@ class PersonasScreen extends HookConsumerWidget {
     final searchController = useTextEditingController();
     useListenable(searchController);
 
+    useValueChanged<FilterDto, Future<void>>(
+      filters.value,
+      (_, __) async {
+        final roleList = RoleInProgram.values.map((e) => e.name).toList();
+        // The search api won't return anything if the roles are empty
+        final filter = filters.value.roles.isNotEmpty
+            ? filters.value
+            : filters.value.copyWith(roles: roleList);
+        final request = await ref
+            .read(personasControllerProvider.notifier)
+            .filterUsers(filter);
+        filtersResult.value = request;
+        return;
+      },
+    );
+
     if (screenController.isLoading || auth.isLoading) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
@@ -195,19 +211,7 @@ class PersonasScreen extends HookConsumerWidget {
                                                   ),
                                                 ) ??
                                                 const FilterDto();
-
-                                            final request = await ref
-                                                .read(
-                                                  personasControllerProvider
-                                                      .notifier,
-                                                )
-                                                .filterUsers(result);
-
-                                            filtersResult.value = request;
-
-                                            if (request != null) {
-                                              filters.value = result;
-                                            }
+                                            filters.value = result;
                                           },
                                           icon: const Icon(
                                             FluentIcons.filter_add_20_regular,
