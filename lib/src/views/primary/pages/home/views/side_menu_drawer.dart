@@ -75,55 +75,26 @@ class SideMenuDrawer extends ConsumerWidget {
             ListView(
               shrinkWrap: true,
               children: [
-                if (auth.valueOrNull?.role == UserRole.melave) ...[
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.data_pie_24_regular),
-                    title: const Text('מדדי תוכנית'),
-                    onTap: () => const ChartsRouteData().go(context),
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.map_24_regular),
-                    title: const Text('מפת מיקומים'),
-                    onTap: () {
-                      const PersonasRouteData().go(context);
-                    },
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.mail_16_regular),
-                    title: const Text('פניות שירות'),
-                    onTap: () => const SupportRouteData().go(context),
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: Assets.illustrations.alarmBell.svg(),
-                    title: const Text(' התראות'),
-                    onTap: () => const NotificationRouteData().go(context),
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.settings_16_regular),
-                    title: const Text(' הגדרות התראות'),
-                    onTap: () =>
-                        const NotificationSettingRouteData().push(context),
-                  ),
-                ] else if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.data_pie_24_regular),
-                    title: const Text('מדדי תוכנית'),
-                    onTap: () => const ChartsRouteData().go(context),
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.map_24_regular),
-                    title: const Text('מפת מיקומים'),
-                    onTap: () {
-                      const PersonasRouteData().go(context);
-                    },
-                  ),
+                ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.data_pie_24_regular),
+                  title: const Text('מדדי תוכנית'),
+                  onTap: () => const ChartsRouteData().go(context),
+                ),
+                ListTile(
+                  dense: true,
+                  leading: const Icon(FluentIcons.map_24_regular),
+                  title: const Text('מפת מיקומים'),
+                  onTap: () {
+                    if ([UserRole.rakazEshkol, UserRole.rakazMosad]
+                        .contains(auth.valueOrNull?.role)) {
+                      ref.read(usersControllerProvider.notifier).mapView(true);
+                    }
+                    const PersonasRouteData().go(context);
+                  },
+                ),
+                if ([UserRole.ahraiTohnit, UserRole.rakazEshkol]
+                    .contains(auth.valueOrNull?.role)) ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.person_24_regular),
@@ -136,10 +107,12 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('מוסדות לימוד'),
                     onTap: () => const InstitutionsRouteData().push(context),
                   ),
+                ],
+                if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.gift_16_regular),
-                    title: const Text(' ניהול קודי מתנה'),
+                    title: const Text('ניהול קודי מתנה'),
                     onTap: () => const GiftRouteData(id: "1").go(context),
                   ),
                   ListTile(
@@ -148,34 +121,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     title: const Text('הגדרות מדדים'),
                     onTap: () => const ChartsSettingsRouteData().push(context),
                   ),
-                ] else if (auth.valueOrNull?.role == UserRole.rakazEshkol) ...[
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.data_pie_24_regular),
-                    title: const Text('מדדי תוכנית'),
-                    onTap: () => const ChartsRouteData().go(context),
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.map_24_regular),
-                    title: const Text('מפת מיקומים'),
-                    onTap: () {
-                      ref.read(usersControllerProvider.notifier).mapView(true);
-                      const PersonasRouteData().go(context);
-                    },
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.person_24_regular),
-                    title: const Text('ניהול משתמשים'),
-                    onTap: () => const PersonasRouteData().go(context),
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.book_open_24_regular),
-                    title: const Text('מוסדות לימוד'),
-                    onTap: () => const InstitutionsRouteData().push(context),
-                  ),
+                ] else ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.mail_12_regular),
@@ -184,43 +130,8 @@ class SideMenuDrawer extends ConsumerWidget {
                   ),
                   ListTile(
                     dense: true,
-                    leading: const Icon(Icons.notifications_none),
-                    title: const Text(' התראות'),
-                    onTap: () => const NotificationRouteData().go(context),
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.settings_16_regular),
-                    title: const Text('הגדרות התראות'),
-                    onTap: () =>
-                        const NotificationSettingRouteData().push(context),
-                  ),
-                ] else if (auth.valueOrNull?.role == UserRole.rakazMosad) ...[
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.data_pie_24_regular),
-                    title: const Text('מדדי תוכנית'),
-                    onTap: () => const ChartsRouteData().go(context),
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.map_24_regular),
-                    title: const Text('מפת מיקומים'),
-                    onTap: () {
-                      ref.read(usersControllerProvider.notifier).mapView(true);
-                      const PersonasRouteData().go(context);
-                    },
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(FluentIcons.mail_12_regular),
-                    title: const Text('פניות שירות'),
-                    onTap: () => const SupportRouteData().push(context),
-                  ),
-                  ListTile(
-                    dense: true,
-                    leading: const Icon(Icons.notifications_none),
-                    title: const Text(' התראות'),
+                    leading: Assets.illustrations.alarmBell.svg(),
+                    title: const Text('התראות'),
                     onTap: () => const NotificationRouteData().go(context),
                   ),
                   ListTile(

@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -16,8 +17,10 @@ class UpcomingEventsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final upcomingEvents =
-        ref.watch(eventsControllerProvider).valueOrNull?.take(99).toList() ??
-            [];
+        (ref.watch(eventsControllerProvider).valueOrNull?.take(99).toList() ??
+                [])
+            .where((event) => event.isDateRelevant)
+            .toList();
 
     if (upcomingEvents.isEmpty) return const SizedBox.shrink();
 
@@ -74,14 +77,15 @@ class _EventCard extends ConsumerWidget {
           ),
         ),
         child: InkWell(
-          onTap: () {
-            if (event.id.isEmpty) {
-              Toaster.error('missing gift id');
-              return;
-            }
-
-            GiftRouteData(id: event.id).go(context);
-          },
+          onTap: event.isBirthday
+              ? () {
+                  if (event.id.isEmpty) {
+                    Toaster.error('missing gift id');
+                    return;
+                  }
+                  GiftRouteData(id: event.id).go(context);
+                }
+              : null,
           borderRadius: const BorderRadius.all(
             Radius.circular(16),
           ),
@@ -100,6 +104,11 @@ class _EventCard extends ConsumerWidget {
                         style: TextStyles.s16w500cGrey2,
                       ),
                       Text(
+                        event.datetime.asDateTime.asTimeAgoDayCutoff,
+                        style: TextStyles.s14w300cGray2,
+                      ),
+                      const Spacer(),
+                      Text(
                         event.description,
                         style: TextStyles.s14w300cGray2,
                         maxLines: 2,
@@ -108,13 +117,14 @@ class _EventCard extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                const Align(
-                  alignment: Alignment.topCenter,
-                  child: Icon(
-                    FluentIcons.gift_24_regular,
-                    color: AppColors.blue02,
+                if (event.isBirthday)
+                  const Align(
+                    alignment: Alignment.topCenter,
+                    child: Icon(
+                      FluentIcons.gift_24_regular,
+                      color: AppColors.blue02,
+                    ),
                   ),
-                ),
               ],
             ),
           ),

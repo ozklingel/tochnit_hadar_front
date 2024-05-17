@@ -28,6 +28,10 @@ class $AssetsIllustrationsGen {
   SvgGenImage get alarmBell =>
       const SvgGenImage('assets/illustrations/alarm_bell.svg');
 
+  /// File path: assets/illustrations/alarm_bell_alert.svg
+  SvgGenImage get alarmBellAlert =>
+      const SvgGenImage('assets/illustrations/alarm_bell_alert.svg');
+
   /// File path: assets/illustrations/clap.svg
   SvgGenImage get clap => const SvgGenImage('assets/illustrations/clap.svg');
 
@@ -106,6 +110,7 @@ class $AssetsIllustrationsGen {
   /// List of all assets
   List<SvgGenImage> get values => [
         alarmBell,
+        alarmBellAlert,
         clap,
         envelop,
         heartLoveFullBody,

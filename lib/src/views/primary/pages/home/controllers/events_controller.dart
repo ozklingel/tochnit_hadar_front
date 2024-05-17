@@ -14,8 +14,6 @@ class EventsController extends _$EventsController {
   Future<List<EventDto>> build() async {
     final events = await ref.watch(getClosestEventsProvider.future);
 
-    // Logger().d(events.length);
-
     return events;
   }
 }

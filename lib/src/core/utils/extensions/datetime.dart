@@ -22,7 +22,7 @@ extension ReportDateTimeX on DateTime? {
 
     return DateTime.now().difference(this!) < const Duration(days: 1)
         ? asTimeAgo
-        : asDayMonth;
+        : asDayMonthYearShortDot;
   }
 
   String get asTimeAgo {
