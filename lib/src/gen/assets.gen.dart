@@ -39,25 +39,9 @@ class $AssetsIllustrationsGen {
   SvgGenImage get envelop =>
       const SvgGenImage('assets/illustrations/envelop.svg');
 
-  /// File path: assets/illustrations/heart-love-full-body.svg
-  SvgGenImage get heartLoveFullBody =>
-      const SvgGenImage('assets/illustrations/heart-love-full-body.svg');
-
   /// File path: assets/illustrations/hold-sign.svg
   SvgGenImage get holdSign =>
       const SvgGenImage('assets/illustrations/hold-sign.svg');
-
-  /// File path: assets/illustrations/mobile-1-pop-out.svg
-  SvgGenImage get mobile1PopOut =>
-      const SvgGenImage('assets/illustrations/mobile-1-pop-out.svg');
-
-  /// File path: assets/illustrations/mobile-2-full-body.svg
-  SvgGenImage get mobile2FullBody =>
-      const SvgGenImage('assets/illustrations/mobile-2-full-body.svg');
-
-  /// File path: assets/illustrations/ok-sign-full-body.svg
-  SvgGenImage get okSignFullBody =>
-      const SvgGenImage('assets/illustrations/ok-sign-full-body.svg');
 
   /// File path: assets/illustrations/ok-sign.svg
   SvgGenImage get okSign =>
@@ -66,14 +50,6 @@ class $AssetsIllustrationsGen {
   /// File path: assets/illustrations/point-down.svg
   SvgGenImage get pointDown =>
       const SvgGenImage('assets/illustrations/point-down.svg');
-
-  /// File path: assets/illustrations/point-left.svg
-  SvgGenImage get pointLeft =>
-      const SvgGenImage('assets/illustrations/point-left.svg');
-
-  /// File path: assets/illustrations/star-full-body.svg
-  SvgGenImage get starFullBody =>
-      const SvgGenImage('assets/illustrations/star-full-body.svg');
 
   /// File path: assets/illustrations/thankful-heart-sign-eyes-closed.svg
   SvgGenImage get thankfulHeartSignEyesClosed => const SvgGenImage(
@@ -91,10 +67,6 @@ class $AssetsIllustrationsGen {
   SvgGenImage get thinking =>
       const SvgGenImage('assets/illustrations/thinking.svg');
 
-  /// File path: assets/illustrations/thumb_down_blue.svg
-  SvgGenImage get thumbDownBlue =>
-      const SvgGenImage('assets/illustrations/thumb_down_blue.svg');
-
   /// File path: assets/illustrations/thumbs-up-full-body.svg
   SvgGenImage get thumbsUpFullBody =>
       const SvgGenImage('assets/illustrations/thumbs-up-full-body.svg');
@@ -103,33 +75,21 @@ class $AssetsIllustrationsGen {
   SvgGenImage get twoThumbsUp =>
       const SvgGenImage('assets/illustrations/two-thumbs-up.svg');
 
-  /// File path: assets/illustrations/v-sign-full-body.svg
-  SvgGenImage get vSignFullBody =>
-      const SvgGenImage('assets/illustrations/v-sign-full-body.svg');
-
   /// List of all assets
   List<SvgGenImage> get values => [
         alarmBell,
         alarmBellAlert,
         clap,
         envelop,
-        heartLoveFullBody,
         holdSign,
-        mobile1PopOut,
-        mobile2FullBody,
-        okSignFullBody,
         okSign,
         pointDown,
-        pointLeft,
-        starFullBody,
         thankfulHeartSignEyesClosed,
         thankfulHeartSignEyesOpen,
         thankfulHeartSignFullBody,
         thinking,
-        thumbDownBlue,
         thumbsUpFullBody,
-        twoThumbsUp,
-        vSignFullBody
+        twoThumbsUp
       ];
 }
 

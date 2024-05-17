@@ -15,6 +15,7 @@ class UnreadCounterBadgeWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    if (isLoading) return const CircularProgressIndicator.adaptive();
     return Badge(
       isLabelVisible: count > 0,
       label: Text(count.toString()),

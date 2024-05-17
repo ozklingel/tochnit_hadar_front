@@ -22,12 +22,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    // final apprentices =
-    //     ref.watch(apprenticesControllerProvider).valueOrNull ?? [];
-
     final auth = ref.watch(authServiceProvider);
-
-    // Logger().d(user);
 
     if (auth.isLoading) {
       return const Center(child: CircularProgressIndicator.adaptive());
@@ -49,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
                   child: IconButton(
                     onPressed: () =>
                         {const NotificationRouteData().go(context)},
-                    icon: const Icon(Icons.notifications_none),
+                    icon: Assets.illustrations.alarmBell.svg(),
                   ),
                 ),
                 error: (error, stack) => IconButton(
