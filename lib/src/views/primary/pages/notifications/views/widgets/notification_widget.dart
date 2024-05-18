@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
-import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 //import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../../../models/auth/auth.dto.dart';
 import '../../../../../../models/notification/notification.dto.dart';
 import '../../../../../../services/auth/auth_service.dart';
 
@@ -35,14 +33,10 @@ class NotificationWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final fromApprentice =
-        ref.watch(personasControllerProvider).valueOrNull?.firstWhere(
-                  (element) => element.phone == message.subject,
-                  orElse: () => const PersonaDto(),
-                ) ??
-            const PersonaDto();
-
     final auth = ref.watch(authServiceProvider);
+
+    List<String> subject_name=message.description.split("עם ");
+    print(subject_name);
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
       child: Material(
@@ -62,72 +56,52 @@ class NotificationWidget extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (message.numOfLinesDisplay == 3)
+                      if (message.numOfLinesDisplay == 3)...[
                         const Text(
                           "אירוע",
                           style: TextStyles.s18w600cShade09,
                         ),
-                      if (message.numOfLinesDisplay == 3)
                         const SizedBox(height: 12),
-                      if (message.numOfLinesDisplay == 3)
                         Text(
                           " בתאריך ${message.dateTime.substring(0, 10)}",
                           style: TextStyles.s16w400cGrey2,
                         ),
-                      if (message.numOfLinesDisplay == 3)
+                  
                         const SizedBox(height: 12),
-                      if (message.numOfLinesDisplay == 3)
+                     
                         Text(
-                          "${message.event} ל${fromApprentice.fullName}",
+                          "${message.event} ל${subject_name[1]}",
                           style: TextStyles.s16w400cGrey2,
-                        ),
-                      if (auth.valueOrNull?.role == UserRole.melave) ...[
-                        if (message.numOfLinesDisplay == 2)
+                        )],
+
+                        if (message.numOfLinesDisplay == 2 &&!message.event.contains("עידכון"))...[
                           Text(
                             "הגיע הזמן ל${message.event}",
                             style: TextStyles.s18w600cShade09,
                           ),
-                        if (message.numOfLinesDisplay == 2)
                           const SizedBox(height: 12),
-                        if (message.numOfLinesDisplay == 2 &&
-                            message.event == "פגישה פיזית")
+                        if (message.event == "פגישה פיזית")
                           Text(
-                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון של ${fromApprentice.fullName}",
+                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה של ${subject_name[1]}",
                             style: TextStyles.s16w400cGrey2,
                           ),
-                        if (message.numOfLinesDisplay == 2 &&
-                            message.event == "מפגש קבוצתי")
+                        if (message.event == "מפגש קבוצתי")
                           Text(
-                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון  ${fromApprentice.fullName}",
+                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון  ",
                             style: TextStyles.s16w400cGrey2,
                           ),
-                        if (message.numOfLinesDisplay == 2 &&
-                            message.event == "שיחה טלפונית")
+                        if (message.event == "שיחה טלפונית")
                           Text(
-                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה ל${fromApprentice.fullName}",
+                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה ל${subject_name[1]}",
                             style: TextStyles.s16w400cGrey2,
                           ),
                       ],
-                      if (auth.valueOrNull?.role != UserRole.melave) ...[
-                        if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "הכנסת מחזור חדש" ||
-                                message.event == "עידכון חודשי-ציון מוסדות" ||
-                                message.event == "ישיבת מוסד אשכול" ||
-                                message.event == "דוח דו שבועי-חניכים נשכחים" ||
-                                message.event == "ישיבת רכזי תוכנית" ||
-                                message.event == "דוח  חודשי- ציון מלווים"))
+                        if ( message.numOfLinesDisplay == 2 &&message.event.contains("עידכון"))...[
                           Text(
                             " ${message.event}",
                             style: TextStyles.s18w600cShade09,
                           ),
-                        if (message.numOfLinesDisplay == 2 &&
-                            (message.event == "מפגש מלווים קבוצתי" ||
-                                message.event == "ישיבת מצב”ר" ||
-                                message.event == "עשיה לטובת בוגרים"))
-                          Text(
-                            "הגיע הזמן ל${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
+                     
                       ],
                     ],
                   ),
