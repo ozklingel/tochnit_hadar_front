@@ -22,8 +22,8 @@ class DioService extends _$DioService {
     //final userPhone = ref.read(storageServiceProvider.notifier).getUserPhone();
 
     //const userPhone = "506795170";
-    //const userPhone = "544817610";
-    const userPhone = "543124512";
+    const userPhone = "544817610";
+    //const userPhone = "543124512";
 
     Logger().d('initializing dio with base url::${Consts.baseUrl}');
 

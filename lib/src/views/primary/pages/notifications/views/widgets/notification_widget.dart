@@ -36,7 +36,7 @@ class NotificationWidget extends ConsumerWidget {
     final auth = ref.watch(authServiceProvider);
 
     List<String> subject_name=message.description.split("עם ");
-    print(subject_name.length);
+    //print(subject_name.length);
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
       child: Material(
@@ -56,25 +56,7 @@ class NotificationWidget extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (message.numOfLinesDisplay == 3)...[
-                        const Text(
-                          "אירוע",
-                          style: TextStyles.s18w600cShade09,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          " בתאריך ${message.dateTime.substring(0, 10)}",
-                          style: TextStyles.s16w400cGrey2,
-                        ),
-                  
-                        const SizedBox(height: 12),
-                     
-                        Text(
-                          "${message.event} ל${auth.valueOrNull?.fullName}",
-                          style: TextStyles.s16w400cGrey2,
-                        )],
-
-                        if (message.numOfLinesDisplay == 2 &&!(message.event.contains("דוח")||message.event.contains("עידכון")))...[
+ if (!(message.event.contains("דוח")||message.event.contains("עידכון")||message.event.contains("הולדת")||message.event.contains("אירוע")))...[
                           Text(
                             "הגיע הזמן ל${message.event}",
                             style: TextStyles.s18w600cShade09,
@@ -97,14 +79,32 @@ class NotificationWidget extends ConsumerWidget {
                             style: TextStyles.s16w400cGrey2,
                           ),
                       ],
-                        if ( message.numOfLinesDisplay == 2 && (message.event.contains("דוח")||message.event.contains("עידכון")))...[
+                        if ((message.event.contains("דוח")||message.event.contains("עידכון")))...[
                           Text(
                             " ${message.event}",
                             style: TextStyles.s18w600cShade09,
                           ),
                      
                       ],
-                    ],
+                                          if (message.event.contains("הולדת")||message.event.contains("אירוע"))...[
+                        const Text(
+                          "אירוע",
+                          style: TextStyles.s18w600cShade09,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          " בתאריך ${message.dateTime.substring(0, 10)}",
+                          style: TextStyles.s16w400cGrey2,
+                        ),
+                  
+                        const SizedBox(height: 12),
+                     
+                        Text(
+                          "${message.event} ל${auth.valueOrNull!.fullName}",
+                          style: TextStyles.s16w400cGrey2,
+                        )],
+                      
+                       ],
                   ),
                 ),
                 Column(
