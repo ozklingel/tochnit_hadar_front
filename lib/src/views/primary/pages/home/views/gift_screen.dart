@@ -9,6 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -47,7 +48,7 @@ class GiftScreen extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
     if (auth.valueOrNull?.role == UserRole.melave) {
-      var res = useState("");
+      final couponCode = useState('');
       final apprentice =
           ref.watch(personasControllerProvider).valueOrNull?.firstWhere(
                     (element) => element.events.any((e) => e.id == eventId),
@@ -60,8 +61,6 @@ class GiftScreen extends HookConsumerWidget {
                     orElse: () => const CompoundDto(),
                   ) ??
               const CompoundDto();
-
-      final isShowCouponCode = useState(false);
 
       return Scaffold(
         appBar: AppBar(
@@ -159,7 +158,7 @@ class GiftScreen extends HookConsumerWidget {
                                   data: '',
                                   dataWidth: 0,
                                 ),
-                                if (isShowCouponCode.value) ...[
+                                if (couponCode.value.isNotEmpty) ...[
                                   Expanded(
                                     child: TextButton(
                                       onPressed: () async {
@@ -174,7 +173,7 @@ class GiftScreen extends HookConsumerWidget {
                                       },
                                       child: Row(
                                         children: [
-                                          Text(res.value),
+                                          Text(couponCode.value),
                                           const Spacer(),
                                           const Icon(
                                             FluentIcons.copy_24_regular,
@@ -193,14 +192,14 @@ class GiftScreen extends HookConsumerWidget {
                                       ),
                                     ),
                                     onPressed: () async {
-                                      res.value = await HttpService.getGift(
+                                      couponCode.value =
+                                          await HttpService.getGift(
                                         auth.valueOrNull!.phone,
                                         compound,
                                         apprentice.teudatZehut,
                                       );
-                                      Logger().d("gift code : $res");
-
-                                      isShowCouponCode.value = true;
+                                      Logger()
+                                          .d("gift code : ${couponCode.value}");
                                     },
                                   ),
                               ],
@@ -231,16 +230,12 @@ class GiftScreen extends HookConsumerWidget {
                         onPressed: () async {
                           String result = await HttpService.deleteGift(
                             apprentice.id,
-                            res.value,
+                            couponCode.value,
                           );
+                          if (!context.mounted) return;
                           if (result == "success") {
-                            // print("in");
-                            // ignore: use_build_context_synchronously
                             showFancyCustomDialog(context);
                           } else {
-                            // print("in");
-
-                            // ignore: use_build_context_synchronously
                             showAlertDialog(context);
                           }
                         },
@@ -260,14 +255,17 @@ class GiftScreen extends HookConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: LargeFilledRoundedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) =>
-                            const SuccessDialog(msg: 'המתנה סומנה כנשלחה'),
-                      );
-                    },
                     label: 'מעבר לאתר כוורת',
+                    onPressed: () async {
+                      await launchGiftStore();
+                      if (context.mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (context) =>
+                              const SuccessDialog(msg: 'המתנה סומנה כנשלחה'),
+                        );
+                      }
+                    },
                   ),
                 ),
               ),
@@ -359,14 +357,14 @@ class GiftScreen extends HookConsumerWidget {
                         onPressed: () async {
                           File f = File(pages.first.files.value.first.path!);
 
-                          var res = await HttpService.addGiftCodeExcel(f);
-                          Logger().d("gift code : $res");
+                          var result = await HttpService.addGiftCodeExcel(f);
+                          Logger().d("Result: $result");
 
                           if (!context.mounted) {
                             return;
                           }
 
-                          if (res == "success") {
+                          if (result == "success") {
                             showFancyCustomDialogAddGift(context);
                           } else {
                             showAlertDialog(context);

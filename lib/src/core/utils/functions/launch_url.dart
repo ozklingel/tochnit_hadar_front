@@ -7,55 +7,43 @@ import 'dart:io';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+Future<void> _launchUri(Uri uri, String platform) async {
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  } else {
+    Toaster.error('Some $platform error occurred. Please try again!');
+  }
+}
+
 void launchWaze({
   required String lat,
   required String lng,
 }) async {
-  final url = 'https://www.waze.com/ul?ll=$lat%2C-$lng&navigate=yes&zoom=17';
-
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    Toaster.error('Some waze occurred. Please try again!');
-  }
+  final uri =
+      Uri.parse('https://www.waze.com/ul?ll=$lat%2C-$lng&navigate=yes&zoom=17');
+  await _launchUri(uri, 'Waze');
 }
 
 void launchGoogleMaps({
   required String lat,
   required String lng,
 }) async {
-  final url = 'https://www.google.com/maps?q=$lat,$lng';
-
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    Toaster.error('Some google maps occurred. Please try again!');
-  }
+  final uri = Uri.parse('https://www.google.com/maps?q=$lat,$lng');
+  await _launchUri(uri, 'Google Maps');
 }
 
 void launchWhatsapp({
   required String phone,
   String text = '',
 }) async {
-  final whatsapp = '972$phone'; //+92xx enter like this
+  final whatsapp = '972$phone'; //+972xx enter like this
   final whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=$text";
   final whatsappURLIos = "https://wa.me/$whatsapp?text=${Uri.tryParse(text)}";
 
-  if (Platform.isIOS) {
-    // for iOS phone only
-    if (await canLaunchUrl(Uri.parse(whatsappURLIos))) {
-      await launchUrl(Uri.parse(whatsappURLIos));
-    } else {
-      Toaster.error('Some whatsapp error occurred. Please try again!');
-    }
-  } else {
-    // android , web
-    if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
-      await launchUrl(Uri.parse(whatsappURlAndroid));
-    } else {
-      Toaster.error('Some whatsapp error occurred. Please try again!');
-    }
-  }
+  _launchUri(
+    Uri.parse(Platform.isIOS ? whatsappURLIos : whatsappURlAndroid),
+    'Whatsapp',
+  );
 }
 
 void launchSms({
@@ -65,36 +53,19 @@ void launchSms({
   final uri = Uri.parse(
     'sms:${phone.map((e) => '+972$e').join(',')}?body=${Uri.encodeComponent(bodyText)}',
   );
-
-  try {
-    if (!await canLaunchUrl(uri)) {
-      throw Exception('cannot launch sms uri');
-    }
-
-    if (Platform.isAndroid) {
-      await launchUrl(uri);
-    } else if (Platform.isIOS) {
-      await launchUrl(uri);
-    }
-  } catch (e) {
-    Toaster.error(e);
-  }
+  _launchUri(uri, 'SMS');
 }
 
 void launchEmail({
   required String email,
   body = '',
 }) async {
-  final url = Uri(
+  final uri = Uri(
     scheme: 'mailto',
     path: email,
     query: 'subject=Hello&body=$body',
   );
-  if (await canLaunchUrl(url)) {
-    launchUrl(url);
-  } else {
-    Toaster.error('Some email error occurred. Please try again!');
-  }
+  _launchUri(uri, 'email');
 }
 
 void launchCall({
@@ -107,3 +78,6 @@ void launchCall({
     Toaster.error('Some phone error occurred. Please try again!');
   }
 }
+
+Future<void> launchGiftStore() async =>
+    _launchUri(Uri.parse('https://www.caveret.org/'), 'Caveret');
