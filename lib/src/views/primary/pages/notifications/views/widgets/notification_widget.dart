@@ -36,7 +36,7 @@ class NotificationWidget extends ConsumerWidget {
     final auth = ref.watch(authServiceProvider);
 
     List<String> subject_name=message.description.split("עם ");
-    print(subject_name);
+    print(subject_name.length);
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
       child: Material(
@@ -70,33 +70,34 @@ class NotificationWidget extends ConsumerWidget {
                         const SizedBox(height: 12),
                      
                         Text(
-                          "${message.event} ל${subject_name[1]}",
+                          "${message.event} ל${auth.valueOrNull?.fullName}",
                           style: TextStyles.s16w400cGrey2,
                         )],
 
-                        if (message.numOfLinesDisplay == 2 &&!message.event.contains("עידכון"))...[
+                        if (message.numOfLinesDisplay == 2 &&!(message.event.contains("דוח")||message.event.contains("עידכון")))...[
                           Text(
                             "הגיע הזמן ל${message.event}",
                             style: TextStyles.s18w600cShade09,
                           ),
                           const SizedBox(height: 12),
-                        if (message.event == "פגישה פיזית")
-                          Text(
-                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה של ${subject_name[1]}",
-                            style: TextStyles.s16w400cGrey2,
-                          ),
-                        if (message.event == "מפגש קבוצתי")
+                
+                        if (message.event == "מפגש קבוצתי" ||message.event == "ביקור בבסיס"||message.event == "ישיבה מוסדית"||message.event == "ישיבת מצב”ר"||message.event == "עשיה לטובת בוגרים")
                           Text(
                             " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון  ",
                             style: TextStyles.s16w400cGrey2,
                           ),
-                        if (message.event == "שיחה טלפונית")
+                        if (message.event == "שיחה טלפונית"||message.event == "פגישה פיזית")
                           Text(
                             " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה ל${subject_name[1]}",
                             style: TextStyles.s16w400cGrey2,
                           ),
+                       if (message.event == "1פגישה פיזית")
+                          Text(
+                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון של ${subject_name[1]}",
+                            style: TextStyles.s16w400cGrey2,
+                          ),
                       ],
-                        if ( message.numOfLinesDisplay == 2 &&message.event.contains("עידכון"))...[
+                        if ( message.numOfLinesDisplay == 2 && (message.event.contains("דוח")||message.event.contains("עידכון")))...[
                           Text(
                             " ${message.event}",
                             style: TextStyles.s18w600cShade09,
