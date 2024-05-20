@@ -4,12 +4,10 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
-//import 'package:hadar_program/src/models/message/message.dto.dart';
+import 'package:hadar_program/src/models/notification/notification.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../../../../../models/notification/notification.dto.dart';
-import '../../../../../../services/auth/auth_service.dart';
 
 class NotificationWidget extends ConsumerWidget {
   const NotificationWidget.collapsed({
@@ -35,8 +33,7 @@ class NotificationWidget extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
 
-    List<String> subject_name=message.description.split("עם ");
-    //print(subject_name.length);
+    List<String> subject_name = message.description.split("עם ");
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
       child: Material(
@@ -56,37 +53,45 @@ class NotificationWidget extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
- if (!(message.event.contains("דוח")||message.event.contains("עידכון")||message.event.contains("הולדת")||message.event.contains("אירוע")))...[
-                          Text(
-                            "הגיע הזמן ל${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
-                          const SizedBox(height: 12),
-                
-                        if (message.event == "מפגש קבוצתי" ||message.event == "ביקור בבסיס"||message.event == "ישיבה מוסדית"||message.event == "ישיבת מצב”ר"||message.event == "עשיה לטובת בוגרים")
+                      if (!(message.event.contains("דוח") ||
+                          message.event.contains("עידכון") ||
+                          message.event.contains("הולדת") ||
+                          message.event.contains("אירוע"))) ...[
+                        Text(
+                          "הגיע הזמן ל${message.event}",
+                          style: TextStyles.s18w600cShade09,
+                        ),
+                        const SizedBox(height: 12),
+                        if (message.event == "מפגש קבוצתי" ||
+                            message.event == "ביקור בבסיס" ||
+                            message.event == "ישיבה מוסדית" ||
+                            message.event == "ישיבת מצב”ר" ||
+                            message.event == "עשיה לטובת בוגרים")
                           Text(
                             " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון  ",
                             style: TextStyles.s16w400cGrey2,
                           ),
-                        if (message.event == "שיחה טלפונית"||message.event == "פגישה פיזית")
+                        if (message.event == "שיחה טלפונית" ||
+                            message.event == "פגישה פיזית")
                           Text(
                             " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה ל${subject_name[1]}",
                             style: TextStyles.s16w400cGrey2,
                           ),
-                       if (message.event == "1פגישה פיזית")
+                        if (message.event == "1פגישה פיזית")
                           Text(
                             " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון של ${subject_name[1]}",
                             style: TextStyles.s16w400cGrey2,
                           ),
                       ],
-                        if ((message.event.contains("דוח")||message.event.contains("עידכון")))...[
-                          Text(
-                            " ${message.event}",
-                            style: TextStyles.s18w600cShade09,
-                          ),
-                     
+                      if ((message.event.contains("דוח") ||
+                          message.event.contains("עידכון"))) ...[
+                        Text(
+                          " ${message.event}",
+                          style: TextStyles.s18w600cShade09,
+                        ),
                       ],
-                                          if (message.event.contains("הולדת")||message.event.contains("אירוע"))...[
+                      if (message.event.contains("הולדת") ||
+                          message.event.contains("אירוע")) ...[
                         const Text(
                           "אירוע",
                           style: TextStyles.s18w600cShade09,
@@ -96,15 +101,13 @@ class NotificationWidget extends ConsumerWidget {
                           " בתאריך ${message.dateTime.substring(0, 10)}",
                           style: TextStyles.s16w400cGrey2,
                         ),
-                  
                         const SizedBox(height: 12),
-                     
                         Text(
                           "${message.event} ל${auth.valueOrNull!.fullName}",
                           style: TextStyles.s16w400cGrey2,
-                        )],
-                      
-                       ],
+                        )
+                      ],
+                    ],
                   ),
                 ),
                 Column(
