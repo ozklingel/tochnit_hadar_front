@@ -20,6 +20,9 @@ class HttpService {
   );
   static const _getNotifSettingUrl =
       '${Consts.baseUrl}notification_form/getAllSetting';
+
+  static const _getMadadimSettingUrl =
+      '${Consts.baseUrl}master_user/getAllSetting_madadim';
   static const _getGifturl = '${Consts.baseUrl}gift/getGift';
   static const _getUsedGifturl = '${Consts.baseUrl}gift/getGifts_cnt';
 
@@ -188,6 +191,18 @@ class HttpService {
   static getUserNotiSetting(userid) async {
     final response = await http.get(
       Uri.parse("$_getNotifSettingUrl?userId=$userid"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    return response;
+  }
+
+    static getMadadimSetting(userid) async {
+    final response = await http.get(
+      Uri.parse("$_getMadadimSettingUrl?userId=$userid"),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
