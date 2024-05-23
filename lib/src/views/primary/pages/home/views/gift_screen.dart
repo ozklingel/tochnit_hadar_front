@@ -37,6 +37,7 @@ enum _DataFillType {
 }
 
 class GiftScreen extends HookConsumerWidget {
+
   const GiftScreen({
     super.key,
     required this.eventId,
@@ -46,6 +47,7 @@ class GiftScreen extends HookConsumerWidget {
   @override
   @override
   Widget build(BuildContext context, ref) {
+
     final auth = ref.watch(authServiceProvider);
     if (auth.valueOrNull?.role == UserRole.melave) {
       final couponCode = useState('');
@@ -286,9 +288,12 @@ class GiftScreen extends HookConsumerWidget {
       useListenable(firstNameController);
       useListenable(lastNameController);
       useListenable(phoneController);
+    final some_records_fail=useState('');
 
       final pages = [
         _FormOrImportPage(
+          some_records_fail: some_records_fail,
+
           selectedInstitution: selectedInstitution,
           selectedUserType: selectedUserType.value,
           isLoading: isLoading,
@@ -364,7 +369,8 @@ class GiftScreen extends HookConsumerWidget {
                             return;
                           }
 
-                          if (result == "success") {
+                          if (result["result"]=='success') {
+                            some_records_fail.value=result["not_commited"].toString();
                             showFancyCustomDialogAddGift(context);
                           } else {
                             showAlertDialog(context);
@@ -400,7 +406,8 @@ class _FormOrImportPage extends HookConsumerWidget {
     required this.formKey,
     required this.firstNameController,
     required this.lastNameController,
-    required this.phoneController,
+    required this.phoneController, 
+    required this.some_records_fail,
   });
 
   final UserRole selectedUserType;
@@ -411,9 +418,12 @@ class _FormOrImportPage extends HookConsumerWidget {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final TextEditingController phoneController;
+  final ValueNotifier<String> some_records_fail;
 
   @override
   Widget build(BuildContext context, ref) {
+
+
     var selectedDataType = _DataFillType.import;
     switch (selectedDataType) {
       case _DataFillType.manual:
@@ -516,6 +526,37 @@ class _FormOrImportPage extends HookConsumerWidget {
                       isLoading.value = false;
                     },
                   ),
+                ),
+              ),
+            ],
+          
+             if (some_records_fail.value=='[]') ...[
+              const SizedBox(height: 12),
+              Card(
+                color: AppColors.blue08,
+                elevation: 0,
+                child: ListTile(
+                  leading: const Icon(FluentIcons.document_pdf_24_regular),
+                  title: Text(
+                     some_records_fail.value
+                       
+                  ),
+
+                ),
+              ),
+            ],
+                         if (some_records_fail.value!='[]'&&some_records_fail.value!='') ...[
+              const SizedBox(height: 12),
+              Card(
+                color: AppColors.red1,
+                elevation: 0,
+                child: ListTile(
+                  leading: const Icon(FluentIcons.document_pdf_24_regular),
+                  title: Text(
+                     some_records_fail.value +"לא הוכנס בשל שגיאה"
+                       
+                  ),
+
                 ),
               ),
             ],

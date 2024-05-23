@@ -12,7 +12,7 @@ class HttpService {
   // static const _getNoriUrl = '${Consts.baseUrl}notification_form/getAll';
 
   static final _addGiftCodeExcel = Uri.parse(
-    '${Consts.baseUrl}export_import/add_giftCode_excel',
+    '${Consts.baseUrl}gift/add_giftCode_excel',
   );
 
   static final _setSettingUrl = Uri.parse(
@@ -112,7 +112,7 @@ class HttpService {
     var response = await http.Response.fromStream(res);
     final result = jsonDecode(response.body) as Map<String, dynamic>;
 
-    return result['result'];
+    return result;
   }
 
   static chatBoxUrl(createdById, subject, contant, context) async {
