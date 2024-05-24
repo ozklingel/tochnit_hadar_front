@@ -14,7 +14,6 @@ import 'package:hadar_program/src/views/primary/pages/home/views/widgets/home_he
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/performance_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_events_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_tasks_widget.dart';
-import 'package:hadar_program/src/views/widgets/badges/unread_count_badge_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -39,24 +38,16 @@ class HomeScreen extends ConsumerWidget {
         ),
         actions: [
           ref.watch(notificationsControllerProvider).when(
-                loading: () => UnreadCounterBadgeWidget(
-                  isLoading: true,
-                  child: IconButton(
-                    onPressed: () =>
-                        {const NotificationRouteData().go(context)},
-                    icon: Assets.illustrations.alarmBell.svg(),
-                  ),
-                ),
+                loading: () => const CircularProgressIndicator.adaptive(),
                 error: (error, stack) => IconButton(
                   onPressed: () => const NotificationRouteData().go(context),
                   icon: const Icon(Icons.ring_volume),
                 ),
-                data: (notifications) => UnreadCounterBadgeWidget(
-                  count: notifications.length,
-                  child: IconButton(
-                    onPressed: () => const NotificationRouteData().go(context),
-                    icon: Assets.illustrations.alarmBell.svg(),
-                  ),
+                data: (notifications) => IconButton(
+                  onPressed: () => const NotificationRouteData().go(context),
+                  icon: !notifications.isNotEmpty
+                      ? Assets.illustrations.alarmBellAlert.svg()
+                      : Assets.illustrations.alarmBell.svg(),
                 ),
               ),
         ],
