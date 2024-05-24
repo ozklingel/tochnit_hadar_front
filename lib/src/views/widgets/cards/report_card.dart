@@ -23,11 +23,9 @@ class ReportCard extends ConsumerWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
-  String _reportDate() =>
-      report.creationDate == 'None' ? report.dateTime : report.creationDate;
-
   @override
   Widget build(BuildContext context, ref) {
+    final reportDate = ('${report.creationDate}Z').asDateTime.toLocal();
     final apprentices = (ref
                 .watch(
                   personasControllerProvider,
@@ -94,8 +92,8 @@ class ReportCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    '${_reportDate().asDateTime.asDayMonthYearShortDot}, ${format(
-                      _reportDate().asDateTime,
+                    '${reportDate.asDayMonthYearShortDot}, ${format(
+                      reportDate,
                       locale: Localizations.localeOf(
                         context,
                       ).languageCode,

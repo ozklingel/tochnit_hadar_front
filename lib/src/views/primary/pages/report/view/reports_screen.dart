@@ -436,7 +436,7 @@ class ReportsScreen extends HookConsumerWidget {
                   (element) => element.id == selectedReportIds.value.first,
                   orElse: () => const ReportDto(),
                 );
-                final recipient = personas.singleWhere(
+                final recipient = personas.firstWhere(
                   (element) => report.recipients.contains(element.id),
                   orElse: () => const PersonaDto(),
                 );
