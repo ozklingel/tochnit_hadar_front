@@ -7,6 +7,8 @@ part 'event.dto.g.dart';
 @JsonSerializable()
 @Freezed(fromJson: false)
 class EventDto with _$EventDto {
+  const EventDto._();
+
   const factory EventDto({
     @Default('')
     @JsonKey(

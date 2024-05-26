@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../services/auth/auth_service.dart';
 import '../../../services/networking/http_service.dart';
+import '../../../services/routing/go_router_provider.dart';
 import '../../primary/pages/home/views/widgets/success_dialog.dart';
 import 'large_filled_rounded_button.dart';
 
@@ -101,7 +102,7 @@ class _ConfirmSignoutDialog extends ConsumerWidget {
                   if (result == "success") {
                     // print("in");
                     // ignore: use_build_context_synchronously
-                    showFancyCustomDialog(context);
+                    showDeleteDialog(context);
                   } else {
                     // print("in");
 
@@ -116,4 +117,91 @@ class _ConfirmSignoutDialog extends ConsumerWidget {
       ),
     );
   }
+}
+
+void showDeleteDialog(BuildContext context) {
+  Dialog fancyDialog = Dialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12.0),
+    ),
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      height: 350.0,
+      width: 300.0,
+      child: Stack(
+        children: <Widget>[
+          Align(
+            // These values are based on trial & error method
+            alignment: Alignment.topLeft,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          Align(
+            // These values are based on trial & error method
+            alignment: Alignment.bottomLeft,
+            child: InkWell(
+              onTap: () {
+                const HomeRouteData().go(context);
+              },
+              child: const SizedBox(
+                child: Image(
+                  image: AssetImage('assets/images/backhome.png'),
+                ),
+              ),
+            ),
+          ),
+          const Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 30,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 2, bottom: 10, left: 2, right: 2),
+                child: Image(
+                  width: 150,
+                  height: 160,
+                  image: AssetImage('assets/images/mechiot_capayim.png'),
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 5,
+              ),
+              Text(
+                ' קודים נמחקו  כנשלחה',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 20,
+              ),
+              Text(
+                'ישר כוח!',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+        
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+  showDialog(context: context, builder: (BuildContext context) => fancyDialog);
 }

@@ -37,6 +37,7 @@ enum _DataFillType {
 }
 
 class GiftScreen extends HookConsumerWidget {
+
   const GiftScreen({
     super.key,
     required this.eventId,
@@ -46,6 +47,7 @@ class GiftScreen extends HookConsumerWidget {
   @override
   @override
   Widget build(BuildContext context, ref) {
+
     final auth = ref.watch(authServiceProvider);
     if (auth.valueOrNull?.role == UserRole.melave) {
       final couponCode = useState('');
@@ -286,12 +288,12 @@ class GiftScreen extends HookConsumerWidget {
       useListenable(firstNameController);
       useListenable(lastNameController);
       useListenable(phoneController);
-
-      final someRecordsFail = useState('');
+    final some_records_fail=useState('');
 
       final pages = [
         _FormOrImportPage(
-          someRecordsFail: someRecordsFail,
+          some_records_fail: some_records_fail,
+
           selectedInstitution: selectedInstitution,
           selectedUserType: selectedUserType.value,
           isLoading: isLoading,
@@ -367,13 +369,9 @@ class GiftScreen extends HookConsumerWidget {
                             return;
                           }
 
-                          if (result["result"] == 'success') {
-                            someRecordsFail.value =
-                                result["not_commited"].toString();
-                            showFancyCustomDialogAddGift(
-                              context,
-                              result["not_commited"].toString() == "[]",
-                            );
+                          if (result["result"]=='success') {
+                            some_records_fail.value=result["not_commited"].toString();
+                            showFancyCustomDialogAddGift(context,result["not_commited"].toString()=="[]");
                           } else {
                             showAlertDialog(context);
                           }
@@ -408,8 +406,8 @@ class _FormOrImportPage extends HookConsumerWidget {
     required this.formKey,
     required this.firstNameController,
     required this.lastNameController,
-    required this.phoneController,
-    required this.someRecordsFail,
+    required this.phoneController, 
+    required this.some_records_fail,
   });
 
   final UserRole selectedUserType;
@@ -420,10 +418,12 @@ class _FormOrImportPage extends HookConsumerWidget {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final TextEditingController phoneController;
-  final ValueNotifier<String> someRecordsFail;
+  final ValueNotifier<String> some_records_fail;
 
   @override
   Widget build(BuildContext context, ref) {
+
+
     var selectedDataType = _DataFillType.import;
     switch (selectedDataType) {
       case _DataFillType.manual:
@@ -529,7 +529,8 @@ class _FormOrImportPage extends HookConsumerWidget {
                 ),
               ),
             ],
-            if (someRecordsFail.value == '[]') ...[
+          
+             if (some_records_fail.value=='[]') ...[
               const SizedBox(height: 12),
               Card(
                 color: AppColors.blue08,
@@ -537,13 +538,14 @@ class _FormOrImportPage extends HookConsumerWidget {
                 child: ListTile(
                   leading: const Icon(FluentIcons.document_pdf_24_regular),
                   title: Text(
-                    someRecordsFail.value,
+                     some_records_fail.value
+                       
                   ),
+
                 ),
               ),
             ],
-            if (someRecordsFail.value != '[]' &&
-                someRecordsFail.value != '') ...[
+                         if (some_records_fail.value!='[]'&&some_records_fail.value!='') ...[
               const SizedBox(height: 12),
               Card(
                 color: AppColors.red1,
@@ -551,8 +553,10 @@ class _FormOrImportPage extends HookConsumerWidget {
                 child: ListTile(
                   leading: const Icon(FluentIcons.document_pdf_24_regular),
                   title: Text(
-                    "${someRecordsFail.value}לא הוכנס בשל שגיאה",
+                     some_records_fail.value +"לא הוכנס בשל שגיאה"
+                       
                   ),
+
                 ),
               ),
             ],
