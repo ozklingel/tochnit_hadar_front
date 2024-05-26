@@ -18,6 +18,9 @@ class HttpService {
   static final _setSettingUrl = Uri.parse(
     '${Consts.baseUrl}notification_form/setSetting',
   );
+    static final _setSettingMadadimUrl = Uri.parse(
+    '${Consts.baseUrl}master_user/setSetting_madadim',
+  );
   static const _getNotifSettingUrl =
       '${Consts.baseUrl}notification_form/getAllSetting';
 
@@ -39,7 +42,6 @@ class HttpService {
     var request = await httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
-    // print(bytes);
     return bytesToImage(bytes);
   }
 
@@ -88,6 +90,45 @@ class HttpService {
     );
   }
 
+  
+    static setSettingMadadim1(
+    userId,
+    String fieldToChange,
+    String value,
+  ) async {
+    return http.post(
+      Uri.parse(_setSettingMadadimUrl.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'userId': userId,
+        'fieldToChange': value,
+     
+      }),
+    );
+  }
+ static setSettingMadadim(    userId,
+    String fieldToChange,
+    String value) async {
+    Map<String, dynamic> request = {
+       'userId': userId,
+        fieldToChange: value,
+           
+
+    };
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.post(
+      Uri.parse(_setSettingMadadimUrl.toString()),
+      headers: headers,
+      body: json.encode(request),
+    );
+    Map<String, dynamic> responsePayload = json.decode(response.body);
+    return responsePayload['result'];
+  }
+
+  
+ 
   static addGiftCodeExcel(File selectedImage) async {
     var request = http.MultipartRequest(
       'put',
@@ -131,7 +172,6 @@ class HttpService {
       body: json.encode(request),
     );
     Map<String, dynamic> responsePayload = json.decode(response.body);
-    Logger().d(responsePayload.toString());
     return responsePayload['result'];
   }
 
@@ -165,7 +205,6 @@ class HttpService {
       headers: headers,
       body: json.encode(request),
     );
-    Logger().d(response.body);
 
     Map<String, dynamic> responsePayload = json.decode(response.body);
     return responsePayload['result'];
@@ -182,7 +221,6 @@ class HttpService {
       headers: headers,
       body: json.encode(request),
     );
-    Logger().d(response.body);
 
     Map<String, dynamic> responsePayload = json.decode(response.body);
     return responsePayload['result'];
@@ -225,13 +263,9 @@ class HttpService {
     );
     var u = jsonDecode(response.body);
 
-    //String t1 = (u["result"]) as String;
-        Logger().d(u);
-//Map<String, dynamic> map3 = Map.of(u);
-
-    //Logger().d("cnt_giftCode_not_used"]+"מתוך"+map3["cnt_giftCode_used"]+"מומשו ");
 
     return u;
 
   }
+
 }

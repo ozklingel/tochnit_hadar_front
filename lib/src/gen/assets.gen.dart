@@ -74,6 +74,8 @@ class $AssetsIllustrationsGen {
   /// File path: assets/illustrations/two-thumbs-up.svg
   SvgGenImage get twoThumbsUp =>
       const SvgGenImage('assets/illustrations/two-thumbs-up.svg');
+  SvgGenImage get no_smile =>
+      const SvgGenImage('assets/illustrations/no-smile.svg');
 
   /// List of all assets
   List<SvgGenImage> get values => [
@@ -89,7 +91,8 @@ class $AssetsIllustrationsGen {
         thankfulHeartSignFullBody,
         thinking,
         thumbsUpFullBody,
-        twoThumbsUp
+        twoThumbsUp,
+        no_smile
       ];
 }
 
@@ -169,6 +172,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/setting.png
   AssetGenImage get setting => const AssetGenImage('assets/images/setting.png');
 
+  /// File path: assets/images/showFail.png
+  AssetGenImage get showFail =>
+      const AssetGenImage('assets/images/showFail.png');
+
   /// File path: assets/images/splash.gif
   AssetGenImage get splash => const AssetGenImage('assets/images/splash.gif');
 
@@ -214,6 +221,7 @@ class $AssetsImagesGen {
         person,
         person2,
         setting,
+        showFail,
         splash,
         successSmile,
         success,

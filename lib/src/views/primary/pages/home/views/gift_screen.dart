@@ -371,7 +371,7 @@ class GiftScreen extends HookConsumerWidget {
 
                           if (result["result"]=='success') {
                             some_records_fail.value=result["not_commited"].toString();
-                            showFancyCustomDialogAddGift(context);
+                            showFancyCustomDialogAddGift(context,result["not_commited"].toString()=="[]");
                           } else {
                             showAlertDialog(context);
                           }
@@ -461,7 +461,7 @@ class _FormOrImportPage extends HookConsumerWidget {
                   );
 
                   if (result != null) {
-                    Logger().d("request image: $result");
+                    //Logger().d("request image: $result");
 
                     files.value = [
                       ...result.files,
