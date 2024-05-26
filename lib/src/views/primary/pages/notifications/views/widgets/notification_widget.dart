@@ -33,7 +33,7 @@ class NotificationWidget extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
 
-    List<String> subject_name = message.description.split("עם ");
+    List<String> subjectName = message.description.split("עם ");
     return ColoredBox(
       color: backgroundColor ?? (isExpanded ? Colors.white : AppColors.blue07),
       child: Material(
@@ -74,12 +74,12 @@ class NotificationWidget extends ConsumerWidget {
                         if (message.event == "שיחה טלפונית" ||
                             message.event == "פגישה פיזית")
                           Text(
-                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה ל${subject_name[1]}",
+                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרונה ל${subjectName[1]}",
                             style: TextStyles.s16w400cGrey2,
                           ),
                         if (message.event == "1פגישה פיזית")
                           Text(
-                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון של ${subject_name[1]}",
+                            " עברו ${message.daysfromnow} ימים מה${message.event}  האחרון של ${subjectName[1]}",
                             style: TextStyles.s16w400cGrey2,
                           ),
                       ],
@@ -105,7 +105,7 @@ class NotificationWidget extends ConsumerWidget {
                         Text(
                           "${message.event} ל${auth.valueOrNull!.fullName}",
                           style: TextStyles.s16w400cGrey2,
-                        )
+                        ),
                       ],
                     ],
                   ),
