@@ -241,11 +241,11 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                 ) ??
             const InstitutionDto();
     final isEditMode = useState(false);
-    final firstNController = useTextEditingController(
+    final firstNameController = useTextEditingController(
       text: auth.valueOrNull!.firstName,
       keys: [auth],
     );
-    final lastNController = useTextEditingController(
+    final lastNameController = useTextEditingController(
       text: auth.valueOrNull!.lastName,
       keys: [auth],
     );
@@ -257,7 +257,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
       text: institution.name,
       keys: [auth],
     );
-    final datOfBirthController = useTextEditingController(
+    final dateOfBirthController = useTextEditingController(
       text: auth.valueOrNull!.dateOfBirth.substring(0, 10),
       keys: [auth],
     );
@@ -318,15 +318,15 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         label: 'שם פרטי',
                         isRequired: true,
                         child: TextField(
-                          controller: firstNController,
+                          controller: firstNameController,
                         ),
                       ),
                       const SizedBox(height: 32),
                       InputFieldContainer(
-                        label: 'שפ משפחה',
+                        label: 'שם משפחה',
                         isRequired: true,
                         child: TextField(
-                          controller: lastNController,
+                          controller: lastNameController,
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -342,7 +342,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                         label: ' תאריך יום הולדת',
                         isRequired: true,
                         child: TextField(
-                          controller: datOfBirthController,
+                          controller: dateOfBirthController,
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -590,10 +590,11 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                             data: jsonEncode({
                                               'city': cityController.text,
                                               'birthday':
-                                                  datOfBirthController.text,
+                                                  dateOfBirthController.text,
                                               'email': emailController.text,
-                                              'last_name': lastNController.text,
-                                              'name': firstNController.text,
+                                              'last_name':
+                                                  lastNameController.text,
+                                              'name': firstNameController.text,
                                             }),
                                           );
 

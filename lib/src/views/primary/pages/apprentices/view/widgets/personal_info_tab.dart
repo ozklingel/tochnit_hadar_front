@@ -37,7 +37,7 @@ class PersonalInfoTabView extends ConsumerWidget {
         _GeneralSection(persona: persona),
         _DatesSection(persona: persona),
         _FamilySection(persona: persona),
-        _EduSection(persona: persona),
+        _EducationSection(persona: persona),
         _WorkSection(persona: persona),
       ],
     );
@@ -157,8 +157,8 @@ class _WorkSection extends HookConsumerWidget {
   }
 }
 
-class _EduSection extends HookConsumerWidget {
-  const _EduSection({
+class _EducationSection extends HookConsumerWidget {
+  const _EducationSection({
     required this.persona,
   });
 
@@ -249,7 +249,7 @@ class _EduSection extends HookConsumerWidget {
                   label: 'טלפון ר”מ',
                   onTapData: () =>
                       launchCall(phone: persona.highSchoolRavMelamedPhone),
-                  data: persona.highSchoolRavMelamedPhone,
+                  data: persona.highSchoolRavMelamedPhone.format,
                 ),
               ],
       ),
@@ -753,8 +753,13 @@ class _DatesSection extends HookConsumerWidget {
               ]
             : [
                 DetailsRowItem(
-                  label: 'יום הולדת',
+                  label: 'יום הולדת עברי',
                   data: persona.dateOfBirth.asDateTime.he,
+                ),
+                const SizedBox(height: 12),
+                DetailsRowItem(
+                  label: 'יום הולדת לועזי',
+                  data: persona.dateOfBirth.asDateTime.asDayMonthYearShortDot,
                 ),
                 // missing on backend
                 // const SizedBox(height: 12),
@@ -1022,7 +1027,7 @@ class _GeneralSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 DetailsRowItem(
                   label: 'מספר טלפון',
-                  data: persona.phone,
+                  data: persona.phone.format,
                 ),
               ],
       ),
@@ -1090,7 +1095,7 @@ class _ContactButtons extends ConsumerWidget {
         SizedBox(
           width: 140,
           child: Text(
-            phone,
+            phone.format,
             style: TextStyles.s14w400.copyWith(
               color: AppColors.gray2,
             ),

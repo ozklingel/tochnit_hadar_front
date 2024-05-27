@@ -60,7 +60,7 @@ class TohnitHadarTabView extends HookConsumerWidget {
 
     return Column(
       children: [
-        if (auth.role != UserRole.ahraiTohnit)
+        if (!auth.role.isProgramDirector)
           DetailsCard(
             title: 'דיווחים אחרונים',
             trailing: TextButton(
@@ -112,28 +112,23 @@ class TohnitHadarTabView extends HookConsumerWidget {
           persona: persona,
           institution: institution,
         ),
-        if (auth.role == UserRole.ahraiTohnit) ...[
+        if (auth.role.isProgramDirector) ...[
           DetailsCard(
             title: 'מצב”ר',
             trailing: Row(
               children: [
                 CircleAvatar(
                   radius: 4,
-                  backgroundColor: persona.matsber == 'אדוק'
-                      ? AppColors.green1
-                      : persona.matsber == 'מחובר'
-                          ? AppColors.green1
-                          : persona.matsber == 'מחובר חלקית'
-                              ? AppColors.yellow1
-                              : persona.matsber == 'בשלבי ניתוק'
-                                  ? AppColors.yellow1
-                                  : persona.matsber == 'מנותק'
-                                      ? AppColors.red1
-                                      : AppColors.grey1,
+                  backgroundColor: switch (persona.spiritualStatus) {
+                    'אדוק' || 'מחובר' => AppColors.green1,
+                    'מחובר חלקית' || 'בשלבי ניתוק' => AppColors.yellow1,
+                    'מנותק' => AppColors.red1,
+                    _ => AppColors.grey1,
+                  },
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  persona.matsber,
+                  persona.spiritualStatus,
                   style: TextStyles.s12w400cGrey2,
                 ),
               ],
@@ -338,7 +333,7 @@ class _GeneralSection extends HookConsumerWidget {
     final ravMelamedYearBPhone =
         useTextEditingController(text: persona.thRavMelamedYearBPhone);
     final isPaying = useState(persona.isPaying);
-    final matsber = useState(persona.matsber);
+    final spiritualStatus = useState(persona.spiritualStatus);
 
     return DetailsCard(
       title: 'תוכנית הדר',
@@ -354,7 +349,7 @@ class _GeneralSection extends HookConsumerWidget {
               icon: const Icon(Icons.check),
               label: Text(persona.isPaying ? 'משלם' : 'לא משלם'),
             ),
-          if (auth.role == UserRole.ahraiTohnit)
+          if (!auth.role.isProgramDirector)
             IconButton(
               icon: const Icon(FluentIcons.edit_24_regular),
               onPressed: () => isEditMode.value = !isEditMode.value,
@@ -365,69 +360,70 @@ class _GeneralSection extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: isEditMode.value
             ? [
-                InputFieldContainer(
-                  label: 'מקום לימודים',
-                  isRequired: true,
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<InstitutionDto>(
-                      hint: Text(
-                        selectedInstitution.value.name,
-                        overflow: TextOverflow.fade,
-                      ),
-                      style: Theme.of(context).inputDecorationTheme.hintStyle,
-                      buttonStyleData: ButtonStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(36),
-                          border: Border.all(
-                            color: AppColors.shade04,
-                          ),
+                if (auth.role.isProgramDirector)
+                  InputFieldContainer(
+                    label: 'מקום לימודים',
+                    isRequired: true,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2<InstitutionDto>(
+                        hint: Text(
+                          selectedInstitution.value.name,
+                          overflow: TextOverflow.fade,
                         ),
-                        elevation: 0,
-                        padding: const EdgeInsets.only(right: 8),
-                      ),
-                      onChanged: (value) => selectedInstitution.value =
-                          value ?? const InstitutionDto(),
-                      dropdownStyleData: const DropdownStyleData(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(16),
+                        style: Theme.of(context).inputDecorationTheme.hintStyle,
+                        buttonStyleData: ButtonStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(36),
+                            border: Border.all(
+                              color: AppColors.shade04,
+                            ),
                           ),
+                          elevation: 0,
+                          padding: const EdgeInsets.only(right: 8),
                         ),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        icon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 1,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
+                        onChanged: (value) => selectedInstitution.value =
+                            value ?? const InstitutionDto(),
+                        dropdownStyleData: const DropdownStyleData(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(16),
                             ),
                           ),
                         ),
-                        openMenuIcon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 3,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
+                        iconStyleData: const IconStyleData(
+                          icon: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: RotatedBox(
+                              quarterTurns: 1,
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: AppColors.grey6,
+                              ),
+                            ),
+                          ),
+                          openMenuIcon: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: RotatedBox(
+                              quarterTurns: 3,
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: AppColors.grey6,
+                              ),
                             ),
                           ),
                         ),
+                        items: institutions
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e.name),
+                              ),
+                            )
+                            .toList(),
                       ),
-                      items: institutions
-                          .map(
-                            (e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(e.name),
-                            ),
-                          )
-                          .toList(),
                     ),
                   ),
-                ),
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'מחזור',
@@ -597,7 +593,7 @@ class _GeneralSection extends HookConsumerWidget {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2<String>(
                       hint: Text(
-                        matsber.value,
+                        spiritualStatus.value,
                         overflow: TextOverflow.fade,
                       ),
                       style: Theme.of(context).inputDecorationTheme.hintStyle,
@@ -611,7 +607,7 @@ class _GeneralSection extends HookConsumerWidget {
                         elevation: 0,
                         padding: const EdgeInsets.only(right: 8),
                       ),
-                      onChanged: (value) => matsber.value = value ?? '',
+                      onChanged: (value) => spiritualStatus.value = value ?? '',
                       dropdownStyleData: const DropdownStyleData(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -744,7 +740,7 @@ class _GeneralSection extends HookConsumerWidget {
                             thRavMelamedYearBName: ravMelamedYearBName.text,
                             thRavMelamedYearBPhone: ravMelamedYearBPhone.text,
                             isPaying: isPaying.value,
-                            matsber: matsber.value,
+                            spiritualStatus: spiritualStatus.value,
                           ),
                         );
 
@@ -767,7 +763,7 @@ class _GeneralSection extends HookConsumerWidget {
                   label: 'ר”מ שנה א',
                   data: '',
                   contactName: persona.thRavMelamedYearAName,
-                  contactPhone: persona.thRavMelamedYearAPhone,
+                  contactPhone: persona.thRavMelamedYearAPhone.format,
                   onTapPhone: () async {
                     final phoneCallAction =
                         Uri.parse('tel:${persona.thRavMelamedYearAPhone}');
@@ -781,7 +777,7 @@ class _GeneralSection extends HookConsumerWidget {
                   label: 'ר”מ שנה ב',
                   data: '',
                   contactName: persona.thRavMelamedYearBName,
-                  contactPhone: persona.thRavMelamedYearBPhone,
+                  contactPhone: persona.thRavMelamedYearBPhone.format,
                   onTapPhone: () async {
                     final phoneCallAction =
                         Uri.parse('tel:${persona.thRavMelamedYearBPhone}');

@@ -36,6 +36,8 @@ enum UserRole {
         return 'USER.ROLE.ERROR';
     }
   }
+
+  bool get isProgramDirector => this == UserRole.ahraiTohnit;
 }
 
 @JsonSerializable()

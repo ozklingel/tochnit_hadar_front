@@ -74,8 +74,6 @@ class $AssetsIllustrationsGen {
   /// File path: assets/illustrations/two-thumbs-up.svg
   SvgGenImage get twoThumbsUp =>
       const SvgGenImage('assets/illustrations/two-thumbs-up.svg');
-  SvgGenImage get no_smile =>
-      const SvgGenImage('assets/illustrations/no-smile.svg');
 
   /// List of all assets
   List<SvgGenImage> get values => [
@@ -91,8 +89,7 @@ class $AssetsIllustrationsGen {
         thankfulHeartSignFullBody,
         thinking,
         thumbsUpFullBody,
-        twoThumbsUp,
-        no_smile
+        twoThumbsUp
       ];
 }
 

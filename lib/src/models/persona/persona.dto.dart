@@ -64,6 +64,7 @@ typedef Phone = String;
 @JsonSerializable()
 @Freezed(fromJson: false)
 class PersonaDto with _$PersonaDto {
+  const PersonaDto._();
   const factory PersonaDto({
     @Default(AddressDto()) AddressDto address,
     @Default('')
@@ -345,9 +346,10 @@ class PersonaDto with _$PersonaDto {
     String militaryPositionNew,
     @Default('')
     @JsonKey(
+      name: 'matsber',
       defaultValue: '',
     )
-    String matsber,
+    String spiritualStatus,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -395,17 +397,13 @@ class PersonaDto with _$PersonaDto {
     bool isPaying,
   }) = _Persona;
 
+  String get payingString => isPaying ? 'משלם' : 'לא משלם';
+
   factory PersonaDto.fromJson(Map<String, dynamic> json) =>
       _$PersonaDtoFromJson(json);
 }
 
-bool _extractPaying(String? data) {
-  if (data == 'משלם') {
-    return true;
-  }
-
-  return false;
-}
+bool _extractPaying(String? data) => data == 'משלם';
 
 int _extractActivityScore(dynamic val) {
   if (val is int) {

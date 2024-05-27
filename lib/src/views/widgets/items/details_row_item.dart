@@ -62,18 +62,16 @@ class DetailsRowItem extends StatelessWidget {
                           );
                   },
                 )
-              : Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(text: contactName),
-                      WidgetSpan(
-                        child: TextButton(
-                          onPressed: onTapPhone,
-                          child: Text(contactPhone),
-                        ),
-                      ),
-                    ],
-                  ),
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(contactName),
+                    TextButton(
+                      onPressed: onTapPhone,
+                      child: Text(contactPhone),
+                    ),
+                  ],
                 ),
         ),
       ],

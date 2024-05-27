@@ -192,8 +192,8 @@ class PersonasController extends _$PersonasController {
           // personal general
           'teudatZehut': persona.teudatZehut,
           'email': persona.email,
-          //! TODO(OZ): this field won't update
-          'address': persona.address,
+          // ! TODO(OZ): this field won't update
+          // 'address': persona.address,
           'marriage_status': persona.maritalStatus,
           'phone': persona.phone,
           // personal dates
@@ -229,10 +229,10 @@ class PersonasController extends _$PersonasController {
           'thPeriod': persona.thPeriod,
           'thRavMelamedYearA_name': persona.thRavMelamedYearAName,
           'thRavMelamedYearA_phone': persona.thRavMelamedYearAPhone,
-          'thRavMelamedYearB_name': persona.thRavMelamedYearBPhone,
+          'thRavMelamedYearB_name': persona.thRavMelamedYearBName,
           'thRavMelamedYearB_phone': persona.thRavMelamedYearBPhone,
-          'paying': persona.isPaying.toString(),
-          'matsber': persona.matsber,
+          'paying': persona.payingString,
+          'matsber': persona.spiritualStatus,
         },
       );
 
