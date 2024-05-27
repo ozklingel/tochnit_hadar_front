@@ -71,13 +71,10 @@ void launchEmail({
 void launchCall({
   required phone,
 }) async {
-  final url = Uri.parse('tel:+972$phone');
-  if (await canLaunchUrl(url)) {
-    launchUrl(url);
-  } else {
-    Toaster.error('Some phone error occurred. Please try again!');
-  }
+  final uri = Uri.parse('tel:+972$phone');
+  _launchUri(uri, 'phone');
 }
 
-Future<void> launchGiftStore() async =>
-    _launchUri(Uri.parse('https://www.caveret.org/'), 'Caveret');
+Future<void> launchGiftStore() async => _launchUri(
+    Uri.parse('https://www.caveret.org/catalogsearch/result/?q=תוכנית+הדר'),
+    'Caveret');
