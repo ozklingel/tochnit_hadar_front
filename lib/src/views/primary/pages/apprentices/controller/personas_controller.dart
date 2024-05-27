@@ -23,7 +23,7 @@ part 'personas_controller.g.dart';
     GetFilteredUsers,
     GetMapsApprentices,
     StorageService,
-    // GoRouterService,
+    GetPersonas,
   ],
 )
 class PersonasController extends _$PersonasController {
@@ -85,7 +85,6 @@ class PersonasController extends _$PersonasController {
       if (req.data['result'] == 'success') {
         ref.invalidate(getPersonasProvider);
         ref.invalidate(getMapsApprenticesProvider);
-
         return true;
       }
     } catch (e) {

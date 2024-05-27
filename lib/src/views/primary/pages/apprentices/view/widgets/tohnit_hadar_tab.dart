@@ -973,7 +973,6 @@ class _EventBottomSheet extends HookConsumerWidget {
                           onPressed: titleController.text.isEmpty
                               ? null
                               : () async {
-                                  final navContext = Navigator.of(context);
                                   final notifier = ref.read(
                                     personasControllerProvider.notifier,
                                   );
@@ -994,9 +993,8 @@ class _EventBottomSheet extends HookConsumerWidget {
                                           apprenticeId: persona.id,
                                           event: newEvent,
                                         );
-
-                                  if (result) {
-                                    navContext.pop();
+                                  if (result && context.mounted) {
+                                    Navigator.pop(context);
                                   }
                                 },
 
