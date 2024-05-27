@@ -7,7 +7,6 @@ import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../services/routing/go_router_provider.dart';
 
 void showFancyCustomDialogAddGift(BuildContext context,bool isSucces) {
-     Logger().d("isSucces: $isSucces");
 
     var fancyDialog= Dialog(
       shape: RoundedRectangleBorder(

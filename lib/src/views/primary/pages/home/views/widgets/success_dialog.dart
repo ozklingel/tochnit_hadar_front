@@ -1,91 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
+import '../../../../../../core/theming/colors.dart';
+import '../../../../../../core/theming/text_styles.dart';
+import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../services/routing/go_router_provider.dart';
 
-
 void showFancyCustomDialog(BuildContext context) {
-  Dialog fancyDialog = Dialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
+
+    var fancyDialog= Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
       ),
-      height: 350.0,
-      width: 300.0,
-      child: Stack(
-        children: <Widget>[
-          Align(
-            // These values are based on trial & error method
-            alignment: Alignment.topLeft,
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context, rootNavigator: true).pop();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-          Align(
-            // These values are based on trial & error method
-            alignment: Alignment.bottomLeft,
-            child: InkWell(
-              onTap: () {
-                const HomeRouteData().go(context);
-              },
-              child: const SizedBox(
-                child: Image(
-                  image: AssetImage('assets/images/backhome.png'),
-                ),
-              ),
-            ),
-          ),
-          const Column(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(
-                width: double.infinity,
-                height: 30,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 2, bottom: 10, left: 2, right: 2),
-                child: Image(
-                  width: 150,
-                  height: 160,
-                  image: AssetImage('assets/images/mechiot_capayim.png'),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  icon: const Icon(Icons.close),
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                height: 5,
+              const SizedBox(height: 8),
+              Expanded(
+                child: Assets.illustrations.clap.svg(),
               ),
+              const SizedBox(height: 24),
               Text(
-                'המתנה סומנה כנשלחה',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                'קודי מתנה נמחקו בהצלחה',
+                textAlign: TextAlign.center,
+                style: TextStyles.s20w500,
               ),
-              SizedBox(
-                width: double.infinity,
-                height: 20,
-              ),
-              Text(
-                'ישר כוח!',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
+              const SizedBox(height: 24),
+            Row(
+            //rossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
         
-            ],
+               TextButton(
+                onPressed: () {
+                  const HomeRouteData().go(context);
+                },
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'חזרה לעמוד הבית',
+                    style: TextStyles.s14w500.copyWith(
+                      color: AppColors.blue02,
+                    ),
+                  ),
+                ),
+                
+              ),
+                   
+            ])],
           ),
-        ],
+        ),
       ),
-    ),
-  );
-  showDialog(context: context, builder: (BuildContext context) => fancyDialog);
+    );
+    showDialog(context: context, builder: (BuildContext context) => fancyDialog);
+
 }
