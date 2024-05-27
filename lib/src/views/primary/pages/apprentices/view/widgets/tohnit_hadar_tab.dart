@@ -76,10 +76,8 @@ class TohnitHadarTabView extends HookConsumerWidget {
                 final reports =
                     (ref.watch(reportsControllerProvider).valueOrNull ?? [])
                         .where(
-                  (element) => persona.reportsIds.take(5).contains(element.id),
+                  (element) => persona.reportsIds.take(3).contains(element.id),
                 );
-
-                // Logger().d(persona.reportsIds);
 
                 return ListView.separated(
                   shrinkWrap: true,
@@ -90,13 +88,11 @@ class TohnitHadarTabView extends HookConsumerWidget {
                           type: e.event,
                           text: TextSpan(
                             children: [
-                              TextSpan(text: e.dateTime.asDateTime.he),
-                              const TextSpan(text: ', '),
-                              TextSpan(text: e.dateTime.asDateTime.asDayMonth),
-                              const TextSpan(text: '. '),
+                              TextSpan(text: '${e.dateTime.asDateTime.he}, '),
                               TextSpan(
-                                text: e.dateTime.asDateTime.asTimeAgoDayCutoff,
+                                text: '${e.dateTime.asDateTime.asDayMonth}. ',
                               ),
+                              TextSpan(text: e.dateTime.asDateTime.asTimeAgo),
                             ],
                           ),
                         ),
@@ -1076,24 +1072,20 @@ class _AnnouncementItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconData = switch (type) {
+      Event.call || Event.callParents => FluentIcons.call_24_regular,
+      Event.fiveMessages => FluentIcons.chat_24_regular,
+      Event.mosadMeetings ||
+      Event.onlineMeeting ||
+      Event.offlineMeeting ||
+      Event.recurringMeeting ||
+      Event.offlineGroupMeeting =>
+        FluentIcons.people_24_regular,
+      _ => FluentIcons.question_24_regular,
+    };
     return Row(
       children: [
-        if ([Event.call, Event.callParents].contains(type))
-          const Icon(FluentIcons.call_24_regular)
-        else if ([
-          Event.mosadMeetings,
-          Event.onlineMeeting,
-          Event.offlineMeeting,
-          Event.recurringMeeting,
-          Event.offlineGroupMeeting,
-        ].contains(type))
-          const Icon(FluentIcons.people_24_regular)
-        else if ([
-          Event.fiveMessages,
-        ].contains(type))
-          const Icon(FluentIcons.chat_24_regular)
-        else
-          const Icon(FluentIcons.question_24_regular),
+        Icon(iconData),
         const SizedBox(width: 18),
         Text.rich(
           text,

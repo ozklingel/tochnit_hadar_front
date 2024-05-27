@@ -65,7 +65,9 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
             : title,
       ),
       leading: IconButton(
-        onPressed: () => const HomeRouteData().go(context),
+        onPressed: () => Navigator.canPop(context)
+            ? Navigator.pop(context)
+            : const HomeRouteData().go(context),
         icon: const Icon(
           FluentIcons.arrow_left_24_regular,
           color: AppColors.gray2,
