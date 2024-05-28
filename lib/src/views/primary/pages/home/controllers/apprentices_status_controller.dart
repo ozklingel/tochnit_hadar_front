@@ -33,7 +33,6 @@ class ApprenticesStatusController extends _$ApprenticesStatusController {
          }         
 
    }
-
   downloadCSV(String file) async {
     // Convert your CSV string to a Uint8List for downloading.
     Uint8List bytes = Uint8List.fromList(utf8.encode(file));

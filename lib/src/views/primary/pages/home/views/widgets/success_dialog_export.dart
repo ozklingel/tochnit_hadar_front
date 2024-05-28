@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 import '../../../../../../core/theming/colors.dart';
 import '../../../../../../core/theming/text_styles.dart';
@@ -41,7 +40,7 @@ void showFancyCustomDialog(BuildContext context) {
                 Text(
                 'תמצא אותם בתקיית הורדות',
                 textAlign: TextAlign.center,
-                style: TextStyles.s20w500,
+                style: TextStyles.s20w400,
               ),
             Row(
             //rossAxisAlignment: CrossAxisAlignment.center,

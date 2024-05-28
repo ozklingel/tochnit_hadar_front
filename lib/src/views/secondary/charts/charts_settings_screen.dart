@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/web.dart';
 
 import '../../../core/theming/colors.dart';
 import '../../../services/auth/auth_service.dart';

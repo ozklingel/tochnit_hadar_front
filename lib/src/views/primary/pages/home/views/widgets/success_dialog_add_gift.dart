@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 import '../../../../../../core/theming/colors.dart';
 import '../../../../../../core/theming/text_styles.dart';
