@@ -16,7 +16,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.0
- 
+  file_saver: ^0.2.8
+
   flutter_datetime_picker: ^1.5.1
   logger: ^2.0.2
   flutter_local_notifications: ^15.1.1

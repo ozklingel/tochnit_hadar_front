@@ -5,7 +5,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 
 class HttpService {
   static const _chatBoxUrl = '${Consts.baseUrl}messegaes_form/add';
@@ -31,6 +30,7 @@ class HttpService {
 
   static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
   static const _deleteGiftAllurl = '${Consts.baseUrl}gift/deleteAll';
+  static const _export_aprentices_status_url = '${Consts.baseUrl}export_import/lowScoreApprentice_tohnit';
 
   static const token = "11"; //await Candidate().getToken();
   static final httpClient = HttpClient();
@@ -45,6 +45,22 @@ class HttpService {
     return bytesToImage(bytes);
   }
 
+   static exportApprenticeStatus(
+    userId,
+    String export_date,
+  ) async {
+    return http.post(
+      Uri.parse(_export_aprentices_status_url.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'userId': userId,
+        //'export_date': null,
+     
+      }),
+    );
+  }
   static Future<ui.Image> bytesToImage(Uint8List imgBytes) async {
     ui.Codec codec = await ui.instantiateImageCodec(imgBytes);
     ui.FrameInfo frame;

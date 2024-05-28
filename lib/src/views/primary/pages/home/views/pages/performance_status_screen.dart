@@ -19,6 +19,8 @@ import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.d
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
+import '../../../../../../services/auth/auth_service.dart';
+
 class PerformanceStatusScreen extends HookConsumerWidget {
   const PerformanceStatusScreen({
     super.key,
@@ -57,6 +59,7 @@ class PerformanceStatusScreen extends HookConsumerWidget {
     final selectedPersonas = personas
         .where((element) => element.institutionId == selectedInstitution.id)
         .toList();
+        final auth = ref.watch(authServiceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -91,7 +94,7 @@ class PerformanceStatusScreen extends HookConsumerWidget {
                 TextButton(
                   onPressed: () => ref
                       .read(apprenticesStatusControllerProvider.notifier)
-                      .export(),
+                      .export(auth.valueOrNull!.phone,context),
                   child: const Text(
                     'ייצוא לאקסל',
                     style: TextStyles.s14w400cBlue2,

@@ -114,14 +114,14 @@ class InstitutionsController extends _$InstitutionsController {
     });
 
     try {
+      print(formData);
       final result = await ref.watch(dioServiceProvider).put(
             Consts.addInstitutionFromExcel,
             data: formData,
           );
-
+      print(result.data);
       if (result.data['result'] == 'success') {
         Toaster.error('הושלם בהצלחה');
-
         ref.read(goRouterServiceProvider).go('/home');
 
         return true;
