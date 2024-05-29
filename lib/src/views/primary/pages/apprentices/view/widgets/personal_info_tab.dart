@@ -14,6 +14,7 @@ import 'package:hadar_program/src/services/api/onboarding_form/city_list.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/persona_dropdown_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 import 'package:hadar_program/src/views/widgets/buttons/row_icon_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -304,69 +305,18 @@ class _FamilySection extends HookConsumerWidget {
                 ...[
                   InputFieldContainer(
                     label: 'איש קשר 1 - קרבה',
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<Relationship>(
-                        hint: Text(
-                          contact1Relationship.value.name,
-                          overflow: TextOverflow.fade,
-                        ),
-                        style: Theme.of(context).inputDecorationTheme.hintStyle,
-                        buttonStyleData: ButtonStyleData(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(36),
-                            border: Border.all(
-                              color: AppColors.shade04,
-                            ),
-                          ),
-                          elevation: 0,
-                          padding: const EdgeInsets.only(right: 8),
-                        ),
-                        onMenuStateChange: (isOpen) {
-                          if (!isOpen) {
-                            contact1Relationship.value = Relationship.other;
-                          }
-                        },
-                        onChanged: (value) => contact1Relationship.value =
-                            value ?? Relationship.other,
-                        dropdownStyleData: const DropdownStyleData(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(16),
-                            ),
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: RotatedBox(
-                              quarterTurns: 1,
-                              child: Icon(
-                                Icons.chevron_left,
-                                color: AppColors.grey6,
-                              ),
-                            ),
-                          ),
-                          openMenuIcon: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: RotatedBox(
-                              quarterTurns: 3,
-                              child: Icon(
-                                Icons.chevron_left,
-                                color: AppColors.grey6,
-                              ),
-                            ),
-                          ),
-                        ),
-                        items: Relationship.values
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e.name),
-                              ),
-                            )
-                            .toList(),
+                    child: PersonaDropdownButton(
+                      value: contact1Relationship.value.name,
+                      items: Relationship.values.map((e) => e.name).toList(),
+                      onChanged: (value) => contact1Relationship.value =
+                          Relationship.values.firstWhere(
+                        (e) => e.name == value,
                       ),
+                      onMenuStateChange: (isOpen) {
+                        if (!isOpen) {
+                          contact1Relationship.value = Relationship.other;
+                        }
+                      },
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -402,69 +352,18 @@ class _FamilySection extends HookConsumerWidget {
                 ...[
                   InputFieldContainer(
                     label: 'איש קשר 2 - קרבה',
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<Relationship>(
-                        hint: Text(
-                          contact2Relationship.value.name,
-                          overflow: TextOverflow.fade,
-                        ),
-                        style: Theme.of(context).inputDecorationTheme.hintStyle,
-                        buttonStyleData: ButtonStyleData(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(36),
-                            border: Border.all(
-                              color: AppColors.shade04,
-                            ),
-                          ),
-                          elevation: 0,
-                          padding: const EdgeInsets.only(right: 8),
-                        ),
-                        onMenuStateChange: (isOpen) {
-                          if (!isOpen) {
-                            contact2Relationship.value = Relationship.other;
-                          }
-                        },
-                        onChanged: (value) => contact2Relationship.value =
-                            value ?? Relationship.other,
-                        dropdownStyleData: const DropdownStyleData(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(16),
-                            ),
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: RotatedBox(
-                              quarterTurns: 1,
-                              child: Icon(
-                                Icons.chevron_left,
-                                color: AppColors.grey6,
-                              ),
-                            ),
-                          ),
-                          openMenuIcon: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: RotatedBox(
-                              quarterTurns: 3,
-                              child: Icon(
-                                Icons.chevron_left,
-                                color: AppColors.grey6,
-                              ),
-                            ),
-                          ),
-                        ),
-                        items: Relationship.values
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e.name),
-                              ),
-                            )
-                            .toList(),
+                    child: PersonaDropdownButton(
+                      value: contact2Relationship.value.name,
+                      items: Relationship.values.map((e) => e.name).toList(),
+                      onChanged: (value) => contact2Relationship.value =
+                          Relationship.values.firstWhere(
+                        (e) => e.name == value,
                       ),
+                      onMenuStateChange: (isOpen) {
+                        if (!isOpen) {
+                          contact2Relationship.value = Relationship.other;
+                        }
+                      },
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -500,69 +399,18 @@ class _FamilySection extends HookConsumerWidget {
                 ...[
                   InputFieldContainer(
                     label: 'איש קשר 3 - קרבה',
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<Relationship>(
-                        hint: Text(
-                          contact3Relationship.value.name,
-                          overflow: TextOverflow.fade,
-                        ),
-                        style: Theme.of(context).inputDecorationTheme.hintStyle,
-                        buttonStyleData: ButtonStyleData(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(36),
-                            border: Border.all(
-                              color: AppColors.shade04,
-                            ),
-                          ),
-                          elevation: 0,
-                          padding: const EdgeInsets.only(right: 8),
-                        ),
-                        onMenuStateChange: (isOpen) {
-                          if (!isOpen) {
-                            contact3Relationship.value = Relationship.other;
-                          }
-                        },
-                        onChanged: (value) => contact3Relationship.value =
-                            value ?? Relationship.other,
-                        dropdownStyleData: const DropdownStyleData(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(16),
-                            ),
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: RotatedBox(
-                              quarterTurns: 1,
-                              child: Icon(
-                                Icons.chevron_left,
-                                color: AppColors.grey6,
-                              ),
-                            ),
-                          ),
-                          openMenuIcon: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: RotatedBox(
-                              quarterTurns: 3,
-                              child: Icon(
-                                Icons.chevron_left,
-                                color: AppColors.grey6,
-                              ),
-                            ),
-                          ),
-                        ),
-                        items: Relationship.values
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e.name),
-                              ),
-                            )
-                            .toList(),
+                    child: PersonaDropdownButton(
+                      value: contact3Relationship.value.name,
+                      items: Relationship.values.map((e) => e.name).toList(),
+                      onChanged: (value) => contact3Relationship.value =
+                          Relationship.values.firstWhere(
+                        (e) => e.name == value,
                       ),
+                      onMenuStateChange: (isOpen) {
+                        if (!isOpen) {
+                          contact3Relationship.value = Relationship.other;
+                        }
+                      },
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -806,7 +654,7 @@ class _GeneralSection extends HookConsumerWidget {
 
     return DetailsCard(
       title: 'כללי',
-      trailing: auth.valueOrNull?.role == UserRole.ahraiTohnit
+      trailing: auth.valueOrNull?.role.isProgramDirector ?? false
           ? RowIconButton(
               onPressed: () => isEditMode.value = !isEditMode.value,
               icon: const Icon(FluentIcons.edit_24_regular),
@@ -841,93 +689,38 @@ class _GeneralSection extends HookConsumerWidget {
                         error: (error, stack) => Center(
                           child: Text(error.toString()),
                         ),
-                        data: (cities) => DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            hint: Text(
-                              cityController.value,
-                              overflow: TextOverflow.fade,
-                            ),
-                            style: Theme.of(context)
-                                .inputDecorationTheme
-                                .hintStyle,
-                            buttonStyleData: ButtonStyleData(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(36),
-                                border: Border.all(
-                                  color: AppColors.shade04,
-                                ),
+                        data: (cities) => PersonaDropdownButton(
+                          value: cityController.value,
+                          items: cities,
+                          onMenuStateChange: (isOpen) {
+                            if (!isOpen) {
+                              citySearchController.clear();
+                            }
+                          },
+                          onChanged: (value) =>
+                              cityController.value = value ?? '',
+                          dropdownSearchData: DropdownSearchData(
+                            searchController: citySearchController,
+                            searchInnerWidgetHeight: 50,
+                            searchInnerWidget: TextField(
+                              controller: citySearchController,
+                              decoration: const InputDecoration(
+                                focusedBorder: UnderlineInputBorder(),
+                                enabledBorder: InputBorder.none,
+                                prefixIcon: Icon(Icons.search),
+                                hintText: 'חיפוש',
+                                hintStyle: TextStyles.s14w400,
                               ),
-                              elevation: 0,
-                              padding: const EdgeInsets.only(right: 8),
                             ),
-                            dropdownSearchData: DropdownSearchData(
-                              searchController: citySearchController,
-                              searchInnerWidgetHeight: 50,
-                              searchInnerWidget: TextField(
-                                controller: citySearchController,
-                                decoration: const InputDecoration(
-                                  focusedBorder: UnderlineInputBorder(),
-                                  enabledBorder: InputBorder.none,
-                                  prefixIcon: Icon(Icons.search),
-                                  hintText: 'חיפוש',
-                                  hintStyle: TextStyles.s14w400,
-                                ),
-                              ),
-                              searchMatchFn: (item, searchValue) {
-                                return item.value
-                                    .toString()
-                                    .toLowerCase()
-                                    .trim()
-                                    .contains(
-                                      searchValue.toLowerCase().trim(),
-                                    );
-                              },
-                            ),
-                            onMenuStateChange: (isOpen) {
-                              if (!isOpen) {
-                                citySearchController.clear();
-                              }
+                            searchMatchFn: (item, searchValue) {
+                              return item.value
+                                  .toString()
+                                  .toLowerCase()
+                                  .trim()
+                                  .contains(
+                                    searchValue.toLowerCase().trim(),
+                                  );
                             },
-                            onChanged: (value) =>
-                                cityController.value = value ?? '',
-                            dropdownStyleData: const DropdownStyleData(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(16),
-                                ),
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 1,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
-                                  ),
-                                ),
-                              ),
-                              openMenuIcon: Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 3,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            items: cities
-                                .map(
-                                  (e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e),
-                                  ),
-                                )
-                                .toList(),
                           ),
                         ),
                       ),

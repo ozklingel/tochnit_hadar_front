@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
@@ -16,6 +16,7 @@ import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/persona_dropdown_button.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
@@ -27,7 +28,6 @@ import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class TohnitHadarTabView extends HookConsumerWidget {
   const TohnitHadarTabView({
@@ -313,12 +313,8 @@ class _GeneralSection extends HookConsumerWidget {
     final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
     final institutions = ref.watch(getInstitutionsProvider).valueOrNull ?? [];
     final isEditMode = useState(false);
-    final selectedInstitution = useState(
-      institutions.singleWhere(
-        (element) => element.id == persona.institutionId,
-        orElse: () => const InstitutionDto(),
-      ),
-    );
+    final selectedMentor = useState(persona.thMentor);
+    final selectedInstitution = useState(institution);
     final selectedMahzor = useState(persona.thPeriod);
     final ravMelamedYearAName =
         useTextEditingController(text: persona.thRavMelamedYearAName);
@@ -360,135 +356,50 @@ class _GeneralSection extends HookConsumerWidget {
                   InputFieldContainer(
                     label: 'מקום לימודים',
                     isRequired: true,
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<InstitutionDto>(
-                        hint: Text(
-                          selectedInstitution.value.name,
-                          overflow: TextOverflow.fade,
-                        ),
-                        style: Theme.of(context).inputDecorationTheme.hintStyle,
-                        buttonStyleData: ButtonStyleData(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(36),
-                            border: Border.all(
-                              color: AppColors.shade04,
-                            ),
-                          ),
-                          elevation: 0,
-                          padding: const EdgeInsets.only(right: 8),
-                        ),
-                        onChanged: (value) => selectedInstitution.value =
-                            value ?? const InstitutionDto(),
-                        dropdownStyleData: const DropdownStyleData(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(16),
-                            ),
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: RotatedBox(
-                              quarterTurns: 1,
-                              child: Icon(
-                                Icons.chevron_left,
-                                color: AppColors.grey6,
+                    child: PersonaDropdownButton(
+                      value: selectedInstitution.value.name,
+                      onChanged: (value) {
+                        final buttonInstitution = institutions.firstWhere(
+                          (element) => element.name == value,
+                          orElse: () => const InstitutionDto(),
+                        );
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('בחירת מלווה\nב$value'),
+                              content: PersonaDropdownButton(
+                                value: selectedMentor.value,
+                                onChanged: (value) {
+                                  selectedMentor.value = value ?? '';
+                                  selectedInstitution.value = buttonInstitution;
+                                  Navigator.pop(context);
+                                },
+                                items: buttonInstitution.melavim,
                               ),
-                            ),
-                          ),
-                          openMenuIcon: Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: RotatedBox(
-                              quarterTurns: 3,
-                              child: Icon(
-                                Icons.chevron_left,
-                                color: AppColors.grey6,
-                              ),
-                            ),
-                          ),
-                        ),
-                        items: institutions
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e.name),
-                              ),
-                            )
-                            .toList(),
-                      ),
+                            );
+                          },
+                        );
+                      },
+                      items: institutions.map((e) => e.name).toList(),
                     ),
                   ),
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'מחזור',
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      hint: Text(
-                        selectedMahzor.value,
-                        overflow: TextOverflow.fade,
-                      ),
-                      style: Theme.of(context).inputDecorationTheme.hintStyle,
-                      buttonStyleData: ButtonStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(36),
-                          border: Border.all(
-                            color: AppColors.shade04,
-                          ),
-                        ),
-                        elevation: 0,
-                        padding: const EdgeInsets.only(right: 8),
-                      ),
-                      onChanged: (value) => selectedMahzor.value = value ?? '',
-                      dropdownStyleData: const DropdownStyleData(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(16),
-                          ),
-                        ),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        icon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 1,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
-                            ),
-                          ),
-                        ),
-                        openMenuIcon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 3,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
-                            ),
-                          ),
-                        ),
-                      ),
-                      items: [
-                        'א',
-                        'ב',
-                        'ג',
-                        'ד',
-                        'ה',
-                        'ו',
-                        'ז',
-                        'ח',
-                      ]
-                          .map(
-                            (e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(e),
-                            ),
-                          )
-                          .toList(),
-                    ),
+                  child: PersonaDropdownButton(
+                    value: selectedMahzor.value,
+                    onChanged: (value) => selectedMahzor.value = value ?? '',
+                    items: const [
+                      'א',
+                      'ב',
+                      'ג',
+                      'ד',
+                      'ה',
+                      'ו',
+                      'ז',
+                      'ח',
+                    ],
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -522,201 +433,40 @@ class _GeneralSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'משלם/לא משלם',
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<bool>(
-                      hint: Text(
-                        isPaying.value ? 'משלם' : 'לא משלם',
-                        overflow: TextOverflow.fade,
-                      ),
-                      style: Theme.of(context).inputDecorationTheme.hintStyle,
-                      buttonStyleData: ButtonStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(36),
-                          border: Border.all(
-                            color: AppColors.shade04,
-                          ),
-                        ),
-                        elevation: 0,
-                        padding: const EdgeInsets.only(right: 8),
-                      ),
-                      onChanged: (value) => isPaying.value = value ?? false,
-                      dropdownStyleData: const DropdownStyleData(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(16),
-                          ),
-                        ),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        icon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 1,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
-                            ),
-                          ),
-                        ),
-                        openMenuIcon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 3,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
-                            ),
-                          ),
-                        ),
-                      ),
-                      items: const [
-                        DropdownMenuItem(
-                          value: true,
-                          child: Text('משלם'),
-                        ),
-                        DropdownMenuItem(
-                          value: false,
-                          child: Text('לא משלם'),
-                        ),
-                      ],
-                    ),
+                  child: PersonaDropdownButton(
+                    value: isPaying.value ? 'משלם' : 'לא משלם',
+                    items: ['משלם', 'לא משלם'],
+                    onChanged: (value) => isPaying.value = value == 'משלם',
                   ),
                 ),
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'מצב רוחני - מצב״ר',
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      hint: Text(
-                        spiritualStatus.value,
-                        overflow: TextOverflow.fade,
-                      ),
-                      style: Theme.of(context).inputDecorationTheme.hintStyle,
-                      buttonStyleData: ButtonStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(36),
-                          border: Border.all(
-                            color: AppColors.shade04,
-                          ),
-                        ),
-                        elevation: 0,
-                        padding: const EdgeInsets.only(right: 8),
-                      ),
-                      onChanged: (value) => spiritualStatus.value = value ?? '',
-                      dropdownStyleData: const DropdownStyleData(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(16),
-                          ),
-                        ),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        icon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 1,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
-                            ),
-                          ),
-                        ),
-                        openMenuIcon: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: RotatedBox(
-                            quarterTurns: 3,
-                            child: Icon(
-                              Icons.chevron_left,
-                              color: AppColors.grey6,
-                            ),
-                          ),
-                        ),
-                      ),
-                      items: [
-                        'אדוק',
-                        'מחובר',
-                        'מחובר חלקית',
-                        'בשלבי ניתוק',
-                        'מנותק',
-                      ]
-                          .map(
-                            (e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(e),
-                            ),
-                          )
-                          .toList(),
-                    ),
+                  child: PersonaDropdownButton(
+                    value: spiritualStatus.value,
+                    onChanged: (value) => spiritualStatus.value = value ?? '',
+                    items: const [
+                      'אדוק',
+                      'מחובר',
+                      'מחובר חלקית',
+                      'בשלבי ניתוק',
+                      'מנותק',
+                    ],
                   ),
                 ),
                 // const SizedBox(height: 12),
                 // InputFieldContainer(
                 //   label: 'מלווה - משויך',
-                //   child: DropdownButtonHideUnderline(
-                //     child: DropdownButton2<PersonaDto>(
-                //       hint: Text(
-                //         selectedPersona,
-                //         overflow: TextOverflow.fade,
-                //       ),
-                //       style: Theme.of(context).inputDecorationTheme.hintStyle,
-                //       buttonStyleData: ButtonStyleData(
-                //         decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(36),
-                //           border: Border.all(
-                //             color: AppColors.shade04,
-                //           ),
-                //         ),
-                //         elevation: 0,
-                //         padding: const EdgeInsets.only(right: 8),
-                //       ),
-                //       onChanged: (value) => matsbar.value = value ?? '',
-                //       dropdownStyleData: const DropdownStyleData(
-                //         decoration: BoxDecoration(
-                //           color: Colors.white,
-                //           borderRadius: BorderRadius.all(
-                //             Radius.circular(16),
-                //           ),
-                //         ),
-                //       ),
-                //       iconStyleData: const IconStyleData(
-                //         icon: Padding(
-                //           padding: EdgeInsets.only(left: 16),
-                //           child: RotatedBox(
-                //             quarterTurns: 1,
-                //             child: Icon(
-                //               Icons.chevron_left,
-                //               color: AppColors.grey6,
-                //             ),
-                //           ),
-                //         ),
-                //         openMenuIcon: Padding(
-                //           padding: EdgeInsets.only(left: 16),
-                //           child: RotatedBox(
-                //             quarterTurns: 3,
-                //             child: Icon(
-                //               Icons.chevron_left,
-                //               color: AppColors.grey6,
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //       items: [
-                //         'אדוק',
-                //         'מחובר',
-                //         'מחובר חלקית',
-                //         'בשלבי ניתוק',
-                //         'מנותק',
-                //       ]
-                //           .map(
-                //             (e) => DropdownMenuItem(
-                //               value: e,
-                //               child: Text(e),
-                //             ),
-                //           )
-                //           .toList(),
-                //     ),
+                //   child: _DropdownButton(
+                //     value: selectedPersona,
+                //     items: [
+                //       'אדוק',
+                //       'מחובר',
+                //       'מחובר חלקית',
+                //       'בשלבי ניתוק',
+                //       'מנותק',
+                //     ],
+                //     onChanged: (value) => spiritualStatus.value = value ?? '',
                 //   ),
                 // ),
                 const SizedBox(height: 24),
@@ -728,8 +478,8 @@ class _GeneralSection extends HookConsumerWidget {
                         .read(personasControllerProvider.notifier)
                         .edit(
                           persona: persona.copyWith(
-                            educationalInstitution:
-                                selectedInstitution.value.name,
+                            institutionId: selectedInstitution.value.id,
+                            thMentor: selectedMentor.value,
                             thPeriod: selectedMahzor.value,
                             thRavMelamedYearAName: ravMelamedYearAName.text,
                             thRavMelamedYearAPhone: ravMelamedYearAPhone.text,
@@ -760,13 +510,8 @@ class _GeneralSection extends HookConsumerWidget {
                   data: '',
                   contactName: persona.thRavMelamedYearAName,
                   contactPhone: persona.thRavMelamedYearAPhone.format,
-                  onTapPhone: () async {
-                    final phoneCallAction =
-                        Uri.parse('tel:${persona.thRavMelamedYearAPhone}');
-                    if (await canLaunchUrl(phoneCallAction)) {
-                      await launchUrl(phoneCallAction);
-                    }
-                  },
+                  onTapPhone: () =>
+                      launchCall(phone: persona.thRavMelamedYearAPhone),
                 ),
                 const SizedBox(height: 12),
                 DetailsRowItem(
@@ -774,18 +519,13 @@ class _GeneralSection extends HookConsumerWidget {
                   data: '',
                   contactName: persona.thRavMelamedYearBName,
                   contactPhone: persona.thRavMelamedYearBPhone.format,
-                  onTapPhone: () async {
-                    final phoneCallAction =
-                        Uri.parse('tel:${persona.thRavMelamedYearBPhone}');
-                    if (await canLaunchUrl(phoneCallAction)) {
-                      await launchUrl(phoneCallAction);
-                    }
-                  },
+                  onTapPhone: () =>
+                      launchCall(phone: persona.thRavMelamedYearBPhone),
                 ),
                 const SizedBox(height: 12),
                 DetailsRowItem(
                   label: 'מלווה',
-                  data: persona.thMentor,
+                  data: selectedMentor.value,
                 ),
               ],
       ),
