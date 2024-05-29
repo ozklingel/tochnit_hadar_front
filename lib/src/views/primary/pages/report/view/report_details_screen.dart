@@ -564,6 +564,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                   return x.val < 200;
                                 case UserRole.rakazMosad:
                                   return x.val < 300;
+                                case UserRole.rakazEshkol:
+                                  return x.val < 400;
                                 default:
                                   return true;
                               }

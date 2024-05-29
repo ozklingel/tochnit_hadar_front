@@ -83,6 +83,7 @@ class ReportDto with _$ReportDto {
 // }
 
 enum Event {
+  // melave
   offlineMeeting(100), // מפגש
   offlineGroupMeeting(101), // מפגש קבוצתי
   onlineMeeting(102),
@@ -91,19 +92,20 @@ enum Event {
   baseVisit(105), // ביקור בבסיס
   fiveMessages(106),
   failedAttempt(107), // נסיון שכשל
-  // melave
+  // rakaz mosad
   matsbarGathering(200), // ישיבת מצב”ר
-  recurringSabath(201), // שבת מחזור
+  recurringSabbath(201), // שבת מחזור
   doingForAlumni(202), // עשיה לבוגרים
   monthlyProfessionalConference(203), // כנס מלווים מקצועי חודשי
   periodInput(204), // הזנת מחזור
   recurringMeeting(205), // מפגש מחזור
   mosadMeetings(206), // ישיבה מוסדית
-  // rakaz mosad
+  // rakz eshkol
   annualConference(300), // כנס מלווים שנתי
   adminsGathering(301), // ישיבת רכזי תוכנית
-  // rakz eshkol
+  coordinatorMeeting(302), // ישיבת רכז
   // ahrai tohnit
+  monthlyProgramMeeting(400), // ישיבת תוכנית חודשית
   other(999);
 
   const Event(this.val);
@@ -114,6 +116,7 @@ enum Event {
 
   String get name {
     switch (this) {
+      // melave
       case Event.offlineMeeting:
         return 'פגישה פיזית';
       case Event.offlineGroupMeeting:
@@ -130,10 +133,10 @@ enum Event {
         return '5 הודעות';
       case Event.failedAttempt:
         return 'נסיון כושל';
-      // end melave
+      // rakaz mosad
       case Event.matsbarGathering:
         return 'ישיבת מצב”ר';
-      case Event.recurringSabath:
+      case Event.recurringSabbath:
         return 'שבת מחזור';
       case Event.doingForAlumni:
         return 'עשיה לבוגרים';
@@ -145,12 +148,16 @@ enum Event {
         return 'מפגש מחזור';
       case Event.mosadMeetings:
         return 'ישיבה מוסדית';
-      // end rakaz mosad
+      // rakaz eshkol
       case Event.annualConference:
         return 'כנס מלווים שנתי';
       case Event.adminsGathering:
         return 'ישיבת רכזי תוכנית';
-      // end rakaz eshkol
+      case Event.coordinatorMeeting:
+        return 'ישיבה רכז';
+      // ahrai tohnit
+      case Event.monthlyProgramMeeting:
+        return 'ישיבת תוכנית חודשית';
       case Event.other:
         return 'UNKNOWN TYPE';
     }
@@ -161,45 +168,16 @@ Event _extractType(String? val) {
   // account for bad server data
   val = val?.replaceAll('_', ' ');
 
-  if (val == Event.adminsGathering.name) {
-    return Event.adminsGathering;
-  } else if (val == Event.annualConference.name) {
-    return Event.annualConference;
-  } else if (val == Event.baseVisit.name) {
-    return Event.baseVisit;
-  } else if (val == Event.doingForAlumni.name) {
-    return Event.doingForAlumni;
-  } else if (val == Event.failedAttempt.name) {
-    return Event.failedAttempt;
-  } else if (val == Event.fiveMessages.name ||
-      (val?.contains(' הודעות') ?? false)) {
-    return Event.fiveMessages;
-  } else if (val == Event.matsbarGathering.name) {
-    return Event.matsbarGathering;
-  } else if (val == Event.monthlyProfessionalConference.name) {
-    return Event.monthlyProfessionalConference;
-  } else if (val == Event.offlineMeeting.name) {
-    return Event.offlineMeeting;
-  } else if (val == Event.offlineGroupMeeting.name) {
-    return Event.offlineGroupMeeting;
-  } else if (val == Event.onlineMeeting.name) {
-    return Event.onlineMeeting;
-  } else if (val == Event.call.name || val == 'שיחה') {
-    return Event.call;
-  } else if (val == Event.callParents.name) {
-    return Event.callParents;
-  } else if (val == Event.periodInput.name) {
-    return Event.periodInput;
-  } else if (val == Event.recurringMeeting.name) {
-    return Event.recurringMeeting;
-  } else if (val == Event.recurringSabath.name) {
-    return Event.recurringSabath;
-  } else {
-    const err = 'failed to extract report type';
-    Logger().i(err, error: val);
-    Sentry.captureException(Exception(err));
-    Toaster.error(err);
-
-    return Event.other;
+  for (final event in Event.values) {
+    if (event.name == val) return event;
   }
+  if (val?.contains(' הודעות') ?? false) return Event.fiveMessages;
+  if (val == 'שיחה') return Event.call;
+
+  const err = 'failed to extract report type';
+  Logger().i(err, error: val);
+  Sentry.captureException(Exception(err));
+  Toaster.error(err);
+
+  return Event.other;
 }
