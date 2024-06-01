@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 abstract class AppColors {
-  static const scafooldBottomNavBackgroundColor = Color(0xFFFFFFFF);
+  static const scaffoldBottomNavBackgroundColor = Color(0xFFFFFFFF);
 
   static const mainCTA = Color(0xFF24517A);
 

@@ -36,7 +36,7 @@ class BottomNavigationWidget extends ConsumerWidget {
       child: SizedBox(
         height: kBottomNavigationBarHeight,
         child: BottomNavigationBar(
-          backgroundColor: AppColors.scafooldBottomNavBackgroundColor,
+          backgroundColor: AppColors.scaffoldBottomNavBackgroundColor,
           currentIndex: navShell.currentIndex,
           onTap: (value) => navShell.goBranch(value, initialLocation: true),
           type: BottomNavigationBarType.fixed,

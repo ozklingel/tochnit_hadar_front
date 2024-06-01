@@ -1,77 +1,61 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/services/networking/http_service.dart';
+import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:hadar_program/src/views/secondary/charts/melave/models/chart_settings.dto.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../core/theming/colors.dart';
-import '../../../services/auth/auth_service.dart';
-import '../../../services/networking/http_service.dart';
+class ChartsSettingsScreen extends HookConsumerWidget {
+  const ChartsSettingsScreen({super.key});
 
-class ChartsSettingsScreen extends StatefulHookConsumerWidget {
-  const ChartsSettingsScreen({Key? key}) : super(key: key);
-   @override
-  ConsumerState<ChartsSettingsScreen> createState() => _SettingPageState();
-}
-final call_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final basis_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final callHorim_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final cenes_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final doForBogrim_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final eshcolMosadMeet_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final groupMeet_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final hazana_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final meet_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final mosadYeshiva_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final professionalMeet_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final tochnitMeet_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-final matzbarmeet_madad_dateProvider = StateProvider<String>((ref) {return '1999-01-01';});
-
-class _SettingPageState extends ConsumerState<ChartsSettingsScreen> {
-
-//final userProvider = StateProvider<String>((ref) {return '1999-01-01';});
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    final auth = ref.watch(authServiceProvider);
-    final jsonData =
-        await HttpService.getMadadimSetting(auth.valueOrNull!.phone);
-    final u = jsonDecode(jsonData.body);
- 
-      String call_madad_date=u["call_madad_date"];
-      String basis_madad_date = u["basis_madad_date"];
-      String callHorim_madad_date = u["callHorim_madad_date"];
-      String cenes_madad_date = u["cenes_madad_date"];
-      String doForBogrim_madad_date = u["doForBogrim_madad_date"];
-         String   eshcolMosadMeet_madad_date = u["eshcolMosadMeet_madad_date"];
-      String groupMeet_madad_date = u["groupMeet_madad_date"];
-      String hazana_madad_date = u["hazana_madad_date"];
-          String  matzbarmeet_madad_date = u["matzbarmeet_madad_date"];
-      String meet_madad_date = u["meet_madad_date"];
-          String  mosadYeshiva_madad_date = u["mosadYeshiva_madad_date"];
-      String professionalMeet_madad_date = u["professionalMeet_madad_date"];
-      String tochnitMeet_madad_date = u["tochnitMeet_madad_date"];
-
-      ref.read(basis_madad_dateProvider.notifier).state=basis_madad_date;
-      ref.read(call_madad_dateProvider.notifier).state=call_madad_date;
-      ref.read(callHorim_madad_dateProvider.notifier).state=callHorim_madad_date;
-      ref.read(cenes_madad_dateProvider.notifier).state=cenes_madad_date;
-      ref.read(doForBogrim_madad_dateProvider.notifier).state=doForBogrim_madad_date;
-      ref.read(eshcolMosadMeet_madad_dateProvider.notifier).state=eshcolMosadMeet_madad_date;
-      ref.read(groupMeet_madad_dateProvider.notifier).state=groupMeet_madad_date;
-      ref.read(matzbarmeet_madad_dateProvider.notifier).state=matzbarmeet_madad_date;
-      ref.read(meet_madad_dateProvider.notifier).state=meet_madad_date;
-      ref.read(mosadYeshiva_madad_dateProvider.notifier).state=mosadYeshiva_madad_date;
-      ref.read(professionalMeet_madad_dateProvider.notifier).state=professionalMeet_madad_date;
-      ref.read(tochnitMeet_madad_dateProvider.notifier).state=tochnitMeet_madad_date;
-      ref.read(basis_madad_dateProvider.notifier).state=basis_madad_date;
-
+  _getNewDate(BuildContext context) {
+    return showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.white,
+              onPrimary: AppColors.blue01,
+              surface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
   }
-  
+
   @override
-  Widget build(BuildContext context) {
-      final auth = ref.watch(authServiceProvider);
-  
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = useState<ChartSettingsDto?>(null);
+    final phone = ref.read(storageServiceProvider.notifier).getUserPhone();
+    final result = useMemoized(() => HttpService.getMadadimSetting(phone));
+    final response = useFuture(result);
+    if (response.hasData) {
+      state.value ??= ChartSettingsDto.fromJson(jsonDecode(response.data.body));
+    }
+    final chartSettings = state.value;
+
+    void updateField(String field) async {
+      final newDate = await _getNewDate(context);
+      if (newDate == null) return;
+      final stringDate = newDate.toString().split(" ")[0];
+      var result =
+          await HttpService.setSettingMadadim(phone, field, stringDate);
+      if (result == 'success') {
+        final newJson = state.value?.toJson() ?? {};
+        newJson[field] = stringDate;
+        state.value = ChartSettingsDto.fromJson(newJson);
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -92,153 +76,77 @@ class _SettingPageState extends ConsumerState<ChartsSettingsScreen> {
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
-                children: [
-                  _SettingsSection(
-                    header: 'מלווים',
-                    children: [
-                      _SettingListTile(
-                        leading: 'ביצוע שיחות',
-                        trailing: ref.watch(call_madad_dateProvider),
-                        onTap:() async {              
-                        final newDate = await getNewDate();
-                            if (newDate == null) {return;}
-                                var result =await HttpService.setSettingMadadim(auth.valueOrNull!.phone,"call_madad_date", newDate.toString().split(" ")[0]);
-                            if (result=='success') {
-                              ref.read(call_madad_dateProvider.notifier).state=newDate.toString().split(" ")[0];;
-                          } else {
-                            //showAlertDialog(context);
-                          }
-                      },
-                    ),     _SettingListTile(
-                        leading: 'ביצוע מפגשים',
-                        trailing: ref.watch(meet_madad_dateProvider),
-                        onTap:() async {              
-                        final newDate = await getNewDate();
-                            if (newDate == null) {return;}
-                                var result =await HttpService.setSettingMadadim(auth.valueOrNull!.phone,"meet_madad_date", newDate.toString().split(" ")[0]);
-                            if (result=='success') {
-                              ref.read(meet_madad_dateProvider.notifier).state=newDate.toString().split(" ")[0];;
-                          } else {
-                            //showAlertDialog(context);
-                          }
-                      },
-                    ),
-                         _SettingListTile(
-                        leading: 'מפגשים קבוצתיים',
-                        trailing: ref.watch(groupMeet_madad_dateProvider),
-                        onTap:() async {              
-                        final newDate = await getNewDate();
-                            if (newDate == null) {return;}
-                                var result =await HttpService.setSettingMadadim(auth.valueOrNull!.phone,"groupMeet_madad_date", newDate.toString().split(" ")[0]);
-                            if (result=='success') {
-                              ref.read(groupMeet_madad_dateProvider.notifier).state=newDate.toString().split(" ")[0];;
-                          } else {
-                            //showAlertDialog(context);
-                          }
-                      },
-                    ),
-                     _SettingListTile(
-                        leading: 'שיחות עם הורים',
-                        trailing: ref.watch(callHorim_madad_dateProvider),
-                        onTap:() async {              
-                        final newDate = await getNewDate();
-                            if (newDate == null) {return;}
-                                var result =await HttpService.setSettingMadadim(auth.valueOrNull!.phone,"callHorim_madad_date", newDate.toString().split(" ")[0]);
-                            if (result=='success') {
-                              ref.read(callHorim_madad_dateProvider.notifier).state=newDate.toString().split(" ")[0];;
-                          } else {
-                            //showAlertDialog(context);
-                          }
-                      },
-                    ),
-                     
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  _SettingsSection(
-                    header: 'רכזים',
-                    children: [
-                    _SettingListTile(
-                        leading: 'מפגשים מקצועיים למלווים',
-                        trailing: ref.watch(professionalMeet_madad_dateProvider),
-                        onTap:() async {              
-                        final newDate = await getNewDate();
-                            if (newDate == null) {return;}
-                                var result =await HttpService.setSettingMadadim(auth.valueOrNull!.phone,"professionalMeet_madad_date", newDate.toString().split(" ")[0]);
-                            if (result=='success') {
-                              ref.read(professionalMeet_madad_dateProvider.notifier).state=newDate.toString().split(" ")[0];;
-                          } else {
-                            //showAlertDialog(context);
-                          }
-                      },
-                    ),
-                     _SettingListTile(
-                        leading: 'ישיבות מצב”ר',
-                        trailing: ref.watch(matzbarmeet_madad_dateProvider),
-                        onTap:() async {              
-                        final newDate = await getNewDate();
-                            if (newDate == null) {return;}
-                                var result =await HttpService.setSettingMadadim(auth.valueOrNull!.phone,"matzbarmeet_madad_date", newDate.toString().split(" ")[0]);
-                            if (result=='success') {
-                              ref.read(matzbarmeet_madad_dateProvider.notifier).state=newDate.toString().split(" ")[0];;
-                          } else {
-                            //showAlertDialog(context);
-                          }
-                      },
-                    ),
-                      _SettingListTile(
-                        leading: 'עשיה לטובת בוגרים',
-                        trailing: ref.watch(doForBogrim_madad_dateProvider),
-                        onTap:() async {              
-                        final newDate = await getNewDate();
-                            if (newDate == null) {return;}
-                                var result =await HttpService.setSettingMadadim(auth.valueOrNull!.phone,"doForBogrim_madad_date", newDate.toString().split(" ")[0]);
-                            if (result=='success') {
-                              ref.read(doForBogrim_madad_dateProvider.notifier).state=newDate.toString().split(" ")[0];;
-                          } else {
-                            //showAlertDialog(context);
-                          }
-                      },
-                    ),
-                   
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  _SettingsSection(
-                    header: 'רכזי אשכול',
-                    children: [
-                       _SettingListTile(
-                        leading: 'ישיבה חודשית עם אחראי תוכנית',
-                        trailing: ref.watch(tochnitMeet_madad_dateProvider),
-                        onTap:() async {              
-                        final newDate = await getNewDate();
-                            if (newDate == null) {return;}
-                                var result =await HttpService.setSettingMadadim(auth.valueOrNull!.phone,"tochnitMeet_madad_date", newDate.toString().split(" ")[0]);
-                            if (result=='success') {
-                              ref.read(tochnitMeet_madad_dateProvider.notifier).state=newDate.toString().split(" ")[0];;
-                          } else {
-                            //showAlertDialog(context);
-                          }
-                      },
-                    ),
-                     _SettingListTile(
-                        leading: 'ישיבה חודשית עם רכז',
-                        trailing: ref.watch(mosadYeshiva_madad_dateProvider),
-                        onTap:() async {              
-                        final newDate = await getNewDate();
-                            if (newDate == null) {return;}
-                                var result =await HttpService.setSettingMadadim(auth.valueOrNull!.phone,"mosadYeshiva_madad_date", newDate.toString().split(" ")[0]);
-                            if (result=='success') {
-                              ref.read(mosadYeshiva_madad_dateProvider.notifier).state=newDate.toString().split(" ")[0];;
-                          } else {
-                            //showAlertDialog(context);
-                          }
-                      },
-                    ),
-                    
-                    ],
-                  ),
-                ],
+                children: chartSettings == null
+                    ? [const CircularProgressIndicator.adaptive()]
+                    : [
+                        _SettingsSection(
+                          header: 'מלווים',
+                          children: [
+                            _SettingListTile(
+                              leading: 'ביצוע שיחות',
+                              trailing: chartSettings.callMadadDate,
+                              onTap: () => updateField('call_madad_date'),
+                            ),
+                            _SettingListTile(
+                              leading: 'ביצוע מפגשים',
+                              trailing: chartSettings.meetMadadDate,
+                              onTap: () => updateField('meet_madad_date'),
+                            ),
+                            _SettingListTile(
+                              leading: 'מפגשים קבוצתיים',
+                              trailing: chartSettings.groupMeetMadadDate,
+                              onTap: () => updateField('groupMeet_madad_date'),
+                            ),
+                            _SettingListTile(
+                              leading: 'שיחות עם הורים',
+                              trailing: chartSettings.callHorimMadadDate,
+                              onTap: () => updateField('callHorim_madad_date'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        _SettingsSection(
+                          header: 'רכזים',
+                          children: [
+                            _SettingListTile(
+                              leading: 'מפגשים מקצועיים למלווים',
+                              trailing: chartSettings.professionalMeetMadadDate,
+                              onTap: () =>
+                                  updateField('professionalMeet_madad_date'),
+                            ),
+                            _SettingListTile(
+                              leading: 'ישיבות מצב”ר',
+                              trailing: chartSettings.matzbarMeetMadadDate,
+                              onTap: () =>
+                                  updateField('matzbarmeet_madad_date'),
+                            ),
+                            _SettingListTile(
+                              leading: 'עשיה לטובת בוגרים',
+                              trailing: chartSettings.doForBogrimMadadDate,
+                              onTap: () =>
+                                  updateField('doForBogrim_madad_date'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        _SettingsSection(
+                          header: 'רכזי אשכול',
+                          children: [
+                            _SettingListTile(
+                              leading: 'ישיבה חודשית עם אחראי תוכנית',
+                              trailing: chartSettings.tochnitMeetMadadDate,
+                              onTap: () =>
+                                  updateField('tochnitMeet_madad_date'),
+                            ),
+                            _SettingListTile(
+                              leading: 'ישיבה חודשית עם רכז',
+                              trailing: chartSettings.mosadYeshivaMadadDate,
+                              onTap: () =>
+                                  updateField('mosadYeshiva_madad_date'),
+                            ),
+                          ],
+                        ),
+                      ],
               ),
             ),
           ],
@@ -246,28 +154,6 @@ class _SettingPageState extends ConsumerState<ChartsSettingsScreen> {
       ),
     );
   }
-  
- getNewDate() {
-                           return showDatePicker(
-                        context: context,
-                        initialDate:
-                            DateTime.now(),
-                        firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                        lastDate: DateTime.now(),
-                        builder: (context, child) {
-                          return Theme(
-                            data: Theme.of(context).copyWith(
-                              colorScheme: const ColorScheme.light(
-                                primary: Colors.white,
-                                onPrimary: AppColors.blue01,
-                                surface: Colors.white,
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                      );
-                        }
 }
 
 class _SettingsSection extends StatelessWidget {
@@ -284,8 +170,8 @@ class _SettingsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-         Padding(
-          padding: EdgeInsets.symmetric(vertical: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Text(
             header,
             style: TextStyles.s20w500cGrey2,
@@ -319,13 +205,10 @@ class _SettingListTile extends StatelessWidget {
       trailing: TextButton.icon(
         onPressed: onTap,
         icon: Text(
-          trailing,
+          trailing.split('-').reversed.toList().join('/'),
           style: TextStyles.s14w300,
         ),
-        label: const RotatedBox(
-          quarterTurns: 1,
-          child: Icon(Icons.chevron_left),
-        ),
+        label: const Icon(Icons.keyboard_arrow_down),
       ),
     );
   }

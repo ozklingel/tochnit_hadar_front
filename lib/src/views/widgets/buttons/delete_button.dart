@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../services/auth/auth_service.dart';
 import '../../../services/networking/http_service.dart';
 import '../../../services/routing/go_router_provider.dart';
-import '../../primary/pages/home/views/widgets/success_dialog.dart';
 import 'large_filled_rounded_button.dart';
 
 class DeleteButton extends HookConsumerWidget {
@@ -196,7 +195,6 @@ void showDeleteDialog(BuildContext context) {
                   fontSize: 15,
                 ),
               ),
-        
             ],
           ),
         ],
