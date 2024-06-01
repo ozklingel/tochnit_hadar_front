@@ -21,10 +21,9 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:timeago/timeago.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   // Check if the platform is not web and is either Android or iOS
   if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    WidgetsFlutterBinding.ensureInitialized();
     // TODO(noga-dev): budget permitting this should have an init loader
     // Initialize notifications service only for Android or iOS
     await initializeNotificationsService();
@@ -34,16 +33,11 @@ Future<void> main() async {
     (options) {
       // options.debug = kDebugMode;
       options.attachScreenshot = kReleaseMode;
-      // or define SENTRY_DSN via Dart environment variable (--dart-define)
       options.dsn =
           'https://9648d7069cc6243a7f1e8e366a6cff42@o4506474413752320.ingest.sentry.io/4506474416242688';
-      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-      // We recommend adjusting this value in production.
       options.tracesSampleRate = 1.0;
     },
     appRunner: () {
-      WidgetsFlutterBinding.ensureInitialized();
-
       setLocaleMessages(
         Consts.defaultLocale.languageCode,
         HeMessages(),
