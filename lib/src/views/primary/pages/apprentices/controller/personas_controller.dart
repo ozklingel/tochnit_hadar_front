@@ -23,7 +23,6 @@ part 'personas_controller.g.dart';
     GetFilteredUsers,
     GetMapsApprentices,
     StorageService,
-    GetPersonas,
   ],
 )
 class PersonasController extends _$PersonasController {

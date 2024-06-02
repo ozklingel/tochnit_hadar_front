@@ -435,7 +435,7 @@ class _GeneralSection extends HookConsumerWidget {
                   label: 'משלם/לא משלם',
                   child: PersonaDropdownButton(
                     value: isPaying.value ? 'משלם' : 'לא משלם',
-                    items: ['משלם', 'לא משלם'],
+                    items: const ['משלם', 'לא משלם'],
                     onChanged: (value) => isPaying.value = value == 'משלם',
                   ),
                 ),

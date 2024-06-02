@@ -17,7 +17,7 @@ class HttpService {
   static final _setSettingUrl = Uri.parse(
     '${Consts.baseUrl}notification_form/setSetting',
   );
-    static final _setSettingMadadimUrl = Uri.parse(
+  static final _setSettingMadadimUrl = Uri.parse(
     '${Consts.baseUrl}master_user/setSetting_madadim',
   );
   static const _getNotifSettingUrl =
@@ -30,7 +30,8 @@ class HttpService {
 
   static const _deleteGifturl = '${Consts.baseUrl}gift/delete';
   static const _deleteGiftAllurl = '${Consts.baseUrl}gift/deleteAll';
-  static const _export_aprentices_status_url = '${Consts.baseUrl}export_import/lowScoreApprentice_tohnit';
+  static const _exportAprenticesStatusUrl =
+      '${Consts.baseUrl}export_import/lowScoreApprentice_tohnit';
 
   static const token = "11"; //await Candidate().getToken();
   static final httpClient = HttpClient();
@@ -45,22 +46,22 @@ class HttpService {
     return bytesToImage(bytes);
   }
 
-   static exportApprenticeStatus(
+  static exportApprenticeStatus(
     userId,
-    String export_date,
+    String exportDate,
   ) async {
     return http.post(
-      Uri.parse(_export_aprentices_status_url.toString()),
+      Uri.parse(_exportAprenticesStatusUrl.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
         'userId': userId,
         //'export_date': null,
-     
       }),
     );
   }
+
   static Future<ui.Image> bytesToImage(Uint8List imgBytes) async {
     ui.Codec codec = await ui.instantiateImageCodec(imgBytes);
     ui.FrameInfo frame;
@@ -106,8 +107,7 @@ class HttpService {
     );
   }
 
-  
-    static setSettingMadadim1(
+  static setSettingMadadim1(
     userId,
     String fieldToChange,
     String value,
@@ -120,18 +120,18 @@ class HttpService {
       body: jsonEncode(<String, String>{
         'userId': userId,
         'fieldToChange': value,
-     
       }),
     );
   }
- static setSettingMadadim(    userId,
-    String fieldToChange,
-    String value) async {
-    Map<String, dynamic> request = {
-       'userId': userId,
-        fieldToChange: value,
-           
 
+  static setSettingMadadim(
+    userId,
+    String fieldToChange,
+    String value,
+  ) async {
+    Map<String, dynamic> request = {
+      'userId': userId,
+      fieldToChange: value,
     };
     final headers = {'Content-Type': 'application/json'};
     final response = await http.post(
@@ -143,8 +143,6 @@ class HttpService {
     return responsePayload['result'];
   }
 
-  
- 
   static addGiftCodeExcel(File selectedImage) async {
     var request = http.MultipartRequest(
       'put',
@@ -254,7 +252,7 @@ class HttpService {
     return response;
   }
 
-    static getMadadimSetting(userid) async {
+  static getMadadimSetting(userid) async {
     final response = await http.get(
       Uri.parse("$_getMadadimSettingUrl?userId=$userid"),
       headers: {
@@ -266,7 +264,9 @@ class HttpService {
     return response;
   }
 
-    static getUsedGifts(userid, ) async {
+  static getUsedGifts(
+    userid,
+  ) async {
     final response = await http.get(
       Uri.parse(
         "$_getUsedGifturl?userId=$userid",
@@ -279,9 +279,6 @@ class HttpService {
     );
     var u = jsonDecode(response.body);
 
-
     return u;
-
   }
-
 }

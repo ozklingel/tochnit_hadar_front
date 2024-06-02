@@ -76,5 +76,6 @@ void launchCall({
 }
 
 Future<void> launchGiftStore() async => _launchUri(
-    Uri.parse('https://www.caveret.org/catalogsearch/result/?q=תוכנית+הדר'),
-    'Caveret');
+      Uri.parse('https://www.caveret.org/catalogsearch/result/?q=תוכנית+הדר'),
+      'Caveret',
+    );
