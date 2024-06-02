@@ -45,9 +45,9 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 data: (notifications) => IconButton(
                   onPressed: () => const NotificationRouteData().go(context),
-                  icon: !notifications.isNotEmpty
-                      ? Assets.illustrations.alarmBellAlert.svg()
-                      : Assets.illustrations.alarmBell.svg(),
+                  icon: notifications.isEmpty
+                      ? Assets.illustrations.alarmBell.svg()
+                      : Assets.illustrations.alarmBellAlert.svg(),
                 ),
               ),
         ],

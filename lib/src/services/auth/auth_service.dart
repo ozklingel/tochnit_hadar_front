@@ -6,6 +6,7 @@ import 'package:hadar_program/src/services/arch/flags_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_service.g.dart';
@@ -33,6 +34,8 @@ class AuthService extends _$AuthService {
 
     if (kDebugMode) {
       final phone = ref.read(storageServiceProvider.notifier).getUserPhone();
+
+      Logger().d('current phone: $phone');
 
       if (phone == '523301800') {
         return user.copyWith(

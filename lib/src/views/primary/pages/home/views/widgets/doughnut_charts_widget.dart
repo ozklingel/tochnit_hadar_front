@@ -110,10 +110,10 @@ class _DoughnutChart extends StatelessWidget {
                         CircleAvatar(
                           radius: 6,
                           backgroundColor: seriesIndex == 0
-                              ? AppColors.blue02
+                              ? AppColors.chartRed
                               : seriesIndex == 1
-                                  ? AppColors.blue04
-                                  : AppColors.blue06,
+                                  ? AppColors.chartOrange
+                                  : AppColors.chartGreen,
                         ),
                         const SizedBox(width: 6),
                         Text(
@@ -139,10 +139,10 @@ class _DoughnutChart extends StatelessWidget {
                     yValueMapper: (datum, _) => datum.y,
                     legendIconType: LegendIconType.circle,
                     pointColorMapper: (datum, index) => index == 0
-                        ? AppColors.blue02
+                        ? AppColors.chartRed
                         : index == 1
-                            ? AppColors.blue04
-                            : AppColors.blue06,
+                            ? AppColors.chartOrange
+                            : AppColors.chartGreen,
                   ),
                 ],
               ),
