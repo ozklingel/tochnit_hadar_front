@@ -64,9 +64,8 @@ class SideMenuDrawer extends ConsumerWidget {
                         "פרופיל אישי ",
                         style: TextStyle(color: Colors.blue[900]),
                       ),
-                      onPressed: () {
-                        const UserProfileRouteData().push(context);
-                      },
+                      onPressed: () =>
+                          const UserProfileRouteData().push(context),
                     ),
                   ],
                 ),

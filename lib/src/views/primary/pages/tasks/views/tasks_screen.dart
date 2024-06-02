@@ -131,46 +131,57 @@ class _AhraiTohnitTasksBody extends HookConsumerWidget {
       body: TabBarView(
         controller: tabController,
         children: [
-          ListView(
-            children: incompleteTasks
-                .map(
-                  (e) => ListTile(
-                    onTap: () => TaskDetailsRouteData(id: e.id).push(context),
-                    leading: Checkbox(
-                      value: false,
-                      onChanged: (value) =>
-                          ref.read(tasksControllerProvider.notifier).edit(
-                                e.copyWith(
-                                  status: TaskStatus.done,
+          if (incompleteTasks.isEmpty)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Assets.vectors.noCompleteTasks.svg(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                ),
+                const Text('אין משימות לביצוע'),
+              ],
+            )
+          else
+            ListView(
+              children: incompleteTasks
+                  .map(
+                    (e) => ListTile(
+                      onTap: () => TaskDetailsRouteData(id: e.id).push(context),
+                      leading: Checkbox(
+                        value: false,
+                        onChanged: (value) =>
+                            ref.read(tasksControllerProvider.notifier).edit(
+                                  e.copyWith(
+                                    status: TaskStatus.done,
+                                  ),
                                 ),
-                              ),
-                    ),
-                    title: Text(
-                      e.title,
-                      style: TextStyles.s18w500cGray1,
-                    ),
-                    subtitle: Text(
-                      e.details,
-                      style: TextStyles.s16w400cGrey2,
-                    ),
-                    trailing: const DefaultTextStyle(
-                      style: TextStyles.s12w400cGrey5fRoboto,
-                      child: Column(
-                        children: [
-                          Text('20/09/23'),
-                          Text('18:30'),
-                          Icon(
-                            FluentIcons.arrow_rotate_clockwise_24_regular,
-                            size: 16,
-                            color: AppColors.gray5,
-                          ),
-                        ],
+                      ),
+                      title: Text(
+                        e.title,
+                        style: TextStyles.s18w500cGray1,
+                      ),
+                      subtitle: Text(
+                        e.details,
+                        style: TextStyles.s16w400cGrey2,
+                      ),
+                      trailing: const DefaultTextStyle(
+                        style: TextStyles.s12w400cGrey5fRoboto,
+                        child: Column(
+                          children: [
+                            Text('20/09/23'),
+                            Text('18:30'),
+                            Icon(
+                              FluentIcons.arrow_rotate_clockwise_24_regular,
+                              size: 16,
+                              color: AppColors.gray5,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                )
-                .toList(),
-          ),
+                  )
+                  .toList(),
+            ),
           if (completeTasks.isEmpty)
             Column(
               mainAxisAlignment: MainAxisAlignment.center,

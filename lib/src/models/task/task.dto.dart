@@ -19,6 +19,7 @@ enum TaskType {
   forgottenApprentices,
   baseVisit,
   hazanatMahzor,
+  birthday,
 }
 
 enum TaskStatus {
@@ -168,6 +169,8 @@ TaskType _extractTaskType(String? data) {
     case 'הזנת מחזור':
     case 'hazanatMahzor':
       return TaskType.hazanatMahzor;
+    case 'יום הולדת':
+      return TaskType.birthday;
     case 'none':
     case 'כומתה':
       return TaskType.none;
