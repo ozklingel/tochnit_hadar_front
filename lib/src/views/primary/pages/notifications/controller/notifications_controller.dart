@@ -4,6 +4,7 @@ import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/notification/get_notifications.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -52,19 +53,21 @@ class NotificationsController extends _$NotificationsController {
 
   Future<bool> deleteNotification(String notificationId) async {
     try {
-      final result = await ref.read(dioServiceProvider).delete(
-        Consts.deleteMessage,
+      final result = await ref.read(dioServiceProvider).post(
+        Consts.deleteNotification,
         data: {
-          'entityId': notificationId,
+          'NotificationId': notificationId,
         },
       );
 
-      if (result.data['result'] == 'success') {
-        ref.invalidateSelf();
+      if (['sucess', 'success'].contains(result.data['result'])) {
+        ref.invalidate(getNotificationsProvider);
 
         return true;
       }
     } catch (e) {
+      Toaster.error(e);
+      Logger().e('failed to delete notification', error: e);
       Sentry.captureException(e);
     }
 

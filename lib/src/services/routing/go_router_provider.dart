@@ -362,7 +362,7 @@ class NotificationDetailsRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return NotificationDetailsScreen(
-      messageId: id,
+      id: id,
     );
   }
 }

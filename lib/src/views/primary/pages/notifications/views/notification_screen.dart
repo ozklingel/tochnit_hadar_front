@@ -131,10 +131,10 @@ class _SearchResultsBody extends StatelessWidget {
               enabled: isLoading,
               child: e.allreadyRead
                   ? NotificationWidget.expanded(
-                      message: e,
+                      notification: e,
                     )
                   : NotificationWidget.collapsed(
-                      message: e,
+                      notification: e,
                     ),
             ),
           )
