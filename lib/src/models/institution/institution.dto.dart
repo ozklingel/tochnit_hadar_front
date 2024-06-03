@@ -27,6 +27,18 @@ class InstitutionDto with _$InstitutionDto {
     @Default('')
     @JsonKey(
       defaultValue: '',
+      name: 'racaz_first_name',
+    )
+    String rakazFirstName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'racaz_last_name',
+    )
+    String rakazLastName,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
       name: 'contact_phone',
     )
     String rakazPhoneNumber,

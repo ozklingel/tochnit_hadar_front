@@ -77,7 +77,22 @@ class _InstitutionDetailsScreenState
             offset: const Offset(0, 32),
             itemBuilder: (context) => [
               PopupMenuItem(
-                onTap: () => Toaster.unimplemented(),
+                onTap: () {
+                  // TODO(oz): add api
+                  Toaster.backend();
+                },
+                child: const Text('ייצוא דו"ח מוסד'),
+              ),
+              PopupMenuItem(
+                onTap: () async {
+                  final navContext = Navigator.of(context);
+                  final result = await ref
+                      .read(institutionsControllerProvider.notifier)
+                      .delete(institution.id);
+                  if (result) {
+                    navContext.pop();
+                  }
+                },
                 child: const Text('מחיקה מהמערכת'),
               ),
             ],

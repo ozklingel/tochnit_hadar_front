@@ -1,19 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
-import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
+import 'package:hadar_program/src/services/api/onboarding_form/city_list.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/persona_dropdown_button.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+const _kEmptyFieldErrorMessage = 'נא למלא';
 
 class NewOrEditInstitutionScreen extends HookConsumerWidget {
   const NewOrEditInstitutionScreen({
@@ -33,9 +37,13 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
     );
     final name = useTextEditingController(text: institution.name);
     final phone = useTextEditingController(text: institution.adminPhoneNumber);
-    final address =
-        useTextEditingController(text: institution.address.fullAddress.trim());
-    final rakazName = useTextEditingController(text: institution.rakazId);
+    final city = useState(institution.address.city);
+    final citySearchController = useTextEditingController();
+    final rakazFirstName =
+        useTextEditingController(text: institution.rakazFirstName);
+    final rakazLastName =
+        useTextEditingController(text: institution.rakazLastName);
+    final shluha = useTextEditingController(text: institution.shluha);
     final rakazPhone =
         useTextEditingController(text: institution.rakazPhoneNumber);
     final roshMehina =
@@ -53,31 +61,17 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       InputFieldContainer(
         label: 'שם מוסד',
         isRequired: true,
-        child: TextField(
+        child: TextFormField(
           controller: name,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return _kEmptyFieldErrorMessage;
+            }
+
+            return null;
+          },
           decoration: const InputDecoration(
-            hintText: 'הזן את השם הפרטי המשתמש',
-            hintStyle: TextStyles.s16w400cGrey5,
-          ),
-        ),
-      ),
-      InputFieldContainer(
-        label: 'טלפון מוסד',
-        child: TextField(
-          controller: phone,
-          decoration: const InputDecoration(
-            hintText: 'מוסד',
-            hintStyle: TextStyles.s16w400cGrey5,
-          ),
-        ),
-      ),
-      InputFieldContainer(
-        label: 'מיקום',
-        isRequired: true,
-        child: TextField(
-          controller: address,
-          decoration: const InputDecoration(
-            hintText: 'מוסד',
+            hintText: 'הזן את שם המוסד',
             hintStyle: TextStyles.s16w400cGrey5,
           ),
         ),
@@ -85,17 +79,135 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       InputFieldContainer(
         label: 'שם רכז מוסד',
         isRequired: true,
-        child: TextField(
-          controller: rakazName,
+        child: TextFormField(
+          controller: rakazFirstName,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return _kEmptyFieldErrorMessage;
+            }
+
+            return null;
+          },
           decoration: const InputDecoration(
-            hintText: 'הזן את שם המשפחה של המשתמש',
+            hintText: 'הזן את שם רכז המוסד',
+            hintStyle: TextStyles.s16w400cGrey5,
+          ),
+        ),
+      ),
+      InputFieldContainer(
+        label: 'שם רכז מוסד',
+        isRequired: true,
+        child: TextFormField(
+          controller: rakazFirstName,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return _kEmptyFieldErrorMessage;
+            }
+
+            return null;
+          },
+          decoration: const InputDecoration(
+            hintText: 'הזן את שם רכז המוסד',
+            hintStyle: TextStyles.s16w400cGrey5,
+          ),
+        ),
+      ),
+      InputFieldContainer(
+        label: 'שם משפחה רכז מוסד',
+        isRequired: true,
+        child: TextFormField(
+          controller: rakazLastName,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return _kEmptyFieldErrorMessage;
+            }
+
+            return null;
+          },
+          decoration: const InputDecoration(
+            hintText: 'הזן את שם המשפחה של רכז המוסד',
             hintStyle: TextStyles.s16w400cGrey5,
           ),
         ),
       ),
       InputFieldContainer(
         label: 'מספר טלפון של רכז המוסד',
+        child: TextField(
+          controller: phone,
+          decoration: const InputDecoration(
+            hintText: 'הזן מספר טלפון',
+            hintStyle: TextStyles.s16w400cGrey5,
+          ),
+        ),
+      ),
+      InputFieldContainer(
+        label: 'מיקום',
         isRequired: true,
+        child: ref.watch(getCitiesListProvider).when(
+              loading: () => const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+              error: (error, stack) => Center(
+                child: Text(error.toString()),
+              ),
+              data: (cities) => PersonaDropdownButton(
+                value: city.value,
+                items: cities,
+                onMenuStateChange: (isOpen) {
+                  if (!isOpen) {
+                    citySearchController.clear();
+                  }
+                },
+                onChanged: (value) => city.value = value ?? '',
+                dropdownSearchData: DropdownSearchData(
+                  searchController: citySearchController,
+                  searchInnerWidgetHeight: 50,
+                  searchInnerWidget: TextFormField(
+                    controller: citySearchController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return _kEmptyFieldErrorMessage;
+                      }
+
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      focusedBorder: UnderlineInputBorder(),
+                      enabledBorder: InputBorder.none,
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'חיפוש',
+                      hintStyle: TextStyles.s14w400,
+                    ),
+                  ),
+                  searchMatchFn: (item, searchValue) {
+                    return item.value.toString().toLowerCase().trim().contains(
+                          searchValue.toLowerCase().trim(),
+                        );
+                  },
+                ),
+              ),
+            ),
+      ),
+      InputFieldContainer(
+        label: 'שלוחה/אשכול',
+        isRequired: true,
+        child: TextFormField(
+          controller: shluha,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return _kEmptyFieldErrorMessage;
+            }
+
+            return null;
+          },
+          decoration: const InputDecoration(
+            hintText: 'שלוחה',
+            hintStyle: TextStyles.s16w400cGrey5,
+          ),
+        ),
+      ),
+      InputFieldContainer(
+        label: 'טלפון מוסד',
         child: TextField(
           controller: rakazPhone,
           decoration: const InputDecoration(
@@ -121,10 +233,17 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       InputFieldContainer(
         label: 'שם ראש מכינה',
         isRequired: true,
-        child: TextField(
+        child: TextFormField(
           controller: roshMehina,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return _kEmptyFieldErrorMessage;
+            }
+
+            return null;
+          },
           decoration: const InputDecoration(
-            hintText: 'מוסד',
+            hintText: 'הזן את שם ושם המשפחה של ראש המכינה',
             hintStyle: TextStyles.s16w400cGrey5,
           ),
         ),
@@ -132,10 +251,17 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       InputFieldContainer(
         label: 'טלפון ראש מכינה',
         isRequired: true,
-        child: TextField(
+        child: TextFormField(
           controller: roshPhoneNumber,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return _kEmptyFieldErrorMessage;
+            }
+
+            return null;
+          },
           decoration: const InputDecoration(
-            hintText: 'מוסד',
+            hintText: 'הזן מספר טלפון',
             hintStyle: TextStyles.s16w400cGrey5,
           ),
         ),
@@ -143,10 +269,17 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       InputFieldContainer(
         label: 'מנהל אדמינסטרטיבי',
         isRequired: true,
-        child: TextField(
+        child: TextFormField(
           controller: menahelAdministrativi,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return _kEmptyFieldErrorMessage;
+            }
+
+            return null;
+          },
           decoration: const InputDecoration(
-            hintText: 'שם',
+            hintText: 'הזן את שם ושם המשפחה של מנהל אדמינסטרטיבי',
             hintStyle: TextStyles.s16w400cGrey5,
           ),
         ),
@@ -154,10 +287,17 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       InputFieldContainer(
         label: 'טלפון מנהל אדמינסטרטיבי',
         isRequired: true,
-        child: TextField(
+        child: TextFormField(
           controller: menahelAdministrativiPhone,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return _kEmptyFieldErrorMessage;
+            }
+
+            return null;
+          },
           decoration: const InputDecoration(
-            hintText: 'שם',
+            hintText: 'הזן מספר טלפון',
             hintStyle: TextStyles.s16w400cGrey5,
           ),
         ),
@@ -204,27 +344,45 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
           ),
         ),
       ),
-      LargeFilledRoundedButton(
-        label: 'שמירה',
-        onPressed: () async {
-          final navContext = Navigator.of(context);
+      Builder(
+        builder: (context) {
+          return LargeFilledRoundedButton(
+            label: 'שמירה',
+            onPressed: () async {
+              final isValid = Form.of(context).validate();
 
-          final result =
-              await ref.read(institutionsControllerProvider.notifier).create(
+              if (!isValid) {
+                Toaster.warning('יש למלא את כל השדות');
+
+                return;
+              }
+
+              final navContext = Navigator.of(context);
+
+              final result = await ref
+                  .read(institutionsControllerProvider.notifier)
+                  .create(
                     institution.copyWith(
                       name: name.text,
                       rakazPhoneNumber: phone.text,
-                      adminName: rakazName.text,
+                      adminName: rakazFirstName.text,
                       adminPhoneNumber: rakazPhone.text,
                       roshMehinaName: roshMehina.text,
                       roshMehinaPhoneNumber: roshPhoneNumber.text,
+                      address: institution.address.copyWith(city: city.value),
+                      rakazFirstName: rakazFirstName.text,
+                      rakazLastName: rakazLastName.text,
+                      shluha: shluha.text,
+                      logo: logo.value,
                     ),
                   );
 
-          if (result) {
-            Toaster.show('Success');
-            navContext.pop();
-          }
+              if (result) {
+                Toaster.show('Success');
+                navContext.pop();
+              }
+            },
+          );
         },
       ),
     ];
@@ -240,10 +398,20 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: ListView.separated(
-          itemCount: children.length,
-          itemBuilder: (context, index) => children[index],
-          separatorBuilder: (context, index) => const SizedBox(height: 24),
+        child: Form(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: children
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: e,
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
         ),
       ),
     );

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -127,6 +129,30 @@ class InstitutionsController extends _$InstitutionsController {
     } catch (e) {
       Logger().e('failed to add institution excel', error: e);
       Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return false;
+  }
+
+  Future<bool> delete(String id) async {
+    try {
+      final result = await ref.read(dioServiceProvider).post(
+            Consts.deleteInstitution,
+            data: jsonEncode({
+              'entityId': id,
+            }),
+          );
+
+      if (['success', 'sucess'].contains(result.data['result'])) {
+        // ref.read(goRouterServiceProvider).go('/home');
+        ref.invalidate(getInstitutionsProvider);
+
+        return true;
+      }
+    } catch (e) {
+      Logger().e('failed to delete institution', error: e);
+      Sentry.captureException(e, stackTrace: StackTrace.current);
       Toaster.error(e);
     }
 

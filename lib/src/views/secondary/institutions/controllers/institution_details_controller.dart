@@ -1,5 +1,5 @@
-import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_apprentice_and_melave.dart';
 import 'package:hadar_program/src/services/api/search_bar/get_filtered_users.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';

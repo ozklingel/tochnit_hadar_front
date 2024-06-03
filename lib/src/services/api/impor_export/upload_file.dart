@@ -19,9 +19,21 @@ class UploadFile extends _$UploadFile {
       throw ArgumentError('missing param bytes');
     }
 
+    // MediaType(
+    //       [
+    //         'jpg',
+    //         'jpeg',
+    //         'png',
+    //       ].contains(filetype)
+    //           ? 'image'
+    //           // e.g. xlsx
+    //           : 'application',
+    //       filetype,
+    //     )
+
     final formData = FormData.fromMap({
-      "file": MultipartFile.fromBytes(
-        file.bytes!.toList(),
+      "file": await MultipartFile.fromFile(
+        file.path!,
         filename: file.name,
         contentType: MediaType.parse('multipart/form-data'),
       ),
