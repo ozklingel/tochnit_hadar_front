@@ -228,17 +228,6 @@ class $AssetsImagesGen {
       ];
 }
 
-class $AssetsVectorsGen {
-  const $AssetsVectorsGen();
-
-  /// File path: assets/vectors/no-complete-tasks.svg
-  SvgGenImage get noCompleteTasks =>
-      const SvgGenImage('assets/vectors/no-complete-tasks.svg');
-
-  /// List of all assets
-  List<SvgGenImage> get values => [noCompleteTasks];
-}
-
 class Assets {
   Assets._();
 
@@ -246,7 +235,6 @@ class Assets {
   static const $AssetsIllustrationsGen illustrations =
       $AssetsIllustrationsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
-  static const $AssetsVectorsGen vectors = $AssetsVectorsGen();
 }
 
 class AssetGenImage {

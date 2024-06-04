@@ -428,92 +428,22 @@ class _CustomFrequencyPage extends HookWidget {
               label: 'חזרה בימים',
               child: Wrap(
                 spacing: 6,
-                children: [
-                  ActionChip(
-                    label: const Text('א'),
-                    labelStyle: TextStyles.s14w400cBlue2,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      side: const BorderSide(
-                        color: AppColors.blue06,
+                children: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש']
+                    .map(
+                      (day) => ActionChip(
+                        label: Text(day),
+                        labelStyle: TextStyles.s14w400cBlue2,
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          side: const BorderSide(
+                            color: AppColors.blue06,
+                          ),
+                        ),
+                        onPressed: () => Toaster.unimplemented(),
                       ),
-                    ),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                  ActionChip(
-                    label: const Text('ב'),
-                    labelStyle: TextStyles.s14w400cBlue2,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      side: const BorderSide(
-                        color: AppColors.blue06,
-                      ),
-                    ),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                  ActionChip(
-                    label: const Text('ג'),
-                    labelStyle: TextStyles.s14w400cBlue2,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      side: const BorderSide(
-                        color: AppColors.blue06,
-                      ),
-                    ),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                  ActionChip(
-                    label: const Text('ד'),
-                    labelStyle: TextStyles.s14w400cBlue2,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      side: const BorderSide(
-                        color: AppColors.blue06,
-                      ),
-                    ),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                  ActionChip(
-                    label: const Text('ה'),
-                    labelStyle: TextStyles.s14w400cBlue2,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      side: const BorderSide(
-                        color: AppColors.blue06,
-                      ),
-                    ),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                  ActionChip(
-                    label: const Text('ו'),
-                    labelStyle: TextStyles.s14w400cBlue2,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      side: const BorderSide(
-                        color: AppColors.blue06,
-                      ),
-                    ),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                  ActionChip(
-                    label: const Text('ש'),
-                    labelStyle: TextStyles.s14w400cBlue2,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      side: const BorderSide(
-                        color: AppColors.blue06,
-                      ),
-                    ),
-                    onPressed: () => Toaster.unimplemented(),
-                  ),
-                ],
+                    )
+                    .toList(),
               ),
             ),
             const Padding(

@@ -399,6 +399,16 @@ class PersonaDto with _$PersonaDto {
 
   String get payingString => isPaying ? 'משלם' : 'לא משלם';
 
+  String? _phoneByRelationShip(Relationship relationship) {
+    if (relationship == contact1Relationship) return contact1Phone;
+    if (relationship == contact2Relationship) return contact2Phone;
+    if (relationship == contact3Relationship) return contact3Phone;
+    return null;
+  }
+
+  String? get motherPhone => _phoneByRelationShip(Relationship.mother);
+  String? get fatherPhone => _phoneByRelationShip(Relationship.father);
+
   factory PersonaDto.fromJson(Map<String, dynamic> json) =>
       _$PersonaDtoFromJson(json);
 }

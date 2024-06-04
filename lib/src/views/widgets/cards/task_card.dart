@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
@@ -14,13 +15,15 @@ class TaskCard extends ConsumerWidget {
     required this.task,
     required this.onLongPress,
     required this.isSelected,
-    required this.onTap,
+    this.onTap,
+    this.onCheckboxTap,
   });
 
   final bool isSelected;
   final TaskDto task;
   final VoidCallback onLongPress;
   final VoidCallback? onTap;
+  final Function(bool?)? onCheckboxTap;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -37,57 +40,101 @@ class TaskCard extends ConsumerWidget {
         onLongPress: onLongPress,
         onTap: onTap,
         child: ListTile(
-          leading: Stack(
-            children: [
-              AvatarWidget(
-                radius: 16,
-                avatarUrl: apprentice.avatar,
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 6,
-                  child: Padding(
-                    padding: const EdgeInsets.all(2),
-                    child: CircleAvatar(
-                      radius: 4,
-                      backgroundColor: apprentice.callStatus.toColor(),
-                    ),
-                  ),
+          leading: onCheckboxTap == null
+              ? _ApprenticeAvatar(
+                  apprentice: apprentice,
+                  isSelected: isSelected,
+                )
+              : Checkbox(
+                  value: task.status == TaskStatus.done,
+                  onChanged: onCheckboxTap,
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: isSelected
-                    ? const Align(
-                        alignment: Alignment.bottomRight,
-                        child: CircleAvatar(
-                          radius: 6,
-                          backgroundColor: AppColors.green1,
-                          child: Icon(
-                            Icons.check,
-                            color: Colors.white,
-                            size: 12,
-                          ),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-              ),
-            ],
-          ),
           title: Text(
             apprentice.fullName,
             style: TextStyles.s18w500cGray1,
           ),
           subtitle: Text(
-            task.dateTime.asDateTime.asTimeAgoDayCutoff,
+            task.details,
             style: TextStyles.s16w300cGray2,
           ),
+          trailing: onCheckboxTap == null
+              ? null
+              : DefaultTextStyle(
+                  style: TextStyles.s12w400cGrey5fRoboto,
+                  child: Column(
+                    children: [
+                      Text(
+                        task.dateTime.asDateTime.asDayMonthYearShortSlash,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        task.dateTime.asDateTime.asTimeAgo,
+                      ),
+                      const Icon(
+                        FluentIcons.arrow_rotate_clockwise_24_regular,
+                        size: 16,
+                        color: AppColors.gray5,
+                      ),
+                    ],
+                  ),
+                ),
         ),
       ),
+    );
+  }
+}
+
+class _ApprenticeAvatar extends StatelessWidget {
+  const _ApprenticeAvatar({
+    required this.apprentice,
+    required this.isSelected,
+  });
+
+  final PersonaDto apprentice;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        AvatarWidget(
+          radius: 16,
+          avatarUrl: apprentice.avatar,
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 6,
+            child: Padding(
+              padding: const EdgeInsets.all(2),
+              child: CircleAvatar(
+                radius: 4,
+                backgroundColor: apprentice.callStatus.toColor(),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: isSelected
+              ? const Align(
+                  alignment: Alignment.bottomRight,
+                  child: CircleAvatar(
+                    radius: 6,
+                    backgroundColor: AppColors.green1,
+                    child: Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 12,
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ),
+      ],
     );
   }
 }
