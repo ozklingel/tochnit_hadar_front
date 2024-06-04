@@ -1,17 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -23,6 +27,7 @@ import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -31,7 +36,6 @@ import '../../../../models/persona/persona.dto.dart';
 import '../../../../services/api/export_import/upload_file.dart';
 import '../../../../services/api/onboarding_form/city_list.dart';
 import '../../../../services/routing/go_router_provider.dart';
-import '../apprentices/controller/personas_controller.dart';
 
 class UserProfileScreen extends StatefulHookConsumerWidget {
   const UserProfileScreen({
@@ -125,12 +129,13 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                                 'userId': user.id,
                               },
                               data: jsonEncode({
-                                'photo_path': uploadUrl,
+                                'avatar': uploadUrl,
                               }),
                             );
 
                         if (result2.data['result'] == 'success') {
                           Logger().d("success upload");
+                          ref.invalidate(authServiceProvider);
                           setState(() {});
                         }
                       },
@@ -230,47 +235,35 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
     final user = auth.valueOrNull ?? const AuthDto();
-    final selectedCity = useState('');
+    final institution =
+        (ref.watch(institutionsControllerProvider).valueOrNull ?? [])
+            .singleWhere(
+      (element) => element.id == auth.valueOrNull!.institution,
+      orElse: () => const InstitutionDto(),
+    );
+    final isEditMode = useState(false);
+    final selectedCity = useState(auth.valueOrNull?.city ?? '');
+    final selectedBirthday = useState(auth.valueOrNull!.dateOfBirth.asDateTime);
     final citySearchController = useTextEditingController();
     final selectedRegion = useState(AddressRegion.none);
-
-    final institution =
-        ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == auth.valueOrNull!.institution,
-                  orElse: () => const InstitutionDto(),
-                ) ??
-            const InstitutionDto();
-    final isEditMode = useState(false);
     final firstNameController = useTextEditingController(
-      text: auth.valueOrNull!.firstName,
+      text: auth.valueOrNull?.firstName,
       keys: [auth],
     );
     final lastNameController = useTextEditingController(
-      text: auth.valueOrNull!.lastName,
+      text: auth.valueOrNull?.lastName,
       keys: [auth],
     );
     final emailController = useTextEditingController(
-      text: auth.valueOrNull!.email,
+      text: auth.valueOrNull?.email,
       keys: [auth],
     );
     final mosadController = useTextEditingController(
       text: institution.name,
       keys: [auth],
     );
-    final dateOfBirthController = useTextEditingController(
-      text: auth.valueOrNull!.dateOfBirth.substring(0, 10),
-      keys: [auth],
-    );
-    final cityController = useTextEditingController(
-      text: auth.valueOrNull!.city,
-      keys: [auth],
-    );
-    // final regionController = useTextEditingController(
-    //   text: auth.valueOrNull!.region,
-    //   keys: [auth],
-    // );
     final eshcolController = useTextEditingController(
-      text: auth.valueOrNull!.cluster,
+      text: auth.valueOrNull?.cluster,
       keys: [auth],
     );
 
@@ -341,8 +334,41 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       InputFieldContainer(
                         label: ' תאריך יום הולדת',
                         isRequired: true,
-                        child: TextField(
-                          controller: dateOfBirthController,
+                        child: InkWell(
+                          onTap: () async {
+                            final newDate = await showDatePicker(
+                              context: context,
+                              initialDate: selectedBirthday.value,
+                              firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+                              lastDate: DateTime.now()
+                                  .add(const Duration(days: 99000)),
+                            );
+
+                            if (newDate == null) {
+                              return;
+                            }
+
+                            selectedBirthday.value = newDate;
+                          },
+                          borderRadius: BorderRadius.circular(36),
+                          child: IgnorePointer(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                labelText: DateFormat('dd/MM/yy')
+                                    .format(selectedBirthday.value),
+                                hintStyle: TextStyles.s16w400cGrey2.copyWith(
+                                  color: AppColors.grey5,
+                                ),
+                                suffixIcon: const Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: Icon(
+                                    Icons.calendar_month,
+                                    color: AppColors.grey5,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -468,7 +494,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       if (auth.valueOrNull?.role == UserRole.melave ||
                           auth.valueOrNull?.role == UserRole.rakazMosad) ...[
                         InputFieldContainer(
-                          label: '  מוסד',
+                          label: 'מוסד',
                           isRequired: true,
                           child: TextField(
                             readOnly: true,
@@ -478,7 +504,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       ],
                       if (auth.valueOrNull?.role == UserRole.rakazEshkol) ...[
                         InputFieldContainer(
-                          label: '  מוסד',
+                          label: 'אשכול',
                           isRequired: true,
                           child: TextField(
                             readOnly: true,
@@ -486,9 +512,8 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                           ),
                         ),
                       ],
-                      const SizedBox(height: 32),
                       InputFieldContainer(
-                        label: '  אזור',
+                        label: 'אזור',
                         isRequired: true,
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton2<AddressRegion>(
@@ -498,9 +523,9 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                             hint: SizedBox(
                               width: 240,
                               child: Text(
-                                selectedCity.value.isEmpty
-                                    ? auth.valueOrNull!.region
-                                    : selectedCity.value,
+                                selectedRegion.value == AddressRegion.none
+                                    ? AddressRegion.center.name
+                                    : selectedRegion.value.name,
                                 overflow: TextOverflow.fade,
                               ),
                             ),
@@ -583,20 +608,22 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                 try {
                                   final result =
                                       await ref.read(dioServiceProvider).put(
-                                            Consts.updateUser,
-                                            queryParameters: {
-                                              'userId': user.id,
-                                            },
-                                            data: jsonEncode({
-                                              'city': cityController.text,
-                                              'birthday':
-                                                  dateOfBirthController.text,
-                                              'email': emailController.text,
-                                              'last_name':
-                                                  lastNameController.text,
-                                              'name': firstNameController.text,
-                                            }),
-                                          );
+                                    Consts.updateUser,
+                                    queryParameters: {
+                                      'userId': user.id,
+                                    },
+                                    data: {
+                                      'city': selectedCity.value,
+                                      'region': selectedRegion.value.name,
+                                      'date_of_birth': DateFormat('yyyy-MM-dd')
+                                          .format(selectedBirthday.value),
+                                      'email': emailController.text,
+                                      'last_name': lastNameController.text,
+                                      'firstName': firstNameController.text,
+                                    },
+                                  );
+
+                                  ref.invalidate(authServiceProvider);
 
                                   if (result.data['result'] == 'success') {
                                     isEditMode.value = false;
@@ -724,11 +751,13 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ],
           ),
         ),
-        if (auth.valueOrNull?.role == UserRole.melave) ...[
+        if (kDebugMode || auth.valueOrNull?.role == UserRole.melave) ...[
           DetailsCard(
             title: ' רשימת חניכים',
             child: Builder(
               builder: (context) {
+                // Logger().d(auth.valueOrNull!.apprentices.length);
+
                 return Column(
                   children: <Widget>[
                     ListView.builder(
@@ -740,23 +769,19 @@ class _TohnitHadarTabView extends ConsumerWidget {
                         BuildContext context,
                         int index,
                       ) {
-                        final apprentice = ref.watch(
-                              personasControllerProvider.select(
-                                (value) => value.value?.singleWhere(
-                                  (element) =>
-                                      element.id ==
-                                      auth.valueOrNull!.apprentices[index],
-                                  orElse: () => const PersonaDto(),
-                                ),
-                              ),
-                            ) ??
-                            const PersonaDto();
+                        final apprentice =
+                            (ref.watch(getPersonasProvider).valueOrNull ?? [])
+                                .singleWhere(
+                          (element) =>
+                              element.id ==
+                              auth.valueOrNull!.apprentices[index],
+                          orElse: () => const PersonaDto(),
+                        );
                         return ListTile(
-                          leading: const CircleAvatar(
+                          leading: CircleAvatar(
                             backgroundColor: Colors.blue,
-                            backgroundImage: AssetImage(
-                              'assets/images/person.png',
-                            ),
+                            backgroundImage:
+                                CachedNetworkImageProvider(apprentice.avatar),
                           ),
                           title: Text(
                             apprentice.fullName,

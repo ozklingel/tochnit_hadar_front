@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hadar_program/src/core/utils/convert/extract_from_json.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -42,7 +43,7 @@ class AuthDto with _$AuthDto {
     String id,
     @Default('')
     @JsonKey(
-      defaultValue: '',
+      fromJson: extractAvatarFromJson,
     )
     String avatar,
     @Default('')

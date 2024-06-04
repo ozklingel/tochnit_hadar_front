@@ -3,6 +3,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/core/utils/extensions/string.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -44,20 +45,17 @@ class SideMenuDrawer extends ConsumerWidget {
                     ),
                     CircleAvatar(
                       radius: 40,
-                      backgroundImage:
-                          (auth.valueOrNull?.avatar.isEmpty ?? true)
-                              ? null
-                              : CachedNetworkImageProvider(
-                                  auth.valueOrNull!.avatar,
-                                ),
+                      backgroundImage: CachedNetworkImageProvider(
+                        auth.valueOrNull!.avatar,
+                      ),
                     ),
                     Text(
-                      auth.valueOrNull?.fullName ?? '',
+                      auth.valueOrNull?.fullName.ifEmpty ?? '[NO NAME]',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      auth.valueOrNull?.email ?? '',
-                      style: const TextStyle(fontSize: 11),
+                      auth.valueOrNull?.email.ifEmpty ?? '[NO EMAIL]',
+                      style: TextStyles.s14w400cGrey5,
                     ),
                     TextButton(
                       child: Text(

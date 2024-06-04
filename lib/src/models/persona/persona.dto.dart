@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/core/utils/convert/extract_from_json.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:logger/logger.dart';
@@ -321,7 +322,7 @@ class PersonaDto with _$PersonaDto {
     String teudatZehut,
     @Default('')
     @JsonKey(
-      defaultValue: '',
+      fromJson: extractAvatarFromJson,
     )
     String avatar,
     @Default('')
