@@ -31,7 +31,7 @@ class NotificationsController extends _$NotificationsController {
       return true;
     }
 
-    Logger().d(msg.id);
+    // Logger().d(msg.id);
 
     try {
       await ref.read(dioServiceProvider).post(

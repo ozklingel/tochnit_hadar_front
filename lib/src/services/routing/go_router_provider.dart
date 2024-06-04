@@ -33,8 +33,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../views/primary/pages/chat_box/support_screen.dart';
 import '../../views/primary/pages/notifications/views/notification_details_screen.dart';
-import '../../views/primary/pages/notifications/views/notification_screen.dart';
-import '../../views/primary/pages/notifications/views/setting_page.dart';
+import '../../views/primary/pages/notifications/views/notifications_screen.dart';
+import '../../views/primary/pages/notifications/views/notifications_setting_page.dart';
 import '../../views/primary/pages/profile/user_profile_screen.dart';
 
 part 'go_router_provider.g.dart';
