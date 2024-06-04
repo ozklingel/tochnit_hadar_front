@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
@@ -77,9 +80,36 @@ class _InstitutionDetailsScreenState
             offset: const Offset(0, 32),
             itemBuilder: (context) => [
               PopupMenuItem(
-                onTap: () {
+                onTap: () async {
                   // TODO(oz): add api
                   Toaster.backend();
+
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => _PdfExport(
+                        institution: institution,
+                        startDate: DateTime.now(),
+                        endDate: DateTime.now(),
+                      ),
+                    ),
+                  );
+
+                  // import 'package:pdf/pdf.dart';
+                  // import 'package:pdf/widgets.dart' as pw;
+                  // final pdf = pw.Document();
+
+                  // pdf.addPage(pw.Page(
+                  //     pageFormat: PdfPageFormat.a4,
+                  //     build: (pw.Context context) {
+                  //       return pw.Center(
+                  //         child: pw.Text('Hello World', style: pw.TextStyle(font: ttf, fontSize: 40)),
+                  //       ); // Center
+                  //     })); // Page
+
+                  // final name = '${DateTime.now().toIso8601String()}.pdf';
+                  // final output = await getTemporaryDirectory();
+                  // final file = File("${output.path}/${name}");
+                  // await file.writeAsBytes(await pdf.save());
                 },
                 child: const Text('ייצוא דו"ח מוסד'),
               ),
@@ -488,6 +518,97 @@ class _GeneralTab extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _PdfExport extends StatelessWidget {
+  const _PdfExport({
+    required this.institution,
+    required this.startDate,
+    required this.endDate,
+  });
+
+  final InstitutionDto institution;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ColoredBox(
+          color: AppColors.blue08,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      institution.name,
+                      style: TextStyles.s20w500,
+                    ),
+                    Text(
+                      'תאריכים: '
+                      '${startDate.asDayMonthYearShortDot}'
+                      ' - '
+                      '${endDate.asDayMonthYearShortDot}',
+                      style: TextStyles.s12w400cGrey2,
+                    ),
+                    Text(
+                      'שם רכז: '
+                      '${institution.rakazFirstName + institution.rakazLastName}',
+                      style: TextStyles.s12w400cGrey2,
+                    ),
+                    Text(
+                      'כמות חניכים: '
+                      '${institution.apprentices.length}',
+                      style: TextStyles.s12w400cGrey2,
+                    ),
+                  ]
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: e,
+                        ),
+                      )
+                      .toList(),
+                ),
+                const Spacer(),
+                if (institution.logo.isNotEmpty) ...[
+                  const SizedBox(width: 20),
+                  CachedNetworkImage(
+                    imageUrl: institution.logo,
+                    height: 40,
+                  ),
+                ],
+                Assets.images.logo.image(
+                  height: 40,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(16),
+          child: Flex(
+            direction: Axis.horizontal,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    'כללי',
+                    style: TextStyles.s16w500,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

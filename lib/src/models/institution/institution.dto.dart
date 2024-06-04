@@ -27,13 +27,13 @@ class InstitutionDto with _$InstitutionDto {
     @Default('')
     @JsonKey(
       defaultValue: '',
-      name: 'racaz_first_name',
+      name: 'racaz_firstName',
     )
     String rakazFirstName,
     @Default('')
     @JsonKey(
       defaultValue: '',
-      name: 'racaz_last_name',
+      name: 'racaz_lastName',
     )
     String rakazLastName,
     @Default('')

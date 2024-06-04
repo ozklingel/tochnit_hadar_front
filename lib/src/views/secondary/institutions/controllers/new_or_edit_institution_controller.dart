@@ -39,7 +39,7 @@ class NewOrEditInstitutionController extends _$NewOrEditInstitutionController {
 
       // Logger().i(request.data, error: id);
 
-      if (request.data['result'] == 'success') {
+      if (['success', 'sucess'].contains(request.data['result'])) {
         ref.invalidate(getInstitutionsProvider);
       }
 
