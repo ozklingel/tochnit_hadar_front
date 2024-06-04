@@ -310,6 +310,15 @@ abstract class TextStyles {
     ],
   );
 
+  static const s16w700 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 16,
+    height: 1,
+    fontVariations: [
+      FontVariation('wght', 700),
+    ],
+  );
+
   static const s16w300cGray2 = TextStyle(
     fontFamily: _kFontFamily,
     fontSize: 16,

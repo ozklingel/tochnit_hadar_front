@@ -14,11 +14,15 @@ import 'package:flutter/services.dart';
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/data_trending_down.svg
+  SvgGenImage get dataTrendingDown =>
+      const SvgGenImage('assets/icons/data_trending_down.svg');
+
   /// File path: assets/icons/whatsapp.svg
   SvgGenImage get whatsapp => const SvgGenImage('assets/icons/whatsapp.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [whatsapp];
+  List<SvgGenImage> get values => [dataTrendingDown, whatsapp];
 }
 
 class $AssetsIllustrationsGen {
