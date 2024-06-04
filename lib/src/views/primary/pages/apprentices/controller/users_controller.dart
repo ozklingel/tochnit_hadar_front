@@ -81,7 +81,9 @@ class UsersController extends _$UsersController {
         state = AsyncData(
           state.requireValue.copyWith(
             users: state.requireValue.users
-                .sortedBy<num>((element) => element.activityScore).reversed.toList(),
+                .sortedBy<num>((element) => element.activityScore)
+                .reversed
+                .toList(),
           ),
         );
         break;
@@ -97,7 +99,7 @@ class UsersController extends _$UsersController {
   }) async {
     try {
       final result = await ref.read(dioServiceProvider).post(
-            Consts.addUserManual,
+            Consts.putAddUserManual,
             data: jsonEncode({
               'role_id': role.val.toString(),
               'institution_id': institutionId,
@@ -125,18 +127,21 @@ class UsersController extends _$UsersController {
 
   Future<bool> createExcel({
     required PlatformFile file,
+    required UserRole userType,
   }) async {
     try {
       if (file.bytes == null) {
         throw ArgumentError('missing param bytes');
       }
 
-      final result = await ref.read(dioServiceProvider).post(
-            Consts.addUserExcel,
+      final result = await ref.read(dioServiceProvider).put(
+            userType == UserRole.apprentice
+                ? Consts.putApprenticeExcel
+                : Consts.putAddUserExcel,
             data: FormData.fromMap({
-              'file': MultipartFile.fromBytes(
-                file.bytes!.toList(),
-                filename: file.path,
+              'file': await MultipartFile.fromFile(
+                file.path!,
+                filename: file.name,
                 contentType: MediaType.parse('multipart/form-data'),
               ),
             }),
@@ -150,7 +155,7 @@ class UsersController extends _$UsersController {
         return true;
       }
     } catch (e) {
-      Logger().e('failed to add user excel', error: e);
+      Logger().e('failed to add ${userType.name} excel', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
     }

@@ -18,6 +18,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/controller/per
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
+import 'package:hadar_program/src/views/widgets/dialogs/upload_excel_dialog.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -29,7 +30,6 @@ import '../../../../../services/auth/auth_service.dart';
 import '../../../../../services/networking/http_service.dart';
 import '../../../../widgets/buttons/delete_button.dart';
 import '../../chat_box/error_dialog.dart';
-import 'widgets/success_dialog_add_gift.dart';
 
 enum _DataFillType {
   manual,
@@ -369,9 +369,11 @@ class GiftScreen extends HookConsumerWidget {
                           if (result["result"] == 'success') {
                             someRecordsFail.value =
                                 result["not_commited"].toString();
-                            showFancyCustomDialogAddGift(
-                              context,
-                              result["not_commited"].toString() == "[]",
+                            showFancyCustomDialogUploadExcel(
+                              context: context,
+                              isSucces:
+                                  result["not_commited"].toString() == "[]",
+                              errMsg: 'קודי מתנה הוזנו בהצלחה',
                             );
                           } else {
                             showAlertDialog(context);

@@ -31,7 +31,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
         await HttpService.getUserNotiSetting(auth.valueOrNull!.phone);
     final u = jsonDecode(jsonData.body);
 
-    Logger().d(u);
+    // Logger().d(u);
 
     super.setState(() {
       t1 = !u["notifyStartWeek"];

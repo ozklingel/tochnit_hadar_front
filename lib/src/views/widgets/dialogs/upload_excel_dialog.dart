@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 
-import '../../../../../../core/theming/colors.dart';
-import '../../../../../../core/theming/text_styles.dart';
-import '../../../../../../gen/assets.gen.dart';
-import '../../../../../../services/routing/go_router_provider.dart';
-
-void showFancyCustomDialogAddGift(BuildContext context, bool isSucces) {
+void showFancyCustomDialogUploadExcel({
+  required BuildContext context,
+  required bool isSucces,
+  required String errMsg,
+}) {
   var fancyDialog = Dialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8),
@@ -35,8 +38,8 @@ void showFancyCustomDialogAddGift(BuildContext context, bool isSucces) {
                   ),
             const SizedBox(height: 24),
             isSucces
-                ? const Text(
-                    'קודי מתנה הוזנו בהצלחה',
+                ? Text(
+                    errMsg,
                     textAlign: TextAlign.center,
                     style: TextStyles.s20w500,
                   )

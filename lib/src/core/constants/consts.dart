@@ -98,13 +98,15 @@ abstract class Consts {
   static const getAllPersonas = 'userProfile_form/myPersonas';
   static const deletePersona = 'userProfile_form/delete';
   static const getAuthUser = 'userProfile_form/getProfileAtributes';
-  static const addUserManual = 'userProfile_form/add_user_manual';
-  static const addUserExcel = 'userProfile_form/add_user_excel';
+  static const putAddUserManual = 'userProfile_form/add_user_manual';
+  static const putAddUserExcel = 'userProfile_form/add_user_excel';
   static const updateUser = 'userProfile_form/update';
 
   // apprentices
   static const updateApprentice = 'apprentice_Profile_form/update';
   static const getMapsApprentices = 'apprentice_Profile_form/maps_apprentices';
+  static const putApprenticeExcel =
+      'apprentice_Profile_form/add_apprentice_excel';
 
   // search bar / filter
   static const getAllFiltered = 'search_bar/search_entities';

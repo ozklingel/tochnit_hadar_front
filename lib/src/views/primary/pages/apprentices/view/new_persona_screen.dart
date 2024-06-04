@@ -120,8 +120,13 @@ class NewPersonaScreen extends HookConsumerWidget {
                                         )
                                         .createExcel(
                                           file: selectedFiles.value.first,
+                                          userType: selectedUserType.value,
                                         );
-                                    if (result) {}
+                                    if (result) {
+                                      Logger().w(
+                                        'TODO add showFancyCustomDialogUploadExcel',
+                                      );
+                                    }
                                   } else {
                                     final isValidForm =
                                         formKey.currentState?.validate() ??

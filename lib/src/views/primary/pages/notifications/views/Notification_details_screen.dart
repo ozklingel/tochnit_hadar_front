@@ -82,10 +82,16 @@ class NotificationDetailsScreen extends HookConsumerWidget {
                 ),
                 const Spacer(),
                 Text(
-                  notification.dateTime.asDateTime.asTimeAgo,
+                  notification.dateTime.asDateTime.asTimeAgoDayCutoff,
                   style: TextStyles.s12w400cGrey5fRoboto,
                 ),
               ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'בתאריך '
+              '${notification.dateTime.asDateTime.asDayMonthYearShortDot}',
+              style: TextStyles.s14w400cGrey2,
             ),
             const SizedBox(height: 16),
             Text(

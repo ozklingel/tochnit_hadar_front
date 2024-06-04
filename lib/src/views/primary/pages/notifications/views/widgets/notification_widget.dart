@@ -101,7 +101,7 @@ class NotificationWidget extends ConsumerWidget {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          " בתאריך ${notification.dateTime.substring(0, 10)}",
+                          " בתאריך ${notification.dateTime.asDateTime.asDayMonthYearShortDot}",
                           style: TextStyles.s14w400cGrey4,
                         ),
                         const SizedBox(height: 12),
