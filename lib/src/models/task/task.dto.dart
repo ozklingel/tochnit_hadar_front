@@ -19,7 +19,11 @@ enum TaskType {
   forgottenApprentices,
   baseVisit,
   hazanatMahzor,
-  birthday,
+  birthday;
+
+  bool get isCall => this == call;
+  bool get isMeeting => this == meeting || this == meetingGroup;
+  bool get isParents => this == meetingParents || this == callParents;
 }
 
 enum TaskStatus {

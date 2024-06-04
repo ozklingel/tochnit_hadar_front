@@ -20,22 +20,13 @@ enum UserRole {
 
   final int val;
 
-  String get name {
-    switch (this) {
-      case UserRole.melave:
-        return 'מלווה';
-      case UserRole.ahraiTohnit:
-        return 'אחראי תכנית';
-      // Mosad_Cooordinator
-      case UserRole.rakazMosad:
-        return 'רכז מוסד';
-      // eshcol_Cooordinator
-      case UserRole.rakazEshkol:
-        return 'רכז אשכול';
-      default:
-        return 'USER.ROLE.ERROR';
-    }
-  }
+  String get name => switch (this) {
+        UserRole.melave => 'מלווה',
+        UserRole.rakazMosad => 'רכז מוסד',
+        UserRole.rakazEshkol => 'רכז אשכול',
+        UserRole.ahraiTohnit => 'אחראי תכנית',
+        _ => 'USER.ROLE.ERROR',
+      };
 
   bool get isProgramDirector => this == UserRole.ahraiTohnit;
 }

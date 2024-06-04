@@ -6,12 +6,12 @@ class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
     required this.image,
-    required this.topText,
+    this.topText,
     required this.bottomText,
   });
 
   final SvgPicture image;
-  final String topText;
+  final String? topText;
   final String bottomText;
 
   @override
@@ -25,11 +25,12 @@ class EmptyState extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               image,
-              Text(
-                topText,
-                textAlign: TextAlign.center,
-                style: TextStyles.s20w500,
-              ),
+              if (topText != null)
+                Text(
+                  topText!,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.s20w500,
+                ),
               const SizedBox(height: 8),
               Text(
                 bottomText,
