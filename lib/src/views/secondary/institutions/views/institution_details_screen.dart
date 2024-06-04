@@ -14,7 +14,7 @@ import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/services/api/impor_export/upload_file.dart';
+import 'package:hadar_program/src/services/api/export_import/upload_file.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -29,6 +29,7 @@ import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.d
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class InstitutionDetailsScreen extends StatefulHookConsumerWidget {
   const InstitutionDetailsScreen({
@@ -592,16 +593,100 @@ class _PdfExport extends StatelessWidget {
             ),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.all(16),
+        Padding(
+          padding: const EdgeInsets.all(16),
           child: Flex(
             direction: Axis.horizontal,
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'כללי',
                     style: TextStyles.s16w500,
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    children: [
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(
+                            color: AppColors.shades200,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: SfCircularChart(
+                            backgroundColor: Colors.transparent,
+                            title: const ChartTitle(
+                              text: 'title',
+                              alignment: ChartAlignment.center,
+                              textStyle: TextStyles.s11w500,
+                            ),
+                            legend: Legend(
+                              isVisible: true,
+                              itemPadding: 0,
+                              alignment: ChartAlignment.center,
+                              position: LegendPosition.left,
+                              overflowMode: LegendItemOverflowMode.wrap,
+                              legendItemBuilder: (
+                                legendText,
+                                series,
+                                point,
+                                seriesIndex,
+                              ) =>
+                                  Padding(
+                                padding: const EdgeInsets.symmetric(
+                                      vertical: 6,
+                                    ) +
+                                    const EdgeInsets.only(right: 12),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 6,
+                                      backgroundColor: seriesIndex == 0
+                                          ? AppColors.chartRed
+                                          : seriesIndex == 1
+                                              ? AppColors.chartOrange
+                                              : AppColors.chartGreen,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      legendText.split(':').first,
+                                      style: TextStyles.s12w400cGrey2,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      legendText.split(':').last,
+                                      style: TextStyles.s12w400cGrey4,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            series: [
+                              DoughnutSeries<({String x, double y}), String>(
+                                explode: true,
+                                radius: '100%',
+                                innerRadius: '70%',
+                                dataSource: const [],
+                                xValueMapper: (datum, _) =>
+                                    '${datum.x}:${datum.y.toInt()}',
+                                yValueMapper: (datum, _) => datum.y,
+                                legendIconType: LegendIconType.circle,
+                                pointColorMapper: (datum, index) => index == 0
+                                    ? AppColors.chartRed
+                                    : index == 1
+                                        ? AppColors.chartOrange
+                                        : AppColors.chartGreen,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

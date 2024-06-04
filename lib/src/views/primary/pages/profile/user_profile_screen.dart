@@ -28,7 +28,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../core/enums/address_region.dart';
 import '../../../../models/persona/persona.dto.dart';
-import '../../../../services/api/impor_export/upload_file.dart';
+import '../../../../services/api/export_import/upload_file.dart';
 import '../../../../services/api/onboarding_form/city_list.dart';
 import '../../../../services/routing/go_router_provider.dart';
 import '../apprentices/controller/personas_controller.dart';

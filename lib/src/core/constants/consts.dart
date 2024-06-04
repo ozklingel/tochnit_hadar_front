@@ -85,6 +85,7 @@ abstract class Consts {
 
   // import / export
   static const uploadFile = 'export_import/uploadfile';
+  static const mosadGeneralInfo = 'export_import/uploadfile';
 
   // madadim charts
   static const chartsMelave = 'madadim/melave';
