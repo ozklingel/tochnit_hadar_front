@@ -206,7 +206,8 @@ class TasksScreen extends HookConsumerWidget {
               .toList(),
         ),
       ),
-      floatingActionButton: tabController.index == 0
+      floatingActionButton: (auth.value?.role.isProgramDirector ?? false) &&
+              tabController.index == 0
           ? FloatingActionButton(
               onPressed: () => const NewTaskRouteData().push(context),
               heroTag: UniqueKey(),
