@@ -400,15 +400,15 @@ class PersonaDto with _$PersonaDto {
 
   String get payingString => isPaying ? 'משלם' : 'לא משלם';
 
-  String? _phoneByRelationShip(Relationship relationship) {
+  String? _phoneByRelationship(Relationship relationship) {
     if (relationship == contact1Relationship) return contact1Phone;
     if (relationship == contact2Relationship) return contact2Phone;
     if (relationship == contact3Relationship) return contact3Phone;
     return null;
   }
 
-  String? get motherPhone => _phoneByRelationShip(Relationship.mother);
-  String? get fatherPhone => _phoneByRelationShip(Relationship.father);
+  String? get motherPhone => _phoneByRelationship(Relationship.mother);
+  String? get fatherPhone => _phoneByRelationship(Relationship.father);
 
   factory PersonaDto.fromJson(Map<String, dynamic> json) =>
       _$PersonaDtoFromJson(json);
@@ -533,7 +533,13 @@ Relationship _extractRelationship(String? val) {
 }
 
 extension ApprenticeX on PersonaDto {
-  String get fullName => '$firstName $lastName';
+  String get fullName {
+    final name = [];
+    if (firstName.isNotEmpty) name.add(firstName);
+    if (lastName.isNotEmpty) name.add(lastName);
+    return name.join(' ');
+  }
+
   List<String> get tags => [
         highSchoolInstitution,
         thPeriod,

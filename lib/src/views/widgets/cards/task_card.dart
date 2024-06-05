@@ -29,10 +29,10 @@ class TaskCard extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final apprentice =
         ref.watch(personasControllerProvider).valueOrNull?.firstWhere(
-                  (element) => task.subject.contains(element.id),
-                  orElse: () => const PersonaDto(),
-                ) ??
-            const PersonaDto();
+              (element) => task.subject.contains(element.id),
+              orElse: () => const PersonaDto(),
+            );
+    final apprenticeName = apprentice?.fullName ?? '';
 
     return Material(
       color: isSelected ? AppColors.blue07 : Colors.transparent,
@@ -40,17 +40,44 @@ class TaskCard extends ConsumerWidget {
         onLongPress: onLongPress,
         onTap: onTap,
         child: ListTile(
-          leading: onCheckboxTap == null
-              ? _ApprenticeAvatar(
-                  apprentice: apprentice,
-                  isSelected: isSelected,
-                )
-              : Checkbox(
+          leading: onCheckboxTap != null
+              ? Checkbox(
                   value: task.status == TaskStatus.done,
                   onChanged: onCheckboxTap,
+                )
+              : Stack(
+                  children: [
+                    AvatarWidget(
+                      radius: 16,
+                      avatarUrl: apprentice?.avatar ?? '',
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        radius: 6,
+                        backgroundColor:
+                            isSelected ? AppColors.green1 : AppColors.white,
+                        child: isSelected
+                            ? const Icon(
+                                Icons.check,
+                                color: AppColors.white,
+                                size: 12,
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.all(2),
+                                child: CircleAvatar(
+                                  radius: 4,
+                                  backgroundColor:
+                                      apprentice?.callStatus.toColor(),
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
           title: Text(
-            apprentice.fullName,
+            apprenticeName.isNotEmpty ? apprenticeName : task.title,
             style: TextStyles.s18w500cGray1,
           ),
           subtitle: Text(
@@ -80,61 +107,6 @@ class TaskCard extends ConsumerWidget {
                 ),
         ),
       ),
-    );
-  }
-}
-
-class _ApprenticeAvatar extends StatelessWidget {
-  const _ApprenticeAvatar({
-    required this.apprentice,
-    required this.isSelected,
-  });
-
-  final PersonaDto apprentice;
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        AvatarWidget(
-          radius: 16,
-          avatarUrl: apprentice.avatar,
-        ),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 6,
-            child: Padding(
-              padding: const EdgeInsets.all(2),
-              child: CircleAvatar(
-                radius: 4,
-                backgroundColor: apprentice.callStatus.toColor(),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: isSelected
-              ? const Align(
-                  alignment: Alignment.bottomRight,
-                  child: CircleAvatar(
-                    radius: 6,
-                    backgroundColor: AppColors.green1,
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 12,
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-      ],
     );
   }
 }
