@@ -299,14 +299,18 @@ class _UsersTab extends HookConsumerWidget {
             .watch(institutionDetailsControllerProvider(id: institutionId))
             .valueOrNull ??
         [];
-    final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
-    final institutions =
-        ref.watch(institutionsControllerProvider).valueOrNull ?? [];
-    final institution = institutions.singleWhere(
+    final compoundsController = ref.watch(compoundControllerProvider);
+    final compounds = compoundsController.valueOrNull ?? [];
+    final institutionsController = ref.watch(institutionsControllerProvider);
+    final institution = (institutionsController.valueOrNull ?? []).singleWhere(
       (element) => element.id == institutionId,
       orElse: () => const InstitutionDto(),
     );
     final filters = useState(const FilterDto());
+
+    if (compoundsController.isLoading || institutionsController.isLoading) {
+      return const CircularProgressIndicator.adaptive();
+    }
 
     // Logger().d(apprentices.length, error: institutionId);
     // Logger().d(institution.apprentices.length, error: institutionId);
