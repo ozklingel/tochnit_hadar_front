@@ -97,10 +97,8 @@ class TasksScreen extends HookConsumerWidget {
 
     ReportNewRouteData routeToReport() {
       final eventType = switch (selectedTasks.value.firstOrNull?.event) {
-        TaskType.call => Event.call.enumName,
-        TaskType.callParents ||
-        TaskType.meetingParents =>
-          Event.callParents.enumName,
+        Event.call => Event.call.enumName,
+        Event.callParents || Event.meetingParents => Event.callParents.enumName,
         _ => Event.other.enumName,
       };
       return ReportNewRouteData(

@@ -29,7 +29,7 @@ class ReportDto with _$ReportDto {
     @Default(Event.other)
     @JsonKey(
       name: 'title',
-      fromJson: _extractType,
+      fromJson: extractEventType,
     )
     Event event,
     @Default([])
@@ -84,14 +84,17 @@ class ReportDto with _$ReportDto {
 
 enum Event {
   // melave
-  offlineMeeting(100), // מפגש
-  offlineGroupMeeting(101), // מפגש קבוצתי
+  meeting(100), // מפגש
+  groupMeeting(101), // מפגש קבוצתי
   onlineMeeting(102),
   call(103), // שיחה
   callParents(104), // שיחה להורים
-  baseVisit(105), // ביקור בבסיס
-  fiveMessages(106),
-  failedAttempt(107), // נסיון שכשל
+  meetingParents(105), // מפגש הורים
+  baseVisit(106), // ביקור בבסיס
+  fiveMessages(107),
+  failedAttempt(108), // נסיון שכשל
+  birthday(109), // יום הולדת
+  forgottenApprentices(110), // חניכים נשכחים
   // rakaz mosad
   matsbarGathering(200), // ישיבת מצב”ר
   recurringSabbath(201), // שבת מחזור
@@ -117,9 +120,9 @@ enum Event {
   String get name {
     switch (this) {
       // melave
-      case Event.offlineMeeting:
+      case Event.meeting:
         return 'פגישה פיזית';
-      case Event.offlineGroupMeeting:
+      case Event.groupMeeting:
         return 'מפגש קבוצתי';
       case Event.onlineMeeting:
         return 'פגישה מקוונת';
@@ -127,12 +130,18 @@ enum Event {
         return 'שיחה טלפונית';
       case Event.callParents:
         return 'שיחה להורים';
+      case Event.meetingParents:
+        return 'מפגש הורים';
       case Event.baseVisit:
         return 'ביקור בבסיס';
       case Event.fiveMessages:
         return '5 הודעות';
       case Event.failedAttempt:
         return 'נסיון כושל';
+      case Event.birthday:
+        return 'יום הולדת';
+      case Event.forgottenApprentices:
+        return 'חניכים נשכחים';
       // rakaz mosad
       case Event.matsbarGathering:
         return 'ישיבת מצב”ר';
@@ -162,9 +171,13 @@ enum Event {
         return 'UNKNOWN TYPE';
     }
   }
+
+  bool get isCall => this == call;
+  bool get isMeeting => this == meeting || this == groupMeeting;
+  bool get isParents => this == meetingParents || this == callParents;
 }
 
-Event _extractType(String? val) {
+Event extractEventType(String? val) {
   // account for bad server data
   val = val?.replaceAll('_', ' ');
 
@@ -173,6 +186,7 @@ Event _extractType(String? val) {
   }
   if (val?.contains(' הודעות') ?? false) return Event.fiveMessages;
   if (val == 'שיחה') return Event.call;
+  if (val == 'none') return Event.other;
 
   const err = 'failed to extract report type';
   Logger().i(err, error: val);

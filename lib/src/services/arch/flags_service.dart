@@ -160,8 +160,7 @@ final _tasks = List.generate(
           faker.randomGenerator.integer(TaskFrequencyMeta.values.length)],
       frequencyEnd: TaskFrequencyEnd.values[
           faker.randomGenerator.integer(TaskFrequencyEnd.values.length)],
-      event: TaskType
-          .values[faker.randomGenerator.integer(TaskType.values.length)],
+      event: Event.values[faker.randomGenerator.integer(Event.values.length)],
       dateTime: faker.date
           .dateTime(
             minYear: 1972,

@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
@@ -31,7 +32,7 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
     // Logger().d(task.dateTime);
 
     final titleController = useTextEditingController(
-      text: task.event == TaskType.none ? '' : task.event.name,
+      text: task.event == Event.other ? '' : task.event.name,
     );
     final detailsTextController = useTextEditingController(text: task.details);
     final frequencyController = useState(

@@ -1,30 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/logger.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:hadar_program/src/models/report/report.dto.dart';
 
 part 'task.dto.f.dart';
 part 'task.dto.g.dart';
-
-enum TaskType {
-  none,
-  meeting,
-  meetingParents,
-  meetingGroup,
-  meetingPeriod,
-  meetingMatsbar,
-  call,
-  callParents,
-  failedAttempt,
-  xMessages,
-  forgottenApprentices,
-  baseVisit,
-  hazanatMahzor,
-  birthday;
-
-  bool get isCall => this == call;
-  bool get isMeeting => this == meeting || this == meetingGroup;
-  bool get isParents => this == meetingParents || this == callParents;
-}
 
 enum TaskStatus {
   unknown,
@@ -106,15 +84,16 @@ class TaskDto with _$TaskDto {
     @Default(TaskStatus.unknown)
     @JsonKey(fromJson: _extractStatus)
     TaskStatus status,
-    @Default(TaskType.none)
+    @Default(Event.other)
     @JsonKey(
-      fromJson: _extractTaskType,
+      fromJson: extractEventType,
     )
-    TaskType event,
+    Event event,
     @Default([])
     @JsonKey(
       defaultValue: [],
       name: 'subject',
+      fromJson: _extractSubject,
     )
     List<String> subject,
     @Default('')
@@ -129,72 +108,10 @@ class TaskDto with _$TaskDto {
       _$TaskDtoFromJson(json);
 }
 
-TaskType _extractTaskType(String? data) {
-  switch (data) {
-    case 'מפגש קבוצתי':
-    case 'מפגש_קבוצתי':
-    case 'meetingGroup':
-      return TaskType.meetingGroup;
-    case 'מפגש מחזור':
-    case 'meetingPeriod':
-      return TaskType.meetingPeriod;
-    case 'שיחה':
-    case 'שיחה טלפונית':
-    case 'call':
-      return TaskType.call;
-    case 'שיחת הורים':
-    case 'שיחת_הורים':
-    case 'שיחה להורים':
-    case 'callParents':
-      return TaskType.callParents;
-    case 'מפגש':
-    case 'פגישה פיזית':
-    case 'meeting':
-      return TaskType.meeting;
-    case 'מפגש הורים':
-    case 'מפגש_הורים':
-    case 'meetingParents':
-      return TaskType.meetingParents;
-    case 'נסיון כושל':
-    case 'failedAttempt':
-      return TaskType.failedAttempt;
-    case '6 הודעות':
-    case 'xMessages':
-      return TaskType.xMessages;
-    case 'חניכים נשכחים':
-    case 'forgottenApprentices':
-      return TaskType.forgottenApprentices;
-    case 'ביקור בבסיס':
-    case 'baseVisit':
-      return TaskType.baseVisit;
-    case 'ישיבת מצב”ר':
-    case 'meetingMatsbar':
-      return TaskType.meetingMatsbar;
-    case 'הזנת מחזור':
-    case 'hazanatMahzor':
-      return TaskType.hazanatMahzor;
-    case 'יום הולדת':
-      return TaskType.birthday;
-    case 'none':
-    case 'כומתה':
-      return TaskType.none;
-    default:
-      const msg = 'failed to extract task type';
-      Logger().d(
-        msg,
-        error: data,
-      );
-      Sentry.captureEvent(
-        SentryEvent(
-          message: SentryMessage(
-            msg,
-            params: [data],
-          ),
-        ),
-      );
-
-      return TaskType.none;
-  }
+List<String> _extractSubject(dynamic data) {
+  // This handles bad server data (i.e. the data is a just a string)
+  final listData = data is! List<dynamic> ? [data] : data;
+  return (listData as List<dynamic>?)?.map((e) => e as String).toList() ?? [];
 }
 
 TaskFrequencyMeta _extractFrequencyMeta(String? data) {

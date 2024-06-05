@@ -248,7 +248,7 @@ class FiltersScreen extends HookConsumerWidget {
 
     String reportLabel(Event event) => switch (event) {
           Event.failedAttempt => 'ניסיון שכשל',
-          Event.offlineMeeting => 'מפגש',
+          Event.meeting => 'מפגש',
           Event.onlineMeeting => 'זום',
           Event.call => 'שיחה',
           _ => throw 'Unknown event type',
@@ -256,7 +256,7 @@ class FiltersScreen extends HookConsumerWidget {
 
     final reportTypes = [
       Event.failedAttempt,
-      Event.offlineMeeting,
+      Event.meeting,
       Event.onlineMeeting,
       Event.call,
     ]

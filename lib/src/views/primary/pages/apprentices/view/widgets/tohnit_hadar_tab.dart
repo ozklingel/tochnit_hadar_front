@@ -162,9 +162,9 @@ class TohnitHadarTabView extends HookConsumerWidget {
                           else if ([
                             Event.mosadMeetings,
                             Event.onlineMeeting,
-                            Event.offlineMeeting,
+                            Event.meeting,
                             Event.recurringMeeting,
-                            Event.offlineGroupMeeting,
+                            Event.groupMeeting,
                           ].contains(e.event))
                             const Icon(FluentIcons.people_24_regular)
                           else if ([
@@ -815,9 +815,9 @@ class _AnnouncementItem extends StatelessWidget {
       Event.fiveMessages => FluentIcons.chat_24_regular,
       Event.mosadMeetings ||
       Event.onlineMeeting ||
-      Event.offlineMeeting ||
+      Event.meeting ||
       Event.recurringMeeting ||
-      Event.offlineGroupMeeting =>
+      Event.groupMeeting =>
         FluentIcons.people_24_regular,
       _ => FluentIcons.question_24_regular,
     };
