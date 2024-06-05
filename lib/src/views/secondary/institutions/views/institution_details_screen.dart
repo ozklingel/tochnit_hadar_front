@@ -297,10 +297,7 @@ class _UsersTab extends HookConsumerWidget {
 
     final users = ref
             .watch(institutionDetailsControllerProvider(id: institutionId))
-            .valueOrNull
-            ?.where(
-              (element) => element.institutionId == institutionId,
-            ) ??
+            .valueOrNull ??
         [];
     final compounds = ref.watch(compoundControllerProvider).valueOrNull ?? [];
     final institutions =
