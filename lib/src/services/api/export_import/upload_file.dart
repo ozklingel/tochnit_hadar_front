@@ -32,8 +32,10 @@ class UploadFile extends _$UploadFile {
     //     )
 
     final formData = FormData.fromMap({
-      "file": await MultipartFile.fromFile(
-        file.path!,
+      // file.path is not supported on web, so we use fromBytes instead:
+      // https://github.com/miguelpruivo/flutter_file_picker/wiki/FAQ
+      "file": MultipartFile.fromBytes(
+        file.bytes as List<int>,
         filename: file.name,
         contentType: MediaType.parse('multipart/form-data'),
       ),

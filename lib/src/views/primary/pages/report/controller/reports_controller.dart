@@ -33,6 +33,10 @@ enum SortReportBy {
     StorageService,
     FilterReports,
     FilterRecipients,
+    // ignore: provider_dependencies
+    GetTasks, // needed for invalidating getTasksProvider
+    // ignore: provider_dependencies
+    GetInitMaster, // needed for invalidating getInitMasterProvider
   ],
 )
 class ReportsController extends _$ReportsController {

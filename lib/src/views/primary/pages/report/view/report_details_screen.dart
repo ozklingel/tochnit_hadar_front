@@ -642,6 +642,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                           final result = await FilePicker.platform.pickFiles(
                             allowMultiple: false,
                             withData: true,
+                            type: FileType.custom,
+                            allowedExtensions: ['png', 'jpeg', 'jpg'],
                           );
 
                           if (result != null) {
