@@ -91,6 +91,52 @@ class _InstitutionDetailsScreenState
                   //   ),
                   // );
 
+                  // final exportDelegate = ExportDelegate(
+                  //   options: const ExportOptions(
+                  //     pageFormatOptions: PageFormatOptions.a4(),
+                  //   ),
+                  // );
+
+                  // const frameId = 'someFrameId';
+
+                  // final uniqKey = UniqueKey();
+
+                  // // needs to be rendered in the tree and offstage/visibility hacks don't work
+                  // ExportFrame(
+                  //   frameId: frameId,
+                  //   exportDelegate: exportDelegate,
+                  //   child: CaptureWrapper(
+                  //     key: uniqKey,
+                  //     child: InstitutionPdfExport(
+                  //       institution: institution,
+                  //       startDate: DateTime.now(),
+                  //       endDate: DateTime.now(),
+                  //     ),
+                  //   ),
+                  // );
+
+                  // try {
+                  //   final pdf =
+                  //       await exportDelegate.exportToPdfDocument(frameId);
+
+                  //   final path = await FileSaver.instance.saveAs(
+                  //     name: DateTime.now().toIso8601String(),
+                  //     ext: '.pdf',
+                  //     mimeType: MimeType.pdf,
+                  //     bytes: await pdf.save(),
+                  //   );
+
+                  //   Logger().d(path);
+                  // } catch (e) {
+                  //   Logger().e(e);
+                  // }
+
+                  // final page =
+                  //     await exportDelegate.exportToPdfPage('someFrameId');
+
+                  // final widget =
+                  //     await exportDelegate.exportToPdfWidget('someFrameId');
+
                   // final pdf = pw.Document();
 
                   // pdf.addPage(
@@ -133,98 +179,106 @@ class _InstitutionDetailsScreenState
           const SizedBox(width: 6),
         ],
       ),
-      body: NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: SliverAppBar(
-                automaticallyImplyLeading: false,
-                expandedHeight: 320,
-                collapsedHeight: 60,
-                forceElevated: false,
-                floating: false,
-                snap: false,
-                pinned: false,
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin,
-                  background: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: DetailsPageHeader(
-                      name: institution.name,
-                      phone: institution.adminPhoneNumber,
-                      avatar: institution.logo,
-                      onTapEditAvatar: () async {
-                        final result = await FilePicker.platform.pickFiles(
-                          allowMultiple: true,
-                          withData: true,
-                        );
+      body: Stack(
+        children: [
+          NestedScrollView(
+            floatHeaderSlivers: true,
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                SliverOverlapAbsorber(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  sliver: SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    expandedHeight: 320,
+                    collapsedHeight: 60,
+                    forceElevated: false,
+                    floating: false,
+                    snap: false,
+                    pinned: false,
+                    flexibleSpace: FlexibleSpaceBar(
+                      collapseMode: CollapseMode.pin,
+                      background: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: DetailsPageHeader(
+                          name: institution.name,
+                          phone: institution.adminPhoneNumber,
+                          avatar: institution.logo,
+                          onTapEditAvatar: () async {
+                            final result = await FilePicker.platform.pickFiles(
+                              allowMultiple: true,
+                              withData: true,
+                            );
 
-                        if (result == null) {
-                          return;
-                        }
+                            if (result == null) {
+                              return;
+                            }
 
-                        final uploadFileLocation = await ref.read(
-                          uploadFileProvider(result.files.first).future,
-                        );
+                            final uploadFileLocation = await ref.read(
+                              uploadFileProvider(result.files.first).future,
+                            );
 
-                        final request = await ref
-                            .read(
-                              newOrEditInstitutionControllerProvider(widget.id)
-                                  .notifier,
-                            )
-                            .updateLogo(uploadFileLocation);
+                            final request = await ref
+                                .read(
+                                  newOrEditInstitutionControllerProvider(
+                                    widget.id,
+                                  ).notifier,
+                                )
+                                .updateLogo(uploadFileLocation);
 
-                        if (request) {}
-                      },
+                            if (request) {}
+                          },
+                        ),
+                      ),
+                    ),
+                    bottom: TabBar(
+                      controller: tabController,
+                      tabs: const [
+                        Tab(text: 'כללי'),
+                        Tab(text: 'משתמשים'),
+                      ],
                     ),
                   ),
                 ),
-                bottom: TabBar(
-                  controller: tabController,
-                  tabs: const [
-                    Tab(text: 'כללי'),
-                    Tab(text: 'משתמשים'),
-                  ],
+              ];
+            },
+            body: TabBarView(
+              controller: tabController,
+              children: List.generate(
+                views.length,
+                (index) => Builder(
+                  builder: (context) {
+                    final parentController =
+                        PrimaryScrollController.of(context);
+                    if (scrollControllers[index]?.parent != parentController) {
+                      scrollControllers[index]?.dispose();
+                      scrollControllers[index] =
+                          SubordinateScrollController(parentController);
+                    }
+
+                    return CustomScrollView(
+                      key: PageStorageKey<String>(
+                        'institution-${views[index].key}${views[index].toString()}',
+                      ),
+                      controller: scrollControllers[index],
+                      slivers: [
+                        SliverOverlapInjector(
+                          handle:
+                              NestedScrollView.sliverOverlapAbsorberHandleFor(
+                            context,
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: views[index],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
-          ];
-        },
-        body: TabBarView(
-          controller: tabController,
-          children: List.generate(
-            views.length,
-            (index) => Builder(
-              builder: (context) {
-                final parentController = PrimaryScrollController.of(context);
-                if (scrollControllers[index]?.parent != parentController) {
-                  scrollControllers[index]?.dispose();
-                  scrollControllers[index] =
-                      SubordinateScrollController(parentController);
-                }
-
-                return CustomScrollView(
-                  key: PageStorageKey<String>(
-                    'institution-${views[index].key}${views[index].toString()}',
-                  ),
-                  controller: scrollControllers[index],
-                  slivers: [
-                    SliverOverlapInjector(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                        context,
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: views[index],
-                    ),
-                  ],
-                );
-              },
-            ),
           ),
-        ),
+        ],
       ),
     );
   }

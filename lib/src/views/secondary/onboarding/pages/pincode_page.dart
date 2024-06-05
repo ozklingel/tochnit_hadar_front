@@ -225,6 +225,7 @@ class OnboardingPagePinCode extends HookConsumerWidget {
                         // TODO(yeo):
                         // ignore: use_build_context_synchronously
                         onFailure?.call(
+                          // ignore: use_build_context_synchronously
                           context,
                           'קוד האימות שהוזן שגוי, רוצה לנסות שוב?',
                         );

@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
@@ -16,6 +15,7 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/core/utils/extensions/string.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/services/api/eshkol/get_eshkols.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
@@ -721,18 +721,14 @@ class _TohnitHadarTabView extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
 
-    final apprentices = ref.watch(getPersonasProvider);
-    final institution =
-        ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == auth.valueOrNull!.institution,
-                  orElse: () => const InstitutionDto(),
-                ) ??
-            const InstitutionDto();
+    final eshkolot = ref.watch(getEshkolListProvider);
+    final institutions = ref.watch(institutionsControllerProvider);
+    final personas = ref.watch(getPersonasProvider);
 
     return Column(
       children: [
         DetailsCard(
-          title: ' כללי',
+          title: 'כללי',
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -743,7 +739,12 @@ class _TohnitHadarTabView extends ConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: ' שיוך מוסדי',
-                data: institution.name,
+                data: (institutions.valueOrNull ?? [])
+                    .singleWhere(
+                      (element) => element.id == auth.valueOrNull!.institution,
+                      orElse: () => const InstitutionDto(),
+                    )
+                    .name,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
@@ -754,61 +755,117 @@ class _TohnitHadarTabView extends ConsumerWidget {
             ],
           ),
         ),
-        if (kDebugMode || auth.valueOrNull?.role == UserRole.melave) ...[
+        if ([UserRole.ahraiTohnit].contains(auth.valueOrNull?.role))
           DetailsCard(
-            title: ' רשימת חניכים',
-            child: Builder(
-              builder: (context) {
-                // Logger().d(auth.valueOrNull!.apprentices.length);
+            title: 'רשימת אשכולות',
+            child: eshkolot.isLoading
+                ? const CircularProgressIndicator.adaptive()
+                : Column(
+                    children: eshkolot.valueOrNull
+                            ?.map(
+                              (e) => Skeletonizer(
+                                enabled: eshkolot.isLoading,
+                                child: ListTile(
+                                  leading: const CircleAvatar(
+                                    backgroundColor: Colors.blue,
+                                  ),
+                                  title: Text(
+                                    e.ifEmpty ?? 'N/A',
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  onTap: null,
+                                ),
+                              ),
+                            )
+                            .toList() ??
+                        [],
+                  ),
+          ),
+        if ([UserRole.ahraiTohnit, UserRole.rakazEshkol]
+            .contains(auth.valueOrNull?.role))
+          DetailsCard(
+            title: 'רשימת מוסדות',
+            child: institutions.isLoading
+                ? const CircularProgressIndicator.adaptive()
+                : Column(
+                    children: institutions.valueOrNull?.map((e) {
+                          final institution =
+                              (institutions.valueOrNull ?? []).singleWhere(
+                            (element) => element.id == e.id,
+                          );
 
-                return Column(
-                  children: <Widget>[
-                    ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      physics: const ClampingScrollPhysics(),
-                      itemCount: auth.valueOrNull!.apprentices.length,
-                      itemBuilder: (
-                        BuildContext context,
-                        int index,
-                      ) {
+                          return Skeletonizer(
+                            enabled: institutions.isLoading,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.blue,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    institution.logo,
+                                  ),
+                                ),
+                                title: Text(
+                                  e.name.ifEmpty ?? 'N/A',
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onTap: () => InstitutionDetailsRouteData(
+                                  id: institution.id,
+                                ).go(context),
+                              ),
+                            ),
+                          );
+                        }).toList() ??
+                        [],
+                  ),
+          ),
+        // if (auth.valueOrNull?.role == UserRole.melave)
+        DetailsCard(
+          title: 'רשימת חניכים',
+          child: personas.isLoading
+              ? const CircularProgressIndicator.adaptive()
+              : Column(
+                  children: personas.valueOrNull?.map((e) {
                         final apprentice =
-                            (apprentices.valueOrNull ?? []).singleWhere(
-                          (element) =>
-                              element.id ==
-                              auth.valueOrNull!.apprentices[index],
+                            (personas.valueOrNull ?? []).singleWhere(
+                          (element) => element.id == e.id,
                           orElse: () => const PersonaDto(),
                         );
 
                         return Skeletonizer(
-                          enabled: apprentices.isLoading,
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.blue,
-                              backgroundImage:
-                                  CachedNetworkImageProvider(apprentice.avatar),
-                            ),
-                            title: Text(
-                              apprentice.fullName.ifEmpty ?? 'LOADING',
-                              textAlign: TextAlign.right,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                          enabled: personas.isLoading,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.blue,
+                                backgroundImage: CachedNetworkImageProvider(
+                                  apprentice.avatar,
+                                ),
                               ),
+                              title: Text(
+                                apprentice.fullName.ifEmpty ?? 'LOADING',
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onTap: () =>
+                                  PersonaDetailsRouteData(id: apprentice.id)
+                                      .go(context),
                             ),
-                            onTap: () =>
-                                PersonaDetailsRouteData(id: apprentice.id)
-                                    .go(context),
                           ),
                         );
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
+                      }).toList() ??
+                      [],
+                ),
+        ),
       ],
     );
   }

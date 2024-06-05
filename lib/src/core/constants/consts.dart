@@ -69,8 +69,8 @@ abstract class Consts {
   static const addInstitution = 'institutionProfile_form/add_mosad';
   static const deleteInstitution = 'institutionProfile_form/delete';
   static const updateInstitution = 'institutionProfile_form/update';
-  static const getAllInstitutionApprenticesAndMelavim =
-      'institutionProfile_form/apprentice_and_melave';
+  // static const getAllInstitutionApprenticesAndMelavim =
+  //     'institutionProfile_form/apprentice_and_melave';
   static const addInstitutionFromExcel =
       'institutionProfile_form/add_mosad_excel';
 
@@ -94,7 +94,6 @@ abstract class Consts {
   static const getForgotenApprentices = 'madadim/forgotenApprentices';
 
   // user profile
-  // static const getAllApprentices = 'apprentice_Profile_form/myApprentices';
   static const getAllPersonas = 'userProfile_form/myPersonas';
   static const deletePersona = 'userProfile_form/delete';
   static const getAuthUser = 'userProfile_form/getProfileAtributes';

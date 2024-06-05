@@ -545,5 +545,11 @@ extension ApprenticeX on PersonaDto {
 }
 
 extension PhoneX on Phone {
-  String get format => '0${substring(0, 2)}-${substring(2)}';
+  String get format {
+    try {
+      return '0${substring(0, 2)}-${substring(2)}';
+    } catch (e) {
+      return this;
+    }
+  }
 }

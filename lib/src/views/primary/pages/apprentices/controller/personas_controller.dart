@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
@@ -19,6 +20,7 @@ part 'personas_controller.g.dart';
 @Riverpod(
   dependencies: [
     GetMapsApprentices,
+    GetPersonas,
     DioService,
     GetFilteredUsers,
     GetMapsApprentices,
@@ -30,11 +32,18 @@ class PersonasController extends _$PersonasController {
 
   @override
   FutureOr<List<PersonaDto>> build() async {
-    final apprentices = await ref.watch(getMapsApprenticesProvider.future);
+    final mapApprentices = await ref.watch(getMapsApprenticesProvider.future);
+    final personas2 = await ref.watch(getPersonasProvider.future);
 
     ref.keepAlive();
 
-    return apprentices;
+    final uniquePersonas = personas2
+        .whereNot(
+          (element) => mapApprentices.map((e) => e.id).contains(element.id),
+        )
+        .toList();
+
+    return mapApprentices + uniquePersonas;
   }
 
   FutureOr<bool> deletePersona(String personaId) async {

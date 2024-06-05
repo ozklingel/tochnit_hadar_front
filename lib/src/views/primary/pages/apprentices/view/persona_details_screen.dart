@@ -54,12 +54,12 @@ class _ApprenticeDetailsScreenState
   Widget build(BuildContext context) {
     final auth = ref.watch(authServiceProvider);
 
-    final persona =
-        ref.watch(personasControllerProvider).valueOrNull?.singleWhere(
-                  (element) => element.id == widget.apprenticeId,
-                  orElse: () => const PersonaDto(),
-                ) ??
-            const PersonaDto();
+    final controller = ref.watch(personasControllerProvider);
+
+    final persona = (controller.valueOrNull ?? []).singleWhere(
+      (element) => element.id == widget.apprenticeId,
+      orElse: () => const PersonaDto(),
+    );
 
     final tabController = useTabController(
       initialLength: 3,
@@ -72,6 +72,10 @@ class _ApprenticeDetailsScreenState
       PersonalInfoTabView(persona: persona),
       MilitaryServiceTabView(persona: persona),
     ];
+
+    if (controller.isLoading) {
+      return const CircularProgressIndicator.adaptive();
+    }
 
     return Scaffold(
       appBar: AppBar(
