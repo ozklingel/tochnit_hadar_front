@@ -40,8 +40,8 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: isSearchOpen.value
             ? SearchBar(
                 controller: controller,
-                elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(AppColors.blue07),
+                elevation: WidgetStateProperty.all(0),
+                backgroundColor: WidgetStateProperty.all(AppColors.blue07),
                 hintText: 'חיפוש...',
                 leading: IconButton(
                   onPressed: () => isSearchOpen.value = false,

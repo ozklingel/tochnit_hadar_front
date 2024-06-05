@@ -334,7 +334,7 @@ class FiltersScreen extends HookConsumerWidget {
                               ChoiceChip(
                                 showCheckmark: false,
                                 selectedColor: AppColors.blue06,
-                                color: MaterialStateColor.resolveWith(
+                                color: WidgetStateColor.resolveWith(
                                   (states) => AppColors.blue06,
                                 ),
                                 selected: filter.value.reportEventTypes
@@ -983,7 +983,7 @@ class _CompoundWidget extends StatelessWidget {
           }
 
           filters.value = filters.value.copyWith(
-            bases: filters.value.bases.contains(value)
+            bases: filters.value.bases.contains(value.id)
                 ? [
                     ...filters.value.bases
                         .where((element) => element != value.name),
@@ -1423,9 +1423,8 @@ class _SelectedUsersPage extends HookWidget {
                           title: Text(e.name),
                           controlAffinity: ListTileControlAffinity.leading,
                           checkColor: Colors.white,
-                          fillColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.selected)) {
+                          fillColor: WidgetStateProperty.resolveWith((states) {
+                            if (states.contains(WidgetState.selected)) {
                               return AppColors.blue03;
                             }
 

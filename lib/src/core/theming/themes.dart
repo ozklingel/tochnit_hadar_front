@@ -40,12 +40,12 @@ ThemeData get appThemeLight {
       backgroundColor: Colors.white,
     ),
     searchBarTheme: SearchBarThemeData(
-      hintStyle: MaterialStateProperty.all(
+      hintStyle: WidgetStateProperty.all(
         TextStyles.s16w400cGrey2.copyWith(
           color: AppColors.gray5,
         ),
       ),
-      textStyle: MaterialStateProperty.all(
+      textStyle: WidgetStateProperty.all(
         TextStyles.s16w400cGrey2.copyWith(
           color: AppColors.gray2,
         ),
@@ -55,7 +55,7 @@ ThemeData get appThemeLight {
       color: Colors.white,
       elevation: 10,
       surfaceTintColor: Colors.white,
-      labelTextStyle: MaterialStateProperty.all(
+      labelTextStyle: WidgetStateProperty.all(
         TextStyles.s16w400cGrey2.copyWith(
           color: AppColors.gray2,
         ),

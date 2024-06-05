@@ -56,7 +56,7 @@ class InstitutionsScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: SearchBar(
                     controller: searchTextEditingController,
-                    padding: MaterialStateProperty.all(
+                    padding: WidgetStateProperty.all(
                       const EdgeInsets.symmetric(horizontal: 16),
                     ),
                     leading: IconButton(
@@ -64,8 +64,8 @@ class InstitutionsScreen extends HookConsumerWidget {
                       icon: const Icon(Icons.arrow_back),
                     ),
                     trailing: const [Icon(FluentIcons.search_24_regular)],
-                    elevation: MaterialStateProperty.all(0),
-                    backgroundColor: MaterialStateColor.resolveWith(
+                    elevation: WidgetStateProperty.all(0),
+                    backgroundColor: WidgetStateColor.resolveWith(
                       (states) => AppColors.blue07,
                     ),
                   ),

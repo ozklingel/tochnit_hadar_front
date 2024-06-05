@@ -225,7 +225,7 @@ class _PickFrequencyDialog extends HookWidget {
                   navState: Navigator.of(context),
                   freq: val!,
                 ),
-                fillColor: MaterialStateColor.resolveWith(
+                fillColor: WidgetStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
                 title: const Text(
@@ -240,7 +240,7 @@ class _PickFrequencyDialog extends HookWidget {
                   navState: Navigator.of(context),
                   freq: val!,
                 ),
-                fillColor: MaterialStateColor.resolveWith(
+                fillColor: WidgetStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
                 title: const Text(
@@ -255,7 +255,7 @@ class _PickFrequencyDialog extends HookWidget {
                   navState: Navigator.of(context),
                   freq: val!,
                 ),
-                fillColor: MaterialStateColor.resolveWith(
+                fillColor: WidgetStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
                 title: const Text(
@@ -270,7 +270,7 @@ class _PickFrequencyDialog extends HookWidget {
                   navState: Navigator.of(context),
                   freq: val!,
                 ),
-                fillColor: MaterialStateColor.resolveWith(
+                fillColor: WidgetStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
                 title: const Text(
@@ -285,7 +285,7 @@ class _PickFrequencyDialog extends HookWidget {
                   navState: Navigator.of(context),
                   freq: val!,
                 ),
-                fillColor: MaterialStateColor.resolveWith(
+                fillColor: WidgetStateColor.resolveWith(
                   (states) => AppColors.blue02,
                 ),
                 title: const Text(
@@ -318,7 +318,7 @@ class _PickFrequencyDialog extends HookWidget {
                         freq: val!,
                       );
                     },
-                    fillColor: MaterialStateColor.resolveWith(
+                    fillColor: WidgetStateColor.resolveWith(
                       (states) => AppColors.blue02,
                     ),
                     title: const Text(

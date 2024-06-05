@@ -882,11 +882,11 @@ class _AddRecipientsManuallyScreen extends HookConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: SearchBar(
                       controller: searchController,
-                      elevation: MaterialStateProperty.all(0),
-                      padding: MaterialStateProperty.all(
+                      elevation: WidgetStateProperty.all(0),
+                      padding: WidgetStateProperty.all(
                         const EdgeInsets.symmetric(horizontal: 12),
                       ),
-                      backgroundColor: MaterialStateColor.resolveWith(
+                      backgroundColor: WidgetStateColor.resolveWith(
                         (states) => AppColors.blue07,
                       ),
                       leading: IconButton(
@@ -911,7 +911,7 @@ class _AddRecipientsManuallyScreen extends HookConsumerWidget {
                                 child: ChoiceChip(
                                   showCheckmark: false,
                                   selectedColor: AppColors.blue06,
-                                  color: MaterialStateColor.resolveWith(
+                                  color: WidgetStateColor.resolveWith(
                                     (states) => AppColors.blue06,
                                   ),
                                   selected: true,

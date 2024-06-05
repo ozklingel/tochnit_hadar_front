@@ -12,7 +12,7 @@ class InstitutionExportPdfDto with _$InstitutionExportPdfDto {
       defaultValue: [],
       name: 'Picud_dict',
     )
-    List<Map<String, int>> pikud,
+    List<Map<String, dynamic>> pikud,
     @Default(0)
     @JsonKey(
       defaultValue: 0,
@@ -42,13 +42,13 @@ class InstitutionExportPdfDto with _$InstitutionExportPdfDto {
       defaultValue: [],
       name: 'mahzor_dict',
     )
-    List<Map<String, int>> mahzor,
+    List<Map<String, dynamic>> mahzor,
     @Default([])
     @JsonKey(
       defaultValue: [],
       name: 'matzbar_dict',
     )
-    List<Map<String, int>> matzbar,
+    List<Map<String, dynamic>> matzbar,
     @Default([])
     @JsonKey(
       defaultValue: [],
@@ -60,7 +60,7 @@ class InstitutionExportPdfDto with _$InstitutionExportPdfDto {
       defaultValue: [],
       name: 'paying_dict',
     )
-    List<Map<String, int>> paying,
+    List<Map<String, dynamic>> paying,
     @Default(0)
     @JsonKey(
       defaultValue: 0,
@@ -72,7 +72,7 @@ class InstitutionExportPdfDto with _$InstitutionExportPdfDto {
       defaultValue: [],
       name: 'sugSherut_dict',
     )
-    List<Map<String, int>> sherut,
+    List<Map<String, dynamic>> sherut,
     @Default([])
     @JsonKey(
       defaultValue: [],

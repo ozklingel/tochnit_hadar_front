@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hadar_program/src/core/utils/convert/extract_from_json.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 
 part 'institution.dto.f.dart';
@@ -95,8 +96,8 @@ class InstitutionDto with _$InstitutionDto {
     String shluha,
     @Default('')
     @JsonKey(
-      defaultValue: '',
       name: 'logo_path',
+      fromJson: extractAvatarFromJson,
     )
     String logo,
   }) = _InstitutionDto;

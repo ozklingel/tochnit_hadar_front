@@ -109,8 +109,8 @@ class ReportsScreen extends HookConsumerWidget {
                                 height: 42,
                                 child: SearchBar(
                                   controller: searchController,
-                                  elevation: MaterialStateProperty.all(0),
-                                  padding: MaterialStateProperty.all(
+                                  elevation: WidgetStateProperty.all(0),
+                                  padding: WidgetStateProperty.all(
                                     const EdgeInsets.symmetric(horizontal: 12),
                                   ),
                                   leading: const Icon(
@@ -124,8 +124,7 @@ class ReportsScreen extends HookConsumerWidget {
                                     ),
                                   ],
                                   hintText: 'חיפוש',
-                                  backgroundColor:
-                                      MaterialStateColor.resolveWith(
+                                  backgroundColor: WidgetStateColor.resolveWith(
                                     (states) => AppColors.blue08,
                                   ),
                                 ),
@@ -573,7 +572,7 @@ class _Chip extends StatelessWidget {
       child: ChoiceChip(
         showCheckmark: false,
         selectedColor: AppColors.blue06,
-        color: MaterialStateColor.resolveWith(
+        color: WidgetStateColor.resolveWith(
           (states) => AppColors.blue06,
         ),
         selected: true,

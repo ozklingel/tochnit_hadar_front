@@ -39,16 +39,16 @@ class MessagePersonasScreen extends HookConsumerWidget {
                     .searchApprentices(val),
               ];
             },
-            elevation: MaterialStateProperty.all(0),
+            elevation: WidgetStateProperty.all(0),
             backgroundColor:
-                MaterialStateColor.resolveWith((states) => AppColors.blue07),
+                WidgetStateColor.resolveWith((states) => AppColors.blue07),
             hintText: 'הזן את שם המשתמש',
-            hintStyle: MaterialStateProperty.all(TextStyles.s16w400cGrey5),
+            hintStyle: WidgetStateProperty.all(TextStyles.s16w400cGrey5),
             leading: IconButton(
               icon: const Icon(FluentIcons.arrow_left_24_filled),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 16),
             ),
             trailing: const [

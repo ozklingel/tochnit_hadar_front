@@ -222,8 +222,9 @@ class OnboardingPagePinCode extends HookConsumerWidget {
                         // Try replacing the use of the deprecated member with the replacement.
                         // ignore: deprecated_member_use
                         ref.read(pinErrorProvider.state).state = true;
+                        // TODO(yeo):
+                        // ignore: use_build_context_synchronously
                         onFailure?.call(
-                          // ignore: use_build_context_synchronously
                           context,
                           'קוד האימות שהוזן שגוי, רוצה לנסות שוב?',
                         );

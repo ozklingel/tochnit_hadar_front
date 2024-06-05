@@ -13,6 +13,7 @@ import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/core/utils/extensions/string.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
@@ -30,6 +31,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/enums/address_region.dart';
 import '../../../../models/persona/persona.dto.dart';
@@ -719,6 +721,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
 
+    final apprentices = ref.watch(getPersonasProvider);
     final institution =
         ref.watch(institutionsControllerProvider).valueOrNull?.singleWhere(
                   (element) => element.id == auth.valueOrNull!.institution,
@@ -770,29 +773,32 @@ class _TohnitHadarTabView extends ConsumerWidget {
                         int index,
                       ) {
                         final apprentice =
-                            (ref.watch(getPersonasProvider).valueOrNull ?? [])
-                                .singleWhere(
+                            (apprentices.valueOrNull ?? []).singleWhere(
                           (element) =>
                               element.id ==
                               auth.valueOrNull!.apprentices[index],
                           orElse: () => const PersonaDto(),
                         );
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            backgroundImage:
-                                CachedNetworkImageProvider(apprentice.avatar),
-                          ),
-                          title: Text(
-                            apprentice.fullName,
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+
+                        return Skeletonizer(
+                          enabled: apprentices.isLoading,
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              backgroundImage:
+                                  CachedNetworkImageProvider(apprentice.avatar),
                             ),
+                            title: Text(
+                              apprentice.fullName.ifEmpty ?? 'LOADING',
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onTap: () =>
+                                PersonaDetailsRouteData(id: apprentice.id)
+                                    .go(context),
                           ),
-                          onTap: () =>
-                              PersonaDetailsRouteData(id: apprentice.id)
-                                  .go(context),
                         );
                       },
                     ),
