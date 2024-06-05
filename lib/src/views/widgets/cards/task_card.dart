@@ -81,7 +81,7 @@ class TaskCard extends ConsumerWidget {
             style: TextStyles.s18w500cGray1,
           ),
           subtitle: Text(
-            "עברו ${task.dateTime.asDateTime.asTimeAgo.replaceAll("לפני ", "")} מ${task.event.name}",
+            "${task.dateTime.asDateTime.asTimeAgo.replaceAll("לפני ", "")} מאז ${task.event.name}",
             style: TextStyles.s16w300cGray2,
           ),
           trailing: onCheckboxTap == null
