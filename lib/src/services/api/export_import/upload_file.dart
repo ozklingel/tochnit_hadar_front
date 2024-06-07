@@ -36,6 +36,8 @@ class UploadFile extends _$UploadFile {
       // NOTE(yamhoresh): file.path is not supported on web, so we use fromBytes instead:
       // https://github.com/miguelpruivo/flutter_file_picker/wiki/FAQ
       // NOTE(noga-dev): why do we care about web support?
+      // NOTE(yamhoresh): Thanks for the fix. Yinon conducts all the tests and feature approvals on a web deployment.
+      // And even once we'd launch on the app stores, they still want to maintain a web version.
       "file": kIsWeb
           ? MultipartFile.fromBytes(
               file.bytes as List<int>,
