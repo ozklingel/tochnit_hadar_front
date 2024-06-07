@@ -4,10 +4,10 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timeago/timeago.dart';
 
 class ReportCard extends ConsumerWidget {
   const ReportCard({
@@ -25,7 +25,6 @@ class ReportCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final reportDate = ('${report.creationDate}Z').asDateTime.toLocal();
     final apprentices = (ref
                 .watch(
                   personasControllerProvider,
@@ -36,6 +35,11 @@ class ReportCard extends ConsumerWidget {
           (element) => report.recipients.contains(element.id),
         )
         .toList();
+
+    final reportDate = report.dateTime.asDateTime;
+    final dateTimeAgo = DateTime.now().difference(reportDate).inDays > 0
+        ? reportDate.asTimeAgo
+        : 'היום';
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -80,9 +84,7 @@ class ReportCard extends ConsumerWidget {
                       SizedBox(
                         width: 264,
                         child: Text(
-                          apprentices
-                              .map((a) => '${a.firstName} ${a.lastName}')
-                              .join(', '),
+                          apprentices.map((a) => a.fullName).join(', '),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyles.s18w500cGray1,
@@ -92,12 +94,7 @@ class ReportCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    '${reportDate.asDayMonthYearShortDot}, ${format(
-                      reportDate,
-                      locale: Localizations.localeOf(
-                        context,
-                      ).languageCode,
-                    )}',
+                    '${reportDate.asDayMonthYearShortDot}, $dateTimeAgo',
                     style: TextStyles.s14w400,
                   ),
                   const SizedBox(height: 8),

@@ -65,7 +65,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
     // Logger().d(initRecipients, error: report.recipients);
 
     final apprenticeSearchController = useTextEditingController();
-    final selectedDatetime = useState<DateTime?>(report.dateTime.asDateTime);
+    final selectedDatetime = useState<DateTime>(report.dateTime.asDateTime);
     final selectedApprentices = useState(
       apprentices
           .where((element) => report.recipients.contains(element.id))
@@ -80,6 +80,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
     final uploadedFiles = useState(report.attachments);
     final isUploadInProgress = useState(<Key>[]);
     final filters = useState(const FilterDto());
+    final descriptionController =
+        useTextEditingController(text: report.description);
 
     if (isReadOnly) {
       return Scaffold(
@@ -472,7 +474,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                       onTap: () async {
                         final newDate = await showDatePicker(
                           context: context,
-                          initialDate: selectedDatetime.value ?? DateTime.now(),
+                          initialDate: selectedDatetime.value,
                           firstDate: DateTime.fromMillisecondsSinceEpoch(0),
                           lastDate:
                               DateTime.now().add(const Duration(days: 99000)),
@@ -488,10 +490,8 @@ class ReportDetailsScreen extends HookConsumerWidget {
                       child: IgnorePointer(
                         child: TextField(
                           decoration: InputDecoration(
-                            labelText: selectedDatetime.value == null
-                                ? 'MM/DD/YY'
-                                : DateFormat('dd/MM/yy')
-                                    .format(selectedDatetime.value!),
+                            labelText: DateFormat('dd/MM/yy')
+                                .format(selectedDatetime.value),
                             hintStyle: TextStyles.s16w400cGrey2.copyWith(
                               color: AppColors.grey5,
                             ),
@@ -588,6 +588,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                   InputFieldContainer(
                     label: 'תיאור האירוע',
                     child: TextField(
+                      controller: descriptionController,
                       minLines: 8,
                       maxLines: 8,
                       decoration: InputDecoration(
@@ -694,7 +695,6 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         child: LargeFilledRoundedButton(
                           label: reportId.isEmpty ? 'דיווח' : 'שמירה',
                           onPressed: selectedEventType.value == Event.other ||
-                                  selectedDatetime.value == null ||
                                   selectedApprentices.value.isEmpty
                               ? null
                               : () async {
@@ -704,12 +704,12 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                   final processedReport = report.copyWith(
                                     attachments: uploadedFiles.value,
                                     dateTime: selectedDatetime.value
-                                            ?.toIso8601String() ??
-                                        DateTime.now().toIso8601String(),
+                                        .toIso8601String(),
                                     recipients: selectedApprentices.value
                                         .map((e) => e.id)
                                         .toList(),
                                     event: selectedEventType.value,
+                                    description: descriptionController.text,
                                   );
 
                                   final result = reportId.isEmpty || isDupe

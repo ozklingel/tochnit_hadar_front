@@ -1,22 +1,18 @@
 // ignore_for_file: unused_element
 
-import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/theming/widgets.dart';
-import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/reports_form/get_reports.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
@@ -42,7 +38,7 @@ class ReportsScreen extends HookConsumerWidget {
     final controller = ref.watch(reportsControllerProvider);
     final selectedReportIds = useState(<String>[]);
     final filters = useState(const FilterDto());
-    final sortBy = useState(SortReportBy.abcAscending);
+    final sortBy = useState(SortReportBy.timeFromCloseToFar);
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
     final scrollController = useScrollController();
@@ -53,22 +49,9 @@ class ReportsScreen extends HookConsumerWidget {
         return true;
       }
       return element.recipients.contains(personaId);
-    }).sorted((a, b) {
-      switch (sortBy.value) {
-        case SortReportBy.abcAscending:
-          return a.event.name.compareTo(b.event.name);
-        case SortReportBy.timeFromCloseToFar:
-          return a.creationDate.asDateTime.compareTo(b.creationDate.asDateTime);
-        default:
-          return 0;
-      }
     });
 
-    if (sortBy.value == SortReportBy.timeFromFarToClose) {
-      sortedReports = sortedReports.reversed.toList();
-    }
-
-    if (auth.valueOrNull?.role == UserRole.ahraiTohnit) {
+    if (auth.valueOrNull?.role.isProgramDirector ?? false) {
       return Scaffold(
         appBar: AppBar(
           title: const Text('דיווחים'),
@@ -336,30 +319,11 @@ class ReportsScreen extends HookConsumerWidget {
                                 ),
                               );
 
-                              switch (result) {
-                                case SortReportBy.abcAscending:
-                                  sortBy.value = SortReportBy.abcAscending;
-                                  ref
-                                      .read(reportsControllerProvider.notifier)
-                                      .sortBy(SortReportBy.abcAscending);
-                                  break;
-                                case SortReportBy.timeFromCloseToFar:
-                                  sortBy.value =
-                                      SortReportBy.timeFromCloseToFar;
-                                  ref
-                                      .read(reportsControllerProvider.notifier)
-                                      .sortBy(SortReportBy.timeFromCloseToFar);
-                                  break;
-                                case SortReportBy.timeFromFarToClose:
-                                  sortBy.value =
-                                      SortReportBy.timeFromFarToClose;
-                                  ref
-                                      .read(reportsControllerProvider.notifier)
-                                      .sortBy(SortReportBy.timeFromFarToClose);
-                                  break;
-                                case null:
-                                  return;
-                              }
+                              if (result == null) return;
+                              sortBy.value = result;
+                              ref
+                                  .read(reportsControllerProvider.notifier)
+                                  .sortBy(result);
                             },
                             icon: const Icon(
                               FluentIcons.arrow_sort_down_lines_24_regular,
@@ -373,7 +337,7 @@ class ReportsScreen extends HookConsumerWidget {
                 ),
               ),
               SliverFillRemaining(
-                child: _ReporsListBody(
+                child: _ReportsListBody(
                   scrollController: scrollController,
                   isLoading: controller.isLoading,
                   selectedReportIds: selectedReportIds,
@@ -529,7 +493,7 @@ class ReportsScreen extends HookConsumerWidget {
           selectedReportIds.value = [];
           return ref.refresh(getReportsProvider.future);
         },
-        child: _ReporsListBody(
+        child: _ReportsListBody(
           scrollController: scrollController,
           isLoading: controller.isLoading,
           selectedReportIds: selectedReportIds,
@@ -551,46 +515,6 @@ class ReportsScreen extends HookConsumerWidget {
                             .contains(searchController.text.toLowerCase()),
                   )
                   .toList(),
-        ),
-      ),
-    );
-  }
-}
-
-class _Chip extends StatelessWidget {
-  const _Chip({
-    super.key,
-    required this.label,
-  });
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: ChoiceChip(
-        showCheckmark: false,
-        selectedColor: AppColors.blue06,
-        color: WidgetStateColor.resolveWith(
-          (states) => AppColors.blue06,
-        ),
-        selected: true,
-        onSelected: (val) => Toaster.unimplemented(),
-        label: Row(
-          children: [
-            Text(label),
-            const SizedBox(width: 8),
-            const Icon(
-              Icons.close,
-              color: AppColors.blue02,
-              size: 16,
-            ),
-          ],
-        ),
-        labelStyle: TextStyles.s14w400cBlue2,
-        side: const BorderSide(
-          color: AppColors.blue06,
         ),
       ),
     );
@@ -716,8 +640,8 @@ class _SortByDialog extends HookWidget {
   }
 }
 
-class _ReporsListBody extends ConsumerWidget {
-  const _ReporsListBody({
+class _ReportsListBody extends ConsumerWidget {
+  const _ReportsListBody({
     required this.reports,
     required this.isLoading,
     required this.selectedReportIds,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/home_page/get_init_master.dart';
@@ -46,37 +47,26 @@ class ReportsController extends _$ReportsController {
   FutureOr<List<ReportDto>> build() async {
     final reports = await ref.watch(getReportsProvider.future);
 
-    reports.sort(
-      (a, b) => b.dateTime.compareTo(a.dateTime),
-    );
-
-    return reports;
+    return reports
+      ..sort(
+        (a, b) => b.dateTime.asDateTime.compareTo(a.dateTime.asDateTime),
+      );
   }
 
   void sortBy(SortReportBy sortBy) {
-    switch (sortBy) {
-      case SortReportBy.abcAscending:
-        final result = state.value!;
-        final sorted =
-            result.sortedBy<String>((element) => element.description);
-        state = AsyncData(sorted);
-        return;
-      case SortReportBy.timeFromFarToClose:
-        final result = state.value!;
-        final sorted = result.sortedBy<num>(
-          (e) => DateTime.parse(e.dateTime).millisecondsSinceEpoch,
-        );
-        state = AsyncData(sorted);
-        return;
-      case SortReportBy.timeFromCloseToFar:
-        final result = state.value!;
-        final sorted = result.sortedBy<num>(
-          (element) => DateTime.parse(element.dateTime).millisecondsSinceEpoch,
-        );
-        final reversed = sorted.reversed.toList();
-        state = AsyncData(reversed);
-        return;
-    }
+    state = AsyncData(
+      state.value!.sorted(
+        (a, b) {
+          final timeFromCloseToFar =
+              b.dateTime.asDateTime.compareTo(a.dateTime.asDateTime);
+          return switch (sortBy) {
+            SortReportBy.abcAscending => a.event.name.compareTo(b.event.name),
+            SortReportBy.timeFromCloseToFar => timeFromCloseToFar,
+            SortReportBy.timeFromFarToClose => timeFromCloseToFar * -1,
+          };
+        },
+      ),
+    );
   }
 
   Future<bool> create(
