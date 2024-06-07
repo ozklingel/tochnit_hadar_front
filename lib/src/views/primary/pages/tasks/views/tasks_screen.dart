@@ -9,7 +9,6 @@ import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -95,18 +94,10 @@ class TasksScreen extends HookConsumerWidget {
         )
         .toList();
 
-    ReportNewRouteData routeToReport() {
-      final eventType = switch (selectedTasks.value.firstOrNull?.event) {
-        Event.call => Event.call.enumName,
-        Event.callParents || Event.meetingParents => Event.callParents.enumName,
-        _ => Event.other.enumName,
-      };
-      return ReportNewRouteData(
-        initRecipients: selectedApprentices.map((e) => e.id).toList(),
-        eventType: eventType,
-        taskIds: selectedTasks.value.map((e) => e.id).toList(),
-      );
-    }
+    void routeToReport() => ReportNewRouteData(
+          initRecipients: selectedApprentices.map((e) => e.id).toList(),
+          taskIds: selectedTasks.value.map((e) => e.id).toList(),
+        ).push(context);
 
     return Scaffold(
       appBar: SearchAppBar(
@@ -158,8 +149,8 @@ class TasksScreen extends HookConsumerWidget {
                         ),
                     ],
                     PopupMenuItem(
+                      onTap: routeToReport,
                       child: const Text('דיווח'),
-                      onTap: () => routeToReport().push(context),
                     ),
                     PopupMenuItem(
                       child: const Text('פרופיל אישי'),
@@ -173,7 +164,7 @@ class TasksScreen extends HookConsumerWidget {
             )
           else if (selectedTasks.value.length > 1)
             IconButton(
-              onPressed: () => routeToReport().push(context),
+              onPressed: routeToReport,
               icon: const Icon(
                 FluentIcons.clipboard_task_24_regular,
               ),

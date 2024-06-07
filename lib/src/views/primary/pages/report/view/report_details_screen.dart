@@ -40,7 +40,6 @@ class ReportDetailsScreen extends HookConsumerWidget {
     required this.isReadOnly,
     required this.initRecipients,
     required this.isDupe,
-    this.eventType,
     this.taskIds,
   });
 
@@ -48,7 +47,6 @@ class ReportDetailsScreen extends HookConsumerWidget {
   final bool isReadOnly;
   final List<String> initRecipients;
   final bool isDupe;
-  final String? eventType;
   final List<String>? taskIds;
 
   @override
@@ -73,8 +71,11 @@ class ReportDetailsScreen extends HookConsumerWidget {
           .where((element) => report.recipients.contains(element.id))
           .toList(),
     );
-    final reportEvent =
-        eventType != null ? Event.values.byName(eventType!) : report.event;
+
+    final tasks = (ref.watch(tasksControllerProvider).valueOrNull ?? [])
+        .where((task) => taskIds?.contains(task.id) ?? false)
+        .toList();
+    final reportEvent = tasks.firstOrNull?.event ?? report.event;
     final selectedEventType = useState(reportEvent);
     final uploadedFiles = useState(report.attachments);
     final isUploadInProgress = useState(<Key>[]);
