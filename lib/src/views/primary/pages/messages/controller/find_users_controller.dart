@@ -18,7 +18,7 @@ class FindUsersController extends _$FindUsersController {
   FutureOr<List<PersonaDto>> build({
     required String searchTerm,
   }) async {
-    final users = await ref.watch(
+    final filteredIds = await ref.watch(
       getFilteredUsersProvider(
         const FilterDto(
           roles: [
@@ -30,20 +30,25 @@ class FindUsersController extends _$FindUsersController {
       ).future,
     );
 
-    final apprentices = await ref.watch(getPersonasProvider.future);
+    final total = await ref.watch(getPersonasProvider.future);
 
-    final filteredApprenticesBySearch = apprentices
+    final filteredApprenticesBySearch = total
         .where((element) => element.fullName.contains(searchTerm))
         .toList();
 
     final filteredApprenticesByIds = filteredApprenticesBySearch
-        .where((element) => users.contains(element.id))
+        .where((element) => filteredIds.contains(element.id))
         .toList();
 
-    Logger().d('users.length: ${users.length}'
-        '\napprentices ${apprentices.length}'
-        '\nfilteredApprenticesBySearch ${filteredApprenticesBySearch.length}'
-        '\nfilteredApprenticesByIds ${filteredApprenticesByIds.length}');
+    Logger().d(
+      'filtered: ${filteredIds.length}'
+      '\n'
+      'total ${total.length}'
+      '\n'
+      'filtered search ${filteredApprenticesBySearch.length}'
+      '\n'
+      'filtered ids ${filteredApprenticesByIds.length}',
+    );
 
     return filteredApprenticesByIds;
   }

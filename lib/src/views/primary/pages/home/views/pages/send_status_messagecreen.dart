@@ -10,7 +10,12 @@ import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SendStatusMessagecreen extends HookConsumerWidget {
-  const SendStatusMessagecreen({super.key});
+  const SendStatusMessagecreen({
+    super.key,
+    required this.recipients,
+  });
+
+  final List<String> recipients;
 
   @override
   Widget build(BuildContext context, ref) {

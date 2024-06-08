@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
@@ -127,6 +128,8 @@ class _MailIconWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
+
     return ref.watch(messagesControllerProvider).when(
           loading: () => const UnreadCounterBadgeWidget(
             isLoading: true,
@@ -134,7 +137,14 @@ class _MailIconWidget extends ConsumerWidget {
           ),
           error: (error, stack) => const Icon(FluentIcons.mail_24_regular),
           data: (messages) => UnreadCounterBadgeWidget(
-            count: messages.where((element) => !element.allreadyRead).length,
+            count: messages
+                .where(
+                  (element) =>
+                      !element.allreadyRead && auth.role.isProgramDirector
+                          ? element.type == MessageType.customerService
+                          : element.type == MessageType.incoming,
+                )
+                .length,
             child: const Icon(FluentIcons.mail_24_regular),
           ),
         );

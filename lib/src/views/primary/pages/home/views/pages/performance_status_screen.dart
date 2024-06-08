@@ -17,7 +17,6 @@ import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_sta
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_messagecreen.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 import '../../../../../../services/auth/auth_service.dart';
 
@@ -59,7 +58,7 @@ class PerformanceStatusScreen extends HookConsumerWidget {
     final selectedPersonas = personas
         .where((element) => element.institutionId == selectedInstitution.id)
         .toList();
-        final auth = ref.watch(authServiceProvider);
+    final auth = ref.watch(authServiceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -94,7 +93,7 @@ class PerformanceStatusScreen extends HookConsumerWidget {
                 TextButton(
                   onPressed: () => ref
                       .read(apprenticesStatusControllerProvider.notifier)
-                      .export(auth.valueOrNull!.phone,context),
+                      .export(auth.valueOrNull!.phone, context),
                   child: const Text(
                     'ייצוא לאקסל',
                     style: TextStyles.s14w400cBlue2,
@@ -251,7 +250,7 @@ class _PersonasView extends HookWidget {
   Widget build(BuildContext context) {
     final selectedPersonas = useState(<PersonaDto>[]);
 
-    Logger().d(selectedPersonas.value.length);
+    // Logger().d(selectedPersonas.value.length);
 
     return personas.isEmpty
         ? Column(
@@ -287,7 +286,11 @@ class _PersonasView extends HookWidget {
                       ),
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const SendStatusMessagecreen(),
+                          builder: (context) => SendStatusMessagecreen(
+                            recipients: selectedPersonas.value
+                                .map((e) => e.id)
+                                .toList(),
+                          ),
                         ),
                       ),
                       child: const Text(

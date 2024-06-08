@@ -17,7 +17,7 @@ import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-enum _MessageFilter {
+enum _TagFilter {
   data,
   technical,
   users,
@@ -51,28 +51,88 @@ class MessagesScreen extends HookConsumerWidget {
     final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
     final tabController = useTabController(initialLength: 3);
-    final filter = useState(_MessageFilter.all);
+    final filter = useState(_TagFilter.all);
 
     useListenable(searchController);
     useListenable(tabController);
 
     final customerService = msgsControllerState
         .where(
-          (element) => element.type == MessageType.customerService,
-        )
-        .toList();
+      (element) => element.type == MessageType.customerService,
+    )
+        .where((element) {
+      if (filter.value == _TagFilter.all) {
+        return true;
+      }
+
+      return element.title.toUpperCase().contains(filter.value.name);
+    }).where((element) {
+      final searchText = searchController.text.toLowerCase();
+
+      if (searchText.isEmpty) {
+        return true;
+      }
+
+      return element.title.toLowerCase().contains(searchText) ||
+          element.content.toLowerCase().contains(searchText) ||
+          element.from.toLowerCase().contains(searchText) ||
+          element.to.any((e) => e.toLowerCase().contains(searchText));
+    }).toList();
 
     final outgoing = msgsControllerState
         .where(
-          (element) => element.type == MessageType.sent,
-        )
-        .toList();
+      (element) => element.type == MessageType.sent,
+    )
+        .where((element) {
+      final searchText = searchController.text.toLowerCase();
+
+      if (searchText.isEmpty) {
+        return true;
+      }
+
+      return element.title.toLowerCase().contains(searchText) ||
+          element.content.toLowerCase().contains(searchText) ||
+          element.from.toLowerCase().contains(searchText) ||
+          element.to.any((e) => e.toLowerCase().contains(searchText));
+    }).toList();
 
     final draft = msgsControllerState
         .where(
-          (element) => element.type == MessageType.draft,
-        )
-        .toList();
+      (element) => element.type == MessageType.draft,
+    )
+        .where(
+      (element) {
+        final searchText = searchController.text.toLowerCase();
+
+        if (searchText.isEmpty) {
+          return true;
+        }
+
+        return element.title.toLowerCase().contains(searchText) ||
+            element.content.toLowerCase().contains(searchText) ||
+            element.from.toLowerCase().contains(searchText) ||
+            element.to.any((e) => e.toLowerCase().contains(searchText));
+      },
+    ).toList();
+
+    final incoming = msgsControllerState
+        .where((element) => element.type == MessageType.incoming)
+        .where(
+      (element) {
+        final searchText = searchController.text.toLowerCase();
+
+        if (searchText.isEmpty) {
+          return true;
+        }
+
+        return element.content.toLowerCase().contains(searchController.text) ||
+            element.title.toLowerCase().contains(searchText) ||
+            element.from.toLowerCase().contains(searchText) ||
+            element.to.any(
+              (e) => e.toLowerCase().contains(searchText),
+            );
+      },
+    ).toList();
 
     switch (auth.valueOrNull?.role) {
       case UserRole.ahraiTohnit:
@@ -97,8 +157,11 @@ class MessagesScreen extends HookConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text('פניות שירות'),
-                      if (msgsControllerState
-                          .any((element) => !element.allreadyRead)) ...[
+                      if (msgsControllerState.any(
+                        (element) =>
+                            !element.allreadyRead &&
+                            element.type == MessageType.customerService,
+                      )) ...[
                         const SizedBox(width: 4),
                         const CircleAvatar(
                           radius: 3,
@@ -162,53 +225,50 @@ class MessagesScreen extends HookConsumerWidget {
                                 )
                               : [
                                   FilterChipWidget(
-                                    text: _MessageFilter.data.name,
-                                    isSelected:
-                                        filter.value == _MessageFilter.data,
+                                    text: _TagFilter.data.name,
+                                    isSelected: filter.value == _TagFilter.data,
                                     onTap: () {
-                                      if (filter.value == _MessageFilter.data) {
-                                        filter.value = _MessageFilter.all;
+                                      if (filter.value == _TagFilter.data) {
+                                        filter.value = _TagFilter.all;
                                       } else {
-                                        filter.value = _MessageFilter.data;
+                                        filter.value = _TagFilter.data;
                                       }
                                     },
                                   ),
                                   FilterChipWidget(
-                                    text: _MessageFilter.technical.name,
-                                    isSelected: filter.value ==
-                                        _MessageFilter.technical,
+                                    text: _TagFilter.technical.name,
+                                    isSelected:
+                                        filter.value == _TagFilter.technical,
                                     onTap: () {
                                       if (filter.value ==
-                                          _MessageFilter.technical) {
-                                        filter.value = _MessageFilter.all;
+                                          _TagFilter.technical) {
+                                        filter.value = _TagFilter.all;
                                       } else {
-                                        filter.value = _MessageFilter.technical;
+                                        filter.value = _TagFilter.technical;
                                       }
                                     },
                                   ),
                                   FilterChipWidget(
-                                    text: _MessageFilter.users.name,
+                                    text: _TagFilter.users.name,
                                     isSelected:
-                                        filter.value == _MessageFilter.users,
+                                        filter.value == _TagFilter.users,
                                     onTap: () {
-                                      if (filter.value ==
-                                          _MessageFilter.users) {
-                                        filter.value = _MessageFilter.all;
+                                      if (filter.value == _TagFilter.users) {
+                                        filter.value = _TagFilter.all;
                                       } else {
-                                        filter.value = _MessageFilter.users;
+                                        filter.value = _TagFilter.users;
                                       }
                                     },
                                   ),
                                   FilterChipWidget(
-                                    text: _MessageFilter.other.name,
+                                    text: _TagFilter.other.name,
                                     isSelected:
-                                        filter.value == _MessageFilter.other,
+                                        filter.value == _TagFilter.other,
                                     onTap: () {
-                                      if (filter.value ==
-                                          _MessageFilter.other) {
-                                        filter.value = _MessageFilter.all;
+                                      if (filter.value == _TagFilter.other) {
+                                        filter.value = _TagFilter.all;
                                       } else {
-                                        filter.value = _MessageFilter.other;
+                                        filter.value = _TagFilter.other;
                                       }
                                     },
                                   ),
@@ -235,14 +295,6 @@ class MessagesScreen extends HookConsumerWidget {
                             )
                           : ListView(
                               children: customerService
-                                  .where((element) {
-                                    if (filter.value == _MessageFilter.all) {
-                                      return true;
-                                    }
-
-                                    return element.title
-                                        .contains(filter.value.name);
-                                  })
                                   .map(
                                     (e) => Skeletonizer(
                                       enabled: false,
@@ -268,10 +320,7 @@ class MessagesScreen extends HookConsumerWidget {
                   )
                 else
                   ListView(
-                    children: msgsControllerState
-                        .where(
-                          (element) => element.type == MessageType.sent,
-                        )
+                    children: outgoing
                         .map(
                           (e) => Skeletonizer(
                             enabled: false,
@@ -294,10 +343,7 @@ class MessagesScreen extends HookConsumerWidget {
                   )
                 else
                   ListView(
-                    children: msgsControllerState
-                        .where(
-                          (element) => element.type == MessageType.draft,
-                        )
+                    children: draft
                         .map(
                           (e) => Skeletonizer(
                             enabled: false,
@@ -346,22 +392,7 @@ class MessagesScreen extends HookConsumerWidget {
                         from: '549247615',
                       ),
                     )
-                  : msgsControllerState
-                      .where(
-                        (element) =>
-                            element.content
-                                .toLowerCase()
-                                .contains(searchController.text) ||
-                            element.title
-                                .toLowerCase()
-                                .contains(searchController.text) ||
-                            element.to.any(
-                              (element) => element
-                                  .toLowerCase()
-                                  .contains(searchController.text),
-                            ),
-                      )
-                      .toList(),
+                  : incoming,
             ),
           ),
         );
