@@ -10,6 +10,7 @@ part 'mosad_general_info.g.dart';
     DioService,
   ],
 )
+@Deprecated('in favor of just getting the pdf from server side')
 class MosadGeneralInfo extends _$MosadGeneralInfo {
   @override
   Future<InstitutionExportPdfDto> build() async {

@@ -69,6 +69,7 @@ abstract class Consts {
   static const addInstitution = 'institutionProfile_form/add_mosad';
   static const deleteInstitution = 'institutionProfile_form/delete';
   static const updateInstitution = 'institutionProfile_form/update';
+  static const institutionPdf = 'institutionProfile_form/mosad_generalInfo';
   // static const getAllInstitutionApprenticesAndMelavim =
   //     'institutionProfile_form/apprentice_and_melave';
   static const addInstitutionFromExcel =

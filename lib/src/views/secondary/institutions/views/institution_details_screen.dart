@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -26,6 +30,8 @@ import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.d
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class InstitutionDetailsScreen extends StatefulHookConsumerWidget {
   const InstitutionDetailsScreen({
@@ -78,86 +84,40 @@ class _InstitutionDetailsScreenState
             itemBuilder: (context) => [
               PopupMenuItem(
                 onTap: () async {
-                  // TODO(oz): add api
-                  Toaster.backend();
+                  final result = await ref
+                      .read(institutionsControllerProvider.notifier)
+                      .getPdf(id: institution.id);
 
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(
-                  //     builder: (context) => InstitutionPdfExport(
-                  //       institution: institution,
-                  //       startDate: DateTime.now(),
-                  //       endDate: DateTime.now(),
-                  //     ),
-                  //   ),
-                  // );
+                  if (result.isEmpty) {
+                    Toaster.warning('unknown error');
 
-                  // final exportDelegate = ExportDelegate(
-                  //   options: const ExportOptions(
-                  //     pageFormatOptions: PageFormatOptions.a4(),
-                  //   ),
-                  // );
+                    return;
+                  }
 
-                  // const frameId = 'someFrameId';
+                  try {
+                    final name =
+                        'institution-id-${institution.id}-report-${DateTime.now().toIso8601String().replaceAll(':', '-')}';
+                    final file = Platform.isAndroid || Platform.isIOS
+                        ? await FileSaver.instance.saveAs(
+                            name: name,
+                            bytes: Uint8List.fromList(result),
+                            ext: 'pdf',
+                            mimeType: MimeType.pdf,
+                          )
+                        : await FileSaver.instance.saveFile(
+                            name: name,
+                            bytes: Uint8List.fromList(result),
+                            ext: 'pdf',
+                            mimeType: MimeType.pdf,
+                          );
 
-                  // final uniqKey = UniqueKey();
-
-                  // // needs to be rendered in the tree and offstage/visibility hacks don't work
-                  // ExportFrame(
-                  //   frameId: frameId,
-                  //   exportDelegate: exportDelegate,
-                  //   child: CaptureWrapper(
-                  //     key: uniqKey,
-                  //     child: InstitutionPdfExport(
-                  //       institution: institution,
-                  //       startDate: DateTime.now(),
-                  //       endDate: DateTime.now(),
-                  //     ),
-                  //   ),
-                  // );
-
-                  // try {
-                  //   final pdf =
-                  //       await exportDelegate.exportToPdfDocument(frameId);
-
-                  //   final path = await FileSaver.instance.saveAs(
-                  //     name: DateTime.now().toIso8601String(),
-                  //     ext: '.pdf',
-                  //     mimeType: MimeType.pdf,
-                  //     bytes: await pdf.save(),
-                  //   );
-
-                  //   Logger().d(path);
-                  // } catch (e) {
-                  //   Logger().e(e);
-                  // }
-
-                  // final page =
-                  //     await exportDelegate.exportToPdfPage('someFrameId');
-
-                  // final widget =
-                  //     await exportDelegate.exportToPdfWidget('someFrameId');
-
-                  // final pdf = pw.Document();
-
-                  // pdf.addPage(
-                  //   pw.Page(
-                  //     pageFormat: PdfPageFormat.a4,
-                  //     orientation: pw.PageOrientation.landscape,
-                  //     build: (pw.Context context) {
-                  //       return InstitutionPdfExport(
-                  //         institution: institution,
-                  //         startDate: DateTime.now(),
-                  //         endDate: DateTime.now(),
-                  //       ) as pw.Widget;
-                  //     },
-                  //   ),
-                  // );
-
-                  // final name = '${DateTime.now().toIso8601String()}.pdf';
-                  // final output = await getDownloadsDirectory() ??
-                  //     await getTemporaryDirectory();
-                  // final file = File("${output.path}/$name");
-                  // await file.writeAsBytes(await pdf.save());
+                    Toaster.success('saved $file');
+                  } catch (e) {
+                    Logger()
+                        .e('failed to save institution pdf to disk', error: e);
+                    Sentry.captureException(e);
+                    Toaster.error(e);
+                  }
                 },
                 child: const Text('ייצוא דו"ח מוסד'),
               ),

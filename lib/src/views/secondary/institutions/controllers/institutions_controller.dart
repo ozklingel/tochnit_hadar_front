@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
@@ -157,5 +158,74 @@ class InstitutionsController extends _$InstitutionsController {
     }
 
     return false;
+  }
+
+  Future<Uint8List> getPdf({
+    required id,
+  }) async {
+    try {
+      final request = await ref.read(dioServiceProvider).get(
+        Consts.institutionPdf,
+        queryParameters: {
+          'institution_id': id,
+        },
+      );
+
+      if (request.data is Map<String, dynamic> &&
+          request.data['result'] ==
+              "error-no coordinator or such institution") {
+        throw ArgumentError('bad id?');
+      }
+
+      if (request.data.toString().isNotEmpty) {
+        // https://stackoverflow.com/questions/28565242/convert-uint8list-to-string-with-dart/56363052#56363052
+        // /final list = <int>[];
+
+        // request.data.toString().runes.forEach((rune) {
+        //   if (rune >= 0x10000) {
+        //     rune -= 0x10000;
+        //     int firstWord = (rune >> 10) + 0xD800;
+        //     list.add(firstWord >> 8);
+        //     list.add(firstWord & 0xFF);
+        //     int secondWord = (rune & 0x3FF) + 0xDC00;
+        //     list.add(secondWord >> 8);
+        //     list.add(secondWord & 0xFF);
+        //   } else {
+        //     list.add(rune >> 8);
+        //     list.add(rune & 0xFF);
+        //   }
+        // });
+
+        // final bytes = Uint8List.fromList(list);
+
+        // Here you have `Uint8List` available
+
+        // Bytes to UTF-16 string
+        // final buffer = StringBuffer();
+        // for (int i = 0; i < bytes.length;) {
+        //   int firstWord = (bytes[i] << 8) + bytes[i + 1];
+        //   if (0xD800 <= firstWord && firstWord <= 0xDBFF) {
+        //     int secondWord = (bytes[i + 2] << 8) + bytes[i + 3];
+        //     buffer.writeCharCode(
+        //       ((firstWord - 0xD800) << 10) + (secondWord - 0xDC00) + 0x10000,
+        //     );
+        //     i += 4;
+        //   } else {
+        //     buffer.writeCharCode(firstWord);
+        //     i += 2;
+        //   }
+        // }
+
+        // return bytes;
+
+        return base64Decode(request.data.toString());
+      }
+    } catch (e) {
+      Logger().e('failed to fetch institution pdf', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return Uint8List.fromList([]);
   }
 }

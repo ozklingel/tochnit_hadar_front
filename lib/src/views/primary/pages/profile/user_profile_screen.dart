@@ -723,6 +723,10 @@ class _TohnitHadarTabView extends ConsumerWidget {
 
     final eshkolot = ref.watch(getEshkolListProvider);
     final institutions = ref.watch(institutionsControllerProvider);
+    final institution = (institutions.valueOrNull ?? []).singleWhere(
+      (element) => element.id == auth.valueOrNull!.institution,
+      orElse: () => const InstitutionDto(),
+    );
     final personas = ref.watch(getPersonasProvider);
 
     return Column(
@@ -738,17 +742,14 @@ class _TohnitHadarTabView extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
-                label: ' שיוך מוסדי',
-                data: (institutions.valueOrNull ?? [])
-                    .singleWhere(
-                      (element) => element.id == auth.valueOrNull!.institution,
-                      orElse: () => const InstitutionDto(),
-                    )
-                    .name,
+                label: 'שיוך מוסדי',
+                data: institution.name,
+                onTapData: () =>
+                    InstitutionDetailsRouteData(id: institution.id).go(context),
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
-                label: ' אשכול',
+                label: 'אשכול',
                 data: auth.valueOrNull?.cluster ?? "לא משוייך",
               ),
               const SizedBox(height: 12),
@@ -792,7 +793,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                 ? const CircularProgressIndicator.adaptive()
                 : Column(
                     children: institutions.valueOrNull?.map((e) {
-                          final institution =
+                          final current =
                               (institutions.valueOrNull ?? []).singleWhere(
                             (element) => element.id == e.id,
                           );
@@ -805,7 +806,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                 leading: CircleAvatar(
                                   backgroundColor: Colors.blue,
                                   backgroundImage: CachedNetworkImageProvider(
-                                    institution.logo,
+                                    current.logo,
                                   ),
                                 ),
                                 title: Text(
@@ -816,7 +817,7 @@ class _TohnitHadarTabView extends ConsumerWidget {
                                   ),
                                 ),
                                 onTap: () => InstitutionDetailsRouteData(
-                                  id: institution.id,
+                                  id: current.id,
                                 ).go(context),
                               ),
                             ),

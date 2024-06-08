@@ -50,16 +50,18 @@ class DetailsRowItem extends StatelessWidget {
                       maxLines: 4,
                     );
 
-                    return onTapData == null
-                        ? child
-                        : Row(
-                            children: [
-                              TextButton(
-                                onPressed: onTapData,
-                                child: child,
-                              ),
-                            ],
-                          );
+                    return Row(
+                      children: [
+                        if (onTapData == null) ...[
+                          const SizedBox(width: 12),
+                          child,
+                        ] else
+                          TextButton(
+                            onPressed: onTapData,
+                            child: child,
+                          ),
+                      ],
+                    );
                   },
                 )
               : Row(
