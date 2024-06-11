@@ -8,6 +8,7 @@ import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+@Deprecated('not needed now since this will be done by backend')
 class InstitutionPdfExport extends StatelessWidget {
   const InstitutionPdfExport({
     super.key,

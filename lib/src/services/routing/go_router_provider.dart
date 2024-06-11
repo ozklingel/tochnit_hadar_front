@@ -10,7 +10,9 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/view/persona_d
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/personas_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/gift_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/home_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/pages/performance_status_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/forgotten_persona_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/persona_performance_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/persona_status_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/messages_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/new_or_edit_message_screen.dart';
@@ -148,8 +150,14 @@ class GoRouterService extends _$GoRouterService {
             TypedGoRoute<GiftRouteData>(
               path: 'gift/:id',
             ),
-            TypedGoRoute<PerformanceStatusRouteData>(
+            TypedGoRoute<PersonaStatusRouteData>(
+              path: 'status',
+            ),
+            TypedGoRoute<PersonaPerformanceRouteData>(
               path: 'performance',
+            ),
+            TypedGoRoute<ForgottenApprenticesRouteData>(
+              path: 'forgotten',
             ),
             TypedGoRoute<ChartsRouteData>(
               path: 'charts',
@@ -645,10 +653,9 @@ class GiftRouteData extends GoRouteData {
   }
 }
 
-class PerformanceStatusRouteData extends GoRouteData {
-  const PerformanceStatusRouteData({
+class PersonaStatusRouteData extends GoRouteData {
+  const PersonaStatusRouteData({
     required this.initIndex,
-    required this.isExtended,
     required this.title,
     required this.subtitle,
   });
@@ -658,16 +665,45 @@ class PerformanceStatusRouteData extends GoRouteData {
   final String title;
   final String subtitle;
   final int initIndex;
-  final bool isExtended;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return PerformanceStatusScreen(
-      isExtended: isExtended,
+    return PersonaStatusScreen(
       title: title,
       initIndex: initIndex,
       subtitle: subtitle,
     );
+  }
+}
+
+class PersonaPerformanceRouteData extends GoRouteData {
+  const PersonaPerformanceRouteData({
+    required this.title,
+    required this.subtitle,
+  });
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return PersonaPerformanceScreen(
+      title: title,
+      subtitle: subtitle,
+    );
+  }
+}
+
+class ForgottenApprenticesRouteData extends GoRouteData {
+  const ForgottenApprenticesRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ForgottenApprenticesScreen();
   }
 }
 

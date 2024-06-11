@@ -32,9 +32,8 @@ class DoughnutChartsWidget extends StatelessWidget {
       height: 180,
       children: [
         _DoughnutChart(
-          onTap: () => const PerformanceStatusRouteData(
+          onTap: () => const PersonaStatusRouteData(
             initIndex: 2,
-            isExtended: true,
             title: 'סטטוס חניכים',
             subtitle: 'חניכים שלא נוצר איתם קשר מעל 100 יום',
           ).push(context),
@@ -46,9 +45,8 @@ class DoughnutChartsWidget extends StatelessWidget {
           ],
         ),
         _DoughnutChart(
-          onTap: () => const PerformanceStatusRouteData(
+          onTap: () => const PersonaStatusRouteData(
             initIndex: 1,
-            isExtended: true,
             title: 'סטטוס חניכים',
             subtitle: 'חניכים שלא נוצר איתם קשר מעל 100 יום',
           ).push(context),

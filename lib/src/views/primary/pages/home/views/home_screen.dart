@@ -3,6 +3,7 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/api/madadim/get_forgotten_apprentices.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/ahrai_home_controller.dart';
@@ -111,19 +112,15 @@ class _AhraiTohnitBody extends ConsumerWidget {
         PerformanceWidget(
           title: 'תפקוד מלווים',
           data: ahraiTohnit.melaveScore,
-          onTap: () => const PerformanceStatusRouteData(
-            initIndex: 0,
-            isExtended: true,
+          onTap: () => const PersonaPerformanceRouteData(
             title: 'סטטוס חניכים',
-            subtitle: 'חניכים שלא נוצר איתם קשר מעל 100 יום',
+            subtitle: 'מלווים מכלל המוסדות',
           ).push(context),
         ),
         PerformanceWidget(
           title: 'תפקוד רכזים',
           data: ahraiTohnit.rakazimScore,
-          onTap: () => const PerformanceStatusRouteData(
-            initIndex: 1,
-            isExtended: false,
+          onTap: () => const PersonaPerformanceRouteData(
             title: 'תפקוד רכזים',
             subtitle: 'מלווים מכלל המוסדות',
           ).push(context),
@@ -131,9 +128,7 @@ class _AhraiTohnitBody extends ConsumerWidget {
         PerformanceWidget(
           title: 'תפקוד רכזי אשכול',
           data: ahraiTohnit.eshkolScore,
-          onTap: () => const PerformanceStatusRouteData(
-            initIndex: 1,
-            isExtended: false,
+          onTap: () => const PersonaPerformanceRouteData(
             title: 'תפקוד רכזים',
             subtitle: 'מלווים מכלל המוסדות',
           ).push(context),
@@ -144,11 +139,13 @@ class _AhraiTohnitBody extends ConsumerWidget {
   }
 }
 
-class _ForgottenApprentices extends StatelessWidget {
+class _ForgottenApprentices extends ConsumerWidget {
   const _ForgottenApprentices();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final forgottenApprentices = ref.watch(getForgottenApprenticesProvider);
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: DecoratedBox(
@@ -157,17 +154,12 @@ class _ForgottenApprentices extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: Consts.borderRadius24,
-            onTap: () => const PerformanceStatusRouteData(
-              initIndex: 0,
-              isExtended: false,
-              title: 'חניכים נשכחים',
-              subtitle: 'חניכים שלא נוצר איתם קשר מעל 100 יום',
-            ).push(context),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            onTap: () => const ForgottenApprenticesRouteData().push(context),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               child: Row(
                 children: [
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -181,15 +173,16 @@ class _ForgottenApprentices extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Column(
                     children: [
                       Text(
-                        '12',
+                        (forgottenApprentices.valueOrNull?.total ?? 0)
+                            .toString(),
                         style: TextStyles.s18w600cBlue2,
                       ),
-                      SizedBox(height: 4),
-                      Text('חניכים', style: TextStyles.s12w400cGrey6),
+                      const SizedBox(height: 4),
+                      const Text('חניכים', style: TextStyles.s12w400cGrey6),
                     ],
                   ),
                 ],

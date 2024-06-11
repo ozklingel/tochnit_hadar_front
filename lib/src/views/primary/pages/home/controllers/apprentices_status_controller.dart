@@ -1,16 +1,19 @@
-import 'package:hadar_program/src/services/api/madadim/get_forgotten_apprentices.dart';
-import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/widgets/success_dialog_export.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:file_saver/file_saver.dart';
+import 'package:hadar_program/src/services/api/madadim/get_forgotten_apprentices.dart';
+import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../../../../services/networking/http_service.dart';
-import '../../chat_box/error_dialog.dart';
+
 part 'apprentices_status_controller.g.dart';
 
 @Riverpod(
   dependencies: [
+    StorageService,
     GetForgottenApprentices,
   ],
 )
@@ -22,17 +25,19 @@ class ApprenticesStatusController extends _$ApprenticesStatusController {
     return result;
   }
 
-  Future<void> export(phone,context) async {
-        final response =await HttpService.exportApprenticeStatus(phone,'1999-09-09'); 
-    if (response.statusCode == 200) {
-          downloadCSV(response.body);
-             showFancyCustomDialog(context);
-         }
-         else{
-             showAlertDialog(context);
-         }         
+  Future<bool> export() async {
+    final phone = ref.watch(storageServiceProvider.notifier).getUserPhone();
 
-   }
+    final response =
+        await HttpService.exportApprenticeStatus(phone, '1999-09-09');
+    if (response.statusCode == 200) {
+      downloadCSV(response.body);
+      return true;
+    }
+
+    return false;
+  }
+
   downloadCSV(String file) async {
     // Convert your CSV string to a Uint8List for downloading.
     Uint8List bytes = Uint8List.fromList(utf8.encode(file));
@@ -45,7 +50,4 @@ class ApprenticesStatusController extends _$ApprenticesStatusController {
       mimeType: MimeType.csv,
     );
   }
-
-
 }
-
