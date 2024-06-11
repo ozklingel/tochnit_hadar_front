@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../../models/auth/auth.dto.dart';
 import '../../../../../services/auth/auth_service.dart';
 import '../../../../../services/networking/http_service.dart';
 import '../../../../../services/routing/go_router_provider.dart';

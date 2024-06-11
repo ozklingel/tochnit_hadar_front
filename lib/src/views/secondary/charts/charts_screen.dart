@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/views/secondary/charts/ahrai_tohnit/views/ahrai_tohnit_dashboard.dart';
 import 'package:hadar_program/src/views/secondary/charts/melave/views/melave_charts_dashboard.dart';
