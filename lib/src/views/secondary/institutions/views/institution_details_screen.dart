@@ -266,7 +266,7 @@ class _UsersTab extends HookConsumerWidget {
       (element) => element.id == institutionId,
       orElse: () => const InstitutionDto(),
     );
-    final filters = useState(const FilterDto());
+    final filter = useState(const FilterDto());
 
     if (compoundsController.isLoading || institutionsController.isLoading) {
       return const CircularProgressIndicator.adaptive();
@@ -275,87 +275,141 @@ class _UsersTab extends HookConsumerWidget {
     // Logger().d(apprentices.length, error: institutionId);
     // Logger().d(institution.apprentices.length, error: institutionId);
 
-    final children = [
-      ...filters.value.roles.map(
+    final filters = [
+      ...filter.value.roles.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles:
+                  filter.value.roles.where((element) => element != e).toList(),
+            ),
+          ),
         ),
       ),
-      ...filters.value.years.map(
+      ...filter.value.years.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) async {
-            final newFilter = filters.value.copyWith(
-              years:
-                  filters.value.years.where((element) => element != e).toList(),
-            );
-
-            final request = await ref
-                .read(
-                  institutionDetailsControllerProvider(id: institutionId)
-                      .notifier,
-                )
-                .filterUsers(newFilter);
-
-            if (request) {
-              filters.value = newFilter;
-            }
-          },
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles:
+                  filter.value.years.where((element) => element != e).toList(),
+            ),
+          ),
         ),
       ),
-      ...filters.value.institutions.map(
+      ...filter.value.institutions.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles: filter.value.institutions
+                  .where((element) => element != e)
+                  .toList(),
+            ),
+          ),
         ),
       ),
-      ...filters.value.periods.map(
+      ...filter.value.periods.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles: filter.value.periods
+                  .where((element) => element != e)
+                  .toList(),
+            ),
+          ),
         ),
       ),
-      ...filters.value.eshkols.map(
+      ...filter.value.eshkols.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles: filter.value.eshkols
+                  .where((element) => element != e)
+                  .toList(),
+            ),
+          ),
         ),
       ),
-      ...filters.value.statuses.map(
+      ...filter.value.statuses.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles: filter.value.statuses
+                  .where((element) => element != e)
+                  .toList(),
+            ),
+          ),
         ),
       ),
-      ...filters.value.bases.map(
+      ...filter.value.bases.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles:
+                  filter.value.bases.where((element) => element != e).toList(),
+            ),
+          ),
         ),
       ),
-      ...filters.value.hativot.map(
+      ...filter.value.hativot.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles: filter.value.hativot
+                  .where((element) => element != e)
+                  .toList(),
+            ),
+          ),
         ),
       ),
-      ...filters.value.regions.map(
+      ...filter.value.regions.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles: filter.value.regions
+                  .where((element) => element != e)
+                  .toList(),
+            ),
+          ),
         ),
       ),
-      ...filters.value.regions.map(
+      ...filter.value.cities.map(
         (e) => FilterChip(
           label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
-        ),
-      ),
-      ...filters.value.cities.map(
-        (e) => FilterChip(
-          label: Text(e),
-          onSelected: (val) => Toaster.unimplemented(),
+          onSelected: (val) => filterResults(
+            ref,
+            filter,
+            filter.value.copyWith(
+              roles:
+                  filter.value.cities.where((element) => element != e).toList(),
+            ),
+          ),
         ),
       ),
     ];
@@ -376,7 +430,7 @@ class _UsersTab extends HookConsumerWidget {
                             MaterialPageRoute<FilterDto>(
                               builder: (context) {
                                 return FiltersScreen.institutionUsers(
-                                  initFilters: filters.value,
+                                  initFilters: filter.value,
                                 );
                               },
                             ),
@@ -392,7 +446,7 @@ class _UsersTab extends HookConsumerWidget {
                           .filterUsers(result);
 
                       if (request) {
-                        filters.value = result;
+                        filter.value = result;
                       }
                     },
                     icon: const Icon(
@@ -407,7 +461,7 @@ class _UsersTab extends HookConsumerWidget {
                         backgroundColor: AppColors.red1,
                         radius: 7,
                         child: Text(
-                          filters.value.length.toString(),
+                          filter.value.length.toString(),
                           style: TextStyles.s11w500fRoboto,
                         ),
                       ),
@@ -419,10 +473,10 @@ class _UsersTab extends HookConsumerWidget {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
-                  itemCount: children.length,
+                  itemCount: filters.length,
                   itemBuilder: (context, index) => Transform.scale(
                     scale: 0.9,
-                    child: children[index],
+                    child: filters[index],
                   ),
                   separatorBuilder: (context, index) => const SizedBox(),
                 ),
@@ -459,6 +513,24 @@ class _UsersTab extends HookConsumerWidget {
               ),
       ],
     );
+  }
+
+  void filterResults(
+    WidgetRef ref,
+    ValueNotifier<FilterDto> filter,
+    FilterDto newFilter,
+  ) async {
+    final request = await ref
+        .read(
+          institutionDetailsControllerProvider(
+            id: institutionId,
+          ).notifier,
+        )
+        .filterUsers(newFilter);
+
+    if (request) {
+      filter.value = newFilter;
+    }
   }
 }
 

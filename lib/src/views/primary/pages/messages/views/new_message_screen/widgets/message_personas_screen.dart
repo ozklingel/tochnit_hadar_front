@@ -135,6 +135,10 @@ class MessagePersonasScreen extends HookConsumerWidget {
                       ? const Center(child: Text('NO USERS FOUND'))
                       : ListView(
                           children: list
+                              .where(
+                                (element) =>
+                                    !selectedUsers.value.contains(element),
+                              )
                               .map(
                                 (e) => ListTile(
                                   title: Text(e.fullName),

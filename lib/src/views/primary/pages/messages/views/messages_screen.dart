@@ -161,18 +161,24 @@ class MessagesScreen extends HookConsumerWidget {
                         (element) =>
                             !element.allreadyRead &&
                             element.type == MessageType.customerService,
-                      )) ...[
-                        const SizedBox(width: 4),
-                        const CircleAvatar(
-                          radius: 3,
-                          backgroundColor: AppColors.blue03,
-                        ),
-                      ],
+                      ))
+                        const _NewNotifIndicator(),
                     ],
                   ),
                 ),
                 const Tab(text: 'יוצאות'),
-                const Tab(text: 'טיוטות'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Tab(text: 'טיוטות'),
+                    if (msgsControllerState.any(
+                      (element) =>
+                          !element.allreadyRead &&
+                          element.type == MessageType.draft,
+                    ))
+                      const _NewNotifIndicator(),
+                  ],
+                ),
               ],
             ),
           ),
@@ -397,6 +403,21 @@ class MessagesScreen extends HookConsumerWidget {
           ),
         );
     }
+  }
+}
+
+class _NewNotifIndicator extends StatelessWidget {
+  const _NewNotifIndicator();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.only(right: 4),
+      child: CircleAvatar(
+        radius: 3,
+        backgroundColor: AppColors.blue03,
+      ),
+    );
   }
 }
 

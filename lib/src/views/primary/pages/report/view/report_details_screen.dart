@@ -624,11 +624,6 @@ class ReportDetailsScreen extends HookConsumerWidget {
                       onPressed: () async {
                         final newKey = UniqueKey();
 
-                        isUploadInProgress.value = [
-                          ...isUploadInProgress.value,
-                          newKey,
-                        ];
-
                         try {
                           final result = await FilePicker.platform.pickFiles(
                             allowMultiple: false,
@@ -638,6 +633,11 @@ class ReportDetailsScreen extends HookConsumerWidget {
                           );
 
                           if (result != null) {
+                            isUploadInProgress.value = [
+                              ...isUploadInProgress.value,
+                              newKey,
+                            ];
+
                             final uploadFileLocation = await ref.read(
                               uploadFileProvider(result.files.first).future,
                             );

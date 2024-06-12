@@ -43,7 +43,11 @@ class MessageDetailsScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('פרטי הודעה'),
+        title: Text(
+          message.type == MessageType.customerService
+              ? 'פרטי פניית שירות'
+              : 'פרטי הודעה',
+        ),
         centerTitle: true,
         actions: [
           PopupMenuButton(

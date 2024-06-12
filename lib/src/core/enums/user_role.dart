@@ -1,13 +1,10 @@
 enum UserRole {
+  other(-2),
+  apprentice(-1),
   melave(0),
-
   rakazMosad(1),
-
   rakazEshkol(2),
-  ahraiTohnit(3),
-
-  apprentice(500),
-  other(800);
+  ahraiTohnit(3);
 
   const UserRole(this.val);
 

@@ -1,4 +1,7 @@
+import 'package:bot_toast/bot_toast.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -7,6 +10,8 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/services/api/export_import/upload_file.dart';
+import 'package:hadar_program/src/services/api/search_bar/get_filtered_users.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
@@ -16,8 +21,10 @@ import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_but
 import 'package:hadar_program/src/views/widgets/dialogs/pick_date_and_time_dialog.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
+import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class NewOrEditMessageScreen extends HookConsumerWidget {
   const NewOrEditMessageScreen({
@@ -45,6 +52,8 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
     final body = useTextEditingController(text: msg.content);
     final isAddUserInMsg = useState(false);
     final filters = useState(const FilterDto());
+    final isUploadInProgress = useState(<Key>[]);
+    final uploadedFiles = useState(msg.attachments);
 
     useEffect(
       () {
@@ -133,10 +142,46 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
           ),
           title: const Text('שליחת הודעה'),
           actions: [
-            // IconButton(
-            //   icon: const Icon(FluentIcons.attach_24_filled),
-            //   onPressed: () => Toaster.unimplemented(),
-            // ),
+            IconButton(
+              icon: const Icon(FluentIcons.attach_24_filled),
+              onPressed: () async {
+                final newKey = UniqueKey();
+
+                try {
+                  final result = await FilePicker.platform.pickFiles(
+                    allowMultiple: false,
+                    withData: true,
+                    type: FileType.custom,
+                    allowedExtensions: ['png', 'jpeg', 'jpg'],
+                  );
+
+                  if (result != null) {
+                    isUploadInProgress.value = [
+                      ...isUploadInProgress.value,
+                      newKey,
+                    ];
+
+                    final uploadFileLocation = await ref.read(
+                      uploadFileProvider(result.files.first).future,
+                    );
+
+                    uploadedFiles.value = [
+                      uploadFileLocation,
+                      ...uploadedFiles.value,
+                    ];
+                  }
+                } catch (e) {
+                  Logger().e(e);
+                }
+
+                isUploadInProgress.value = [
+                  ...isUploadInProgress.value.where((element) {
+                    // Logger().d(element, error: newKey);
+                    return element != newKey;
+                  }),
+                ];
+              },
+            ),
             PopupMenuButton(
               icon: const Icon(
                 FluentIcons.more_vertical_24_regular,
@@ -214,15 +259,46 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                                 label: const Text('הוספת קבוצת נמענים'),
                                 labelStyle: TextStyles.s14w400cBlue2,
                                 side: const BorderSide(color: AppColors.blue06),
-                                onPressed: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (val) {
-                                      return FiltersScreen.users(
+                                onPressed: () async {
+                                  final filter = await Navigator.of(context)
+                                      .push<FilterDto>(
+                                    MaterialPageRoute(
+                                      builder: (val) => FiltersScreen.users(
                                         initFilters: filters.value,
-                                      );
-                                    },
-                                  ),
-                                ),
+                                      ),
+                                    ),
+                                  );
+
+                                  if (filter == null) {
+                                    return;
+                                  } else if (filter.isEmpty) {
+                                    filters.value = const FilterDto();
+                                  }
+
+                                  BotToast.showLoading();
+
+                                  try {
+                                    final req = await ref.read(
+                                      getFilteredUsersProvider(filter).future,
+                                    );
+
+                                    final filtered = (await ref
+                                            .read(getPersonasProvider.future))
+                                        .where(
+                                          (element) => req.contains(element.id),
+                                        )
+                                        .toList();
+
+                                    selectedRecipients.value = filtered;
+                                  } catch (e) {
+                                    Logger()
+                                        .e('failed to filter users', error: e);
+                                    Sentry.captureException(e);
+                                    Toaster.error(e);
+                                  }
+
+                                  BotToast.closeAllLoading();
+                                },
                               ),
                             ],
                           ),
@@ -368,6 +444,38 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                           const SizedBox(width: 12),
                           const Text('הוסף את שם הנמען בהודעה'),
                         ],
+                      ),
+                      SizedBox(
+                        height: 120,
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          children: [
+                            Wrap(
+                              children: isUploadInProgress.value
+                                  .map(
+                                    (e) => const Padding(
+                                      padding: EdgeInsets.all(4),
+                                      child: SizedBox.square(
+                                        dimension: 12,
+                                        child: CircularProgressIndicator
+                                            .adaptive(),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            ...uploadedFiles.value
+                                .map(
+                                  (e) => CachedNetworkImage(
+                                    imageUrl: e,
+                                    progressIndicatorBuilder:
+                                        (context, url, progress) =>
+                                            const LoadingState(),
+                                  ),
+                                )
+                                .toList(),
+                          ],
+                        ),
                       ),
                     ],
                   ),
