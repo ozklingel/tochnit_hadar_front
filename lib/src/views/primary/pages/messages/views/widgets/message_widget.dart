@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
@@ -6,6 +7,7 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class MessageWidget extends ConsumerWidget {
   const MessageWidget.collapsed({
@@ -67,20 +69,41 @@ class MessageWidget extends ConsumerWidget {
                         style: TextStyles.s16w400cGrey2,
                       ),
                       if (message.attachments.isNotEmpty) ...[
-                        if (isExpanded) const SizedBox(height: 16),
-                        Chip(
-                          padding: const EdgeInsets.all(4),
-                          avatar: const Padding(
-                            padding: EdgeInsets.only(
-                              right: 10,
-                              bottom: 16,
+                        if (isExpanded)
+                          SizedBox(
+                            height: 120,
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              children: message.attachments
+                                  .map(
+                                    (e) => CachedNetworkImage(
+                                      imageUrl: e,
+                                      errorListener: (value) =>
+                                          Sentry.captureException(
+                                        value,
+                                        stackTrace: StackTrace.current,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const Text('⚠️'),
+                                    ),
+                                  )
+                                  .toList(),
                             ),
-                            child: Icon(
-                              FluentIcons.image_16_regular,
+                          )
+                        else
+                          Chip(
+                            padding: const EdgeInsets.all(4),
+                            avatar: const Padding(
+                              padding: EdgeInsets.only(
+                                right: 10,
+                                bottom: 16,
+                              ),
+                              child: Icon(
+                                FluentIcons.image_16_regular,
+                              ),
                             ),
+                            label: Text(message.attachments.first),
                           ),
-                          label: Text(message.attachments.first),
-                        ),
                       ],
                     ],
                   ),
@@ -91,7 +114,8 @@ class MessageWidget extends ConsumerWidget {
                       message.dateTime.asDateTime.asTimeAgoDayCutoff,
                       style: TextStyles.s12w400cGrey5fRoboto,
                     ),
-                    if (DateTime.now().difference(message.dateTime.asDateTime) < const Duration(seconds: 5)) ...[
+                    if (DateTime.now().difference(message.dateTime.asDateTime) <
+                        const Duration(seconds: 5)) ...[
                       const SizedBox(height: 12),
                       const Icon(
                         FluentIcons.clock_24_regular,

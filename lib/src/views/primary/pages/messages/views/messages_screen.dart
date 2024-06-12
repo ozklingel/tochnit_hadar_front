@@ -407,9 +407,7 @@ class MessagesScreen extends HookConsumerWidget {
 }
 
 class _NewNotifIndicator extends StatelessWidget {
-  const _NewNotifIndicator({
-    super.key,
-  });
+  const _NewNotifIndicator();
 
   @override
   Widget build(BuildContext context) {
