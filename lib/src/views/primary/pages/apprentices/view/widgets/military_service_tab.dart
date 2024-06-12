@@ -296,62 +296,64 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 32),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: LargeFilledRoundedButton(
-                            label: 'שמירה',
-                            onPressed: (unitController.text.isEmpty ||
-                                    positionOldController.text.isEmpty ||
-                                    positionNewController.text.isEmpty)
-                                ? null
-                                : () async {
-                                    final result = await ref
-                                        .read(
-                                          personasControllerProvider.notifier,
-                                        )
-                                        .edit(
-                                          persona: persona.copyWith(
-                                            militaryCompoundId:
-                                                selectedCompound.value.id,
-                                            militaryUnit: unitController.text,
-                                            militaryPositionNew:
-                                                positionNewController.text,
-                                            militaryPositionOld:
-                                                positionOldController.text,
-                                            militaryDateOfEnlistment:
-                                                enrollmentDate.value
-                                                    .toIso8601String(),
-                                            militaryDateOfDischarge:
-                                                dischargeDate.value
-                                                    .toIso8601String(),
-                                          ),
-                                        );
+                    if (isEditMode.value) ...[
+                      const SizedBox(height: 32),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: LargeFilledRoundedButton(
+                              label: 'שמירה',
+                              onPressed: (unitController.text.isEmpty ||
+                                      positionOldController.text.isEmpty ||
+                                      positionNewController.text.isEmpty)
+                                  ? null
+                                  : () async {
+                                      final result = await ref
+                                          .read(
+                                            personasControllerProvider.notifier,
+                                          )
+                                          .edit(
+                                            persona: persona.copyWith(
+                                              militaryCompoundId:
+                                                  selectedCompound.value.id,
+                                              militaryUnit: unitController.text,
+                                              militaryPositionNew:
+                                                  positionNewController.text,
+                                              militaryPositionOld:
+                                                  positionOldController.text,
+                                              militaryDateOfEnlistment:
+                                                  enrollmentDate.value
+                                                      .toIso8601String(),
+                                              militaryDateOfDischarge:
+                                                  dischargeDate.value
+                                                      .toIso8601String(),
+                                            ),
+                                          );
 
-                                    if (result) {
-                                      isEditMode.value = false;
-                                    } else {
-                                      Toaster.show(
-                                        'שגיאה בעת שמירת השינויים',
-                                      );
-                                    }
-                                  },
-                            textStyle: TextStyles.s14w500,
+                                      if (result) {
+                                        isEditMode.value = false;
+                                      } else {
+                                        Toaster.show(
+                                          'שגיאה בעת שמירת השינויים',
+                                        );
+                                      }
+                                    },
+                              textStyle: TextStyles.s14w500,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 24),
-                        Expanded(
-                          child: LargeFilledRoundedButton(
-                            label: 'ביטול',
-                            onPressed: () => isEditMode.value = false,
-                            backgroundColor: Colors.white,
-                            foregroundColor: AppColors.blue02,
-                            textStyle: TextStyles.s14w500,
+                          const SizedBox(width: 24),
+                          Expanded(
+                            child: LargeFilledRoundedButton(
+                              label: 'ביטול',
+                              onPressed: () => isEditMode.value = false,
+                              backgroundColor: Colors.white,
+                              foregroundColor: AppColors.blue02,
+                              textStyle: TextStyles.s14w500,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
