@@ -129,7 +129,7 @@ class InstitutionsController extends _$InstitutionsController {
           );
       if (result.data['result'] == 'success') {
         Toaster.error('הושלם בהצלחה');
-        ref.read(goRouterServiceProvider).go('/home');
+        ref.invalidate(getInstitutionsProvider);
 
         return true;
       }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -29,18 +28,7 @@ class SendStatusMessagecreen extends HookConsumerWidget {
         title: const Text('שליחת הודעה'),
         actions: [
           IconButton(
-            onPressed: () async {
-              // if (attachment.value == null) {
-              //   return;
-              // }
-
-              final result = await ref
-                  .read(institutionsControllerProvider.notifier)
-                  .addFromExcel(attachment.value!);
-
-              if (result) {
-              } else {}
-            },
+            onPressed: () async => Toaster.unimplemented(),
             icon: const Icon(FluentIcons.attach_24_regular),
           ),
           // IconButton(
