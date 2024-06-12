@@ -9,11 +9,9 @@ class InstitutionsView extends StatelessWidget {
     super.key,
     required this.items,
     required this.institutions,
-    required this.selectedItem,
     required this.onTap,
   });
 
-  final ApprenticeStatusItemDto selectedItem;
   final List<ApprenticeStatusItemDto> items;
   final List<InstitutionDto> institutions;
   final void Function(ApprenticeStatusItemDto apprentice) onTap;

@@ -65,7 +65,6 @@ class PersonaPerformanceScreen extends HookConsumerWidget {
                   ? InstitutionsView(
                       items: screenController.items,
                       institutions: institutions,
-                      selectedItem: const ApprenticeStatusItemDto(),
                       onTap: (val) => selectedPerformanceItem.value = val.id,
                     )
                   : const _PerformanceBody(),
