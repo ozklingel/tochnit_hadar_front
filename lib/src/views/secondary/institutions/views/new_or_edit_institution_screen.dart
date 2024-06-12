@@ -151,7 +151,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
               error: (error, stack) => Center(
                 child: Text(error.toString()),
               ),
-              data: (cities) => PersonaDropdownButton(
+              data: (cities) => PersonaDropdownButton<String>(
                 value: city.value,
                 items: cities,
                 onMenuStateChange: (isOpen) {

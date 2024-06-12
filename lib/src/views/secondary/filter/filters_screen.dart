@@ -490,22 +490,16 @@ class FiltersScreen extends HookConsumerWidget {
                               iconStyleData: const IconStyleData(
                                 icon: Padding(
                                   padding: EdgeInsets.only(left: 16),
-                                  child: RotatedBox(
-                                    quarterTurns: 1,
-                                    child: Icon(
-                                      Icons.chevron_left,
-                                      color: AppColors.grey6,
-                                    ),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.grey6,
                                   ),
                                 ),
                                 openMenuIcon: Padding(
                                   padding: EdgeInsets.only(left: 16),
-                                  child: RotatedBox(
-                                    quarterTurns: 3,
-                                    child: Icon(
-                                      Icons.chevron_left,
-                                      color: AppColors.grey6,
-                                    ),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_up,
+                                    color: AppColors.grey6,
                                   ),
                                 ),
                               ),
@@ -740,22 +734,16 @@ class _MahzorWidget extends StatelessWidget {
         iconStyleData: const IconStyleData(
           icon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.grey6,
             ),
           ),
           openMenuIcon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 3,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_up,
+              color: AppColors.grey6,
             ),
           ),
         ),
@@ -880,22 +868,16 @@ class _EshkolWidget extends StatelessWidget {
         iconStyleData: const IconStyleData(
           icon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.grey6,
             ),
           ),
           openMenuIcon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 3,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_up,
+              color: AppColors.grey6,
             ),
           ),
         ),
@@ -1002,22 +984,16 @@ class _CompoundWidget extends StatelessWidget {
         iconStyleData: const IconStyleData(
           icon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.grey6,
             ),
           ),
           openMenuIcon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 3,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_up,
+              color: AppColors.grey6,
             ),
           ),
         ),
@@ -1124,22 +1100,16 @@ class _HativotWidget extends StatelessWidget {
         iconStyleData: const IconStyleData(
           icon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.grey6,
             ),
           ),
           openMenuIcon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 3,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_up,
+              color: AppColors.grey6,
             ),
           ),
         ),
@@ -1213,22 +1183,16 @@ class _RegionWidget extends StatelessWidget {
         iconStyleData: const IconStyleData(
           icon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.grey6,
             ),
           ),
           openMenuIcon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 3,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_up,
+              color: AppColors.grey6,
             ),
           ),
         ),
@@ -1344,22 +1308,16 @@ class _CityListWidget extends StatelessWidget {
         iconStyleData: const IconStyleData(
           icon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.grey6,
             ),
           ),
           openMenuIcon: Padding(
             padding: EdgeInsets.only(left: 16),
-            child: RotatedBox(
-              quarterTurns: 3,
-              child: Icon(
-                Icons.chevron_left,
-                color: AppColors.grey6,
-              ),
+            child: Icon(
+              Icons.keyboard_arrow_up,
+              color: AppColors.grey6,
             ),
           ),
         ),

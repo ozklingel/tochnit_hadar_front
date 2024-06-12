@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 
 class InputFieldContainer extends StatelessWidget {
   const InputFieldContainer({
@@ -9,15 +10,24 @@ class InputFieldContainer extends StatelessWidget {
     this.isRequired = false,
     this.labelStyle,
     required this.child,
+    this.data,
   });
 
   final bool isRequired;
   final String label;
   final Widget child;
   final TextStyle? labelStyle;
+  final String? data;
 
   @override
   Widget build(BuildContext context) {
+    if (data != null) {
+      return DetailsRowItem(
+        label: label,
+        data: data!,
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

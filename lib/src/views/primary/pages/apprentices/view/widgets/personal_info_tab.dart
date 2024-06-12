@@ -71,43 +71,62 @@ class _WorkSection extends HookConsumerWidget {
             )
           : null,
       child: Column(
-        children: isEditMode.value
-            ? [
-                InputFieldContainer(
-                  label: 'סטטוס',
-                  child: TextField(
-                    controller: workStatus,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'עיסוק',
-                  child: TextField(
-                    controller: workOccupation,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'סוג עבודה',
-                  child: TextField(
-                    controller: workType,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'מקום עבודה',
-                  child: TextField(
-                    controller: workPlace,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                AcceptCancelButtons(
-                  onPressedCancel: () => isEditMode.value = false,
-                  okText: 'שמירה',
-                  onPressedOk: () async {
-                    final result = await ref
-                        .read(personasControllerProvider.notifier)
-                        .edit(
+        children: [
+          InputFieldContainer(
+            label: 'סטטוס',
+            data: isEditMode.value ? null : persona.workStatus,
+            child: TextField(
+              controller: workStatus,
+            ),
+          ),
+          const SizedBox(height: 12),
+          InputFieldContainer(
+            label: 'עיסוק',
+            data: isEditMode.value ? null : persona.workOccupation,
+            child: TextField(
+              controller: workOccupation,
+            ),
+          ),
+          const SizedBox(height: 12),
+          InputFieldContainer(
+            label: 'מקום לימודים',
+            data: isEditMode.value ? null : persona.educationalInstitution,
+            child: TextField(
+              controller: workType,
+            ),
+          ),
+          const SizedBox(height: 12),
+          InputFieldContainer(
+            label: 'פקולטה',
+            data: isEditMode.value ? null : persona.educationFaculty,
+            child: TextField(
+              controller: workPlace,
+            ),
+          ),
+          const SizedBox(height: 12),
+          InputFieldContainer(
+            label: 'סוג עבודה',
+            data: isEditMode.value ? null : persona.workType,
+            child: TextField(
+              controller: workPlace,
+            ),
+          ),
+          const SizedBox(height: 12),
+          InputFieldContainer(
+            label: 'מקום עבודה',
+            data: isEditMode.value ? null : persona.workPlace,
+            child: TextField(
+              controller: workPlace,
+            ),
+          ),
+          if (isEditMode.value) ...[
+            const SizedBox(height: 24),
+            AcceptCancelButtons(
+              onPressedCancel: () => isEditMode.value = false,
+              okText: 'שמירה',
+              onPressedOk: () async {
+                final result =
+                    await ref.read(personasControllerProvider.notifier).edit(
                           persona: persona.copyWith(
                             workStatus: workStatus.text,
                             workOccupation: workOccupation.text,
@@ -116,43 +135,13 @@ class _WorkSection extends HookConsumerWidget {
                           ),
                         );
 
-                    if (result) {
-                      isEditMode.value = false;
-                    }
-                  },
-                ),
-              ]
-            : [
-                DetailsRowItem(
-                  label: 'סטטוס',
-                  data: persona.workStatus,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'עיסוק',
-                  data: persona.workOccupation,
-                ),
-                const SizedBox(height: 12),
-                // DetailsRowItem(
-                //   label: 'מקום לימודים',
-                //   data: persona.educationalInstitution,
-                // ),
-                // const SizedBox(height: 12),
-                // DetailsRowItem(
-                //   label: 'פקולטה',
-                //   data: persona.educationFaculty,
-                // ),
-                // const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'סוג עבודה',
-                  data: persona.workType,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'מקום עבודה',
-                  data: persona.workPlace,
-                ),
-              ],
+                if (result) {
+                  isEditMode.value = false;
+                }
+              },
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -187,72 +176,64 @@ class _EducationSection extends HookConsumerWidget {
             )
           : null,
       child: Column(
-        children: isEditMode.value
-            ? [
-                InputFieldContainer(
-                  label: 'מוסד לימודים',
-                  child: TextField(
-                    controller: institution,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'שם ר”מ',
-                  child: TextField(
-                    controller: ravMelamedName,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'טלפון ר”מ',
-                  child: TextField(
-                    controller: ravMelamedPhone,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                AcceptCancelButtons(
-                  onPressedCancel: () => isEditMode.value = false,
-                  okText: 'שמירה',
-                  onPressedOk: (institution.text.isEmpty ||
-                          ravMelamedName.text.isEmpty ||
-                          ravMelamedPhone.text.isEmpty)
-                      ? null
-                      : () async {
-                          final result = await ref
-                              .read(personasControllerProvider.notifier)
-                              .edit(
-                                persona: persona.copyWith(
-                                  highSchoolInstitution: institution.text,
-                                  highSchoolRavMelamedName: ravMelamedName.text,
-                                  highSchoolRavMelamedPhone:
-                                      ravMelamedPhone.text,
-                                ),
-                              );
+        children: [
+          InputFieldContainer(
+            label: 'מוסד לימודים',
+            data: isEditMode.value ? null : persona.highSchoolInstitution,
+            child: TextField(
+              controller: institution,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (!isEditMode.value) ...[
+            DetailsRowItem(
+              label: 'ר”מ בתיכון',
+              contactName: persona.highSchoolRavMelamedName,
+              contactPhone: persona.highSchoolRavMelamedPhone.format,
+              onTapPhone: () =>
+                  launchCall(phone: persona.highSchoolRavMelamedPhone),
+              data: persona.highSchoolRavMelamedPhone.format,
+            ),
+          ] else ...[
+            InputFieldContainer(
+              label: 'שם ר”מ',
+              child: TextField(
+                controller: ravMelamedName,
+              ),
+            ),
+            const SizedBox(height: 12),
+            InputFieldContainer(
+              label: 'טלפון ר”מ',
+              child: TextField(
+                controller: ravMelamedPhone,
+              ),
+            ),
+            const SizedBox(height: 12),
+            AcceptCancelButtons(
+              onPressedCancel: () => isEditMode.value = false,
+              okText: 'שמירה',
+              onPressedOk: (institution.text.isEmpty ||
+                      ravMelamedName.text.isEmpty ||
+                      ravMelamedPhone.text.isEmpty)
+                  ? null
+                  : () async {
+                      final result = await ref
+                          .read(personasControllerProvider.notifier)
+                          .edit(
+                            persona: persona.copyWith(
+                              highSchoolInstitution: institution.text,
+                              highSchoolRavMelamedName: ravMelamedName.text,
+                              highSchoolRavMelamedPhone: ravMelamedPhone.text,
+                            ),
+                          );
 
-                          if (result) {
-                            isEditMode.value = false;
-                          }
-                        },
-                ),
-              ]
-            : [
-                DetailsRowItem(
-                  label: 'מוסד לימודים',
-                  data: persona.highSchoolInstitution,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'שם ר”מ',
-                  data: persona.highSchoolRavMelamedName,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'טלפון ר”מ',
-                  onTapData: () =>
-                      launchCall(phone: persona.highSchoolRavMelamedPhone),
-                  data: persona.highSchoolRavMelamedPhone.format,
-                ),
-              ],
+                      if (result) {
+                        isEditMode.value = false;
+                      }
+                    },
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -305,13 +286,11 @@ class _FamilySection extends HookConsumerWidget {
                 ...[
                   InputFieldContainer(
                     label: 'איש קשר 1 - קרבה',
-                    child: PersonaDropdownButton(
+                    child: PersonaDropdownButton<Relationship>(
                       value: contact1Relationship.value.name,
-                      items: Relationship.values.map((e) => e.name).toList(),
-                      onChanged: (value) => contact1Relationship.value =
-                          Relationship.values.firstWhere(
-                        (e) => e.name == value,
-                      ),
+                      items: Relationship.values,
+                      stringMapper: (e) => e.name,
+                      onChanged: (value) => contact1Relationship.value = value!,
                       onMenuStateChange: (isOpen) {
                         if (!isOpen) {
                           contact1Relationship.value = Relationship.other;
@@ -352,13 +331,11 @@ class _FamilySection extends HookConsumerWidget {
                 ...[
                   InputFieldContainer(
                     label: 'איש קשר 2 - קרבה',
-                    child: PersonaDropdownButton(
+                    child: PersonaDropdownButton<Relationship>(
                       value: contact2Relationship.value.name,
-                      items: Relationship.values.map((e) => e.name).toList(),
-                      onChanged: (value) => contact2Relationship.value =
-                          Relationship.values.firstWhere(
-                        (e) => e.name == value,
-                      ),
+                      items: Relationship.values,
+                      stringMapper: (e) => e.name,
+                      onChanged: (value) => contact2Relationship.value = value!,
                       onMenuStateChange: (isOpen) {
                         if (!isOpen) {
                           contact2Relationship.value = Relationship.other;
@@ -399,13 +376,11 @@ class _FamilySection extends HookConsumerWidget {
                 ...[
                   InputFieldContainer(
                     label: 'איש קשר 3 - קרבה',
-                    child: PersonaDropdownButton(
+                    child: PersonaDropdownButton<Relationship>(
                       value: contact3Relationship.value.name,
-                      items: Relationship.values.map((e) => e.name).toList(),
-                      onChanged: (value) => contact3Relationship.value =
-                          Relationship.values.firstWhere(
-                        (e) => e.name == value,
-                      ),
+                      items: Relationship.values,
+                      stringMapper: (e) => e.name,
+                      onChanged: (value) => contact3Relationship.value = value!,
                       onMenuStateChange: (isOpen) {
                         if (!isOpen) {
                           contact3Relationship.value = Relationship.other;
@@ -538,84 +513,76 @@ class _DatesSection extends HookConsumerWidget {
             )
           : null,
       child: Column(
-        children: isEditMode.value
-            ? [
-                InputFieldContainer(
-                  label: 'יום הולדת',
-                  isRequired: true,
-                  child: InkWell(
-                    onTap: () async {
-                      final newDate = await showDatePicker(
-                        context: context,
-                        initialDate: bdController.value,
-                        firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                        lastDate:
-                            DateTime.now().add(const Duration(days: 99000)),
-                      );
-
-                      if (newDate == null) {
-                        return;
-                      }
-
-                      bdController.value = newDate;
-                    },
-                    borderRadius: BorderRadius.circular(36),
-                    child: IgnorePointer(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText:
-                              DateFormat('dd/MM/yy').format(bdController.value),
-                          hintStyle: TextStyles.s16w400cGrey2.copyWith(
-                            color: AppColors.grey5,
-                          ),
-                          suffixIcon: const Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: Icon(
-                              Icons.calendar_month,
-                              color: AppColors.grey5,
-                            ),
-                          ),
-                        ),
+        children: [
+          InputFieldContainer(
+            label: 'יום הולדת לועזי',
+            data: isEditMode.value
+                ? null
+                : persona.dateOfBirth.asDateTime.asDayMonthYearShortDot,
+            isRequired: true,
+            child: InkWell(
+              onTap: () async {
+                final newDate = await showDatePicker(
+                  context: context,
+                  initialDate: bdController.value,
+                  firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+                  lastDate: DateTime.now().add(const Duration(days: 99000)),
+                );
+                if (newDate == null) return;
+                bdController.value = newDate;
+              },
+              borderRadius: BorderRadius.circular(36),
+              child: IgnorePointer(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText:
+                        DateFormat('dd/MM/yy').format(bdController.value),
+                    hintStyle: TextStyles.s16w400cGrey2.copyWith(
+                      color: AppColors.grey5,
+                    ),
+                    suffixIcon: const Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: Icon(
+                        Icons.calendar_month,
+                        color: AppColors.grey5,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                AcceptCancelButtons(
-                  onPressedCancel: () => isEditMode.value = false,
-                  okText: 'שמירה',
-                  onPressedOk: () async {
-                    final result = await ref
-                        .read(personasControllerProvider.notifier)
-                        .edit(
+              ),
+            ),
+          ),
+          if (!isEditMode.value) ...[
+            const SizedBox(height: 12),
+            DetailsRowItem(
+              label: 'יום הולדת עברי',
+              data: persona.dateOfBirth.asDateTime.he,
+            ),
+            const SizedBox(height: 12),
+            const DetailsRowItem(
+              label: 'יום נישואים',
+              data: 'ט”ו אב',
+            ),
+          ] else ...[
+            const SizedBox(height: 24),
+            AcceptCancelButtons(
+              onPressedCancel: () => isEditMode.value = false,
+              okText: 'שמירה',
+              onPressedOk: () async {
+                final result =
+                    await ref.read(personasControllerProvider.notifier).edit(
                           persona: persona.copyWith(
                             dateOfBirth: bdController.value.toIso8601String(),
                           ),
                         );
 
-                    if (result) {
-                      isEditMode.value = false;
-                    }
-                  },
-                ),
-              ]
-            : [
-                DetailsRowItem(
-                  label: 'יום הולדת עברי',
-                  data: persona.dateOfBirth.asDateTime.he,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'יום הולדת לועזי',
-                  data: persona.dateOfBirth.asDateTime.asDayMonthYearShortDot,
-                ),
-                // missing on backend
-                // const SizedBox(height: 12),
-                // const DetailsRowItem(
-                //   label: 'יום נישואים',
-                //   data: 'ט”ו אב',
-                // ),
-              ],
+                if (result) {
+                  isEditMode.value = false;
+                }
+              },
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -661,168 +628,153 @@ class _GeneralSection extends HookConsumerWidget {
             )
           : null,
       child: Column(
-        children: isEditMode.value
-            ? [
-                InputFieldContainer(
-                  label: 'תעודת זהות',
-                  isRequired: true,
-                  child: TextField(
-                    controller: tzController,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'אימייל',
-                  isRequired: true,
-                  child: TextField(
-                    controller: emailController,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'יישוב',
-                  isRequired: true,
-                  child: ref.watch(getCitiesListProvider).when(
-                        loading: () => const Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                        error: (error, stack) => Center(
-                          child: Text(error.toString()),
-                        ),
-                        data: (cities) => PersonaDropdownButton(
-                          value: cityController.value,
-                          items: cities,
-                          onMenuStateChange: (isOpen) {
-                            if (!isOpen) {
-                              citySearchController.clear();
-                            }
-                          },
-                          onChanged: (value) =>
-                              cityController.value = value ?? '',
-                          dropdownSearchData: DropdownSearchData(
-                            searchController: citySearchController,
-                            searchInnerWidgetHeight: 50,
-                            searchInnerWidget: TextField(
-                              controller: citySearchController,
-                              decoration: const InputDecoration(
-                                focusedBorder: UnderlineInputBorder(),
-                                enabledBorder: InputBorder.none,
-                                prefixIcon: Icon(Icons.search),
-                                hintText: 'חיפוש',
-                                hintStyle: TextStyles.s14w400,
-                              ),
-                            ),
-                            searchMatchFn: (item, searchValue) {
-                              return item.value
-                                  .toString()
-                                  .toLowerCase()
-                                  .trim()
-                                  .contains(
-                                    searchValue.toLowerCase().trim(),
-                                  );
-                            },
+        children: [
+          InputFieldContainer(
+            label: 'תעודת זהות',
+            data: isEditMode.value ? null : persona.teudatZehut,
+            isRequired: true,
+            child: TextField(
+              controller: tzController,
+            ),
+          ),
+          const SizedBox(height: 12),
+          InputFieldContainer(
+            label: 'אימייל',
+            data: isEditMode.value ? null : persona.email,
+            isRequired: true,
+            child: TextField(
+              controller: emailController,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (isEditMode.value) ...[
+            InputFieldContainer(
+              label: 'יישוב',
+              isRequired: true,
+              child: ref.watch(getCitiesListProvider).when(
+                    loading: () => const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    ),
+                    error: (error, stack) => Center(
+                      child: Text(error.toString()),
+                    ),
+                    data: (cities) => PersonaDropdownButton<String>(
+                      value: cityController.value,
+                      items: cities,
+                      onMenuStateChange: (isOpen) {
+                        if (!isOpen) {
+                          citySearchController.clear();
+                        }
+                      },
+                      onChanged: (value) => cityController.value = value ?? '',
+                      dropdownSearchData: DropdownSearchData(
+                        searchController: citySearchController,
+                        searchInnerWidgetHeight: 50,
+                        searchInnerWidget: TextField(
+                          controller: citySearchController,
+                          decoration: const InputDecoration(
+                            focusedBorder: UnderlineInputBorder(),
+                            enabledBorder: InputBorder.none,
+                            prefixIcon: Icon(Icons.search),
+                            hintText: 'חיפוש',
+                            hintStyle: TextStyles.s14w400,
                           ),
                         ),
-                      ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'רחוב',
-                  isRequired: true,
-                  child: TextField(
-                    controller: streetController,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'מס\' בית',
-                  isRequired: true,
-                  child: TextField(
-                    controller: houseNumberController,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'מצב משפחתי',
-                  isRequired: true,
-                  child: TextField(
-                    controller: maritalStatusController,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                InputFieldContainer(
-                  label: 'מספר טלפון',
-                  isRequired: true,
-                  child: TextField(
-                    controller: phoneController,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                AcceptCancelButtons(
-                  onPressedCancel: () => isEditMode.value = false,
-                  okText: 'שמירה',
-                  onPressedOk: (tzController.text.isEmpty ||
-                          emailController.text.isEmpty ||
-                          cityController.value.isEmpty ||
-                          streetController.text.isEmpty ||
-                          houseNumberController.text.isEmpty ||
-                          maritalStatusController.text.isEmpty ||
-                          phoneController.text.isEmpty)
-                      ? null
-                      : () async {
-                          final res = await ref
-                              .read(personasControllerProvider.notifier)
-                              .edit(
-                                persona: persona.copyWith(
-                                  teudatZehut: tzController.text,
-                                  email: emailController.text,
-                                  address: persona.address.copyWith(
-                                    city: cityController.value,
-                                    street: streetController.text,
-                                    houseNumber: houseNumberController.text,
-                                  ),
-                                  maritalStatus: maritalStatusController.text,
-                                  phone: phoneController.text,
-                                ),
+                        searchMatchFn: (item, searchValue) {
+                          return item.value
+                              .toString()
+                              .toLowerCase()
+                              .trim()
+                              .contains(
+                                searchValue.toLowerCase().trim(),
                               );
-
-                          if (res) {
-                            isEditMode.value = false;
-                          }
                         },
-                ),
-              ]
-            : [
-                DetailsRowItem(
-                  label: 'תעודת זהות',
-                  data: persona.teudatZehut,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'אימייל',
-                  data: persona.email,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'כתובת',
-                  data: persona.address.fullAddress,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'אזור',
-                  data: persona.address.region,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'מצב משפחתי',
-                  data: persona.maritalStatus,
-                ),
-                const SizedBox(height: 12),
-                DetailsRowItem(
-                  label: 'מספר טלפון',
-                  data: persona.phone.format,
-                ),
-              ],
+                      ),
+                    ),
+                  ),
+            ),
+            const SizedBox(height: 12),
+            InputFieldContainer(
+              label: 'רחוב',
+              isRequired: true,
+              child: TextField(
+                controller: streetController,
+              ),
+            ),
+            const SizedBox(height: 12),
+            InputFieldContainer(
+              label: 'מס\' בית',
+              isRequired: true,
+              child: TextField(
+                controller: houseNumberController,
+              ),
+            ),
+          ] else ...[
+            DetailsRowItem(
+              label: 'כתובת',
+              data: persona.address.fullAddress,
+            ),
+            const SizedBox(height: 12),
+            DetailsRowItem(
+              label: 'אזור',
+              data: persona.address.region,
+            ),
+          ],
+          const SizedBox(height: 12),
+          InputFieldContainer(
+            label: 'מצב משפחתי',
+            data: isEditMode.value ? null : persona.maritalStatus,
+            isRequired: true,
+            child: TextField(
+              controller: maritalStatusController,
+            ),
+          ),
+          const SizedBox(height: 12),
+          InputFieldContainer(
+            label: 'מספר טלפון',
+            data: isEditMode.value ? null : persona.phone.format,
+            isRequired: true,
+            child: TextField(
+              controller: phoneController,
+            ),
+          ),
+          if (isEditMode.value) ...[
+            const SizedBox(height: 24),
+            AcceptCancelButtons(
+              onPressedCancel: () => isEditMode.value = false,
+              okText: 'שמירה',
+              onPressedOk: (tzController.text.isEmpty ||
+                      emailController.text.isEmpty ||
+                      cityController.value.isEmpty ||
+                      streetController.text.isEmpty ||
+                      houseNumberController.text.isEmpty ||
+                      maritalStatusController.text.isEmpty ||
+                      phoneController.text.isEmpty)
+                  ? null
+                  : () async {
+                      final res = await ref
+                          .read(personasControllerProvider.notifier)
+                          .edit(
+                            persona: persona.copyWith(
+                              teudatZehut: tzController.text,
+                              email: emailController.text,
+                              address: persona.address.copyWith(
+                                city: cityController.value,
+                                street: streetController.text,
+                                houseNumber: houseNumberController.text,
+                              ),
+                              maritalStatus: maritalStatusController.text,
+                              phone: phoneController.text,
+                            ),
+                          );
+
+                      if (res) {
+                        isEditMode.value = false;
+                      }
+                    },
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -881,8 +833,6 @@ class _ContactButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    // final auth = ref.watch(authServiceProvider);
-
     return Row(
       children: [
         SizedBox(

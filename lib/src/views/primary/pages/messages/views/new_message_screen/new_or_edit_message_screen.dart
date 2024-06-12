@@ -378,22 +378,16 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                             iconStyleData: const IconStyleData(
                               icon: Padding(
                                 padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 1,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
-                                  ),
+                                child: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.grey6,
                                 ),
                               ),
                               openMenuIcon: Padding(
                                 padding: EdgeInsets.only(left: 16),
-                                child: RotatedBox(
-                                  quarterTurns: 3,
-                                  child: Icon(
-                                    Icons.chevron_left,
-                                    color: AppColors.grey6,
-                                  ),
+                                child: Icon(
+                                  Icons.keyboard_arrow_up,
+                                  color: AppColors.grey6,
                                 ),
                               ),
                             ),

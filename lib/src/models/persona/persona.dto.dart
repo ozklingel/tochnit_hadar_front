@@ -61,6 +61,18 @@ enum Relationship {
   }
 }
 
+enum MilitaryServiceType {
+  commando,
+  battalion,
+  rear;
+
+  String get hebrewName => switch (this) {
+        MilitaryServiceType.commando => 'סיירת',
+        MilitaryServiceType.battalion => 'גדוד',
+        MilitaryServiceType.rear => 'עורפי',
+      };
+}
+
 typedef Phone = String;
 
 @JsonSerializable()

@@ -2,21 +2,25 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 
-class PersonaDropdownButton extends StatelessWidget {
+class PersonaDropdownButton<T> extends StatelessWidget {
   const PersonaDropdownButton({
     super.key,
     required this.value,
     required this.items,
     required this.onChanged,
+    this.stringMapper,
+    this.textStyle,
     this.onMenuStateChange,
     this.dropdownSearchData,
   });
 
   final String value;
-  final List<String> items;
-  final void Function(String?) onChanged;
+  final List<T> items;
+  final String Function(T)? stringMapper;
+  final void Function(T?) onChanged;
+  final TextStyle? textStyle;
   final void Function(bool)? onMenuStateChange;
-  final DropdownSearchData<String>? dropdownSearchData;
+  final DropdownSearchData<T>? dropdownSearchData;
 
   Widget _arrowIcon({bool isDown = true}) => Padding(
         padding: const EdgeInsets.only(left: 16),
@@ -29,12 +33,12 @@ class PersonaDropdownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
-      child: DropdownButton2<String>(
+      child: DropdownButton2<T>(
         hint: Text(
           value,
           overflow: TextOverflow.fade,
         ),
-        style: Theme.of(context).inputDecorationTheme.hintStyle,
+        style: textStyle ?? Theme.of(context).inputDecorationTheme.hintStyle,
         buttonStyleData: ButtonStyleData(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(36),
@@ -64,7 +68,9 @@ class PersonaDropdownButton extends StatelessWidget {
             .map(
               (e) => DropdownMenuItem(
                 value: e,
-                child: Text(e),
+                child: Text(
+                  stringMapper != null ? stringMapper!(e) : e.toString(),
+                ),
               ),
             )
             .toList(),

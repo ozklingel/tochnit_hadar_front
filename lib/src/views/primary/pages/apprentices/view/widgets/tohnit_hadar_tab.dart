@@ -357,32 +357,31 @@ class _GeneralSection extends HookConsumerWidget {
                   InputFieldContainer(
                     label: 'מקום לימודים',
                     isRequired: true,
-                    child: PersonaDropdownButton(
+                    child: PersonaDropdownButton<InstitutionDto>(
                       value: selectedInstitution.value.name,
+                      items: institutions,
+                      stringMapper: (e) => e.name,
                       onChanged: (value) {
-                        final buttonInstitution = institutions.firstWhere(
-                          (element) => element.name == value,
-                          orElse: () => const InstitutionDto(),
-                        );
+                        final buttonInstitution =
+                            value ?? const InstitutionDto();
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text('בחירת מלווה\nב$value'),
-                              content: PersonaDropdownButton(
+                              content: PersonaDropdownButton<String>(
                                 value: selectedMentor.value,
+                                items: buttonInstitution.melavim,
                                 onChanged: (value) {
                                   selectedMentor.value = value ?? '';
                                   selectedInstitution.value = buttonInstitution;
                                   Navigator.pop(context);
                                 },
-                                items: buttonInstitution.melavim,
                               ),
                             );
                           },
                         );
                       },
-                      items: institutions.map((e) => e.name).toList(),
                     ),
                   ),
                 const SizedBox(height: 12),
@@ -455,21 +454,6 @@ class _GeneralSection extends HookConsumerWidget {
                     ],
                   ),
                 ),
-                // const SizedBox(height: 12),
-                // InputFieldContainer(
-                //   label: 'מלווה - משויך',
-                //   child: _DropdownButton(
-                //     value: selectedPersona,
-                //     items: [
-                //       'אדוק',
-                //       'מחובר',
-                //       'מחובר חלקית',
-                //       'בשלבי ניתוק',
-                //       'מנותק',
-                //     ],
-                //     onChanged: (value) => spiritualStatus.value = value ?? '',
-                //   ),
-                // ),
                 const SizedBox(height: 24),
                 AcceptCancelButtons(
                   onPressedCancel: () => isEditMode.value = false,
