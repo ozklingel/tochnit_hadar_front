@@ -44,10 +44,7 @@ class ExportToExcelBar extends HookConsumerWidget {
             selectedDate.value.asDayMonthYearShortSlash,
             style: TextStyles.s14w300cGray2,
           ),
-          label: const RotatedBox(
-            quarterTurns: 1,
-            child: Icon(Icons.chevron_left),
-          ),
+          label: const Icon(Icons.keyboard_arrow_down),
         ),
       ],
     );
