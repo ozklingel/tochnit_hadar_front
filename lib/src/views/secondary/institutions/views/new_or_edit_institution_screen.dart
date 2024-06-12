@@ -96,24 +96,6 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
         ),
       ),
       InputFieldContainer(
-        label: 'שם רכז מוסד',
-        isRequired: true,
-        child: TextFormField(
-          controller: rakazFirstName,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return _kEmptyFieldErrorMessage;
-            }
-
-            return null;
-          },
-          decoration: const InputDecoration(
-            hintText: 'הזן את שם רכז המוסד',
-            hintStyle: TextStyles.s16w400cGrey5,
-          ),
-        ),
-      ),
-      InputFieldContainer(
         label: 'שם משפחה רכז מוסד',
         isRequired: true,
         child: TextFormField(
@@ -166,7 +148,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
                   searchInnerWidget: TextFormField(
                     controller: citySearchController,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.trim().isEmpty) {
                         return _kEmptyFieldErrorMessage;
                       }
 

@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
@@ -109,11 +109,17 @@ class InstitutionsController extends _$InstitutionsController {
     }
 
     final formData = FormData.fromMap({
-      "file": MultipartFile.fromBytes(
-        file.bytes!.toList(),
-        filename: file.path,
-        contentType: MediaType.parse('multipart/form-data'),
-      ),
+      "file": kIsWeb
+          ? MultipartFile.fromBytes(
+              file.bytes as List<int>,
+              filename: file.name,
+              contentType: MediaType.parse('multipart/form-data'),
+            )
+          : await MultipartFile.fromFile(
+              file.path!,
+              filename: file.name,
+              contentType: MediaType.parse('multipart/form-data'),
+            ),
     });
 
     try {
