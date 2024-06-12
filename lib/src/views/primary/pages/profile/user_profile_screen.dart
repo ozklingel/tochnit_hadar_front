@@ -829,11 +829,61 @@ class _TohnitHadarTabView extends ConsumerWidget {
           ),
         // if (auth.valueOrNull?.role == UserRole.melave)
         DetailsCard(
+          title: 'רשימת מלווים',
+          child: personas.isLoading
+              ? const CircularProgressIndicator.adaptive()
+              : Column(
+                  children: personas.valueOrNull
+                          ?.where(
+                        (element) => element.roles.contains(UserRole.melave),
+                      )
+                          .map((e) {
+                        final apprentice =
+                            (personas.valueOrNull ?? []).singleWhere(
+                          (element) => element.id == e.id,
+                          orElse: () => const PersonaDto(),
+                        );
+
+                        return Skeletonizer(
+                          enabled: personas.isLoading,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.blue,
+                                backgroundImage: CachedNetworkImageProvider(
+                                  apprentice.avatar,
+                                ),
+                              ),
+                              title: Text(
+                                apprentice.fullName.ifEmpty ?? 'LOADING',
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onTap: () =>
+                                  PersonaDetailsRouteData(id: apprentice.id)
+                                      .go(context),
+                            ),
+                          ),
+                        );
+                      }).toList() ??
+                      [],
+                ),
+        ),
+        DetailsCard(
           title: 'רשימת חניכים',
           child: personas.isLoading
               ? const CircularProgressIndicator.adaptive()
               : Column(
-                  children: personas.valueOrNull?.map((e) {
+                  children: personas.valueOrNull
+                          ?.where(
+                        (element) =>
+                            element.roles.contains(UserRole.apprentice),
+                        // || element.roles.isEmpty,
+                      )
+                          .map((e) {
                         final apprentice =
                             (personas.valueOrNull ?? []).singleWhere(
                           (element) => element.id == e.id,

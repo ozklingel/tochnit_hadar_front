@@ -19,11 +19,17 @@ class DioService extends _$DioService {
   Dio build() {
     ref.watch(storageServiceProvider);
 
+    Logger().d('initializing dio with base url::${Consts.baseUrl}');
+
     final authToken = ref.read(storageServiceProvider.notifier).getAuthToken();
     final userPhone = ref.read(storageServiceProvider.notifier).getUserPhone();
     //final userPhone="528827064";
 
-    Logger().d('initializing dio with base url::${Consts.baseUrl}');
+    // for debugging
+    // const userId = '506795170';
+    final userId = userPhone;
+
+    Logger().d('userId::$userId');
 
     final dio = Dio(
       BaseOptions(
@@ -40,7 +46,7 @@ class DioService extends _$DioService {
           if (userPhone.isNotEmpty)
             'userId': switch (userPhone) {
               // for testing persona roles
-              '523301800' => kDebugMode ? '506795170' : userPhone,
+              '523301800' => kDebugMode ? userId : userPhone,
               _ => userPhone,
             },
         },
