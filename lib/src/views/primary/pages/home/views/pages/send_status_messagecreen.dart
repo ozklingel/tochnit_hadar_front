@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -21,7 +20,7 @@ class SendStatusMessagecreen extends HookConsumerWidget {
     final isRakazEshkol = useState(true);
     final isRakazMosad = useState(true);
     final isMelave = useState(true);
-    final attachment = useState<PlatformFile?>(null);
+    // final attachment = useState<PlatformFile?>(null);
 
     return Scaffold(
       appBar: AppBar(

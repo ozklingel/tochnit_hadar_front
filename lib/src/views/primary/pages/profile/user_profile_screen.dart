@@ -661,33 +661,33 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
-                        label: ' שם משפחה',
+                        label: 'שם משפחה',
                         data: auth.valueOrNull?.lastName ?? "אין",
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
-                        label: ' כתובת מייל',
+                        label: 'כתובת מייל',
                         data: auth.valueOrNull?.email ?? "אין",
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
-                        label: ' תאריך יומהולדת',
+                        label: 'תאריך יומהולדת',
                         data: auth.valueOrNull?.dateOfBirth.substring(0, 10) ??
                             "אין",
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
-                        label: ' עיר',
+                        label: 'עיר',
                         data: auth.valueOrNull!.city,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
-                        label: ' מוסד',
+                        label: 'מוסד',
                         data: institution.name,
                       ),
                       const SizedBox(height: 12),
                       DetailsRowItem(
-                        label: ' אזור',
+                        label: 'אזור',
                         data: auth.valueOrNull!.region,
                       ),
                       const SizedBox(height: 12),

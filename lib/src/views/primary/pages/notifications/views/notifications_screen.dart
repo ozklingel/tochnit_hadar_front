@@ -40,16 +40,15 @@ class NotificationScreen extends HookConsumerWidget {
           appBar: AppBar(
             centerTitle: true,
             actions: [
-              const SizedBox(
-                width: 10,
-              ),
-              GestureDetector(
-                child: const Icon(
+              IconButton(
+                onPressed: () =>
+                    const NotificationSettingRouteData().go(context),
+                icon: const Icon(
                   FluentIcons.more_vertical_24_regular,
                   color: Colors.black,
                 ),
-                onTap: () => const NotificationSettingRouteData().go(context),
               ),
+              const SizedBox(width: 8),
             ],
             leading: GestureDetector(
               child: const Icon(
