@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
@@ -35,24 +33,24 @@ class MessagesController extends _$MessagesController {
 
     try {
       final result = await ref.read(dioServiceProvider).post(
-            Consts.addMessage,
-            data: jsonEncode({
-              'subject': msg.title,
-              'content': msg.content,
-              'created_by_id':
-                  ref.read(storageServiceProvider.notifier).getUserPhone(),
-              'created_for_ids': msg.to,
-              'type': msg.type.name,
-              'icon': switch (msg.method) {
-                MessageMethod.sms => 'PHONE',
-                MessageMethod.whatsapp => 'WHATSAPP',
-                MessageMethod.system => 'SYSTEM',
-                MessageMethod.other => 'UNKNOWN',
-              },
-              'attachments': msg.attachments,
-              // 'icon': msg.icon,
-            }),
-          );
+        Consts.addMessage,
+        data: {
+          'subject': msg.title,
+          'content': msg.content,
+          'created_by_id':
+              ref.read(storageServiceProvider.notifier).getUserPhone(),
+          'created_for_ids': msg.to,
+          'type': msg.type.name,
+          'icon': switch (msg.method) {
+            MessageMethod.sms => 'PHONE',
+            MessageMethod.whatsapp => 'WHATSAPP',
+            MessageMethod.system => 'SYSTEM',
+            MessageMethod.other => 'UNKNOWN',
+          },
+          'attachments': msg.attachments,
+          // 'icon': msg.icon,
+        },
+      );
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getMessagesProvider);

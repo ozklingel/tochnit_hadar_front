@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/services/api/search_bar/get_filtered_users.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
@@ -18,6 +20,7 @@ import 'package:hadar_program/src/views/widgets/dialogs/success_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class NewOrEditMessageScreen extends HookConsumerWidget {
   const NewOrEditMessageScreen({
@@ -214,15 +217,46 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                                 label: const Text('הוספת קבוצת נמענים'),
                                 labelStyle: TextStyles.s14w400cBlue2,
                                 side: const BorderSide(color: AppColors.blue06),
-                                onPressed: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (val) {
-                                      return FiltersScreen.users(
+                                onPressed: () async {
+                                  final filter = await Navigator.of(context)
+                                      .push<FilterDto>(
+                                    MaterialPageRoute(
+                                      builder: (val) => FiltersScreen.users(
                                         initFilters: filters.value,
-                                      );
-                                    },
-                                  ),
-                                ),
+                                      ),
+                                    ),
+                                  );
+
+                                  if (filter == null) {
+                                    return;
+                                  } else if (filter.isEmpty) {
+                                    filters.value = const FilterDto();
+                                  }
+
+                                  BotToast.showLoading();
+
+                                  try {
+                                    final req = await ref.read(
+                                      getFilteredUsersProvider(filter).future,
+                                    );
+
+                                    final filtered = (await ref
+                                            .read(getPersonasProvider.future))
+                                        .where(
+                                          (element) => req.contains(element.id),
+                                        )
+                                        .toList();
+
+                                    selectedRecipients.value = filtered;
+                                  } catch (e) {
+                                    Logger()
+                                        .e('failed to filter users', error: e);
+                                    Sentry.captureException(e);
+                                    Toaster.error(e);
+                                  }
+
+                                  BotToast.closeAllLoading();
+                                },
                               ),
                             ],
                           ),
