@@ -6,6 +6,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 @Deprecated('not needed now since this will be done by backend')
@@ -71,6 +72,8 @@ class InstitutionPdfExport extends StatelessWidget {
                   CachedNetworkImage(
                     imageUrl: institution.logo,
                     height: 40,
+                    progressIndicatorBuilder: (context, url, progress) =>
+                        const LoadingState(),
                   ),
                 ],
                 Assets.images.logo.image(

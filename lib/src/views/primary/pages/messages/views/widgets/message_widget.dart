@@ -6,6 +6,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
+import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -78,6 +79,9 @@ class MessageWidget extends ConsumerWidget {
                                   .map(
                                     (e) => CachedNetworkImage(
                                       imageUrl: e,
+                                      progressIndicatorBuilder:
+                                          (context, url, progress) =>
+                                              const LoadingState(),
                                       errorListener: (value) =>
                                           Sentry.captureException(
                                         value,

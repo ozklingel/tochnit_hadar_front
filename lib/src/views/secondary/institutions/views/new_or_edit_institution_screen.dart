@@ -15,6 +15,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/p
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
+import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 const _kEmptyFieldErrorMessage = 'נא למלא';
@@ -339,7 +340,11 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
                         ),
                       ],
                     )
-                  : CachedNetworkImage(imageUrl: logo.value),
+                  : CachedNetworkImage(
+                      imageUrl: logo.value,
+                      progressIndicatorBuilder: (context, url, progress) =>
+                          const LoadingState(),
+                    ),
             ),
           ),
         ),
