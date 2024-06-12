@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,11 +8,11 @@ import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_cont
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/services/api/export_import/upload_file.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/military_service_tab.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/persona_image_selector.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/personal_info_tab.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/tohnit_hadar_tab.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
@@ -126,30 +125,10 @@ class _ApprenticeDetailsScreenState
                       avatar: persona.avatar,
                       name: '${persona.firstName} ${persona.lastName}',
                       phone: persona.phone.format,
-                      onTapEditAvatar: () async {
-                        final result = await FilePicker.platform.pickFiles(
-                          allowMultiple: false,
-                          withData: true,
-                        );
-
-                        if (result == null) {
-                          return;
-                        }
-
-                        final uploadUrl = await ref.read(
-                          uploadFileProvider(result.files.first).future,
-                        );
-
-                        final result2 = await ref
-                            .read(personasControllerProvider.notifier)
-                            .edit(
-                              persona: persona.copyWith(
-                                avatar: uploadUrl,
-                              ),
-                            );
-
-                        if (result2) {}
-                      },
+                      onTapEditAvatar: () async => showModalBottomSheet(
+                        context: context,
+                        builder: (context) => PersonaImageSelector(persona),
+                      ),
                       bottom: Column(
                         children: [
                           const SizedBox(height: 24),
