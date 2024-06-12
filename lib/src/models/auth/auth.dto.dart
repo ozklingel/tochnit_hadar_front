@@ -1,36 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/utils/convert/extract_from_json.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'auth.dto.f.dart';
 part 'auth.dto.g.dart';
-
-enum UserRole {
-  melave(0),
-
-  rakazMosad(1),
-
-  rakazEshkol(2),
-  ahraiTohnit(3),
-
-  apprentice(500),
-  other(800);
-
-  const UserRole(this.val);
-
-  final int val;
-
-  String get name => switch (this) {
-        UserRole.melave => 'מלווה',
-        UserRole.rakazMosad => 'רכז מוסד',
-        UserRole.rakazEshkol => 'רכז אשכול',
-        UserRole.ahraiTohnit => 'אחראי תכנית',
-        _ => 'USER.ROLE.ERROR',
-      };
-
-  bool get isProgramDirector => this == UserRole.ahraiTohnit;
-}
 
 @JsonSerializable()
 @Freezed(fromJson: false)

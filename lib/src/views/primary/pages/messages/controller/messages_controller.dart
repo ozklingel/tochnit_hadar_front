@@ -7,7 +7,6 @@ import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart'
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,7 +20,6 @@ part 'messages_controller.g.dart';
     GetMessages,
     GetPersonas,
     StorageService,
-    GoRouterService,
   ],
 )
 class MessagesController extends _$MessagesController {
@@ -33,7 +31,7 @@ class MessagesController extends _$MessagesController {
   }
 
   Future<bool> create(MessageDto msg) async {
-    Logger().d(msg.to);
+    // Logger().d(msg.to);
 
     try {
       final result = await ref.read(dioServiceProvider).post(
@@ -58,8 +56,6 @@ class MessagesController extends _$MessagesController {
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getMessagesProvider);
-
-        ref.read(goRouterServiceProvider).pop();
 
         return true;
       }

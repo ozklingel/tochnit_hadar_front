@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/utils/convert/extract_from_json.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
@@ -259,6 +260,12 @@ class PersonaDto with _$PersonaDto {
       fromJson: _extractReports,
     )
     List<String> reportsIds,
+    @Default([])
+    @JsonKey(
+      name: 'role',
+      fromJson: _extractRole,
+    )
+    List<UserRole> roles,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -414,6 +421,21 @@ class PersonaDto with _$PersonaDto {
       _$PersonaDtoFromJson(json);
 }
 
+List<UserRole> _extractRole(List<dynamic>? data) {
+  if (data == null) {
+    return [];
+  }
+
+  if (data.isEmpty) {
+    return [];
+  }
+
+  final result =
+      UserRole.values.where((element) => data.contains(element.index)).toList();
+
+  return result;
+}
+
 bool _extractPaying(String? data) => data == 'משלם';
 
 int _extractActivityScore(dynamic val) {
@@ -436,15 +458,6 @@ int _extractActivityScore(dynamic val) {
 }
 
 StatusColor _parseStatus(dynamic val) {
-  if (val == null) {
-    Logger().w('status color null');
-    Sentry.captureException(
-      Exception('failed to extract status color'),
-    );
-
-    return StatusColor.grey;
-  }
-
   switch (val) {
     case 'red':
       return StatusColor.red;
@@ -453,7 +466,7 @@ StatusColor _parseStatus(dynamic val) {
     case 'orange':
       return StatusColor.orange;
     default:
-      Logger().w('bad status color');
+      Logger().w('failed to extract status color: $val');
       Sentry.captureMessage(
         'failed to extract status color',
         params: [val],
@@ -476,7 +489,7 @@ List<String> _extractReports(dynamic val) {
       // Logger().w('$errMsg list', error: val);
     }
   } else if (val is String) {
-    const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION STRING';
+    const errMsg = 'MISSING REPORTS PARSE IMPLEMENTATION';
     // not suposed to be here but found this during dev so putting it here
     Sentry.captureMessage(errMsg, params: [val]);
     Logger().w(errMsg, error: val);
@@ -504,7 +517,7 @@ List<EventDto> _parseEvents(dynamic val) {
   } else if (val is String) {
     // not suposed to be here but found this during dev so putting it here
     Sentry.captureMessage(errMsg, params: [val]);
-    Logger().w(errMsg);
+    Logger().w(errMsg, error: val);
 
     return [];
   }

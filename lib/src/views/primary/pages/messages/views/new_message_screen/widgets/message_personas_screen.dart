@@ -7,6 +7,8 @@ import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/find_users_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/controller/messages_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/states/error_state.dart';
+import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class MessagePersonasScreen extends HookConsumerWidget {
@@ -127,30 +129,29 @@ class MessagePersonasScreen extends HookConsumerWidget {
             children: [
               Expanded(
                 child: findUsersController.when(
-                  loading: () => const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-                  error: (error, stack) =>
-                      Center(child: Text(error.toString())),
-                  data: (list) => ListView(
-                    children: list
-                        .map(
-                          (e) => ListTile(
-                            title: Text(e.fullName),
-                            onTap: () {
-                              if (selectedUsers.value.contains(e)) {
-                                return;
-                              }
+                  loading: () => const LoadingState(),
+                  error: (error, _) => ErrorState(error),
+                  data: (list) => list.isEmpty
+                      ? const Center(child: Text('NO USERS FOUND'))
+                      : ListView(
+                          children: list
+                              .map(
+                                (e) => ListTile(
+                                  title: Text(e.fullName),
+                                  onTap: () {
+                                    if (selectedUsers.value.contains(e)) {
+                                      return;
+                                    }
 
-                              selectedUsers.value = [
-                                e,
-                                ...selectedUsers.value,
-                              ];
-                            },
-                          ),
-                        )
-                        .toList(),
-                  ),
+                                    selectedUsers.value = [
+                                      e,
+                                      ...selectedUsers.value,
+                                    ];
+                                  },
+                                ),
+                              )
+                              .toList(),
+                        ),
                 ),
               ),
               if (selectedUsers.value.isNotEmpty)
