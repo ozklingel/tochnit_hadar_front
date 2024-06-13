@@ -11,7 +11,6 @@ import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -41,10 +40,15 @@ class TohnitHadarTabView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
-    final reports =
-        (ref.watch(reportsControllerProvider).valueOrNull ?? []).where(
-      (element) => element.recipients.contains(persona.id),
-    );
+    final reports = (ref.watch(reportsControllerProvider).valueOrNull ?? [])
+        .where(
+          (element) => element.recipients.contains(persona.id),
+        )
+        .sortedBy<num>(
+          (element) => element.dateTime.asDateTime.millisecondsSinceEpoch,
+        )
+        .reversed
+        .take(5);
     final institution =
         (ref.watch(institutionsControllerProvider).valueOrNull ?? [])
             .singleWhere(
@@ -61,55 +65,11 @@ class TohnitHadarTabView extends HookConsumerWidget {
 
     return Column(
       children: [
-        if (!auth.role.isProgramDirector)
-          DetailsCard(
-            title: 'דיווחים אחרונים',
-            trailing: TextButton(
-              onPressed: () =>
-                  ReportsRouteData(apprenticeId: persona.id).push(context),
-              child: const Text(
-                'הצג הכל',
-                style: TextStyles.s12w300cGray2,
-              ),
-            ),
-            child: Builder(
-              builder: (context) {
-                final reports =
-                    (ref.watch(reportsControllerProvider).valueOrNull ?? [])
-                        .where(
-                  (element) => persona.reportsIds.take(3).contains(element.id),
-                );
-
-                return ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) => reports
-                      .map(
-                        (e) => _AnnouncementItem(
-                          type: e.event,
-                          text: TextSpan(
-                            children: [
-                              TextSpan(text: '${e.dateTime.asDateTime.he}, '),
-                              TextSpan(
-                                text: '${e.dateTime.asDateTime.asDayMonth}. ',
-                              ),
-                              TextSpan(text: e.dateTime.asDateTime.asTimeAgo),
-                            ],
-                          ),
-                        ),
-                      )
-                      .toList()[index],
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemCount: reports.length,
-                );
-              },
-            ),
-          ),
         _GeneralSection(
           persona: persona,
           institution: institution,
         ),
-        if (auth.role.isProgramDirector) ...[
+        if (auth.role.isProgramDirector)
           DetailsCard(
             title: 'מצב”ר',
             trailing: Row(
@@ -132,72 +92,41 @@ class TohnitHadarTabView extends HookConsumerWidget {
             ),
             child: const SizedBox.shrink(),
           ),
-          DetailsCard(
-            title: 'דיווחים אחרונים',
-            trailing: TextButton(
-              onPressed: () =>
-                  ReportsRouteData(apprenticeId: persona.id).push(context),
-              child: const Text(
-                'הצג הכל',
-                style: TextStyles.s12w300cBlue2,
-              ),
-            ),
-            child: Column(
-              children: reports
-                  .sortedBy<num>(
-                    (element) =>
-                        DateTime.parse(element.dateTime).millisecondsSinceEpoch,
-                  )
-                  .reversed
-                  .take(5)
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        children: [
-                          if ([
-                            Event.call,
-                            Event.callParents,
-                          ].contains(e.event))
-                            const Icon(FluentIcons.call_24_regular)
-                          else if ([
-                            Event.mosadMeetings,
-                            Event.onlineMeeting,
-                            Event.meeting,
-                            Event.recurringMeeting,
-                            Event.groupMeeting,
-                          ].contains(e.event))
-                            const Icon(FluentIcons.people_24_regular)
-                          else if ([
-                            Event.fiveMessages,
-                          ].contains(e.event))
-                            const Icon(FluentIcons.chat_24_regular)
-                          else
-                            const Icon(FluentIcons.question_24_regular),
-                          const SizedBox(width: 6),
-                          Text(
-                            e.dateTime.asDateTime.he,
-                            style: TextStyles.s14w400cGrey5,
-                          ),
-                          const Text(', '),
-                          Text(
-                            e.dateTime.asDateTime.asDayMonth,
-                            style: TextStyles.s14w400cGrey5,
-                          ),
-                          const Text('.'),
-                          const SizedBox(width: 6),
-                          Text(
-                            e.dateTime.asDateTime.asTimeAgoDayCutoff,
-                            style: TextStyles.s14w400cGrey5,
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                  .toList(),
+        DetailsCard(
+          title: 'דיווחים אחרונים',
+          trailing: TextButton(
+            onPressed: () =>
+                ReportsRouteData(apprenticeId: persona.id).push(context),
+            child: const Text(
+              'הצג הכל',
+              style: TextStyles.s12w300cBlue2,
             ),
           ),
-        ],
+          child: Column(
+            children: reports
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        Icon(e.event.iconData),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            '${e.dateTime.asDateTime.he}, ${e.dateTime.asDateTime.asDayMonth}. ${e.dateTime.asDateTime.asTimeAgo}',
+                            style: TextStyles.s14w400cGrey5,
+                            softWrap: false,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
         DetailsCard(
           title: 'אירועים',
           trailing: IconButton(
@@ -718,58 +647,12 @@ class _EventBottomSheet extends HookConsumerWidget {
                                           apprenticeId: persona.id,
                                           event: newEvent,
                                         );
-                                  if (result && context.mounted) {
+                                  if (!result) {
+                                    Toaster.show('שגיאה בעת שמירת האירוע');
+                                  } else if (context.mounted) {
                                     Navigator.pop(context);
                                   }
                                 },
-
-                          // TODO (noga-dev): bring back
-                          // onPressed: () async {
-                          //   final navContext = Navigator.of(context);
-                          //   final notifier = ref.read(
-                          //     apprenticesControllerProvider.notifier,
-                          //   );
-
-                          //   if (event.id.isEmpty) {
-                          //     final result = await notifier.addEvent(
-                          //       apprenticeId: apprentice.id,
-                          //       event: EventDto(
-                          //         title: titleController.text,
-                          //         description: descriptionController.text,
-                          //         dateTime: selectedDatetime.value
-                          //                 ?.toIso8601String() ??
-                          //             DateTime.now().toIso8601String(),
-                          //       ),
-                          //     );
-                          //     if (result) {
-                          //       navContext.maybePop();
-                          //     } else {
-                          //       Toaster.show('שגיאה בעת שמירת האירוע');
-                          //       return;
-                          //     }
-                          //   } else {
-                          //     final edited = apprentice.eventIds.firstWhere(
-                          //       (element) => element == event.id,
-                          //     );
-                          //     final result = await notifier.editEvent(
-                          //       apprenticeId: apprentice.id,
-                          //       event: edited.copyWith(
-                          //         title: titleController.text,
-                          //         description: descriptionController.text,
-                          //         dateTime: selectedDatetime.value
-                          //                 ?.toIso8601String() ??
-                          //             DateTime.now().toIso8601String(),
-                          //       ),
-                          //     );
-
-                          //     if (result) {
-                          //       navContext.maybePop();
-                          //     } else {
-                          //       Toaster.show('שגיאה בעת שמירת האירוע');
-                          //       return;
-                          //     }
-                          //   }
-                          // },
                         ),
                       ),
                     ),
@@ -780,43 +663,6 @@ class _EventBottomSheet extends HookConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _AnnouncementItem extends StatelessWidget {
-  const _AnnouncementItem({
-    required this.text,
-    required this.type,
-  });
-
-  final TextSpan text;
-  final Event type;
-
-  @override
-  Widget build(BuildContext context) {
-    final iconData = switch (type) {
-      Event.call || Event.callParents => FluentIcons.call_24_regular,
-      Event.fiveMessages => FluentIcons.chat_24_regular,
-      Event.mosadMeetings ||
-      Event.onlineMeeting ||
-      Event.meeting ||
-      Event.recurringMeeting ||
-      Event.groupMeeting =>
-        FluentIcons.people_24_regular,
-      _ => FluentIcons.question_24_regular,
-    };
-    return Row(
-      children: [
-        Icon(iconData),
-        const SizedBox(width: 18),
-        Text.rich(
-          text,
-          style: TextStyles.s14w400.copyWith(
-            color: AppColors.gray5,
-          ),
-        ),
-      ],
     );
   }
 }

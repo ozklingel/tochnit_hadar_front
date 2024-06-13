@@ -1,3 +1,5 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:logger/logger.dart';
@@ -117,60 +119,47 @@ enum Event {
 
   String get enumName => toString().split('.').last;
 
-  String get name {
-    switch (this) {
-      // melave
-      case Event.meeting:
-        return 'פגישה פיזית';
-      case Event.groupMeeting:
-        return 'מפגש קבוצתי';
-      case Event.onlineMeeting:
-        return 'פגישה מקוונת';
-      case Event.call:
-        return 'שיחה טלפונית';
-      case Event.callParents:
-        return 'שיחה להורים';
-      case Event.meetingParents:
-        return 'מפגש הורים';
-      case Event.baseVisit:
-        return 'ביקור בבסיס';
-      case Event.fiveMessages:
-        return '5 הודעות';
-      case Event.failedAttempt:
-        return 'נסיון כושל';
-      case Event.birthday:
-        return 'יום הולדת';
-      case Event.forgottenApprentices:
-        return 'חניכים נשכחים';
-      // rakaz mosad
-      case Event.matsbarGathering:
-        return 'ישיבת מצב”ר';
-      case Event.recurringSabbath:
-        return 'שבת מחזור';
-      case Event.doingForAlumni:
-        return 'עשיה לבוגרים';
-      case Event.monthlyProfessionalConference:
-        return 'כנס מלווים מקצועי חודשי';
-      case Event.periodInput:
-        return 'הזנת מחזור';
-      case Event.recurringMeeting:
-        return 'מפגש מחזור';
-      case Event.mosadMeetings:
-        return 'ישיבה מוסדית';
-      // rakaz eshkol
-      case Event.annualConference:
-        return 'כנס מלווים שנתי';
-      case Event.adminsGathering:
-        return 'ישיבת רכזי תוכנית';
-      case Event.coordinatorMeeting:
-        return 'ישיבה רכז';
-      // ahrai tohnit
-      case Event.monthlyProgramMeeting:
-        return 'ישיבת תוכנית חודשית';
-      case Event.other:
-        return 'UNKNOWN TYPE';
-    }
-  }
+  String get name => switch (this) {
+        // melave
+        meeting => "פגישה פיזית",
+        groupMeeting => "מפגש קבוצתי",
+        onlineMeeting => "פגישה מקוונת",
+        call => "שיחה טלפונית",
+        callParents => "שיחה להורים",
+        meetingParents => "מפגש הורים",
+        baseVisit => "ביקור בבסיס",
+        fiveMessages => "5 הודעות",
+        failedAttempt => "נסיון כושל",
+        birthday => "יום הולדת",
+        forgottenApprentices => "חניכים נשכחים",
+        // rakaz mosad
+        matsbarGathering => "ישיבת מצב”ר",
+        recurringSabbath => "שבת מחזור",
+        doingForAlumni => "עשיה לבוגרים",
+        monthlyProfessionalConference => "כנס מלווים מקצועי חודשי",
+        periodInput => "הזנת מחזור",
+        recurringMeeting => "מפגש מחזור",
+        mosadMeetings => "ישיבה מוסדית",
+        // rakaz eshkol
+        annualConference => "כנס מלווים שנתי",
+        adminsGathering => "ישיבת רכזי תוכנית",
+        coordinatorMeeting => "ישיבה רכז",
+        // ahrai tohnit
+        monthlyProgramMeeting => "ישיבת תוכנית חודשית",
+        other => "UNKNOWN TYPE",
+      };
+
+  IconData get iconData => switch (this) {
+        call || callParents => FluentIcons.call_24_regular,
+        meeting ||
+        meetingParents ||
+        groupMeeting ||
+        mosadMeetings ||
+        recurringMeeting =>
+          FluentIcons.people_24_regular,
+        fiveMessages => FluentIcons.chat_24_regular,
+        _ => FluentIcons.question_24_regular,
+      };
 
   bool get isCall => this == call;
   bool get isMeeting => this == meeting || this == groupMeeting;

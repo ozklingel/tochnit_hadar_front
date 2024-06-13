@@ -18,9 +18,13 @@ class EventDto with _$EventDto {
     @Default('')
     @JsonKey(
       defaultValue: '',
-      name: 'event',
     )
     String title,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+    )
+    String event,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -38,7 +42,7 @@ class EventDto with _$EventDto {
   factory EventDto.fromJson(Map<String, dynamic> json) =>
       _$EventDtoFromJson(json);
 
-  bool get isBirthday => title == 'יומהולדת';
+  bool get isBirthday => event == 'יומהולדת';
 
   bool get isDateRelevant =>
       DateTime.now()
