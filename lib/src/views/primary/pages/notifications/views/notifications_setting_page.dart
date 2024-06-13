@@ -11,7 +11,7 @@ import '../../../../../services/networking/http_service.dart';
 import '../../../../../services/routing/go_router_provider.dart';
 
 class SettingPage extends StatefulHookConsumerWidget {
-  const SettingPage({Key? key}) : super(key: key);
+  const SettingPage({super.key});
 
   @override
   ConsumerState<SettingPage> createState() => _SettingPageState();

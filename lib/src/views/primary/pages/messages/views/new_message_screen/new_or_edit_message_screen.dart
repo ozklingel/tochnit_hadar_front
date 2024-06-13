@@ -472,8 +472,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                                         (context, url, progress) =>
                                             const LoadingState(),
                                   ),
-                                )
-                                .toList(),
+                                ),
                           ],
                         ),
                       ),

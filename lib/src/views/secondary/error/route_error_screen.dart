@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class RouteErrorScreen extends StatefulWidget {
   final String errorMsg;
-  const RouteErrorScreen({required this.errorMsg, Key? key}) : super(key: key);
+  const RouteErrorScreen({required this.errorMsg, super.key});
 
   @override
   State<RouteErrorScreen> createState() => _RouteErrorScreenState();
