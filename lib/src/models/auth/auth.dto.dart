@@ -108,7 +108,7 @@ UserRole _extractUserRole(dynamic role) {
   }
 
   final result = UserRole.values.firstWhere(
-    (element) => element.index == roleIndex,
+    (element) => element.val == roleIndex,
   );
 
   return result;
