@@ -1,10 +1,19 @@
 enum AddressRegion {
-  none,
-  center,
-  jerusalem,
-  north,
-  south,
-  yehuda;
+  none(-1),
+  center(0),
+  jerusalem(1),
+  north(2),
+  south(3),
+  judea(4);
+
+  const AddressRegion(this.val);
+  final int val;
+
+  static AddressRegion fromString(String val) =>
+      values.firstWhere((e) => e.val == int.tryParse(val), orElse: () => none);
+
+  static List<AddressRegion> get regions =>
+      values.where((e) => e != none).toList();
 
   String get name {
     switch (this) {
@@ -15,12 +24,12 @@ enum AddressRegion {
         return 'ירושלים והסביבה';
       case AddressRegion.north:
         return 'מחוז צפון';
-      case AddressRegion.yehuda:
+      case AddressRegion.judea:
         return 'יהודה ושומרון';
-      case AddressRegion.none:
-      // return '';
       case AddressRegion.south:
         return 'מחוז דרום';
+      case AddressRegion.none:
+        return 'ללא';
     }
   }
 }

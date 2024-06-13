@@ -21,6 +21,7 @@ import 'package:hadar_program/src/services/api/user_profile_form/get_personas.da
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
+import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -396,91 +397,30 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              data: (cities) => DropdownButtonHideUnderline(
-                                child: DropdownButton2<String>(
-                                  hint: SizedBox(
-                                    width: 240,
-                                    child: Text(
-                                      selectedCity.value.isEmpty
-                                          ? auth.valueOrNull!.city
-                                          : selectedCity.value,
-                                      overflow: TextOverflow.fade,
+                              data: (cities) => GeneralDropdownButton<String>(
+                                value: selectedCity.value.isEmpty
+                                    ? auth.valueOrNull!.city
+                                    : selectedCity.value,
+                                items: cities,
+                                onChanged: (value) =>
+                                    selectedCity.value = value!,
+                                textStyle: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .hintStyle,
+                                onMenuStateChange: (isOpen) {
+                                  if (!isOpen) {
+                                    citySearchController.clear();
+                                  }
+                                },
+                                searchController: citySearchController,
+                                searchMatchFunction: (item, searchValue) => item
+                                    .value
+                                    .toString()
+                                    .toLowerCase()
+                                    .trim()
+                                    .contains(
+                                      searchValue.toLowerCase().trim(),
                                     ),
-                                  ),
-                                  style: Theme.of(context)
-                                      .inputDecorationTheme
-                                      .hintStyle,
-                                  buttonStyleData: ButtonStyleData(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(36),
-                                      border: Border.all(color: Colors.black),
-                                    ),
-                                    elevation: 0,
-                                    padding: const EdgeInsets.only(right: 8),
-                                  ),
-                                  dropdownSearchData: DropdownSearchData(
-                                    searchController: citySearchController,
-                                    searchInnerWidgetHeight: 50,
-                                    searchInnerWidget: TextField(
-                                      controller: citySearchController,
-                                      decoration: const InputDecoration(
-                                        focusedBorder: UnderlineInputBorder(),
-                                        enabledBorder: InputBorder.none,
-                                        prefixIcon: Icon(Icons.search),
-                                        hintText: 'חיפוש',
-                                        hintStyle: TextStyles.s14w400,
-                                      ),
-                                    ),
-                                    searchMatchFn: (item, searchValue) {
-                                      return item.value
-                                          .toString()
-                                          .toLowerCase()
-                                          .trim()
-                                          .contains(
-                                            searchValue.toLowerCase().trim(),
-                                          );
-                                    },
-                                  ),
-                                  onMenuStateChange: (isOpen) {
-                                    if (!isOpen) {
-                                      citySearchController.clear();
-                                    }
-                                  },
-                                  onChanged: (value) {
-                                    selectedCity.value = value!;
-                                  },
-                                  dropdownStyleData: const DropdownStyleData(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(16)),
-                                    ),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    icon: Padding(
-                                      padding: EdgeInsets.only(left: 16),
-                                      child: Icon(
-                                        Icons.keyboard_arrow_down,
-                                        color: AppColors.grey6,
-                                      ),
-                                    ),
-                                    openMenuIcon: Padding(
-                                      padding: EdgeInsets.only(left: 16),
-                                      child: Icon(
-                                        Icons.keyboard_arrow_up,
-                                        color: AppColors.grey6,
-                                      ),
-                                    ),
-                                  ),
-                                  items: cities
-                                      .map(
-                                        (e) => DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
                               ),
                             ),
                       ),
@@ -561,28 +501,14 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                                 ),
                               ),
                             ),
-                            items: [
-                              DropdownMenuItem(
-                                value: AddressRegion.center,
-                                child: Text(AddressRegion.center.name),
-                              ),
-                              DropdownMenuItem(
-                                value: AddressRegion.jerusalem,
-                                child: Text(AddressRegion.jerusalem.name),
-                              ),
-                              DropdownMenuItem(
-                                value: AddressRegion.north,
-                                child: Text(AddressRegion.north.name),
-                              ),
-                              DropdownMenuItem(
-                                value: AddressRegion.south,
-                                child: Text(AddressRegion.south.name),
-                              ),
-                              DropdownMenuItem(
-                                value: AddressRegion.yehuda,
-                                child: Text(AddressRegion.yehuda.name),
-                              ),
-                            ],
+                            items: AddressRegion.regions
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e.name),
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ),
                       ),

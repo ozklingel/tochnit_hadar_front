@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,7 @@ import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/services/api/export_import/upload_file.dart';
 import 'package:hadar_program/src/services/api/onboarding_form/city_list.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/persona_dropdown_button.dart';
+import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -133,7 +132,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
               error: (error, stack) => Center(
                 child: Text(error.toString()),
               ),
-              data: (cities) => PersonaDropdownButton<String>(
+              data: (cities) => GeneralDropdownButton<String>(
                 value: city.value,
                 items: cities,
                 onMenuStateChange: (isOpen) {
@@ -142,32 +141,11 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
                   }
                 },
                 onChanged: (value) => city.value = value ?? '',
-                dropdownSearchData: DropdownSearchData(
-                  searchController: citySearchController,
-                  searchInnerWidgetHeight: 50,
-                  searchInnerWidget: TextFormField(
-                    controller: citySearchController,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return _kEmptyFieldErrorMessage;
-                      }
-
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      focusedBorder: UnderlineInputBorder(),
-                      enabledBorder: InputBorder.none,
-                      prefixIcon: Icon(Icons.search),
-                      hintText: 'חיפוש',
-                      hintStyle: TextStyles.s14w400,
-                    ),
-                  ),
-                  searchMatchFn: (item, searchValue) {
-                    return item.value.toString().toLowerCase().trim().contains(
+                searchController: citySearchController,
+                searchMatchFunction: (item, searchValue) =>
+                    item.value.toString().toLowerCase().trim().contains(
                           searchValue.toLowerCase().trim(),
-                        );
-                  },
-                ),
+                        ),
               ),
             ),
       ),

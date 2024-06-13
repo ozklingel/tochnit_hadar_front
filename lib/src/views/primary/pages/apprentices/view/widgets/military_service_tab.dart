@@ -1,4 +1,3 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -11,7 +10,7 @@ import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/persona_dropdown_button.dart';
+import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -118,30 +117,15 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                             label: 'בסיס',
                             data: isEditMode.value ? null : compound.name,
                             isRequired: true,
-                            child: DropdownButtonHideUnderline(
-                              child: PersonaDropdownButton<CompoundDto>(
-                                value: selectedCompound.value.name,
-                                textStyle: TextStyles.s16w400cGrey5,
-                                items: compounds,
-                                stringMapper: (e) => e.name,
-                                onChanged: (value) =>
-                                    selectedCompound.value = value!,
-                                onMenuStateChange: (isOpen) {},
-                                dropdownSearchData: DropdownSearchData(
-                                  searchController: compoundController,
-                                  searchInnerWidgetHeight: 50,
-                                  searchInnerWidget: TextField(
-                                    controller: compoundController,
-                                    decoration: const InputDecoration(
-                                      focusedBorder: UnderlineInputBorder(),
-                                      enabledBorder: InputBorder.none,
-                                      prefixIcon: Icon(Icons.search),
-                                      hintText: 'חיפוש',
-                                      hintStyle: TextStyles.s14w400,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            child: GeneralDropdownButton<CompoundDto>(
+                              value: selectedCompound.value.name,
+                              textStyle: TextStyles.s16w400cGrey5,
+                              items: compounds,
+                              stringMapper: (e) => e.name,
+                              onChanged: (value) =>
+                                  selectedCompound.value = value!,
+                              onMenuStateChange: (isOpen) {},
+                              searchController: compoundController,
                             ),
                           ),
                         ),
@@ -151,7 +135,7 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                       data: isEditMode.value
                           ? null
                           : selectedServiceType.value.hebrewName,
-                      child: PersonaDropdownButton<MilitaryServiceType>(
+                      child: GeneralDropdownButton<MilitaryServiceType>(
                         value: selectedServiceType.value.hebrewName,
                         textStyle: TextStyles.s16w400cGrey5,
                         items: MilitaryServiceType.values,

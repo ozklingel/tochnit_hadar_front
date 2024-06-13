@@ -1,9 +1,10 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:hadar_program/src/core/theming/text_styles.dart';
 
-class PersonaDropdownButton<T> extends StatelessWidget {
-  const PersonaDropdownButton({
+class GeneralDropdownButton<T> extends StatelessWidget {
+  const GeneralDropdownButton({
     super.key,
     required this.value,
     required this.items,
@@ -11,7 +12,8 @@ class PersonaDropdownButton<T> extends StatelessWidget {
     this.stringMapper,
     this.textStyle,
     this.onMenuStateChange,
-    this.dropdownSearchData,
+    this.searchController,
+    this.searchMatchFunction,
   });
 
   final String value;
@@ -20,7 +22,8 @@ class PersonaDropdownButton<T> extends StatelessWidget {
   final void Function(T?) onChanged;
   final TextStyle? textStyle;
   final void Function(bool)? onMenuStateChange;
-  final DropdownSearchData<T>? dropdownSearchData;
+  final TextEditingController? searchController;
+  final bool Function(DropdownMenuItem<T>, String)? searchMatchFunction;
 
   Widget _arrowIcon({bool isDown = true}) => Padding(
         padding: const EdgeInsets.only(left: 16),
@@ -51,7 +54,29 @@ class PersonaDropdownButton<T> extends StatelessWidget {
         ),
         onChanged: onChanged,
         onMenuStateChange: onMenuStateChange,
-        dropdownSearchData: dropdownSearchData,
+        dropdownSearchData: searchController == null
+            ? null
+            : DropdownSearchData(
+                searchController: searchController,
+                searchInnerWidgetHeight: 50,
+                searchInnerWidget: TextFormField(
+                  controller: searchController,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'נא למלא';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    focusedBorder: UnderlineInputBorder(),
+                    enabledBorder: InputBorder.none,
+                    prefixIcon: Icon(Icons.search),
+                    hintText: 'חיפוש',
+                    hintStyle: TextStyles.s14w400,
+                  ),
+                ),
+                searchMatchFn: searchMatchFunction,
+              ),
         dropdownStyleData: const DropdownStyleData(
           decoration: BoxDecoration(
             color: Colors.white,

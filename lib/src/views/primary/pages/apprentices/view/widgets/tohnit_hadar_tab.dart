@@ -17,7 +17,7 @@ import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/persona_dropdown_button.dart';
+import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
@@ -357,7 +357,7 @@ class _GeneralSection extends HookConsumerWidget {
                   InputFieldContainer(
                     label: 'מקום לימודים',
                     isRequired: true,
-                    child: PersonaDropdownButton<InstitutionDto>(
+                    child: GeneralDropdownButton<InstitutionDto>(
                       value: selectedInstitution.value.name,
                       items: institutions,
                       stringMapper: (e) => e.name,
@@ -369,7 +369,7 @@ class _GeneralSection extends HookConsumerWidget {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text('בחירת מלווה\nב$value'),
-                              content: PersonaDropdownButton<String>(
+                              content: GeneralDropdownButton<String>(
                                 value: selectedMentor.value,
                                 items: buttonInstitution.melavim,
                                 onChanged: (value) {
@@ -387,7 +387,7 @@ class _GeneralSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'מחזור',
-                  child: PersonaDropdownButton(
+                  child: GeneralDropdownButton<String>(
                     value: selectedMahzor.value,
                     onChanged: (value) => selectedMahzor.value = value ?? '',
                     items: const [
@@ -433,7 +433,7 @@ class _GeneralSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'משלם/לא משלם',
-                  child: PersonaDropdownButton(
+                  child: GeneralDropdownButton<String>(
                     value: isPaying.value ? 'משלם' : 'לא משלם',
                     items: const ['משלם', 'לא משלם'],
                     onChanged: (value) => isPaying.value = value == 'משלם',
@@ -442,7 +442,7 @@ class _GeneralSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'מצב רוחני - מצב״ר',
-                  child: PersonaDropdownButton(
+                  child: GeneralDropdownButton<String>(
                     value: spiritualStatus.value,
                     onChanged: (value) => spiritualStatus.value = value ?? '',
                     items: const [

@@ -260,28 +260,14 @@ class OnboardingPagePersonalDetails extends HookConsumerWidget {
                           ),
                         ),
                       ),
-                      items: [
-                        DropdownMenuItem(
-                          value: AddressRegion.center,
-                          child: Text(AddressRegion.center.name),
-                        ),
-                        DropdownMenuItem(
-                          value: AddressRegion.jerusalem,
-                          child: Text(AddressRegion.jerusalem.name),
-                        ),
-                        DropdownMenuItem(
-                          value: AddressRegion.north,
-                          child: Text(AddressRegion.north.name),
-                        ),
-                        DropdownMenuItem(
-                          value: AddressRegion.south,
-                          child: Text(AddressRegion.south.name),
-                        ),
-                        DropdownMenuItem(
-                          value: AddressRegion.yehuda,
-                          child: Text(AddressRegion.yehuda.name),
-                        ),
-                      ],
+                      items: AddressRegion.regions
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e.name),
+                            ),
+                          )
+                          .toList(),
                     ),
                   ),
                   ListTile(

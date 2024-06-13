@@ -1,7 +1,7 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/enums/address_region.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
@@ -14,7 +14,7 @@ import 'package:hadar_program/src/services/api/onboarding_form/city_list.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/persona_dropdown_button.dart';
+import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 import 'package:hadar_program/src/views/widgets/buttons/row_icon_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -286,7 +286,7 @@ class _FamilySection extends HookConsumerWidget {
                 ...[
                   InputFieldContainer(
                     label: 'איש קשר 1 - קרבה',
-                    child: PersonaDropdownButton<Relationship>(
+                    child: GeneralDropdownButton<Relationship>(
                       value: contact1Relationship.value.name,
                       items: Relationship.values,
                       stringMapper: (e) => e.name,
@@ -331,7 +331,7 @@ class _FamilySection extends HookConsumerWidget {
                 ...[
                   InputFieldContainer(
                     label: 'איש קשר 2 - קרבה',
-                    child: PersonaDropdownButton<Relationship>(
+                    child: GeneralDropdownButton<Relationship>(
                       value: contact2Relationship.value.name,
                       items: Relationship.values,
                       stringMapper: (e) => e.name,
@@ -376,7 +376,7 @@ class _FamilySection extends HookConsumerWidget {
                 ...[
                   InputFieldContainer(
                     label: 'איש קשר 3 - קרבה',
-                    child: PersonaDropdownButton<Relationship>(
+                    child: GeneralDropdownButton<Relationship>(
                       value: contact3Relationship.value.name,
                       items: Relationship.values,
                       stringMapper: (e) => e.name,
@@ -658,7 +658,7 @@ class _GeneralSection extends HookConsumerWidget {
                     error: (error, stack) => Center(
                       child: Text(error.toString()),
                     ),
-                    data: (cities) => PersonaDropdownButton<String>(
+                    data: (cities) => GeneralDropdownButton<String>(
                       value: cityController.value,
                       items: cities,
                       onMenuStateChange: (isOpen) {
@@ -667,29 +667,11 @@ class _GeneralSection extends HookConsumerWidget {
                         }
                       },
                       onChanged: (value) => cityController.value = value ?? '',
-                      dropdownSearchData: DropdownSearchData(
-                        searchController: citySearchController,
-                        searchInnerWidgetHeight: 50,
-                        searchInnerWidget: TextField(
-                          controller: citySearchController,
-                          decoration: const InputDecoration(
-                            focusedBorder: UnderlineInputBorder(),
-                            enabledBorder: InputBorder.none,
-                            prefixIcon: Icon(Icons.search),
-                            hintText: 'חיפוש',
-                            hintStyle: TextStyles.s14w400,
-                          ),
-                        ),
-                        searchMatchFn: (item, searchValue) {
-                          return item.value
-                              .toString()
-                              .toLowerCase()
-                              .trim()
-                              .contains(
+                      searchController: citySearchController,
+                      searchMatchFunction: (item, searchValue) =>
+                          item.value.toString().toLowerCase().trim().contains(
                                 searchValue.toLowerCase().trim(),
-                              );
-                        },
-                      ),
+                              ),
                     ),
                   ),
             ),
@@ -717,7 +699,7 @@ class _GeneralSection extends HookConsumerWidget {
             const SizedBox(height: 12),
             DetailsRowItem(
               label: 'אזור',
-              data: persona.address.region,
+              data: AddressRegion.fromString(persona.address.region).name,
             ),
           ],
           const SizedBox(height: 12),
