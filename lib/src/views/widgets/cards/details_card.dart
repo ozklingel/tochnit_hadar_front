@@ -40,17 +40,18 @@ class DetailsCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    title,
-                    style: TextStyles.s20w400.copyWith(
-                      color: AppColors.gray2,
+                  if (title.isNotEmpty)
+                    Text(
+                      title,
+                      style: TextStyles.s20w400.copyWith(
+                        color: AppColors.gray2,
+                      ),
                     ),
-                  ),
                   const Spacer(),
                   trailing ?? const SizedBox.shrink(),
                 ],
               ),
-              const SizedBox(height: 12),
+              if (title.isNotEmpty) const SizedBox(height: 12),
               child,
             ],
           ),

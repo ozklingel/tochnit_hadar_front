@@ -10,6 +10,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/base/get_bases.dart';
 import 'package:hadar_program/src/services/api/eshkol/get_eshkols.dart';
@@ -1320,19 +1321,17 @@ class _CityListWidget extends StatelessWidget {
   }
 }
 
-class _SelectedUsersPage extends HookWidget {
-  const _SelectedUsersPage({
+class SelectedUsersScreen extends HookWidget {
+  const SelectedUsersScreen({
     super.key,
     required this.items,
-    required this.initiallySelected,
   });
 
-  final List<({String id, String name})> items;
-  final List<({String id, String name})> initiallySelected;
+  final List<PersonaDto> items;
 
   @override
   Widget build(BuildContext context) {
-    final selected = useState(initiallySelected);
+    final selected = useState(items);
 
     return SafeArea(
       child: Scaffold(
@@ -1364,7 +1363,7 @@ class _SelectedUsersPage extends HookWidget {
                       .map(
                         (e) => CheckboxListTile(
                           value: selected.value.contains(e),
-                          title: Text(e.name),
+                          title: Text(e.fullName),
                           controlAffinity: ListTileControlAffinity.leading,
                           checkColor: Colors.white,
                           fillColor: WidgetStateProperty.resolveWith((states) {

@@ -58,7 +58,7 @@ class ExpansionTileContainer extends StatelessWidget {
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          borderRadius: Consts.borderRadius24,
+                          borderRadius: Consts.defaultBorderRadius24,
                           onTap: onTap,
                           child: e,
                         ),

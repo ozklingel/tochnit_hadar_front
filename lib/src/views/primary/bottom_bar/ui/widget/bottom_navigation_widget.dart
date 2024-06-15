@@ -138,14 +138,17 @@ class _MailIconWidget extends ConsumerWidget {
           ),
           error: (error, stack) => const Icon(FluentIcons.mail_24_regular),
           data: (messages) => UnreadCounterBadgeWidget(
-            count: messages
-                .where(
-                  (element) =>
-                      !element.allreadyRead && auth.role.isProgramDirector
-                          ? element.type == MessageType.customerService
-                          : element.type == MessageType.incoming,
-                )
-                .length,
+            count: messages.where(
+              (element) {
+                if (element.allreadyRead) {
+                  return false;
+                }
+
+                return auth.role.isProgramDirector
+                    ? element.type == MessageType.customerService
+                    : element.type == MessageType.incoming;
+              },
+            ).length,
             child: const Icon(FluentIcons.mail_24_regular),
           ),
         );

@@ -47,7 +47,15 @@ class MessageWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (hasIcon && message.icon.isNotEmpty)
-                  const Icon(FluentIcons.mail_24_regular),
+                  Icon(
+                    switch (message.icon.toLowerCase()) {
+                      'email' => FluentIcons.mail_24_regular,
+                      'msg' => FluentIcons.chat_24_regular,
+                      'phone' => FluentIcons.call_24_regular,
+                      'system' => FluentIcons.system_24_regular,
+                      _ => FluentIcons.question_24_regular,
+                    },
+                  ),
                 SizedBox(
                   width: 232,
                   child: Column(

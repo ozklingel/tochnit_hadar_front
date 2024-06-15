@@ -260,8 +260,10 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                                 labelStyle: TextStyles.s14w400cBlue2,
                                 side: const BorderSide(color: AppColors.blue06),
                                 onPressed: () async {
-                                  final filter = await Navigator.of(context)
-                                      .push<FilterDto>(
+                                  final navContext = Navigator.of(context);
+
+                                  final filter =
+                                      await navContext.push<FilterDto>(
                                     MaterialPageRoute(
                                       builder: (val) => FiltersScreen.users(
                                         initFilters: filters.value,
@@ -289,7 +291,30 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                                         )
                                         .toList();
 
-                                    selectedRecipients.value = filtered;
+                                    BotToast.closeAllLoading();
+
+                                    final selectedUsers =
+                                        await navContext.push<List<PersonaDto>>(
+                                      MaterialPageRoute(
+                                        builder: (val) => SelectedUsersScreen(
+                                          items: filtered,
+                                        ),
+                                      ),
+                                    );
+
+                                    if (selectedUsers == null ||
+                                        selectedUsers.isEmpty) {
+                                      return;
+                                    }
+
+                                    final secondFilter = filtered
+                                        .where(
+                                          (element) =>
+                                              selectedUsers.contains(element),
+                                        )
+                                        .toList();
+
+                                    selectedRecipients.value = secondFilter;
                                   } catch (e) {
                                     Logger()
                                         .e('failed to filter users', error: e);
@@ -464,15 +489,14 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                                   )
                                   .toList(),
                             ),
-                            ...uploadedFiles.value
-                                .map(
-                                  (e) => CachedNetworkImage(
-                                    imageUrl: e,
-                                    progressIndicatorBuilder:
-                                        (context, url, progress) =>
-                                            const LoadingState(),
-                                  ),
-                                ),
+                            ...uploadedFiles.value.map(
+                              (e) => CachedNetworkImage(
+                                imageUrl: e,
+                                progressIndicatorBuilder:
+                                    (context, url, progress) =>
+                                        const LoadingState(),
+                              ),
+                            ),
                           ],
                         ),
                       ),

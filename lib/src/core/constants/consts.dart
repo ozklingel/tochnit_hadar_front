@@ -123,7 +123,8 @@ abstract class Consts {
   static const defaultCurve = Curves.linear;
 
   // widget props
-  static const borderRadius24 = BorderRadius.all(Radius.circular(24));
+  static const defaultBodyPadding = EdgeInsets.all(12);
+  static const defaultBorderRadius24 = BorderRadius.all(Radius.circular(24));
   static const defaultBoxShadow = BoxShadow(
     color: Color(0x0d000000),
     offset: Offset(0, 12),
@@ -134,7 +135,7 @@ abstract class Consts {
     boxShadow: [
       defaultBoxShadow,
     ],
-    borderRadius: borderRadius24,
+    borderRadius: defaultBorderRadius24,
   );
 
   // geolocation

@@ -53,20 +53,26 @@ class MessageDetailsScreen extends HookConsumerWidget {
           PopupMenuButton(
             child: const Icon(Icons.more_vert),
             itemBuilder: (context) => [
-              if (message.type == MessageType.customerService &&
-                  RegExp(r'^5\d{8}$').hasMatch(message.from)) ...[
-                PopupMenuItem(
-                  child: const Text('להתקשר'),
-                  onTap: () => launchCall(phone: message.from),
-                ),
-                PopupMenuItem(
-                  child: const Text('שליחת וואטסאפ'),
-                  onTap: () => launchWhatsapp(phone: message.from),
-                ),
-                PopupMenuItem(
-                  child: const Text('שליחת SMS'),
-                  onTap: () => launchSms(phone: [message.from]),
-                ),
+              if (message.type == MessageType.customerService) ...[
+                if (RegExp(r'^5\d{8}$').hasMatch(message.from)) ...[
+                  PopupMenuItem(
+                    child: const Text('להתקשר'),
+                    onTap: () => launchCall(phone: message.from),
+                  ),
+                  PopupMenuItem(
+                    child: const Text('שליחת וואטסאפ'),
+                    onTap: () => launchWhatsapp(phone: message.from),
+                  ),
+                  PopupMenuItem(
+                    child: const Text('שליחת SMS'),
+                    onTap: () => launchSms(phone: [message.from]),
+                  ),
+                  PopupMenuItem(
+                    child: const Text('פרופיל אישי'),
+                    onTap: () => PersonaDetailsRouteData(id: message.to.first)
+                        .push(context),
+                  ),
+                ],
               ],
               if (auth.role != UserRole.melave) ...[
                 if (isEditable)

@@ -154,7 +154,7 @@ class _ForgottenApprentices extends ConsumerWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: Consts.borderRadius24,
+            borderRadius: Consts.defaultBorderRadius24,
             onTap: () => const ForgottenApprenticesRouteData().push(context),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),

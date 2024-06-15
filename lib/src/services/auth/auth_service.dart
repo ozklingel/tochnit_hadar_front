@@ -31,7 +31,7 @@ class AuthService extends _$AuthService {
 
     final request = await ref.watch(dioServiceProvider).get(Consts.getAuthUser);
 
-    final user = AuthDto.fromJson(request.data);
+    var user = AuthDto.fromJson(request.data);
 
     if (kDebugMode) {
       final phone = ref.read(storageServiceProvider.notifier).getUserPhone();
@@ -39,13 +39,17 @@ class AuthService extends _$AuthService {
       Logger().d('current phone: $phone');
 
       if (phone == '523301800') {
-        return user.copyWith(
+        user = user.copyWith(
           role: UserRole.ahraiTohnit,
         );
       }
-    } else {
+    }
+
+    if (kReleaseMode) {
       ref.keepAlive();
     }
+
+    Logger().d('current role: ${user.role}');
 
     return user;
   }

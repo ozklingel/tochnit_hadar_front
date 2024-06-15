@@ -26,8 +26,8 @@ class DioService extends _$DioService {
     //final userPhone="528827064";
 
     // for debugging as admin
-    const userId = '506795170';
-    // final userId = userPhone;
+    // const userId = '506795170';
+    final userId = userPhone;
 
     Logger().d('userId::$userId');
 

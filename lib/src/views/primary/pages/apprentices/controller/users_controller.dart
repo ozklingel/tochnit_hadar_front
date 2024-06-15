@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
+import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/apprentice/get_maps_apprentices.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
@@ -91,21 +92,17 @@ class UsersController extends _$UsersController {
   }
 
   Future<bool> createManual({
-    required UserRole role,
-    required String institutionId,
-    required String firstName,
-    required String lastName,
-    required String phone,
+    required PersonaDto persona,
   }) async {
     try {
       final result = await ref.read(dioServiceProvider).post(
             Consts.putAddUserManual,
             data: jsonEncode({
-              'role_id': role.val.toString(),
-              'institution_id': institutionId,
-              'phone': phone,
-              'first_name': firstName,
-              'last_name': lastName,
+              'role_id': persona.roles.first.toString(),
+              'institution_id': persona.institutionId,
+              'phone': persona.phone,
+              'first_name': persona.firstName,
+              'last_name': persona.lastName,
             }),
           );
 
@@ -125,7 +122,7 @@ class UsersController extends _$UsersController {
     return false;
   }
 
-  Future<bool> createExcel({
+  Future<String> createExcel({
     required PlatformFile file,
     required UserRole userType,
   }) async {
@@ -152,7 +149,7 @@ class UsersController extends _$UsersController {
 
         ref.read(goRouterServiceProvider).go('/personas');
 
-        return true;
+        return result.data;
       }
     } catch (e) {
       Logger().e('failed to add ${userType.name} excel', error: e);
@@ -160,7 +157,7 @@ class UsersController extends _$UsersController {
       Toaster.error(e);
     }
 
-    return false;
+    return '';
   }
 
   // Future<bool> addUser() {}

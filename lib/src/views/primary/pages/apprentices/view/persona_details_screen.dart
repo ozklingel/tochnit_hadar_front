@@ -12,11 +12,12 @@ import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/military_service_tab.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/persona_image_selector.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/personal_info_tab.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/tohnit_hadar_tab.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/dialogs/missing_details_dialog.dart';
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
+import 'package:hadar_program/src/views/widgets/sheets/__image_selector_sheet.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -125,9 +126,17 @@ class _ApprenticeDetailsScreenState
                       avatar: persona.avatar,
                       name: '${persona.firstName} ${persona.lastName}',
                       phone: persona.phone.format,
-                      onTapEditAvatar: () async => showModalBottomSheet(
+                      onTapEditAvatar: () async => showImageSelector(
                         context: context,
-                        builder: (context) => PersonaImageSelector(persona),
+                        onImageUploaded: (uploadUrl) async {
+                          final result = await ref
+                              .read(personasControllerProvider.notifier)
+                              .edit(
+                                persona: persona.copyWith(avatar: uploadUrl),
+                              );
+
+                          return result;
+                        },
                       ),
                       bottom: Column(
                         children: [
@@ -142,8 +151,8 @@ class _ApprenticeDetailsScreenState
                                   if (persona.phone.isEmpty) {
                                     showDialog(
                                       context: context,
-                                      builder: (_) =>
-                                          const _MissingInformationDialog(),
+                                      builder: (context) =>
+                                          const MissingInformationDialog(),
                                     );
 
                                     return;
@@ -303,62 +312,6 @@ class _DeletePersonaDialog extends ConsumerWidget {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MissingInformationDialog extends StatelessWidget {
-  const _MissingInformationDialog();
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: SizedBox(
-        height: 320,
-        child: ColoredBox(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Align(
-                  alignment: AlignmentDirectional.topEnd,
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).maybePop(),
-                    icon: const Icon(Icons.close),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'חסרים פרטים',
-                        style: TextStyles.s24w400,
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'מספר הטלפון לא מוזן במערכת,'
-                        '\n'
-                        'ולכן אין אפשרות להתקשר.',
-                        style: TextStyles.s16w400cGrey2,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 48),
-                LargeFilledRoundedButton(
-                  label: 'אישור',
-                  onPressed: () => Navigator.of(context).maybePop(),
-                ),
-              ],
-            ),
           ),
         ),
       ),

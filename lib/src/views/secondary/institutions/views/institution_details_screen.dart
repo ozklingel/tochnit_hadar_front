@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/services/api/export_import/upload_file.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -29,6 +27,7 @@ import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
+import 'package:hadar_program/src/views/widgets/sheets/__image_selector_sheet.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -164,30 +163,20 @@ class _InstitutionDetailsScreenState
                           name: institution.name,
                           phone: institution.adminPhoneNumber,
                           avatar: institution.logo,
-                          onTapEditAvatar: () async {
-                            final result = await FilePicker.platform.pickFiles(
-                              allowMultiple: true,
-                              withData: true,
-                            );
+                          onTapEditAvatar: () => showImageSelector(
+                            context: context,
+                            onImageUploaded: (url) async {
+                              final result = await ref
+                                  .read(
+                                    newOrEditInstitutionControllerProvider(
+                                      widget.id,
+                                    ).notifier,
+                                  )
+                                  .updateLogo(url);
 
-                            if (result == null) {
-                              return;
-                            }
-
-                            final uploadFileLocation = await ref.read(
-                              uploadFileProvider(result.files.first).future,
-                            );
-
-                            final request = await ref
-                                .read(
-                                  newOrEditInstitutionControllerProvider(
-                                    widget.id,
-                                  ).notifier,
-                                )
-                                .updateLogo(uploadFileLocation);
-
-                            if (request) {}
-                          },
+                              return result;
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -458,12 +447,28 @@ class _UsersTab extends HookConsumerWidget {
                     top: 8,
                     child: IgnorePointer(
                       child: CircleAvatar(
-                        backgroundColor: AppColors.red1,
-                        radius: 7,
-                        child: Text(
-                          filter.value.length.toString(),
-                          style: TextStyles.s11w500fRoboto,
-                        ),
+                        backgroundColor: Colors.white,
+                        radius: 7.5,
+                        child: filters.isEmpty
+                            ? const CircleAvatar(
+                                backgroundColor: AppColors.grey2,
+                                radius: 6.5,
+                                child: Text(
+                                  '+',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              )
+                            : CircleAvatar(
+                                backgroundColor: AppColors.red1,
+                                radius: 7.6,
+                                child: Text(
+                                  filter.value.length.toString(),
+                                  style: TextStyles.s11w500fRoboto,
+                                ),
+                              ),
                       ),
                     ),
                   ),
@@ -545,68 +550,83 @@ class _GeneralTab extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
 
-    return DetailsCard(
-      title: 'פרטי מוסד',
-      trailing: auth.valueOrNull?.role != UserRole.ahraiTohnit
-          ? null
-          : IconButton(
-              onPressed: () =>
-                  EditInstitutionRouteData(id: institution.id).push(context),
-              icon: const Icon(FluentIcons.edit_24_regular),
+    return Column(
+      children: [
+        DetailsCard(
+          title: 'פרטי מוסד',
+          trailing: auth.valueOrNull?.role != UserRole.ahraiTohnit
+              ? null
+              : IconButton(
+                  onPressed: () => EditInstitutionRouteData(id: institution.id)
+                      .push(context),
+                  icon: const Icon(FluentIcons.edit_24_regular),
+                ),
+          child: Column(
+            children: [
+              DetailsRowItem(
+                label: 'שם מוסד',
+                data: institution.name,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'רכז מוסד',
+                data: institution.rakazId,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'טלפון רכז מוסד',
+                data: institution.rakazPhoneNumber,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'מיקום',
+                data: institution.address.fullAddress,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'שלוחה',
+                data: institution.shluha,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'טלפון',
+                data: institution.adminPhoneNumber,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'שם ראש מכינה',
+                data: institution.roshMehinaName,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'טלפון ראש מכינה',
+                data: institution.roshMehinaPhoneNumber,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'שם מנהל אדמינסטרטיבי',
+                data: institution.adminName,
+              ),
+              const SizedBox(height: 12),
+              DetailsRowItem(
+                label: 'טלפון מנהל אדמינסטרטיבי',
+                data: institution.adminPhoneNumber,
+              ),
+            ],
+          ),
+        ),
+        DetailsCard(
+          title: '',
+          child: TextButton(
+            onPressed: () =>
+                ChartsInstitutionRouteData(id: institution.id).push(context),
+            child: const Text(
+              'מדדים',
+              style: TextStyles.s20w400cGrey1,
             ),
-      child: Column(
-        children: [
-          DetailsRowItem(
-            label: 'שם מוסד',
-            data: institution.name,
           ),
-          const SizedBox(height: 12),
-          DetailsRowItem(
-            label: 'רכז מוסד',
-            data: institution.rakazId,
-          ),
-          const SizedBox(height: 12),
-          DetailsRowItem(
-            label: 'טלפון רכז מוסד',
-            data: institution.rakazPhoneNumber,
-          ),
-          const SizedBox(height: 12),
-          DetailsRowItem(
-            label: 'מיקום',
-            data: institution.address.fullAddress,
-          ),
-          const SizedBox(height: 12),
-          DetailsRowItem(
-            label: 'שלוחה',
-            data: institution.shluha,
-          ),
-          const SizedBox(height: 12),
-          DetailsRowItem(
-            label: 'טלפון',
-            data: institution.adminPhoneNumber,
-          ),
-          const SizedBox(height: 12),
-          DetailsRowItem(
-            label: 'שם ראש מכינה',
-            data: institution.roshMehinaName,
-          ),
-          const SizedBox(height: 12),
-          DetailsRowItem(
-            label: 'טלפון ראש מכינה',
-            data: institution.roshMehinaPhoneNumber,
-          ),
-          const SizedBox(height: 12),
-          DetailsRowItem(
-            label: 'שם מנהל אדמינסטרטיבי',
-            data: institution.adminName,
-          ),
-          const SizedBox(height: 12),
-          DetailsRowItem(
-            label: 'טלפון מנהל אדמינסטרטיבי',
-            data: institution.adminPhoneNumber,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

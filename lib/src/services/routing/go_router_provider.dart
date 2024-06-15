@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hadar_program/src/views/primary/bottom_bar/ui/dashboard_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_persona_screen.dart';
@@ -164,6 +165,9 @@ class GoRouterService extends _$GoRouterService {
               routes: [
                 TypedGoRoute<ChartsSettingsRouteData>(
                   path: 'settings',
+                ),
+                TypedGoRoute<ChartsInstitutionRouteData>(
+                  path: 'institution/:id',
                 ),
               ],
             ),
@@ -632,7 +636,7 @@ class NotificationSettingRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const SettingPage();
+    return const NotificationsSettingsPage();
   }
 }
 
@@ -800,5 +804,22 @@ class ChartsSettingsRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const ChartsSettingsScreen();
+  }
+}
+
+class ChartsInstitutionRouteData extends GoRouteData {
+  const ChartsInstitutionRouteData({
+    required this.id,
+  });
+
+  final String id;
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    Toaster.unimplemented();
+
+    return const Placeholder();
   }
 }

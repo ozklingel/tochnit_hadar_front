@@ -121,6 +121,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/exit.png
   AssetGenImage get exit => const AssetGenImage('assets/images/exit.png');
 
+  /// File path: assets/images/gift.png
+  AssetGenImage get gift => const AssetGenImage('assets/images/gift.png');
+
   /// File path: assets/images/home-page-header.svg
   SvgGenImage get homePageHeader =>
       const SvgGenImage('assets/images/home-page-header.svg');
@@ -207,6 +210,7 @@ class $AssetsImagesGen {
         disconnect,
         envalop,
         exit,
+        gift,
         homePageHeader,
         loader,
         logo,

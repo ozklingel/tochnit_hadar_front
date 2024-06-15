@@ -21,10 +21,11 @@ import 'package:hadar_program/src/services/api/user_profile_form/get_personas.da
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
+import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
+import 'package:hadar_program/src/views/widgets/dialogs/missing_details_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
@@ -79,7 +80,7 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
 
     final views = [
       const _TohnitHadarTabView(),
-      const _MilitaryServiceTabView(),
+      const _PersonalDetailsTabView(),
     ];
 
     return Scaffold(
@@ -232,8 +233,8 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
   }
 }
 
-class _MilitaryServiceTabView extends HookConsumerWidget {
-  const _MilitaryServiceTabView();
+class _PersonalDetailsTabView extends HookConsumerWidget {
+  const _PersonalDetailsTabView();
 
   @override
   Widget build(BuildContext context, ref) {
@@ -328,7 +329,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 32),
                       InputFieldContainer(
-                        label: ' כתובת מייל',
+                        label: 'כתובת מייל',
                         isRequired: true,
                         child: TextField(
                           controller: emailController,
@@ -336,7 +337,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 32),
                       InputFieldContainer(
-                        label: ' תאריך יום הולדת',
+                        label: 'תאריך יום הולדת',
                         isRequired: true,
                         child: InkWell(
                           onTap: () async {
@@ -377,7 +378,7 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 32),
                       InputFieldContainer(
-                        label: '  עיר',
+                        label: 'עיר',
                         isRequired: true,
                         child: ref.watch(getCitiesListProvider).when(
                               loading: () => const Center(
@@ -519,6 +520,21 @@ class _MilitaryServiceTabView extends HookConsumerWidget {
                             child: LargeFilledRoundedButton(
                               label: 'שמירה',
                               onPressed: () async {
+                                if (firstNameController.text.isEmpty ||
+                                    lastNameController.text.isEmpty ||
+                                    emailController.text.isEmpty ||
+                                    selectedCity.value.isEmpty ||
+                                    selectedRegion.value ==
+                                        AddressRegion.none) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        const MissingInformationDialog(),
+                                  );
+
+                                  return;
+                                }
+
                                 try {
                                   final result =
                                       await ref.read(dioServiceProvider).put(
@@ -654,21 +670,49 @@ class _TohnitHadarTabView extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
-                label: 'שיוך מוסדי',
+                label: 'שיוך מוסד',
                 data: institution.name,
                 onTapData: () =>
                     InstitutionDetailsRouteData(id: institution.id).go(context),
               ),
               const SizedBox(height: 12),
+              // if ([
+              //   UserRole.ahraiTohnit,
+              //   UserRole.rakazEshkol,
+              //   UserRole.rakazMosad,
+              // ].contains(auth.valueOrNull?.role))
               DetailsRowItem(
                 label: 'אשכול',
                 data: auth.valueOrNull?.cluster ?? "לא משוייך",
               ),
+              // if ([
+              //   UserRole.melave,
+              // ].contains(auth.valueOrNull?.role))
+              // DetailsRowItem(
+              //           label: 'רכז',
+              //           data: auth.valueOrNull?.rakaz,
+              //         ),
               const SizedBox(height: 12),
             ],
           ),
         ),
-        if ([UserRole.ahraiTohnit].contains(auth.valueOrNull?.role))
+        DetailsCard(
+          title: '',
+          child: Row(
+            children: [
+              TextButton(
+                onPressed: () => const ChartsRouteData().push(context),
+                child: const Text(
+                  'מדדים',
+                  style: TextStyles.s20w400cGrey1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        if ([
+          UserRole.ahraiTohnit,
+        ].contains(auth.valueOrNull?.role))
           DetailsCard(
             title: 'רשימת אשכולות',
             child: eshkolot.isLoading
@@ -697,8 +741,10 @@ class _TohnitHadarTabView extends ConsumerWidget {
                         [],
                   ),
           ),
-        if ([UserRole.ahraiTohnit, UserRole.rakazEshkol]
-            .contains(auth.valueOrNull?.role))
+        if ([
+          UserRole.ahraiTohnit,
+          UserRole.rakazEshkol,
+        ].contains(auth.valueOrNull?.role))
           DetailsCard(
             title: 'רשימת מוסדות',
             child: institutions.isLoading
@@ -738,51 +784,55 @@ class _TohnitHadarTabView extends ConsumerWidget {
                         [],
                   ),
           ),
-        // if (auth.valueOrNull?.role == UserRole.melave)
-        DetailsCard(
-          title: 'רשימת מלווים',
-          child: personas.isLoading
-              ? const CircularProgressIndicator.adaptive()
-              : Column(
-                  children: personas.valueOrNull
-                          ?.where(
-                        (element) => element.roles.contains(UserRole.melave),
-                      )
-                          .map((e) {
-                        final apprentice =
-                            (personas.valueOrNull ?? []).singleWhere(
-                          (element) => element.id == e.id,
-                          orElse: () => const PersonaDto(),
-                        );
+        if ([
+          UserRole.ahraiTohnit,
+          UserRole.rakazEshkol,
+          UserRole.rakazMosad,
+        ].contains(auth.valueOrNull?.role))
+          DetailsCard(
+            title: 'רשימת מלווים',
+            child: personas.isLoading
+                ? const CircularProgressIndicator.adaptive()
+                : Column(
+                    children: personas.valueOrNull
+                            ?.where(
+                          (element) => element.roles.contains(UserRole.melave),
+                        )
+                            .map((e) {
+                          final apprentice =
+                              (personas.valueOrNull ?? []).singleWhere(
+                            (element) => element.id == e.id,
+                            orElse: () => const PersonaDto(),
+                          );
 
-                        return Skeletonizer(
-                          enabled: personas.isLoading,
-                          child: Material(
-                            color: Colors.transparent,
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.blue,
-                                backgroundImage: CachedNetworkImageProvider(
-                                  apprentice.avatar,
+                          return Skeletonizer(
+                            enabled: personas.isLoading,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.blue,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    apprentice.avatar,
+                                  ),
                                 ),
-                              ),
-                              title: Text(
-                                apprentice.fullName.ifEmpty ?? 'LOADING',
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                title: Text(
+                                  apprentice.fullName.ifEmpty ?? 'LOADING',
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
+                                onTap: () =>
+                                    PersonaDetailsRouteData(id: apprentice.id)
+                                        .go(context),
                               ),
-                              onTap: () =>
-                                  PersonaDetailsRouteData(id: apprentice.id)
-                                      .go(context),
                             ),
-                          ),
-                        );
-                      }).toList() ??
-                      [],
-                ),
-        ),
+                          );
+                        }).toList() ??
+                        [],
+                  ),
+          ),
         DetailsCard(
           title: 'רשימת חניכים',
           child: personas.isLoading
