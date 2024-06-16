@@ -15,19 +15,30 @@ import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.d
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class InstitutionsScreen extends HookConsumerWidget {
-  const InstitutionsScreen({super.key});
+  const InstitutionsScreen({
+    super.key,
+    this.eshkol = '',
+  });
+
+  final String eshkol;
 
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
     final institutionsController = ref.watch(institutionsControllerProvider);
-    final institutions = institutionsController.valueOrNull ?? [];
     final sortBy = useState(SortInstitutionBy.fromA2Z);
     final isSearchActive = useState(false);
     final searchTextEditingController = useTextEditingController();
     useListenable(searchTextEditingController);
 
-    var filtered = institutions.where(
+    final institutions =
+        (institutionsController.valueOrNull ?? []).where((element) {
+      if (eshkol.isEmpty) {
+        return true;
+      }
+
+      return element.eshkol == eshkol;
+    }).where(
       (element) => element.name
           .toLowerCase()
           .contains(searchTextEditingController.text.toLowerCase()),
@@ -110,7 +121,7 @@ class InstitutionsScreen extends HookConsumerWidget {
                       color: AppColors.grey2,
                     ),
                     label: Text(
-                      '${filtered.length} מוסדות',
+                      '${institutions.length} מוסדות',
                       style: TextStyles.s14w400cGrey5,
                     ),
                     onPressed: () async {
@@ -152,7 +163,7 @@ class InstitutionsScreen extends HookConsumerWidget {
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                children: filtered
+                children: institutions
                     .map(
                       (e) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6),

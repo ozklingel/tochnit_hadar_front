@@ -722,18 +722,23 @@ class _TohnitHadarTabView extends ConsumerWidget {
                             ?.map(
                               (e) => Skeletonizer(
                                 enabled: eshkolot.isLoading,
-                                child: ListTile(
-                                  leading: const CircleAvatar(
-                                    backgroundColor: Colors.blue,
-                                  ),
-                                  title: Text(
-                                    e.ifEmpty ?? 'N/A',
-                                    textAlign: TextAlign.right,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: ListTile(
+                                    leading: const CircleAvatar(
+                                      backgroundColor: Colors.blue,
                                     ),
+                                    title: Text(
+                                      e.ifEmpty ?? 'N/A',
+                                      textAlign: TextAlign.right,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    onTap: () =>
+                                        EshkolInstitutionsRouteData(eshkol: e)
+                                            .push(context),
                                   ),
-                                  onTap: null,
                                 ),
                               ),
                             )

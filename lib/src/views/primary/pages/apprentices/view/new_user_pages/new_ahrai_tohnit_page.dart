@@ -12,8 +12,8 @@ import 'package:hadar_program/src/views/widgets/dialogs/missing_details_dialog.d
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class NewAhraiTohnit extends HookConsumerWidget {
-  const NewAhraiTohnit({super.key});
+class NewAhraiTohnitPage extends HookConsumerWidget {
+  const NewAhraiTohnitPage({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
@@ -89,7 +89,7 @@ class NewAhraiTohnit extends HookConsumerWidget {
     ];
 
     return Scaffold(
-      appBar: const NewPersonaAppbar(title: 'הוספת מלווה'),
+      appBar: const NewPersonaAppbar(title: 'הוספת אחראי תכנית'),
       body: Padding(
         padding: Consts.defaultBodyPadding,
         child: Column(
@@ -131,6 +131,7 @@ class NewAhraiTohnit extends HookConsumerWidget {
                   const HomeRouteData().go(navContext.context);
                 }
               },
+              onPressedCancel: () => Navigator.of(context).pop(),
             ),
           ],
         ),

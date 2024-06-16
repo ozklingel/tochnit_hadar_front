@@ -9,6 +9,7 @@ import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/import_new_users_from_excel.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_ahrai_tohnit_page.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_apprentice_page.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_melave_page.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_persona_appbar.dart';
@@ -16,6 +17,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_rakaz_mosad_page.dart';
 import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 class NewPersonaScreen extends HookConsumerWidget {
   const NewPersonaScreen({super.key});
@@ -175,6 +177,8 @@ class _SelectDataFillTypeScreen extends HookWidget {
   Widget build(BuildContext context) {
     final isManual = useState(true);
 
+    Logger().d(userType);
+
     return Scaffold(
       appBar: NewPersonaAppbar(
         title: switch (userType) {
@@ -182,6 +186,7 @@ class _SelectDataFillTypeScreen extends HookWidget {
           UserRole.melave => 'הוספת מלווה',
           UserRole.rakazMosad => 'הוספת רכז מוסד',
           UserRole.rakazEshkol => 'הוספת רכז אשכול',
+          UserRole.ahraiTohnit => 'הוספת אחראי תכנית',
           _ => throw UnimplementedError(),
         },
       ),
@@ -215,6 +220,7 @@ class _SelectDataFillTypeScreen extends HookWidget {
                           UserRole.melave => const NewMelavePage(),
                           UserRole.rakazMosad => const NewRakazMosadPage(),
                           UserRole.rakazEshkol => const NewRakazEshkolPage(),
+                          UserRole.ahraiTohnit => const NewAhraiTohnitPage(),
                           _ => throw UnimplementedError(),
                         },
                       ),

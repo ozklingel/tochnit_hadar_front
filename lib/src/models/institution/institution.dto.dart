@@ -100,6 +100,11 @@ class InstitutionDto with _$InstitutionDto {
       fromJson: extractAvatarFromJson,
     )
     String logo,
+    @Default('')
+    @JsonKey(
+      name: 'eshcol',
+    )
+    String eshkol,
   }) = _InstitutionDto;
 
   factory InstitutionDto.fromJson(Map<String, dynamic> json) =>

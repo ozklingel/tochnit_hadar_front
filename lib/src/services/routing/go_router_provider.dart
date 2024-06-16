@@ -174,6 +174,9 @@ class GoRouterService extends _$GoRouterService {
             TypedGoRoute<InstitutionsRouteData>(
               path: 'institutions',
               routes: [
+                TypedGoRoute<EshkolInstitutionsRouteData>(
+                  path: 'eshkol/:eshkol',
+                ),
                 TypedGoRoute<InstitutionTypePickerRouteData>(
                   path: 'type-picker',
                 ),
@@ -719,6 +722,21 @@ class InstitutionsRouteData extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const InstitutionsScreen();
+  }
+}
+
+class EshkolInstitutionsRouteData extends GoRouteData {
+  const EshkolInstitutionsRouteData({
+    this.eshkol = '',
+  });
+
+  final String eshkol;
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return InstitutionsScreen(eshkol: eshkol);
   }
 }
 
