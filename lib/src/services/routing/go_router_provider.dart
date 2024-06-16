@@ -636,7 +636,7 @@ class NotificationSettingRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const NotificationsSettingsPage();
+    return const NotificationsSettingsScreen();
   }
 }
 

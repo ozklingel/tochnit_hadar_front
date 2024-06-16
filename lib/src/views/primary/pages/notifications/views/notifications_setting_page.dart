@@ -1,74 +1,37 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/models/notification/notification_settings.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
+import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_settings_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
-import '../../../../../services/auth/auth_service.dart';
-import '../../../../../services/networking/http_service.dart';
-import '../../../../../services/routing/go_router_provider.dart';
-
-class NotificationsSettingsPage extends StatefulHookConsumerWidget {
-  const NotificationsSettingsPage({super.key});
+class NotificationsSettingsScreen extends HookConsumerWidget {
+  const NotificationsSettingsScreen({super.key});
 
   @override
-  ConsumerState<NotificationsSettingsPage> createState() => _SettingPageState();
-}
-
-class _SettingPageState extends ConsumerState<NotificationsSettingsPage> {
-  bool t1 = false;
-  bool t2 = false;
-  bool t3 = false;
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    final auth = ref.watch(authServiceProvider);
-
-    final jsonData =
-        await HttpService.getUserNotiSetting(auth.valueOrNull!.phone);
-    final u = jsonDecode(jsonData.body);
-
-    // Logger().d(u);
-
-    super.setState(() {
-      t1 = !u["notifyStartWeek"];
-      t2 = !u["notifyDayBefore"];
-      t3 = !u["notifyMorning"];
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
+    final settings =
+        ref.watch(notificationsSettingsControllerProvider).valueOrNull ??
+            const NotificationSettingsDto();
 
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onTap: () => {
-            HttpService.setSetting(auth.phone, !t1, !t2, !t3),
-            const NotificationRouteData().go(context),
-          },
-        ),
         title: const Text('ניהול התראות'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: Consts.defaultBodyPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
               auth.role.isProgramDirector
                   ? 'הגדרת זמני קבלת התראות על אירועים'
-                  : 'הגדרת זמני קבלת ההתראות על אירועים  (ימי הולדת ואירועים אישיים של החניך)',
+                  : 'הגדרת זמני קבלת ההתראות על אירועים (ימי הולדת ואירועים אישיים של החניך)',
               style: TextStyles.s16w400cGrey2,
             ),
             const SizedBox(height: 36),
@@ -90,21 +53,26 @@ class _SettingPageState extends ConsumerState<NotificationsSettingsPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
-                      color: t3
+                      color: settings.notifyStartWeek
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
                     ),
                     child: CupertinoSwitch(
-                      value: t1,
+                      value: settings.notifyStartWeek,
                       activeColor: CupertinoColors.white,
                       trackColor: CupertinoColors.white,
-                      thumbColor: t1
+                      thumbColor: settings.notifyStartWeek
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
-                      onChanged: (v) => setState(() {
-                        Logger().d(t1.toString());
-                        t1 = v;
-                      }),
+                      onChanged: (value) => ref
+                          .read(
+                            notificationsSettingsControllerProvider.notifier,
+                          )
+                          .edit(
+                            settings: settings.copyWith(
+                              notifyStartWeek: !settings.notifyStartWeek,
+                            ),
+                          ),
                     ),
                   ),
                 ],
@@ -123,20 +91,26 @@ class _SettingPageState extends ConsumerState<NotificationsSettingsPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
-                      color: t2
+                      color: settings.notifyDayBefore
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
                     ),
                     child: CupertinoSwitch(
-                      value: t2,
+                      value: settings.notifyDayBefore,
                       activeColor: CupertinoColors.white,
                       trackColor: CupertinoColors.white,
-                      thumbColor: t2
+                      thumbColor: settings.notifyDayBefore
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
-                      onChanged: (v) => setState(() {
-                        t2 = v;
-                      }),
+                      onChanged: (v) => ref
+                          .read(
+                            notificationsSettingsControllerProvider.notifier,
+                          )
+                          .edit(
+                            settings: settings.copyWith(
+                              notifyDayBefore: !settings.notifyDayBefore,
+                            ),
+                          ),
                     ),
                   ),
                 ],
@@ -155,20 +129,26 @@ class _SettingPageState extends ConsumerState<NotificationsSettingsPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
-                      color: t3
+                      color: settings.notifyMorning
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
                     ),
                     child: CupertinoSwitch(
-                      value: t3,
+                      value: settings.notifyMorning,
                       activeColor: CupertinoColors.white,
                       trackColor: CupertinoColors.white,
-                      thumbColor: t3
+                      thumbColor: settings.notifyMorning
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
-                      onChanged: (v) => setState(() {
-                        t3 = v;
-                      }),
+                      onChanged: (v) => ref
+                          .read(
+                            notificationsSettingsControllerProvider.notifier,
+                          )
+                          .edit(
+                            settings: settings.copyWith(
+                              notifyMorning: !settings.notifyMorning,
+                            ),
+                          ),
                     ),
                   ),
                 ],
@@ -194,21 +174,27 @@ class _SettingPageState extends ConsumerState<NotificationsSettingsPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
-                      color: t3
+                      color: settings.notifyStartWeekSevev
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
                     ),
                     child: CupertinoSwitch(
-                      value: t1,
+                      value: settings.notifyStartWeekSevev,
                       activeColor: CupertinoColors.white,
                       trackColor: CupertinoColors.white,
-                      thumbColor: t1
+                      thumbColor: settings.notifyStartWeekSevev
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
-                      onChanged: (v) => setState(() {
-                        Logger().d(t1.toString());
-                        t1 = v;
-                      }),
+                      onChanged: (v) => ref
+                          .read(
+                            notificationsSettingsControllerProvider.notifier,
+                          )
+                          .edit(
+                            settings: settings.copyWith(
+                              notifyStartWeekSevev:
+                                  !settings.notifyStartWeekSevev,
+                            ),
+                          ),
                     ),
                   ),
                 ],
@@ -227,20 +213,27 @@ class _SettingPageState extends ConsumerState<NotificationsSettingsPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
-                      color: t2
+                      color: settings.notifyDayBeforeSevev
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
                     ),
                     child: CupertinoSwitch(
-                      value: t2,
+                      value: settings.notifyDayBeforeSevev,
                       activeColor: CupertinoColors.white,
                       trackColor: CupertinoColors.white,
-                      thumbColor: t2
+                      thumbColor: settings.notifyDayBeforeSevev
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
-                      onChanged: (v) => setState(() {
-                        t2 = v;
-                      }),
+                      onChanged: (v) => ref
+                          .read(
+                            notificationsSettingsControllerProvider.notifier,
+                          )
+                          .edit(
+                            settings: settings.copyWith(
+                              notifyDayBeforeSevev:
+                                  !settings.notifyDayBeforeSevev,
+                            ),
+                          ),
                     ),
                   ),
                 ],
@@ -259,20 +252,26 @@ class _SettingPageState extends ConsumerState<NotificationsSettingsPage> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
-                      color: t3
+                      color: settings.notifyMorningSevev
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
                     ),
                     child: CupertinoSwitch(
-                      value: t3,
+                      value: settings.notifyMorningSevev,
                       activeColor: CupertinoColors.white,
                       trackColor: CupertinoColors.white,
-                      thumbColor: t3
+                      thumbColor: settings.notifyMorningSevev
                           ? Colors.blue.shade700
                           : CupertinoColors.inactiveGray,
-                      onChanged: (v) => setState(() {
-                        t3 = v;
-                      }),
+                      onChanged: (v) => ref
+                          .read(
+                            notificationsSettingsControllerProvider.notifier,
+                          )
+                          .edit(
+                            settings: settings.copyWith(
+                              notifyMorningSevev: !settings.notifyMorningSevev,
+                            ),
+                          ),
                     ),
                   ),
                 ],

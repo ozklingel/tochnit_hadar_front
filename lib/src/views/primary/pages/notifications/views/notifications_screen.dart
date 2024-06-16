@@ -42,7 +42,7 @@ class NotificationScreen extends HookConsumerWidget {
             actions: [
               IconButton(
                 onPressed: () =>
-                    const NotificationSettingRouteData().go(context),
+                    const NotificationSettingRouteData().push(context),
                 icon: const Icon(
                   FluentIcons.more_vertical_24_regular,
                   color: Colors.black,
