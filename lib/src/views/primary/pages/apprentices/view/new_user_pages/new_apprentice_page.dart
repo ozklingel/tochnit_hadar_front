@@ -1207,6 +1207,8 @@ class NewApprenticePage extends HookConsumerWidget {
                     militaryArmyServiceType.value.isEmpty ||
                     datesDateOfBirth.value == null) {
                   showMissingInfoDialog(context);
+
+                  return;
                 }
 
                 final navContext = Navigator.of(context);

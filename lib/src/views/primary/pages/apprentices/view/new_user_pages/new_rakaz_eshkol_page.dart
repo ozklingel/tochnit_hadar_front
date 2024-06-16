@@ -159,6 +159,8 @@ class NewRakazEshkolPage extends HookConsumerWidget {
                     phoneController.text.isEmpty ||
                     institutionController.value.isEmpty) {
                   showMissingInfoDialog(context);
+
+                  return;
                 }
 
                 final navContext = Navigator.of(context);
