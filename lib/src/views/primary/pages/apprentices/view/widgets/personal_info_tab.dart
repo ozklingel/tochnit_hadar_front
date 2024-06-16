@@ -1,7 +1,10 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/enums/address_region.dart';
+import 'package:hadar_program/src/core/enums/marital_status.dart';
+import 'package:hadar_program/src/core/enums/relationship.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
@@ -14,8 +17,8 @@ import 'package:hadar_program/src/services/api/onboarding_form/city_list.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
-import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
+import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/row_icon_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
@@ -608,15 +611,14 @@ class _GeneralSection extends HookConsumerWidget {
     final citySearchController = useTextEditingController();
     final houseNumberController =
         useTextEditingController(text: persona.address.houseNumber);
-    final maritalStatusController =
-        useTextEditingController(text: persona.maritalStatus);
+    final maritalStatus = useState(persona.maritalStatus);
     final phoneController = useTextEditingController(text: persona.phone);
 
     useListenable(tzController);
     useListenable(emailController);
     useListenable(streetController);
     useListenable(houseNumberController);
-    useListenable(maritalStatusController);
+    useListenable(maritalStatus);
     useListenable(phoneController);
 
     return DetailsCard(
@@ -705,10 +707,66 @@ class _GeneralSection extends HookConsumerWidget {
           const SizedBox(height: 12),
           InputFieldContainer(
             label: 'מצב משפחתי',
-            data: isEditMode.value ? null : persona.maritalStatus,
+            data: isEditMode.value ? null : persona.maritalStatus.name,
             isRequired: true,
-            child: TextField(
-              controller: maritalStatusController,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<MaritalStatus>(
+                value: maritalStatus.value == MaritalStatus.unknown
+                    ? null
+                    : maritalStatus.value,
+                hint: SizedBox(
+                  width: 240,
+                  child: Text(
+                    maritalStatus.value == MaritalStatus.unknown
+                        ? MaritalStatus.unknown.name
+                        : maritalStatus.value.name,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+                style: Theme.of(context).inputDecorationTheme.hintStyle,
+                buttonStyleData: ButtonStyleData(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(36),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 15, 7, 7),
+                    ),
+                  ),
+                  elevation: 0,
+                  padding: const EdgeInsets.only(right: 8),
+                ),
+                onChanged: (value) =>
+                    maritalStatus.value = value ?? MaritalStatus.unknown,
+                dropdownStyleData: const DropdownStyleData(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(16)),
+                  ),
+                ),
+                iconStyleData: const IconStyleData(
+                  icon: Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: AppColors.grey6,
+                    ),
+                  ),
+                  openMenuIcon: Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: Icon(
+                      Icons.keyboard_arrow_up,
+                      color: AppColors.grey6,
+                    ),
+                  ),
+                ),
+                items: MaritalStatus.values
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.name),
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           ),
           const SizedBox(height: 12),
@@ -730,8 +788,8 @@ class _GeneralSection extends HookConsumerWidget {
                       cityController.value.isEmpty ||
                       streetController.text.isEmpty ||
                       houseNumberController.text.isEmpty ||
-                      maritalStatusController.text.isEmpty ||
-                      phoneController.text.isEmpty)
+                      phoneController.text.isEmpty ||
+                      maritalStatus.value == MaritalStatus.unknown)
                   ? null
                   : () async {
                       final res = await ref
@@ -745,7 +803,7 @@ class _GeneralSection extends HookConsumerWidget {
                                 street: streetController.text,
                                 houseNumber: houseNumberController.text,
                               ),
-                              maritalStatus: maritalStatusController.text,
+                              maritalStatus: maritalStatus.value,
                               phone: phoneController.text,
                             ),
                           );

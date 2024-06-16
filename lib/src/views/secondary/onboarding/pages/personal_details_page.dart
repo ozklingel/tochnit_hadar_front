@@ -25,7 +25,7 @@ class OnboardingPagePersonalDetails extends HookConsumerWidget {
     final emailController = useTextEditingController();
     final selectedDateOfBirth = useState<DateTime?>(null);
     final selectedCity = useState('');
-    final selectedRegion = useState(AddressRegion.none);
+    final selectedRegion = useState(AddressRegion.unknown);
     final isTermsOfServiceAccepted = useState(false);
 
     final citySearchController = useTextEditingController();
@@ -218,7 +218,7 @@ class OnboardingPagePersonalDetails extends HookConsumerWidget {
                   const SizedBox(height: 12),
                   DropdownButtonHideUnderline(
                     child: DropdownButton2<AddressRegion>(
-                      value: selectedRegion.value == AddressRegion.none
+                      value: selectedRegion.value == AddressRegion.unknown
                           ? null
                           : selectedRegion.value,
                       hint: const Text('אזור מגורים'),
@@ -237,7 +237,7 @@ class OnboardingPagePersonalDetails extends HookConsumerWidget {
                         padding: const EdgeInsets.only(right: 8),
                       ),
                       onChanged: (value) =>
-                          selectedRegion.value = value ?? AddressRegion.none,
+                          selectedRegion.value = value ?? AddressRegion.unknown,
                       dropdownStyleData: const DropdownStyleData(
                         decoration: BoxDecoration(
                           color: Colors.white,

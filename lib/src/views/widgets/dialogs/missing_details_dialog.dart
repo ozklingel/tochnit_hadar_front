@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 
+void showMissingInfoDialog(BuildContext context) => showDialog(
+      context: context,
+      builder: (_) => const MissingInformationDialog(),
+    );
+
 class MissingInformationDialog extends StatelessWidget {
   const MissingInformationDialog({super.key});
 

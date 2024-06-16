@@ -108,8 +108,9 @@ class UsersController extends _$UsersController {
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getPersonasProvider);
+        ref.invalidate(getMapsApprenticesProvider);
 
-        ref.read(goRouterServiceProvider).go('/personas');
+        // ref.read(goRouterServiceProvider).go('/personas');
 
         return true;
       }

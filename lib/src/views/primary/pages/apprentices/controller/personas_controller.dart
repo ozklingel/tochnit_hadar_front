@@ -191,7 +191,7 @@ class PersonasController extends _$PersonasController {
           'avatar': persona.avatar,
           // military
           'militaryCompoundId': persona.militaryCompoundId,
-          'militaryUnit': persona.militaryUnit,
+          'militaryUnit': persona.militaryServiceType,
           'militaryPositionNew': persona.militaryPositionNew,
           'militaryPositionOld': persona.militaryPositionOld,
           'militaryDateOfEnlistment': persona.militaryDateOfEnlistment,
@@ -239,7 +239,7 @@ class PersonasController extends _$PersonasController {
           'thRavMelamedYearB_name': persona.thRavMelamedYearBName,
           'thRavMelamedYearB_phone': persona.thRavMelamedYearBPhone,
           'paying': persona.payingString,
-          'matsber': persona.spiritualStatus,
+          'matsber': persona.matsbarStatus,
         },
       );
 

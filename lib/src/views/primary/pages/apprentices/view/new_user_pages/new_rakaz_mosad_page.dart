@@ -6,7 +6,6 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/string.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/services/api/eshkol/get_eshkols.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
@@ -15,12 +14,10 @@ import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.da
 import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/missing_details_dialog.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
-import 'package:hadar_program/src/views/widgets/states/error_state.dart';
-import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class NewRakazEshkolPage extends HookConsumerWidget {
-  const NewRakazEshkolPage({super.key});
+class NewRakazMosadPage extends HookConsumerWidget {
+  const NewRakazMosadPage({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
@@ -29,7 +26,6 @@ class NewRakazEshkolPage extends HookConsumerWidget {
     final phoneController = useTextEditingController();
     final institutionController = useState(const InstitutionDto());
     final thInstitutionSearch = useTextEditingController();
-    final eshkol = useState('');
 
     final children = [
       InputFieldContainer(
@@ -124,23 +120,10 @@ class NewRakazEshkolPage extends HookConsumerWidget {
               ),
             ),
       ),
-      InputFieldContainer(
-        label: 'שיוך אשכול',
-        isRequired: true,
-        child: ref.watch(getEshkolListProvider).when(
-              loading: () => const LoadingState(),
-              error: (error, stack) => ErrorState(error),
-              data: (eshokls) => GeneralDropdownButton<String>(
-                value: eshkol.value.ifEmpty ?? 'אשכול',
-                onChanged: (value) => eshkol.value = value!,
-                items: eshokls,
-              ),
-            ),
-      ),
     ];
 
     return Scaffold(
-      appBar: const NewPersonaAppbar(title: 'הוספת רכז אשכול'),
+      appBar: const NewPersonaAppbar(title: 'הוספת רכז מוסד'),
       body: Padding(
         padding: Consts.defaultBodyPadding,
         child: Column(
@@ -169,11 +152,10 @@ class NewRakazEshkolPage extends HookConsumerWidget {
                     )
                     .createManual(
                       persona: PersonaDto(
-                        roles: [UserRole.rakazEshkol],
+                        roles: [UserRole.rakazMosad],
                         firstName: firstNameController.text,
                         lastName: lastNameController.text,
                         phone: phoneController.text,
-                        //
                       ),
                     );
 

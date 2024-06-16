@@ -250,7 +250,7 @@ class _PersonalDetailsTabView extends HookConsumerWidget {
     final selectedCity = useState(auth.valueOrNull?.city ?? '');
     final selectedBirthday = useState(auth.valueOrNull!.dateOfBirth.asDateTime);
     final citySearchController = useTextEditingController();
-    final selectedRegion = useState(AddressRegion.none);
+    final selectedRegion = useState(AddressRegion.unknown);
     final firstNameController = useTextEditingController(
       text: auth.valueOrNull?.firstName,
       keys: [auth],
@@ -452,13 +452,13 @@ class _PersonalDetailsTabView extends HookConsumerWidget {
                         isRequired: true,
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton2<AddressRegion>(
-                            value: selectedRegion.value == AddressRegion.none
+                            value: selectedRegion.value == AddressRegion.unknown
                                 ? null
                                 : selectedRegion.value,
                             hint: SizedBox(
                               width: 240,
                               child: Text(
-                                selectedRegion.value == AddressRegion.none
+                                selectedRegion.value == AddressRegion.unknown
                                     ? AddressRegion.center.name
                                     : selectedRegion.value.name,
                                 overflow: TextOverflow.fade,
@@ -478,7 +478,7 @@ class _PersonalDetailsTabView extends HookConsumerWidget {
                               padding: const EdgeInsets.only(right: 8),
                             ),
                             onChanged: (value) => selectedRegion.value =
-                                value ?? AddressRegion.none,
+                                value ?? AddressRegion.unknown,
                             dropdownStyleData: const DropdownStyleData(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -525,7 +525,7 @@ class _PersonalDetailsTabView extends HookConsumerWidget {
                                     emailController.text.isEmpty ||
                                     selectedCity.value.isEmpty ||
                                     selectedRegion.value ==
-                                        AddressRegion.none) {
+                                        AddressRegion.unknown) {
                                   showDialog(
                                     context: context,
                                     builder: (_) =>

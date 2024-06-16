@@ -600,8 +600,8 @@ class _ListViewWidget extends StatelessWidget {
                           ) ??
                           const CompoundDto())
                       .name,
-                  filteredUsers[idx].militaryUnit,
-                  filteredUsers[idx].maritalStatus,
+                  filteredUsers[idx].militaryServiceType,
+                  filteredUsers[idx].maritalStatus.name,
                 ],
                 isSelected: selectedPersonas.value.contains(filteredUsers[idx]),
                 onLongPress: onSelect,

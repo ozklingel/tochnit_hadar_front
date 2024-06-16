@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hadar_program/src/core/enums/marital_status.dart';
+import 'package:hadar_program/src/core/enums/matsbar_status.dart';
+import 'package:hadar_program/src/core/enums/relationship.dart';
+import 'package:hadar_program/src/core/enums/status_color.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
-import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/utils/convert/extract_from_json.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
@@ -10,68 +12,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'persona.dto.f.dart';
 part 'persona.dto.g.dart';
-
-enum StatusColor {
-  grey(100),
-  green(200),
-  orange(300),
-  red(400),
-  invis(999);
-
-  const StatusColor(this.value);
-  final int value;
-
-  Color toColor() {
-    return this == StatusColor.green
-        ? AppColors.green2
-        : this == StatusColor.red
-            ? AppColors.red2
-            : this == StatusColor.orange
-                ? AppColors.yellow1
-                : Colors.transparent;
-  }
-}
-
-enum Relationship {
-  mother,
-  father,
-  sister,
-  brother,
-  wife,
-  husband,
-  other;
-
-  String get name {
-    switch (this) {
-      case mother:
-        return 'אמא';
-      case Relationship.father:
-        return 'אבא';
-      case Relationship.sister:
-        return 'אחות';
-      case Relationship.brother:
-        return 'אח';
-      case Relationship.wife:
-        return 'אישה';
-      case Relationship.husband:
-        return 'בעל';
-      case Relationship.other:
-        return 'אחר';
-    }
-  }
-}
-
-enum MilitaryServiceType {
-  commando,
-  battalion,
-  rear;
-
-  String get hebrewName => switch (this) {
-        MilitaryServiceType.commando => 'סיירת',
-        MilitaryServiceType.battalion => 'גדוד',
-        MilitaryServiceType.rear => 'עורפי',
-      };
-}
 
 typedef Phone = String;
 
@@ -86,7 +26,7 @@ class PersonaDto with _$PersonaDto {
       defaultValue: '',
       name: 'army_role',
     )
-    String militaryUnit,
+    String militaryServiceType,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -239,12 +179,17 @@ class PersonaDto with _$PersonaDto {
       name: 'last_name',
     )
     String lastName,
+    @Default(MaritalStatus.unknown)
+    @JsonKey(
+      name: 'marriage_status',
+      fromJson: _extractMaritalStatus,
+    )
+    MaritalStatus maritalStatus,
     @Default('')
     @JsonKey(
-      defaultValue: '',
-      name: 'marriage_status',
+      name: 'marriage_date',
     )
-    String maritalStatus,
+    String dateOfMarriage,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -364,12 +309,12 @@ class PersonaDto with _$PersonaDto {
       defaultValue: '',
     )
     String militaryPositionNew,
-    @Default('')
+    @Default(MatsbarStatus.unknown)
     @JsonKey(
       name: 'matsber',
-      defaultValue: '',
+      fromJson: _extractMatsbarStatus,
     )
-    String spiritualStatus,
+    MatsbarStatus matsbarStatus,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -433,6 +378,13 @@ class PersonaDto with _$PersonaDto {
       _$PersonaDtoFromJson(json);
 }
 
+MatsbarStatus _extractMatsbarStatus(String? data) {
+  return MatsbarStatus.values.singleWhere(
+    (element) => element.name == data,
+    orElse: () => MatsbarStatus.unknown,
+  );
+}
+
 List<UserRole> _extractRole(List<dynamic>? data) {
   if (data == null) {
     return [];
@@ -449,6 +401,21 @@ List<UserRole> _extractRole(List<dynamic>? data) {
 }
 
 bool _extractPaying(String? data) => data == 'משלם';
+
+MaritalStatus _extractMaritalStatus(String? data) {
+  switch (data) {
+    case 'רווק':
+      return MaritalStatus.single;
+    case 'נשוי':
+      return MaritalStatus.married;
+    case 'אלמן':
+      return MaritalStatus.widow;
+    case 'גרוש':
+      return MaritalStatus.divorced;
+    default:
+      return MaritalStatus.unknown;
+  }
+}
 
 int _extractActivityScore(dynamic val) {
   if (val is int) {
@@ -569,8 +536,8 @@ extension ApprenticeX on PersonaDto {
         highSchoolInstitution,
         thPeriod,
         militaryPositionNew,
-        militaryUnit,
-        maritalStatus,
+        militaryServiceType,
+        maritalStatus.name,
       ];
   bool get isEmpty => id.isEmpty;
 }

@@ -13,7 +13,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_melave_page.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_persona_appbar.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_rakaz_eshkol_page.dart';
-import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_rosh_mosad_page.dart';
+import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_rakaz_mosad_page.dart';
 import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

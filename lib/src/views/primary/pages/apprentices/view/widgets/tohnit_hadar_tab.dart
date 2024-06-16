@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/enums/matsbar_status.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
@@ -16,11 +17,11 @@ import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
-import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/events_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/report/controller/reports_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
 import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
+import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/row_icon_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
@@ -76,16 +77,20 @@ class TohnitHadarTabView extends HookConsumerWidget {
               children: [
                 CircleAvatar(
                   radius: 4,
-                  backgroundColor: switch (persona.spiritualStatus) {
-                    'אדוק' || 'מחובר' => AppColors.green1,
-                    'מחובר חלקית' || 'בשלבי ניתוק' => AppColors.yellow1,
-                    'מנותק' => AppColors.red1,
+                  backgroundColor: switch (persona.matsbarStatus) {
+                    MatsbarStatus.pious ||
+                    MatsbarStatus.connected =>
+                      AppColors.green1,
+                    MatsbarStatus.partial ||
+                    MatsbarStatus.leaving =>
+                      AppColors.yellow1,
+                    MatsbarStatus.disconnected => AppColors.red1,
                     _ => AppColors.grey1,
                   },
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  persona.spiritualStatus,
+                  persona.matsbarStatus.name,
                   style: TextStyles.s12w400cGrey2,
                 ),
               ],
@@ -255,7 +260,7 @@ class _GeneralSection extends HookConsumerWidget {
     final ravMelamedYearBPhone =
         useTextEditingController(text: persona.thRavMelamedYearBPhone);
     final isPaying = useState(persona.isPaying);
-    final spiritualStatus = useState(persona.spiritualStatus);
+    final spiritualStatus = useState(persona.matsbarStatus);
 
     return DetailsCard(
       title: 'תוכנית הדר',
@@ -371,16 +376,11 @@ class _GeneralSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 InputFieldContainer(
                   label: 'מצב רוחני - מצב״ר',
-                  child: GeneralDropdownButton<String>(
-                    value: spiritualStatus.value,
-                    onChanged: (value) => spiritualStatus.value = value ?? '',
-                    items: const [
-                      'אדוק',
-                      'מחובר',
-                      'מחובר חלקית',
-                      'בשלבי ניתוק',
-                      'מנותק',
-                    ],
+                  child: GeneralDropdownButton<MatsbarStatus>(
+                    value: spiritualStatus.value.name,
+                    onChanged: (value) =>
+                        spiritualStatus.value = value ?? MatsbarStatus.unknown,
+                    items: MatsbarStatus.values,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -400,7 +400,7 @@ class _GeneralSection extends HookConsumerWidget {
                             thRavMelamedYearBName: ravMelamedYearBName.text,
                             thRavMelamedYearBPhone: ravMelamedYearBPhone.text,
                             isPaying: isPaying.value,
-                            spiritualStatus: spiritualStatus.value,
+                            matsbarStatus: spiritualStatus.value,
                           ),
                         );
 

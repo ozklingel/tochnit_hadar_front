@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/core/enums/marital_status.dart';
+import 'package:hadar_program/src/core/enums/relationship.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
@@ -202,7 +204,8 @@ final _apprentices = List.generate(
     ),
     dateOfBirth:
         faker.date.dateTime(minYear: 1971, maxYear: 2004).toIso8601String(),
-    maritalStatus: faker.lorem.word(),
+    maritalStatus: MaritalStatus
+        .values[faker.randomGenerator.integer(MaritalStatus.values.length)],
     educationFaculty: faker.lorem.word(),
     educationalInstitution: faker.lorem.word(),
     workOccupation: faker.lorem.word(),
@@ -249,7 +252,7 @@ final _apprentices = List.generate(
         faker.date.dateTime(minYear: 1971).toIso8601String(),
     militaryPositionNew: faker.lorem.word(),
     militaryPositionOld: faker.lorem.word(),
-    militaryUnit: faker.lorem.word(),
+    militaryServiceType: faker.lorem.word(),
     reportsIds: [],
     events: List.generate(
       Consts.mockEventsGuids.length,

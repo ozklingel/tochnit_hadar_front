@@ -122,6 +122,16 @@ abstract class TextStyles {
     ],
   );
 
+  static const s20w400cGrey2 = TextStyle(
+    fontFamily: _kFontFamily,
+    height: 1,
+    fontSize: 20,
+    color: AppColors.grey2,
+    fontVariations: [
+      FontVariation('wght', 400),
+    ],
+  );
+
   static const s20w500 = TextStyle(
     fontFamily: _kFontFamily,
     height: 1,

@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/core/enums/military_service_type.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
@@ -39,7 +40,7 @@ class MilitaryServiceTabView extends HookConsumerWidget {
       keys: [persona],
     );
     final unitController = useTextEditingController(
-      text: persona.militaryUnit,
+      text: persona.militaryServiceType,
       keys: [persona],
     );
     final positionNewController = useTextEditingController(
@@ -147,7 +148,7 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                     const SizedBox(height: 32),
                     InputFieldContainer(
                       label: 'שיוך יחידתי',
-                      data: persona.militaryUnit,
+                      data: persona.militaryServiceType,
                       child: TextFormField(
                         controller: unitController,
                         validator: (value) {
@@ -300,7 +301,8 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                                             persona: persona.copyWith(
                                               militaryCompoundId:
                                                   selectedCompound.value.id,
-                                              militaryUnit: unitController.text,
+                                              militaryServiceType:
+                                                  unitController.text,
                                               militaryPositionNew:
                                                   positionNewController.text,
                                               militaryPositionOld:
