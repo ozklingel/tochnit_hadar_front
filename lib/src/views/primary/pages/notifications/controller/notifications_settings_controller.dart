@@ -28,6 +28,8 @@ class NotificationsSettingsController
   }
 
   Future<bool> edit({required NotificationSettingsDto settings}) async {
+    Toaster.isLoading(true);
+
     try {
       final result = await ref.read(dioServiceProvider).post(
         Consts.setNotificationsSettings,
@@ -46,6 +48,8 @@ class NotificationsSettingsController
       Logger().e('failed to edit notification settings', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
+    } finally {
+      Toaster.isLoading(false);
     }
 
     return false;
