@@ -439,7 +439,7 @@ class _GeneralSection extends HookConsumerWidget {
                 const SizedBox(height: 12),
                 DetailsRowItem(
                   label: 'מלווה',
-                  data: selectedMentor.value,
+                  data: persona.thMentorName,
                 ),
               ],
       ),

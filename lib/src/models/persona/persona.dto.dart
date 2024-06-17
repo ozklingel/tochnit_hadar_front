@@ -306,6 +306,11 @@ class PersonaDto with _$PersonaDto {
     String thMentor,
     @Default('')
     @JsonKey(
+      name: 'thMentor_name',
+    )
+    String thMentorName,
+    @Default('')
+    @JsonKey(
       defaultValue: '',
     )
     String militaryPositionNew,
