@@ -19,16 +19,19 @@ class AuthDto with _$AuthDto {
     @Default('')
     @JsonKey(
       fromJson: extractAvatarFromJson,
+      name: 'photo_path',
     )
     String avatar,
     @Default('')
     @JsonKey(
       defaultValue: '',
+      name: 'name',
     )
     String firstName,
     @Default('')
     @JsonKey(
       defaultValue: '',
+      name: 'last_name',
     )
     String lastName,
     @Default('')
@@ -44,16 +47,19 @@ class AuthDto with _$AuthDto {
     @Default(UserRole.other)
     @JsonKey(
       fromJson: _extractUserRole,
+      name: 'role_ids',
     )
     UserRole role,
     @Default('')
     @JsonKey(
       defaultValue: '',
+      name: 'institution_id',
     )
     String institution,
     @Default('')
     @JsonKey(
       defaultValue: '',
+      name: 'eshcol',
     )
     String cluster,
     @Default('')
@@ -64,12 +70,13 @@ class AuthDto with _$AuthDto {
     @Default('')
     @JsonKey(
       defaultValue: '',
+      name: 'cluster_id',
     )
     String region,
     @Default('')
     @JsonKey(
       defaultValue: '',
-      name: 'date_of_birth',
+      name: 'birthday',
     )
     String dateOfBirth,
     @Default([])

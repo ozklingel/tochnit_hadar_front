@@ -545,11 +545,11 @@ class _PersonalDetailsTabView extends HookConsumerWidget {
                                     data: {
                                       'city': selectedCity.value,
                                       'region': selectedRegion.value.name,
-                                      'date_of_birth': DateFormat('yyyy-MM-dd')
+                                      'birthday': DateFormat('yyyy-MM-dd')
                                           .format(selectedBirthday.value),
                                       'email': emailController.text,
                                       'last_name': lastNameController.text,
-                                      'firstName': firstNameController.text,
+                                      'name': firstNameController.text,
                                     },
                                   );
 
