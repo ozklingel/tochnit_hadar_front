@@ -17,7 +17,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/view/widgets/t
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/dialogs/missing_details_dialog.dart';
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
-import 'package:hadar_program/src/views/widgets/sheets/__image_selector_sheet.dart';
+import 'package:hadar_program/src/views/widgets/sheets/image_selector_sheet.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 

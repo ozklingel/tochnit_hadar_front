@@ -8,7 +8,6 @@ import 'package:hadar_program/src/services/api/madadim/get_forgotten_apprentices
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/ahrai_home_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/home/controllers/notifications_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/models/ahrai_home.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/side_menu_drawer.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/doughnut_charts_widget.dart';
@@ -16,6 +15,7 @@ import 'package:hadar_program/src/views/primary/pages/home/views/widgets/home_he
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/performance_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_events_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_tasks_widget.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -39,15 +39,15 @@ class HomeScreen extends ConsumerWidget {
           height: 42,
         ),
         actions: [
-          ref.watch(notificationsControllerProvider).when(
+          ref.watch(tasksControllerProvider).when(
                 loading: () => const CircularProgressIndicator.adaptive(),
                 error: (error, stack) => IconButton(
                   onPressed: () => const NotificationRouteData().go(context),
                   icon: const Icon(Icons.ring_volume),
                 ),
-                data: (notifications) => IconButton(
+                data: (tasks) => IconButton(
                   onPressed: () => const NotificationRouteData().go(context),
-                  icon: notifications.isEmpty
+                  icon: tasks.isEmpty
                       ? Assets.illustrations.alarmBell.svg()
                       : Assets.illustrations.alarmBellAlert.svg(),
                 ),

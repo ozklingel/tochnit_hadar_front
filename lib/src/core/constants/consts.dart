@@ -41,20 +41,20 @@ abstract class Consts {
   static const setChartSettings = 'master_user/setSetting_madadim';
 
   // notifications
-  static const getAllNotifications = 'notification_form/getAll';
   static const getNotificationsSettings = 'notification_form/getAllSetting';
   static const setNotificationsSettings = 'notification_form/setSetting';
   // these are not in postman???
+  // They're about to be removed, since we're merging the notifications and the tasks.
   static const addNotification = 'notification_form/add1';
   static const deleteNotification = 'notification_form/delete';
   static const updateNotification = 'notification_form/update';
-  static const setNotificationWasRead = 'notification_form/setWasRead';
 
   // tasks
   static const getAllTasks = 'tasks_form/getTasks';
   static const deleteTask = 'tasks_form/delete';
   static const editTask = 'tasks_form/update';
   static const createTask = 'tasks_form/add';
+  static const setTaskWasRead = 'tasks_form/setWasRead';
 
   // reports
   static const getAllReports = 'reports_form/getAll';

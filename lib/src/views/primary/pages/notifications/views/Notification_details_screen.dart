@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
-import 'package:hadar_program/src/models/notification/notification.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_controller.dart';
+import 'package:hadar_program/src/models/task/task.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NotificationDetailsScreen extends HookConsumerWidget {
@@ -16,12 +16,12 @@ class NotificationDetailsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final notification = ref.watch(
-      notificationsControllerProvider.select(
+    final task = ref.watch(
+      tasksControllerProvider.select(
         (val) {
           return val.value!.firstWhere(
             (element) => element.id == id,
-            orElse: () => const NotificationDto(),
+            orElse: () => const TaskDto(),
           );
         },
       ),
@@ -29,9 +29,7 @@ class NotificationDetailsScreen extends HookConsumerWidget {
 
     useEffect(
       () {
-        ref
-            .read(notificationsControllerProvider.notifier)
-            .setToReadStatus(notification);
+        ref.read(tasksControllerProvider.notifier).setToReadStatus(task);
 
         return null;
       },
@@ -56,8 +54,8 @@ class NotificationDetailsScreen extends HookConsumerWidget {
                   final navContext = Navigator.of(context);
 
                   final result = await ref
-                      .read(notificationsControllerProvider.notifier)
-                      .deleteNotification(notification.id);
+                      .read(tasksControllerProvider.notifier)
+                      .delete(task);
 
                   if (result) {
                     navContext.pop();
@@ -77,12 +75,12 @@ class NotificationDetailsScreen extends HookConsumerWidget {
             Row(
               children: [
                 Text(
-                  notification.event,
+                  task.event.name,
                   style: TextStyles.s18w500cGray2,
                 ),
                 const Spacer(),
                 Text(
-                  notification.dateTime.asDateTime.asTimeAgoDayCutoff,
+                  task.dateTime.asDateTime.asTimeAgoDayCutoff,
                   style: TextStyles.s12w400cGrey5fRoboto,
                 ),
               ],
@@ -90,13 +88,11 @@ class NotificationDetailsScreen extends HookConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'בתאריך '
-              '${notification.dateTime.asDateTime.asDayMonthYearShortDot}',
+              '${task.dateTime.asDateTime.asDayMonthYearShortDot}',
               style: TextStyles.s14w400cGrey2,
             ),
             const SizedBox(height: 16),
-            Text(
-              notification.description,
-            ),
+            Text(task.details),
           ],
         ),
       ),
