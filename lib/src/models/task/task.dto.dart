@@ -102,6 +102,12 @@ class TaskDto with _$TaskDto {
       name: 'date',
     )
     String dateTime,
+    @Default(false)
+    @JsonKey(
+      defaultValue: false,
+      name: 'allreadyread',
+    )
+    bool alreadyRead,
   }) = _TaskDto;
 
   factory TaskDto.fromJson(Map<String, dynamic> json) =>

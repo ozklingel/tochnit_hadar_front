@@ -3,17 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
-import 'package:hadar_program/src/models/notification/notification.dto.dart';
+import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
-import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/views/widgets/notification_widget.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
-//import '../../../../../models/message/message.dto.dart';
-//import '../../messages/controller/messages_controller.dart';
 
 class NotificationScreen extends HookConsumerWidget {
   const NotificationScreen({super.key});
@@ -21,7 +18,7 @@ class NotificationScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
-    final msgsController = ref.watch(notificationsControllerProvider);
+    final msgsController = ref.watch(tasksControllerProvider);
     // final isSearchOpen = useState(false);
     final searchController = useTextEditingController();
 
@@ -60,8 +57,7 @@ class NotificationScreen extends HookConsumerWidget {
             title: const Text(" התראות"),
           ),
           body: RefreshIndicator.adaptive(
-            onRefresh: () =>
-                ref.refresh(notificationsControllerProvider.future),
+            onRefresh: () => ref.refresh(tasksControllerProvider.future),
             child: msgsController.unwrapPrevious().when(
                   error: (error, s) => CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -77,8 +73,8 @@ class NotificationScreen extends HookConsumerWidget {
                     isLoading: true,
                     messages: List.generate(
                       10,
-                      (index) => NotificationDto(
-                        event: 'titletitletitletitle',
+                      (index) => TaskDto(
+                        title: 'titletitletitletitle',
                         dateTime: DateTime.now().toIso8601String(),
                       ),
                     ),
@@ -88,10 +84,10 @@ class NotificationScreen extends HookConsumerWidget {
                     messages: messages
                         .where(
                           (element) =>
-                              element.event
+                              element.event.name
                                   .toLowerCase()
                                   .contains(searchController.text) ||
-                              element.description
+                              element.details
                                   .toLowerCase()
                                   .contains(searchController.text),
                         )
@@ -110,7 +106,7 @@ class _SearchResultsBody extends StatelessWidget {
     required this.isLoading,
   });
 
-  final List<NotificationDto> messages;
+  final List<TaskDto> messages;
   final bool isLoading;
 
   @override
@@ -128,13 +124,7 @@ class _SearchResultsBody extends StatelessWidget {
           .map(
             (e) => Skeletonizer(
               enabled: isLoading,
-              child: e.allreadyRead
-                  ? NotificationWidget.expanded(
-                      notification: e,
-                    )
-                  : NotificationWidget.collapsed(
-                      notification: e,
-                    ),
+              child: NotificationWidget(task: e),
             ),
           )
           .toList(),

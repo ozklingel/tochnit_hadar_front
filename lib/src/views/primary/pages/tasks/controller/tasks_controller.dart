@@ -156,4 +156,26 @@ class TasksController extends _$TasksController {
 
     return false;
   }
+
+  Future<bool> setToReadStatus(TaskDto task) async {
+    if (task.alreadyRead) {
+      return true;
+    }
+
+    try {
+      await ref.read(dioServiceProvider).post(
+        Consts.setTaskWasRead,
+        data: {
+          'task_id': task.id,
+        },
+      );
+      ref.invalidate(getTasksProvider);
+
+      return true;
+    } catch (e) {
+      Sentry.captureException(e);
+
+      return false;
+    }
+  }
 }
