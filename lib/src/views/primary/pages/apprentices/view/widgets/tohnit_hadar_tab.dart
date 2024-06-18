@@ -166,7 +166,7 @@ class TohnitHadarTabView extends HookConsumerWidget {
                               SizedBox(
                                 width: 100,
                                 child: Text(
-                                  e.title,
+                                  e.eventType,
                                   style: TextStyles.s14w400.copyWith(
                                     color: AppColors.gray5,
                                   ),
@@ -460,7 +460,7 @@ class _EventBottomSheet extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final selectedDatetime = useState<DateTime?>(event.datetime.asDateTime);
     final titleController = useTextEditingController(
-      text: event.title,
+      text: event.eventType,
       keys: [event],
     );
     final descriptionController = useTextEditingController(
@@ -631,7 +631,7 @@ class _EventBottomSheet extends HookConsumerWidget {
                                     personasControllerProvider.notifier,
                                   );
                                   final newEvent = event.copyWith(
-                                    title: titleController.text,
+                                    eventType: titleController.text,
                                     description: descriptionController.text,
                                     datetime: selectedDatetime.value
                                             ?.toIso8601String() ??

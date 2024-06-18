@@ -27,7 +27,9 @@ class NotificationsSettingsController
     return notifSettings;
   }
 
-  Future<bool> edit({required NotificationSettingsDto settings}) async {
+  Future<bool> edit({
+    required NotificationSettingsDto settings,
+  }) async {
     Toaster.isLoading(true);
 
     try {

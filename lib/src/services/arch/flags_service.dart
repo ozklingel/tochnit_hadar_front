@@ -258,7 +258,7 @@ final _apprentices = List.generate(
       Consts.mockEventsGuids.length,
       (index) => EventDto(
         id: Consts.mockEventsGuids[index],
-        title: faker.lorem.word(),
+        eventType: faker.lorem.word(),
         description: faker.lorem.sentence(),
         datetime: faker.date.dateTime().toIso8601String(),
       ),

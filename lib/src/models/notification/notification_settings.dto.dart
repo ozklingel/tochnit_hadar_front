@@ -9,43 +9,43 @@ class NotificationSettingsDto with _$NotificationSettingsDto {
   const factory NotificationSettingsDto({
     @Default(false)
     @JsonKey(
-      defaultValue: false,
+      fromJson: _parseValue,
       name: 'notifyDayBefore',
     )
     bool notifyDayBefore,
     @Default(false)
     @JsonKey(
-      defaultValue: false,
+      fromJson: _parseValue,
       name: 'notifyDayBefore_sevev',
     )
     bool notifyDayBeforeSevev,
     @Default(false)
     @JsonKey(
-      defaultValue: false,
+      fromJson: _parseValue,
       name: 'notifyMorning',
     )
     bool notifyMorning,
     @Default(false)
     @JsonKey(
-      defaultValue: false,
+      fromJson: _parseValue,
       name: 'notifyMorning_sevev',
     )
     bool notifyMorningSevev,
     @Default(false)
     @JsonKey(
-      defaultValue: false,
+      fromJson: _parseValue,
       name: 'notifyMorning_weekly_report',
     )
     bool notifyMorningWeeklyReport,
     @Default(false)
     @JsonKey(
-      defaultValue: false,
+      fromJson: _parseValue,
       name: 'notifyStartWeek',
     )
     bool notifyStartWeek,
     @Default(false)
     @JsonKey(
-      defaultValue: false,
+      fromJson: _parseValue,
       name: 'notifyStartWeek_sevev',
     )
     bool notifyStartWeekSevev,
@@ -53,4 +53,18 @@ class NotificationSettingsDto with _$NotificationSettingsDto {
 
   factory NotificationSettingsDto.fromJson(Map<String, dynamic> json) =>
       _$NotificationSettingsDtoFromJson(json);
+}
+
+bool _parseValue(dynamic data) {
+  if (data is bool?) {
+    if (data != null) {
+      return data;
+    }
+  }
+
+  if (data?.toString().toLowerCase() == 'true') {
+    return true;
+  }
+
+  return false;
 }

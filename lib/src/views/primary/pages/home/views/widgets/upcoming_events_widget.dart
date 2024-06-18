@@ -108,7 +108,7 @@ class _EventCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        persona?.fullName ?? event.title,
+                        persona?.fullName ?? event.eventType,
                         style: TextStyles.s16w500cGrey2,
                       ),
                       const Spacer(),

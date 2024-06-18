@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'institution_pdf_export.dto.f.dart';
 part 'institution_pdf_export.dto.g.dart';
 
+@Deprecated('hopefully we won\'t need this and can delete this at a later time')
 @JsonSerializable()
 @Freezed(fromJson: false)
 class InstitutionExportPdfDto with _$InstitutionExportPdfDto {

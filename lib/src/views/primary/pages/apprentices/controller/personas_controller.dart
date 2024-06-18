@@ -81,7 +81,7 @@ class PersonasController extends _$PersonasController {
         data: {
           'userId': ref.read(storageServiceProvider.notifier).getUserPhone(),
           'apprenticeid': apprenticeId,
-          'event': event.title,
+          'event': event.eventType,
           'details': event.description,
           'frequency': 'frequency',
           'date': event.datetime,
@@ -145,12 +145,12 @@ class PersonasController extends _$PersonasController {
           'apprenticeId': apprenticeId,
           'date': event.datetime,
           'details': event.description,
-          'event': event.title,
+          'event': event.eventType,
           'frequency': 'frequency',
           "numOfLinesDisplay": 2,
           // this is due to backend bug
           'subject': apprenticeId,
-          "title": event.title,
+          // "title": event.title,
         },
       );
 

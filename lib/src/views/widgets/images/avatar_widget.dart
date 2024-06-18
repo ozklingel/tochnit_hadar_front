@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AvatarWidget extends StatelessWidget {
   const AvatarWidget({
@@ -30,6 +31,7 @@ class AvatarWidget extends StatelessWidget {
       radius: radius,
       backgroundImage: CachedNetworkImageProvider(
         avatarUrl,
+        errorListener: (error) => Sentry.captureException(error),
       ),
     );
   }

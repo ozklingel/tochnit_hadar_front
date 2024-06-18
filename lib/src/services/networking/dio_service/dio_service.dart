@@ -30,6 +30,7 @@ class DioService extends _$DioService {
     final userId = userPhone;
 
     Logger().d('userId::$userId');
+    Logger().d('authToken::$authToken');
 
     final dio = Dio(
       BaseOptions(

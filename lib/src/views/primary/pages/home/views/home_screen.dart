@@ -103,12 +103,12 @@ class _AhraiTohnitBody extends ConsumerWidget {
     return Column(
       children: [
         DoughnutChartsWidget(
-          callsGreen: ahraiTohnit.greenvisitcalls,
-          callsOrange: ahraiTohnit.orangevisitcalls,
-          callsRed: ahraiTohnit.redvisitcalls,
-          meeetingsGreen: ahraiTohnit.greenvisitmeetings,
-          meeetingsOrange: ahraiTohnit.orangevisitmeetings,
-          meeetingsRed: ahraiTohnit.redvisitmeetings,
+          callsGreen: ahraiTohnit.greenVisitCalls,
+          callsOrange: ahraiTohnit.orangeVisitCalls,
+          callsRed: ahraiTohnit.redVisitCalls,
+          meeetingsGreen: ahraiTohnit.greenVisitMeetings,
+          meeetingsOrange: ahraiTohnit.orangeVisitMeetings,
+          meeetingsRed: ahraiTohnit.redVisitMeetings,
         ),
         PerformanceWidget(
           title: 'תפקוד מלווים',

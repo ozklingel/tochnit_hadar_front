@@ -7,6 +7,7 @@ import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/notification/notification_settings.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_settings_controller.dart';
+import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NotificationsSettingsScreen extends HookConsumerWidget {
@@ -15,9 +16,14 @@ class NotificationsSettingsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
+    final settingsController =
+        ref.watch(notificationsSettingsControllerProvider);
     final settings =
-        ref.watch(notificationsSettingsControllerProvider).valueOrNull ??
-            const NotificationSettingsDto();
+        settingsController.valueOrNull ?? const NotificationSettingsDto();
+
+    if (settingsController.isLoading) {
+      return const LoadingState();
+    }
 
     return Scaffold(
       appBar: AppBar(

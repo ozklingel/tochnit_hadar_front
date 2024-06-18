@@ -20,25 +20,57 @@ class AhraiHomeDto with _$AhraiHomeDto {
       fromJson: _extractScore,
     )
     List<(double, double)> eshkolScore,
-    @Default(0) double greenvisitcalls,
-    @Default(0) double greenvisitmeetings,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+    )
+    int forgotenApprenticCount,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+      name: 'greenvisitcalls',
+    )
+    double greenVisitCalls,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+      name: 'greenvisitmeetings',
+    )
+    double greenVisitMeetings,
     @Default([])
     @JsonKey(
       name: 'melave_score',
       fromJson: _extractScore,
     )
     List<(double, double)> melaveScore,
-    @Default(0) double orangevisitcalls,
-    @Default(0) double orangevisitmeetings,
-    @Default(0) double redvisitcalls,
-    @Default(0) double redvisitmeetings,
-    @Default([])
-    @JsonKey(name: 'score_Mosad_Eshcol_CoordProfile_list')
-    List<Map<String, dynamic>> scoreMosadEshcolCoordProfileList,
-    @Default([])
-    @JsonKey(name: 'score_melaveProfile_list')
-    List<Map<String, dynamic>> scoreMelaveProfileList,
-    @Default(0) int totalApprentices,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+      name: 'orangevisitcalls',
+    )
+    double orangeVisitCalls,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+      name: 'orangevisitmeetings',
+    )
+    double orangeVisitMeetings,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+      name: 'redvisitcalls',
+    )
+    double redVisitCalls,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+    )
+    double redVisitMeetings,
+    @Default(0)
+    @JsonKey(
+      defaultValue: 0,
+    )
+    int totalApprentices,
   }) = _AhraiHomeDto;
 
   factory AhraiHomeDto.fromJson(Map<String, dynamic> json) =>

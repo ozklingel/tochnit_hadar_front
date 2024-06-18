@@ -302,10 +302,12 @@ class PersonaDto with _$PersonaDto {
     @Default('')
     @JsonKey(
       defaultValue: '',
+      name: 'thMentor_id',
     )
     String thMentor,
     @Default('')
     @JsonKey(
+      defaultValue: '',
       name: 'thMentor_name',
     )
     String thMentorName,

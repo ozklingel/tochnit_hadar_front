@@ -14,7 +14,7 @@ import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
-import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
+import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -22,12 +22,12 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/controller/com
 import 'package:hadar_program/src/views/secondary/filter/filters_screen.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institution_details_controller.dart';
 import 'package:hadar_program/src/views/secondary/institutions/controllers/institutions_controller.dart';
-import 'package:hadar_program/src/views/secondary/institutions/controllers/new_or_edit_institution_controller.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
 import 'package:hadar_program/src/views/widgets/sheets/__image_selector_sheet.dart';
+import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -54,17 +54,14 @@ class _InstitutionDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final screenController = ref.watch(getInstitutionsProvider);
-    final institutions = screenController.valueOrNull ?? [];
-    final institution = institutions.singleWhere(
-      (element) => element.id == widget.id,
-      orElse: () => const InstitutionDto(),
-    );
+    final screenController =
+        ref.watch(institutionDetailsControllerProvider(id: widget.id));
+    final institution = screenController.valueOrNull ?? const InstitutionDto();
     final tabController = useTabController(initialLength: 2);
 
     final views = [
       _GeneralTab(institution: institution),
-      _UsersTab(institutionId: institution.id),
+      _UsersTab(institution: institution),
     ];
 
     if (screenController.isLoading) {
@@ -168,8 +165,8 @@ class _InstitutionDetailsScreenState
                             onImageUploaded: (url) async {
                               final result = await ref
                                   .read(
-                                    newOrEditInstitutionControllerProvider(
-                                      widget.id,
+                                    institutionDetailsControllerProvider(
+                                      id: widget.id,
                                     ).notifier,
                                   )
                                   .updateLogo(url);
@@ -235,29 +232,36 @@ class _InstitutionDetailsScreenState
 
 class _UsersTab extends HookConsumerWidget {
   const _UsersTab({
-    required this.institutionId,
+    required this.institution,
   });
 
-  final String institutionId;
+  final InstitutionDto institution;
 
   @override
   Widget build(BuildContext context, ref) {
     useAutomaticKeepAlive();
 
-    final users = ref
-            .watch(institutionDetailsControllerProvider(id: institutionId))
-            .valueOrNull ??
-        [];
+    final institutionController =
+        ref.watch(institutionDetailsControllerProvider(id: institution.id));
+
     final compoundsController = ref.watch(compoundControllerProvider);
     final compounds = compoundsController.valueOrNull ?? [];
-    final institutionsController = ref.watch(institutionsControllerProvider);
-    final institution = (institutionsController.valueOrNull ?? []).singleWhere(
-      (element) => element.id == institutionId,
-      orElse: () => const InstitutionDto(),
-    );
     final filter = useState(const FilterDto());
+    final filteredUsers = useState<List<String>>([]);
+    final usersController = ref.watch(getPersonasProvider);
+    final users = (usersController.valueOrNull ?? [])
+        .where(
+          (element) => element.institutionId == institution.id,
+        )
+        .where(
+          (element) => filter.value.isEmpty
+              ? true
+              : filteredUsers.value.contains(element.id),
+        );
 
-    if (compoundsController.isLoading || institutionsController.isLoading) {
+    Logger().d(ref.watch(getPersonasProvider).valueOrNull?.length);
+
+    if (compoundsController.isLoading || institutionController.isLoading) {
       return const CircularProgressIndicator.adaptive();
     }
 
@@ -269,12 +273,13 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
               roles:
                   filter.value.roles.where((element) => element != e).toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -282,12 +287,13 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
-              roles:
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
+              years:
                   filter.value.years.where((element) => element != e).toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -295,13 +301,14 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
-              roles: filter.value.institutions
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
+              institutions: filter.value.institutions
                   .where((element) => element != e)
                   .toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -309,13 +316,14 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
-              roles: filter.value.periods
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
+              periods: filter.value.periods
                   .where((element) => element != e)
                   .toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -323,13 +331,14 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
-              roles: filter.value.eshkols
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
+              eshkols: filter.value.eshkols
                   .where((element) => element != e)
                   .toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -337,13 +346,14 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
-              roles: filter.value.statuses
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
+              statuses: filter.value.statuses
                   .where((element) => element != e)
                   .toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -351,12 +361,13 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
-              roles:
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
+              bases:
                   filter.value.bases.where((element) => element != e).toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -364,13 +375,14 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
-              roles: filter.value.hativot
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
+              hativot: filter.value.hativot
                   .where((element) => element != e)
                   .toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -378,13 +390,14 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
-              roles: filter.value.regions
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
+              regions: filter.value.regions
                   .where((element) => element != e)
                   .toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -392,12 +405,13 @@ class _UsersTab extends HookConsumerWidget {
         (e) => FilterChip(
           label: Text(e),
           onSelected: (val) => filterResults(
-            ref,
-            filter,
-            filter.value.copyWith(
-              roles:
+            ref: ref,
+            filter: filter,
+            newFilter: filter.value.copyWith(
+              cities:
                   filter.value.cities.where((element) => element != e).toList(),
             ),
+            users: filteredUsers,
           ),
         ),
       ),
@@ -429,13 +443,15 @@ class _UsersTab extends HookConsumerWidget {
                       final request = await ref
                           .read(
                             institutionDetailsControllerProvider(
-                              id: institutionId,
+                              id: institution.id,
                             ).notifier,
                           )
                           .filterUsers(result);
 
-                      if (request) {
+                      if (request != null) {
+                        // TODO(nogadev): should consolidate these
                         filter.value = result;
+                        filteredUsers.value = request;
                       }
                     },
                     icon: const Icon(
@@ -489,51 +505,57 @@ class _UsersTab extends HookConsumerWidget {
             ],
           ),
         ),
-        users.isEmpty
-            ? const Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
-                child: Text('ריק'),
-              )
-            : ListView(
-                shrinkWrap: true,
-                children: users.map(
-                  (e) {
-                    final compound = compounds.singleWhere(
-                      (element) => element.id == e.militaryCompoundId,
-                      orElse: () => const CompoundDto(),
-                    );
+        usersController.isLoading
+            ? const LoadingState()
+            : users.isEmpty
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: Text('ריק'),
+                  )
+                : ListView(
+                    shrinkWrap: true,
+                    children: users.map(
+                      (e) {
+                        final compound = compounds.singleWhere(
+                          (element) => element.id == e.militaryCompoundId,
+                          orElse: () => const CompoundDto(),
+                        );
 
-                    return ListTileWithTagsCard(
-                      avatar: e.avatar,
-                      name: e.fullName,
-                      onlineStatus: e.callStatus,
-                      tags: [
-                        ...e.tags,
-                        institution.name,
-                        compound.name,
-                      ],
-                    );
-                  },
-                ).toList(),
-              ),
+                        return ListTileWithTagsCard(
+                          avatar: e.avatar,
+                          name: e.fullName,
+                          onlineStatus: e.callStatus,
+                          onTap: () =>
+                              PersonaDetailsRouteData(id: e.id).push(context),
+                          tags: [
+                            ...e.tags,
+                            institution.name,
+                            compound.name,
+                          ],
+                        );
+                      },
+                    ).toList(),
+                  ),
       ],
     );
   }
 
-  void filterResults(
-    WidgetRef ref,
-    ValueNotifier<FilterDto> filter,
-    FilterDto newFilter,
-  ) async {
+  void filterResults({
+    required WidgetRef ref,
+    required ValueNotifier<FilterDto> filter,
+    required ValueNotifier<List<String>> users,
+    required FilterDto newFilter,
+  }) async {
     final request = await ref
         .read(
           institutionDetailsControllerProvider(
-            id: institutionId,
+            id: institution.id,
           ).notifier,
         )
         .filterUsers(newFilter);
 
-    if (request) {
+    if (request != null) {
+      users.value = request;
       filter.value = newFilter;
     }
   }
