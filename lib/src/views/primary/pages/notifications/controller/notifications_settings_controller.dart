@@ -37,7 +37,9 @@ class NotificationsSettingsController
         Consts.setNotificationsSettings,
         data: {
           'userId': ref.read(storageServiceProvider.notifier).getUserPhone(),
-          ...settings.toJson(),
+          ...settings.toJson().map(
+                (key, value) => MapEntry(key, value.toString()),
+              ),
         },
       );
 

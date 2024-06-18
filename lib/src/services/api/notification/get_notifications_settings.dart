@@ -19,6 +19,8 @@ class GetNotificationsSettings extends _$GetNotificationsSettings {
 
     final parsed = NotificationSettingsDto.fromJson(request.data);
 
+    ref.keepAlive();
+
     return parsed;
   }
 }

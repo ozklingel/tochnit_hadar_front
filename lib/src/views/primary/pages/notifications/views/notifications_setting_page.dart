@@ -7,7 +7,6 @@ import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/notification/notification_settings.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/views/primary/pages/notifications/controller/notifications_settings_controller.dart';
-import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NotificationsSettingsScreen extends HookConsumerWidget {
@@ -20,10 +19,6 @@ class NotificationsSettingsScreen extends HookConsumerWidget {
         ref.watch(notificationsSettingsControllerProvider);
     final settings =
         settingsController.valueOrNull ?? const NotificationSettingsDto();
-
-    if (settingsController.isLoading) {
-      return const LoadingState();
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -46,246 +41,108 @@ class NotificationsSettingsScreen extends HookConsumerWidget {
                 'משימות מתוזמנות',
                 style: TextStyles.s16w500cGrey2,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      "בתחילת השבוע של משימה ",
-                      style: TextStyles.s16w400cGrey2,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: settings.notifyStartWeek
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                    ),
-                    child: CupertinoSwitch(
-                      value: settings.notifyStartWeek,
-                      activeColor: CupertinoColors.white,
-                      trackColor: CupertinoColors.white,
-                      thumbColor: settings.notifyStartWeek
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                      onChanged: (value) => ref
-                          .read(
-                            notificationsSettingsControllerProvider.notifier,
-                          )
-                          .edit(
-                            settings: settings.copyWith(
-                              notifyStartWeek: !settings.notifyStartWeek,
-                            ),
-                          ),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 8),
+              _Item(
+                label: "בתחילת השבוע של משימה",
+                isSelected: settings.notifyStartWeek,
+                newSettings: settings.copyWith(
+                  notifyStartWeek: !settings.notifyStartWeek,
+                ),
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      "יום לפני משימה",
-                      style: TextStyles.s16w400cGrey2,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: settings.notifyDayBefore
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                    ),
-                    child: CupertinoSwitch(
-                      value: settings.notifyDayBefore,
-                      activeColor: CupertinoColors.white,
-                      trackColor: CupertinoColors.white,
-                      thumbColor: settings.notifyDayBefore
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                      onChanged: (v) => ref
-                          .read(
-                            notificationsSettingsControllerProvider.notifier,
-                          )
-                          .edit(
-                            settings: settings.copyWith(
-                              notifyDayBefore: !settings.notifyDayBefore,
-                            ),
-                          ),
-                    ),
-                  ),
-                ],
+              _Item(
+                label: "יום לפני משימה",
+                isSelected: settings.notifyDayBefore,
+                newSettings: settings.copyWith(
+                  notifyDayBefore: !settings.notifyDayBefore,
+                ),
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      " ביום משימה",
-                      style: TextStyles.s16w400cGrey2,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: settings.notifyMorning
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                    ),
-                    child: CupertinoSwitch(
-                      value: settings.notifyMorning,
-                      activeColor: CupertinoColors.white,
-                      trackColor: CupertinoColors.white,
-                      thumbColor: settings.notifyMorning
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                      onChanged: (v) => ref
-                          .read(
-                            notificationsSettingsControllerProvider.notifier,
-                          )
-                          .edit(
-                            settings: settings.copyWith(
-                              notifyMorning: !settings.notifyMorning,
-                            ),
-                          ),
-                    ),
-                  ),
-                ],
+              _Item(
+                label: "ביום משימה",
+                isSelected: settings.notifyMorning,
+                newSettings: settings.copyWith(
+                  notifyMorning: !settings.notifyMorning,
+                ),
               ),
-              const SizedBox(height: 36),
             ],
+            const SizedBox(height: 24),
             ...[
               if (auth.role.isProgramDirector)
                 const Text(
                   'תזכורת סבב מוסד',
                   style: TextStyles.s16w500cGrey2,
                 ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      "בתחילת השבוע של האירוע ",
-                      style: TextStyles.s16w400cGrey2,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: settings.notifyStartWeekSevev
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                    ),
-                    child: CupertinoSwitch(
-                      value: settings.notifyStartWeekSevev,
-                      activeColor: CupertinoColors.white,
-                      trackColor: CupertinoColors.white,
-                      thumbColor: settings.notifyStartWeekSevev
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                      onChanged: (v) => ref
-                          .read(
-                            notificationsSettingsControllerProvider.notifier,
-                          )
-                          .edit(
-                            settings: settings.copyWith(
-                              notifyStartWeekSevev:
-                                  !settings.notifyStartWeekSevev,
-                            ),
-                          ),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 8),
+              _Item(
+                label: "בתחילת השבוע של האירוע",
+                isSelected: settings.notifyStartWeekSevev,
+                newSettings: settings.copyWith(
+                  notifyStartWeekSevev: !settings.notifyStartWeekSevev,
+                ),
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      "יום לפני האירוע",
-                      style: TextStyles.s16w400cGrey2,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: settings.notifyDayBeforeSevev
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                    ),
-                    child: CupertinoSwitch(
-                      value: settings.notifyDayBeforeSevev,
-                      activeColor: CupertinoColors.white,
-                      trackColor: CupertinoColors.white,
-                      thumbColor: settings.notifyDayBeforeSevev
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                      onChanged: (v) => ref
-                          .read(
-                            notificationsSettingsControllerProvider.notifier,
-                          )
-                          .edit(
-                            settings: settings.copyWith(
-                              notifyDayBeforeSevev:
-                                  !settings.notifyDayBeforeSevev,
-                            ),
-                          ),
-                    ),
-                  ),
-                ],
+              _Item(
+                label: "יום לפני האירוע",
+                isSelected: settings.notifyDayBeforeSevev,
+                newSettings: settings.copyWith(
+                  notifyDayBeforeSevev: !settings.notifyDayBeforeSevev,
+                ),
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      " ביום האירוע",
-                      style: TextStyles.s16w400cGrey2,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: settings.notifyMorningSevev
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                    ),
-                    child: CupertinoSwitch(
-                      value: settings.notifyMorningSevev,
-                      activeColor: CupertinoColors.white,
-                      trackColor: CupertinoColors.white,
-                      thumbColor: settings.notifyMorningSevev
-                          ? Colors.blue.shade700
-                          : CupertinoColors.inactiveGray,
-                      onChanged: (v) => ref
-                          .read(
-                            notificationsSettingsControllerProvider.notifier,
-                          )
-                          .edit(
-                            settings: settings.copyWith(
-                              notifyMorningSevev: !settings.notifyMorningSevev,
-                            ),
-                          ),
-                    ),
-                  ),
-                ],
+              _Item(
+                label: "ביום האירוע",
+                isSelected: settings.notifyMorningSevev,
+                newSettings: settings.copyWith(
+                  notifyMorningSevev: !settings.notifyMorningSevev,
+                ),
               ),
             ],
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Item extends ConsumerWidget {
+  const _Item({
+    required this.label,
+    required this.isSelected,
+    required this.newSettings,
+  });
+
+  final String label;
+  final bool isSelected;
+  final NotificationSettingsDto newSettings;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final isLoading =
+        ref.watch(notificationsSettingsControllerProvider).isLoading;
+
+    return SwitchListTile(
+      title: Text(
+        label,
+        style: TextStyles.s16w400cGrey2,
+      ),
+      trackOutlineColor: WidgetStateColor.resolveWith(
+        (states) =>
+            isSelected ? Colors.blue.shade700 : CupertinoColors.inactiveGray,
+      ),
+      trackColor: WidgetStateColor.resolveWith(
+        (states) => Colors.white,
+      ),
+      thumbColor: WidgetStateColor.resolveWith(
+        (states) =>
+            isSelected ? Colors.blue.shade700 : CupertinoColors.inactiveGray,
+      ),
+      value: isSelected,
+      onChanged: isLoading
+          ? null
+          : (value) => ref
+              .read(
+                notificationsSettingsControllerProvider.notifier,
+              )
+              .edit(
+                settings: newSettings,
+              ),
     );
   }
 }
