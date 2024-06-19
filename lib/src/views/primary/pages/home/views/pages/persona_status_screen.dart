@@ -12,7 +12,7 @@ import 'package:hadar_program/src/services/api/institutions/get_institutions.dar
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/apprentices_status_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_messagecreen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_message_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/export_excel_bar.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/institutions_view.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';

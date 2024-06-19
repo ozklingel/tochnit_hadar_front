@@ -1,9 +1,12 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
+import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -17,6 +20,7 @@ class SendStatusMessagecreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final auth = ref.watch(authServiceProvider).valueOrNull ?? const AuthDto();
     final isRakazEshkol = useState(true);
     final isRakazMosad = useState(true);
     final isMelave = useState(true);
@@ -54,35 +58,45 @@ class SendStatusMessagecreen extends HookConsumerWidget {
                     isRequired: true,
                     child: Column(
                       children: [
-                        CheckboxListTile(
-                          value: isRakazEshkol.value,
-                          onChanged: (_) =>
-                              isRakazEshkol.value = !isRakazEshkol.value,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          title: const Text(
-                            'רכז אשכול',
-                            style: TextStyles.s16w400cGrey2,
+                        if (auth.role == UserRole.ahraiTohnit)
+                          CheckboxListTile(
+                            value: isRakazEshkol.value,
+                            onChanged: (_) =>
+                                isRakazEshkol.value = !isRakazEshkol.value,
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: const Text(
+                              'רכז אשכול',
+                              style: TextStyles.s16w400cGrey2,
+                            ),
                           ),
-                        ),
-                        CheckboxListTile(
-                          value: isRakazMosad.value,
-                          onChanged: (_) =>
-                              isRakazMosad.value = !isRakazMosad.value,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          title: const Text(
-                            'רכז מוסד',
-                            style: TextStyles.s16w400cGrey2,
+                        if ([
+                          UserRole.ahraiTohnit,
+                          UserRole.rakazEshkol,
+                        ].contains(auth.role))
+                          CheckboxListTile(
+                            value: isRakazMosad.value,
+                            onChanged: (_) =>
+                                isRakazMosad.value = !isRakazMosad.value,
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: const Text(
+                              'רכז מוסד',
+                              style: TextStyles.s16w400cGrey2,
+                            ),
                           ),
-                        ),
-                        CheckboxListTile(
-                          value: isMelave.value,
-                          onChanged: (_) => isMelave.value = !isMelave.value,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          title: const Text(
-                            'מלווה',
-                            style: TextStyles.s16w400cGrey2,
+                        if ([
+                          UserRole.ahraiTohnit,
+                          UserRole.rakazEshkol,
+                          UserRole.rakazMosad,
+                        ].contains(auth.role))
+                          CheckboxListTile(
+                            value: isMelave.value,
+                            onChanged: (_) => isMelave.value = !isMelave.value,
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: const Text(
+                              'מלווה',
+                              style: TextStyles.s16w400cGrey2,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -127,22 +141,9 @@ class SendStatusMessagecreen extends HookConsumerWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: LargeFilledRoundedButton(
-                      label: 'שליחה',
-                      onPressed: () => Toaster.unimplemented(),
-                    ),
-                  ),
-                  const SizedBox(width: 24),
-                  Expanded(
-                    child: LargeFilledRoundedButton.cancel(
-                      label: 'שליחה',
-                      onPressed: () => Toaster.unimplemented(),
-                    ),
-                  ),
-                ],
+              child: AcceptCancelButtons(
+                onPressedOk: () => Toaster.unimplemented(),
+                onPressedCancel: () => Navigator.of(context).pop(),
               ),
             ),
           ],

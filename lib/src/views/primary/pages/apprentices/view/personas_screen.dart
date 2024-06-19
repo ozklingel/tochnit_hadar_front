@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -56,7 +57,10 @@ class PersonasScreen extends HookConsumerWidget {
     useValueChanged<FilterDto, Future<void>>(
       filters.value,
       (_, __) async {
-        final roleList = RoleInProgram.values.map((e) => e.name).toList();
+        final roleList = UserRole.values
+            .whereNot((element) => element == UserRole.other)
+            .map((e) => e.name)
+            .toList();
         // The search api won't return anything if the roles are empty
         final filter = filters.value.roles.isNotEmpty
             ? filters.value
@@ -65,6 +69,7 @@ class PersonasScreen extends HookConsumerWidget {
             .read(personasControllerProvider.notifier)
             .filterUsers(filter);
         filtersResult.value = request;
+
         return;
       },
     );
