@@ -16,6 +16,8 @@ import 'package:hadar_program/src/views/primary/pages/home/views/widgets/perform
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_events_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/widgets/upcoming_tasks_widget.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
+import 'package:hadar_program/src/views/widgets/states/error_state.dart';
+import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -54,23 +56,27 @@ class HomeScreen extends ConsumerWidget {
               ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const HomeHeader(),
-            const SizedBox(height: 44),
-            if (user.role == UserRole.melave)
-              const _MelaveBody()
-            else if ([
-              UserRole.ahraiTohnit,
-              UserRole.rakazEshkol,
-              UserRole.rakazMosad,
-            ].contains(user.role))
-              const _AhraiTohnitBody()
-            else
-              const Center(child: Text('BAD USER ROLE')),
-          ],
+      body: auth.when(
+        loading: () => const LoadingState(),
+        error: (error, stack) => ErrorState(error),
+        data: (data) => SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const HomeHeader(),
+              const SizedBox(height: 44),
+              if (user.role == UserRole.melave)
+                const _MelaveBody()
+              else if ([
+                UserRole.ahraiTohnit,
+                UserRole.rakazEshkol,
+                UserRole.rakazMosad,
+              ].contains(user.role))
+                const _AhraiTohnitBody()
+              else
+                const Center(child: Text('BAD USER ROLE')),
+            ],
+          ),
         ),
       ),
     );

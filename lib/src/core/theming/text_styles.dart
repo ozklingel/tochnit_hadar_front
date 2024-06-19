@@ -593,6 +593,16 @@ abstract class TextStyles {
     ],
   );
 
+  static const s12w300cGray5 = TextStyle(
+    fontFamily: _kFontFamily,
+    fontSize: 12,
+    height: 1,
+    color: AppColors.gray5,
+    fontVariations: [
+      FontVariation('wght', 300),
+    ],
+  );
+
   static const s11w500fRoboto = TextStyle(
     fontFamily: 'Roboto',
     fontSize: 11,
