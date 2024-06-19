@@ -33,7 +33,7 @@ class MessagesController extends _$MessagesController {
 
     try {
       final result = await ref.read(dioServiceProvider).post(
-        Consts.addMessage,
+        Consts.postMessage,
         data: {
           'subject': msg.title,
           'content': msg.content,
@@ -45,7 +45,7 @@ class MessagesController extends _$MessagesController {
             MessageMethod.sms => 'PHONE',
             MessageMethod.whatsapp => 'WHATSAPP',
             MessageMethod.system => 'SYSTEM',
-            MessageMethod.other => 'UNKNOWN',
+            MessageMethod.unknown => 'UNKNOWN',
           },
           'attachments': msg.attachments,
           // 'icon': msg.icon,
@@ -69,7 +69,7 @@ class MessagesController extends _$MessagesController {
   Future<bool> edit(MessageDto msg) async {
     try {
       await ref.read(dioServiceProvider).post(
-        Consts.addMessage,
+        Consts.postMessage,
         data: {
           'subject': msg.title,
           'content': msg.content,
@@ -96,7 +96,7 @@ class MessagesController extends _$MessagesController {
 
     try {
       await ref.read(dioServiceProvider).post(
-        Consts.setMessagesWasRead,
+        Consts.postMessagesWasRead,
         data: {
           'message_id': msg.id,
         },

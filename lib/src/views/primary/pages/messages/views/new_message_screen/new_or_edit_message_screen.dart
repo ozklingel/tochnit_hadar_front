@@ -47,7 +47,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
     );
     final personas = ref.watch(getPersonasProvider).valueOrNull ?? [];
     final selectedRecipients = useState(<PersonaDto>[]);
-    final method = useState(MessageMethod.other);
+    final method = useState(MessageMethod.unknown);
     final title = useTextEditingController(text: msg.title);
     final body = useTextEditingController(text: msg.content);
     final isAddUserInMsg = useState(false);
@@ -362,7 +362,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton2<MessageMethod>(
                             hint: Text(
-                              method.value == MessageMethod.other
+                              method.value == MessageMethod.unknown
                                   ? 'בחר את סוג ההודעה'
                                   : method.value.name,
                               style: TextStyles.s16w400cGrey5,
@@ -392,7 +392,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                               padding: const EdgeInsets.only(right: 8),
                             ),
                             onChanged: (value) {
-                              method.value = value ?? MessageMethod.other;
+                              method.value = value ?? MessageMethod.unknown;
                             },
                             dropdownStyleData: const DropdownStyleData(
                               decoration: BoxDecoration(

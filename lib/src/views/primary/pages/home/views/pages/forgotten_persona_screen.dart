@@ -170,7 +170,8 @@ class _PersonasView extends HookConsumerWidget {
     final forgottenApprentices =
         screenController.valueOrNull ?? const ForgottenMosadApprenticesDto();
     final selectedPersonas = useState(<PersonaDto>[]);
-    final filteredPersonas = (ref.watch(getPersonasProvider).valueOrNull ?? [])
+    final personas = ref.watch(getPersonasProvider);
+    final filteredPersonas = (personas.valueOrNull ?? [])
         .where(
           (element) => forgottenApprentices.items.any(
             (e) => e.id == element.id,
@@ -180,7 +181,7 @@ class _PersonasView extends HookConsumerWidget {
 
     // Logger().d(forgottenApprentices.items);
 
-    return screenController.isLoading
+    return screenController.isLoading || personas.isLoading
         ? const LoadingState()
         : Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -252,6 +253,13 @@ class _PersonasView extends HookConsumerWidget {
                               )
                                   .map(
                                 (e) {
+                                  final forgotten =
+                                      forgottenApprentices.items.singleWhere(
+                                    (element) => element.id == e.id,
+                                    orElse: () =>
+                                        const ForgottenApprenticeDto(),
+                                  );
+
                                   void selectPersona() {
                                     if (selectedPersonas.value.contains(e)) {
                                       selectedPersonas.value = [
@@ -275,11 +283,7 @@ class _PersonasView extends HookConsumerWidget {
                                     onLongPress: selectPersona,
                                     onTap: selectPersona,
                                     tags: [
-                                      'עברו ${forgottenApprentices.items.singleWhere(
-                                            (element) => element.id == e.id,
-                                            orElse: () =>
-                                                const ForgottenApprenticeDto(),
-                                          ).gap} ימים מהשיחה האחרונה',
+                                      'עברו ${forgotten.gap} ימים מהשיחה האחרונה',
                                     ],
                                   );
                                 },

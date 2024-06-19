@@ -483,7 +483,7 @@ class _FormOrImportPage extends HookConsumerWidget {
                 isLoading.value = true;
 
                 try {
-                  var result = await FilePicker.platform.pickFiles(
+                  final result = await FilePicker.platform.pickFiles(
                     allowMultiple: false,
                     withData: true,
                     type: FileType.custom,

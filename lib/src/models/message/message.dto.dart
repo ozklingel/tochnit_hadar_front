@@ -15,7 +15,20 @@ enum MessageMethod {
   sms,
   whatsapp,
   system,
-  other;
+  unknown;
+
+  String get postType {
+    switch (this) {
+      case sms:
+        return 'SMS';
+      case whatsapp:
+        return 'WHATAPP';
+      case system:
+        return 'INTERNAL';
+      case unknown:
+        return 'UNKOWN';
+    }
+  }
 
   String get name {
     switch (this) {
@@ -26,9 +39,13 @@ enum MessageMethod {
       case system:
         return 'הודעת מערכת';
       default:
-        return 'other?';
+        return 'unknown';
     }
   }
+}
+
+extension MessageMethodX on MessageMethod {
+  bool get isEmpty => this == MessageMethod.unknown;
 }
 
 @JsonSerializable()
@@ -87,7 +104,7 @@ class MessageDto with _$MessageDto {
       defaultValue: [],
     )
     List<String> to,
-    @Default(MessageMethod.other)
+    @Default(MessageMethod.unknown)
     @JsonKey(
       fromJson: _extractMessageMethod,
     )
@@ -99,7 +116,7 @@ class MessageDto with _$MessageDto {
 }
 
 MessageMethod _extractMessageMethod(String? data) {
-  return MessageMethod.other;
+  return MessageMethod.unknown;
 }
 
 MessageType _extractMessageType(String? data) {

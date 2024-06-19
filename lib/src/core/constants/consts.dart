@@ -26,10 +26,11 @@ abstract class Consts {
   // messages
   static const messagesApiEndpoint = 'messegaes_form/';
   static const getAllMessages = '${messagesApiEndpoint}getAll';
-  static const setMessagesWasRead = '${messagesApiEndpoint}setWasRead';
-  static const addMessage = '${messagesApiEndpoint}add';
+  static const postMessagesWasRead = '${messagesApiEndpoint}setWasRead';
+  static const postMessage = '${messagesApiEndpoint}add';
   static const deleteMessage = '${messagesApiEndpoint}delete';
-  static const msgSendPerPersona = '${messagesApiEndpoint}send_per_persona';
+  static const postMessageSendPerPersona =
+      '${messagesApiEndpoint}send_per_persona';
 
   // homepage
   static const getHomePageInitMaster = '/homepage_form/initMaster';
