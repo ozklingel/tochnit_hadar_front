@@ -70,6 +70,7 @@ class _EventCard extends ConsumerWidget {
         .watch(personasControllerProvider)
         .valueOrNull
         ?.firstWhereOrNull((element) => event.id.contains(element.id));
+
     return SizedBox(
       width: 232,
       child: DecoratedBox(
@@ -89,6 +90,7 @@ class _EventCard extends ConsumerWidget {
               ? () {
                   if (event.id.isEmpty) {
                     Toaster.error('missing gift id');
+
                     return;
                   }
                   GiftRouteData(id: event.id).go(context);
