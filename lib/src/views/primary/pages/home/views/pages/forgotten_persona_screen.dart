@@ -274,8 +274,12 @@ class _PersonasView extends HookConsumerWidget {
                                         selectedPersonas.value.contains(e),
                                     onLongPress: selectPersona,
                                     onTap: selectPersona,
-                                    tags: const [
-                                      'עברו 78 ימים מהשיחה האחרונה',
+                                    tags: [
+                                      'עברו ${forgottenApprentices.items.singleWhere(
+                                            (element) => element.id == e.id,
+                                            orElse: () =>
+                                                const ForgottenApprenticeDto(),
+                                          ).gap} ימים מהשיחה האחרונה',
                                     ],
                                   );
                                 },
