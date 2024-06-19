@@ -51,7 +51,7 @@ class ReportsScreen extends HookConsumerWidget {
       return element.recipients.contains(personaId);
     });
 
-    if (auth.valueOrNull?.role.isProgramDirector ?? false) {
+    if (auth.valueOrNull?.role.isAhraiTohnit ?? false) {
       return Scaffold(
         appBar: AppBar(
           title: const Text('דיווחים'),

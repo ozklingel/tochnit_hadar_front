@@ -133,12 +133,12 @@ class NewPersonaScreen extends HookConsumerWidget {
                       value: UserRole.rakazEshkol,
                       child: Text('רכז אשכול'),
                     ),
-                  if (auth.role == UserRole.ahraiTohnit)
+                  if (auth.role.isAhraiTohnit)
                     const DropdownMenuItem(
                       value: UserRole.ahraiTohnit,
                       child: Text('אחראי תוכנית'),
                     ),
-                  if (auth.role == UserRole.ahraiTohnit)
+                  if (auth.role.isAhraiTohnit)
                     const DropdownMenuItem(
                       value: UserRole.other,
                       child: Text('מוסד'),

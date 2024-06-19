@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/string.dart';
+import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
@@ -12,8 +13,6 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/controller/use
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:requests_inspector/requests_inspector.dart';
-
-import '../../../../../gen/assets.gen.dart';
 
 class SideMenuDrawer extends ConsumerWidget {
   const SideMenuDrawer({
@@ -91,14 +90,15 @@ class SideMenuDrawer extends ConsumerWidget {
                     const PersonasRouteData().go(context);
                   },
                 ),
-                if ([UserRole.ahraiTohnit, UserRole.rakazEshkol]
-                    .contains(auth.valueOrNull?.role)) ...[
+                if (auth.valueOrNull?.role.isRakazMosadPlus ?? false) ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.person_24_regular),
                     title: const Text('ניהול משתמשים'),
                     onTap: () => const PersonasRouteData().go(context),
                   ),
+                ],
+                if (auth.valueOrNull?.role.isRakazEshkolPlus ?? false) ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.book_open_24_regular),
@@ -106,7 +106,7 @@ class SideMenuDrawer extends ConsumerWidget {
                     onTap: () => const InstitutionsRouteData().push(context),
                   ),
                 ],
-                if (auth.valueOrNull?.role == UserRole.ahraiTohnit) ...[
+                if (auth.valueOrNull?.role.isAhraiTohnit ?? false) ...[
                   ListTile(
                     dense: true,
                     leading: const Icon(FluentIcons.gift_16_regular),

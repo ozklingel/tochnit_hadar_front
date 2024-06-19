@@ -344,7 +344,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         ),
                       ),
                     )
-                  else if (auth.valueOrNull?.role == UserRole.ahraiTohnit)
+                  else if (auth.valueOrNull?.role.isAhraiTohnit ?? false)
                     InputFieldContainer(
                       label: 'הוספת משתתפים',
                       isRequired: true,

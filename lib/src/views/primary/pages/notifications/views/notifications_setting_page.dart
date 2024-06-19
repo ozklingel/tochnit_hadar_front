@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
-import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/notification/notification_settings.dto.dart';
@@ -30,13 +29,13 @@ class NotificationsSettingsScreen extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              auth.role.isProgramDirector
+              auth.role.isAhraiTohnit
                   ? 'הגדרת זמני קבלת התראות על אירועים'
                   : 'הגדרת זמני קבלת ההתראות על אירועים (ימי הולדת ואירועים אישיים של החניך)',
               style: TextStyles.s16w400cGrey2,
             ),
             const SizedBox(height: 36),
-            if (auth.role == UserRole.ahraiTohnit) ...[
+            if (auth.role.isAhraiTohnit) ...[
               const Text(
                 'משימות מתוזמנות',
                 style: TextStyles.s16w500cGrey2,
@@ -66,7 +65,7 @@ class NotificationsSettingsScreen extends HookConsumerWidget {
             ],
             const SizedBox(height: 24),
             ...[
-              if (auth.role.isProgramDirector)
+              if (auth.role.isAhraiTohnit)
                 const Text(
                   'תזכורת סבב מוסד',
                   style: TextStyles.s16w500cGrey2,

@@ -103,22 +103,26 @@ class _AhraiTohnitBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final ahraiTohnit = ref.watch(ahraiHomeControllerProvider).valueOrNull ??
-        const AhraiHomeDto();
+    final auth = ref.watch(authServiceProvider);
+    final user = auth.valueOrNull ?? const AuthDto();
+    final role = user.role;
+    final ahraiTohnitController =
+        ref.watch(ahraiHomeControllerProvider).valueOrNull ??
+            const AhraiHomeDto();
 
     return Column(
       children: [
         DoughnutChartsWidget(
-          callsGreen: ahraiTohnit.greenVisitCalls,
-          callsOrange: ahraiTohnit.orangeVisitCalls,
-          callsRed: ahraiTohnit.redVisitCalls,
-          meeetingsGreen: ahraiTohnit.greenVisitMeetings,
-          meeetingsOrange: ahraiTohnit.orangeVisitMeetings,
-          meeetingsRed: ahraiTohnit.redVisitMeetings,
+          callsGreen: ahraiTohnitController.greenVisitCalls,
+          callsOrange: ahraiTohnitController.orangeVisitCalls,
+          callsRed: ahraiTohnitController.redVisitCalls,
+          meeetingsGreen: ahraiTohnitController.greenVisitMeetings,
+          meeetingsOrange: ahraiTohnitController.orangeVisitMeetings,
+          meeetingsRed: ahraiTohnitController.redVisitMeetings,
         ),
         PerformanceWidget(
           title: 'תפקוד מלווים',
-          data: ahraiTohnit.melaveScore,
+          data: ahraiTohnitController.melaveScore,
           onTap: () => const PersonaPerformanceRouteData(
             title: 'סטטוס חניכים',
             subtitle: 'מלווים מכלל המוסדות',
@@ -126,20 +130,21 @@ class _AhraiTohnitBody extends ConsumerWidget {
         ),
         PerformanceWidget(
           title: 'תפקוד רכזים',
-          data: ahraiTohnit.rakazimScore,
+          data: ahraiTohnitController.rakazimScore,
           onTap: () => const PersonaPerformanceRouteData(
             title: 'תפקוד רכזים',
             subtitle: 'מלווים מכלל המוסדות',
           ).push(context),
         ),
-        PerformanceWidget(
-          title: 'תפקוד רכזי אשכול',
-          data: ahraiTohnit.eshkolScore,
-          onTap: () => const PersonaPerformanceRouteData(
-            title: 'תפקוד רכזים',
-            subtitle: 'מלווים מכלל המוסדות',
-          ).push(context),
-        ),
+        if (role.isAhraiTohnit)
+          PerformanceWidget(
+            title: 'תפקוד רכזי אשכול',
+            data: ahraiTohnitController.eshkolScore,
+            onTap: () => const PersonaPerformanceRouteData(
+              title: 'תפקוד רכזים',
+              subtitle: 'מלווים מכלל המוסדות',
+            ).push(context),
+          ),
         const _ForgottenApprentices(),
       ],
     );

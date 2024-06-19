@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/enums/address_region.dart';
 import 'package:hadar_program/src/core/enums/marital_status.dart';
 import 'package:hadar_program/src/core/enums/relationship.dart';
-import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
@@ -67,7 +66,7 @@ class _WorkSection extends HookConsumerWidget {
 
     return DetailsCard(
       title: 'עיסוק',
-      trailing: auth.valueOrNull?.role == UserRole.ahraiTohnit
+      trailing: auth.valueOrNull?.role.isAhraiTohnit ?? false
           ? RowIconButton(
               onPressed: () => isEditMode.value = !isEditMode.value,
               icon: const Icon(FluentIcons.edit_24_regular),
@@ -172,7 +171,7 @@ class _EducationSection extends HookConsumerWidget {
 
     return DetailsCard(
       title: 'לימודי תיכון',
-      trailing: auth.valueOrNull?.role == UserRole.ahraiTohnit
+      trailing: auth.valueOrNull?.role.isAhraiTohnit ?? false
           ? RowIconButton(
               onPressed: () => isEditMode.value = !isEditMode.value,
               icon: const Icon(FluentIcons.edit_24_regular),
@@ -277,7 +276,7 @@ class _FamilySection extends HookConsumerWidget {
 
     return DetailsCard(
       title: 'משפחה',
-      trailing: auth.valueOrNull?.role == UserRole.ahraiTohnit
+      trailing: auth.valueOrNull?.role.isAhraiTohnit ?? false
           ? RowIconButton(
               onPressed: () => isEditMode.value = !isEditMode.value,
               icon: const Icon(FluentIcons.edit_24_regular),
@@ -509,7 +508,7 @@ class _DatesSection extends HookConsumerWidget {
 
     return DetailsCard(
       title: 'תאריכים',
-      trailing: auth.valueOrNull?.role == UserRole.ahraiTohnit
+      trailing: auth.valueOrNull?.role.isAhraiTohnit ?? false
           ? RowIconButton(
               onPressed: () => isEditMode.value = !isEditMode.value,
               icon: const Icon(FluentIcons.edit_24_regular),
@@ -623,7 +622,7 @@ class _GeneralSection extends HookConsumerWidget {
 
     return DetailsCard(
       title: 'כללי',
-      trailing: auth.valueOrNull?.role.isProgramDirector ?? false
+      trailing: auth.valueOrNull?.role.isAhraiTohnit ?? false
           ? RowIconButton(
               onPressed: () => isEditMode.value = !isEditMode.value,
               icon: const Icon(FluentIcons.edit_24_regular),

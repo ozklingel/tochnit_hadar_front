@@ -70,7 +70,7 @@ class TohnitHadarTabView extends HookConsumerWidget {
           persona: persona,
           institution: institution,
         ),
-        if (auth.role.isProgramDirector)
+        if (auth.role.isAhraiTohnit)
           DetailsCard(
             title: 'מצב”ר',
             trailing: Row(
@@ -276,7 +276,7 @@ class _GeneralSection extends HookConsumerWidget {
               icon: const Icon(Icons.check),
               label: Text(persona.isPaying ? 'משלם' : 'לא משלם'),
             ),
-          if (!auth.role.isProgramDirector)
+          if (!auth.role.isAhraiTohnit)
             IconButton(
               icon: const Icon(FluentIcons.edit_24_regular),
               onPressed: () => isEditMode.value = !isEditMode.value,
@@ -287,7 +287,7 @@ class _GeneralSection extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: isEditMode.value
             ? [
-                if (auth.role.isProgramDirector)
+                if (auth.role.isAhraiTohnit)
                   InputFieldContainer(
                     label: 'מקום לימודים',
                     isRequired: true,

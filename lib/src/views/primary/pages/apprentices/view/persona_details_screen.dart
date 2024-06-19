@@ -1,7 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/controllers/subordinate_scroll_controller.dart';
@@ -82,7 +81,7 @@ class _ApprenticeDetailsScreenState
         centerTitle: true,
         title: const Text('כרטיס חניך'),
         actions: [
-          if (auth.valueOrNull?.role == UserRole.ahraiTohnit)
+          if (auth.valueOrNull?.role.isAhraiTohnit ?? false)
             PopupMenuButton(
               offset: const Offset(0, 32),
               itemBuilder: (context) => [

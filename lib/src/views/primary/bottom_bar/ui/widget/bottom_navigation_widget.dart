@@ -144,7 +144,7 @@ class _MailIconWidget extends ConsumerWidget {
                   return false;
                 }
 
-                return auth.role.isProgramDirector
+                return auth.role.isAhraiTohnit
                     ? element.type == MessageType.customerService
                     : element.type == MessageType.incoming;
               },

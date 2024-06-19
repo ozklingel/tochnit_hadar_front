@@ -18,5 +18,11 @@ enum UserRole {
         _ => 'USER.ROLE.ERROR',
       };
 
-  bool get isProgramDirector => this == UserRole.ahraiTohnit;
+  // hierarchies
+  bool get isAhraiTohnit => this == UserRole.ahraiTohnit;
+  bool get isRakazEshkolPlus => isAhraiTohnit || this == UserRole.rakazEshkol;
+  bool get isRakazMosad => this == UserRole.rakazMosad;
+  bool get isRakazMosadPlus => isRakazEshkolPlus || this == UserRole.rakazMosad;
+  bool get isMelavePlus => isRakazMosadPlus || this == UserRole.melave;
+  bool get isMelave => this == UserRole.melave;
 }

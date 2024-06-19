@@ -197,19 +197,19 @@ class TasksScreen extends HookConsumerWidget {
               .toList(),
         ),
       ),
-      floatingActionButton: (auth.value?.role.isProgramDirector ?? false) &&
-              tabController.index == 0
-          ? FloatingActionButton(
-              onPressed: () => const NewTaskRouteData().push(context),
-              heroTag: UniqueKey(),
-              shape: const CircleBorder(),
-              backgroundColor: AppColors.blue02,
-              child: const Icon(
-                FluentIcons.add_24_regular,
-                color: Colors.white,
-              ),
-            )
-          : null,
+      floatingActionButton:
+          (auth.value?.role.isAhraiTohnit ?? false) && tabController.index == 0
+              ? FloatingActionButton(
+                  onPressed: () => const NewTaskRouteData().push(context),
+                  heroTag: UniqueKey(),
+                  shape: const CircleBorder(),
+                  backgroundColor: AppColors.blue02,
+                  child: const Icon(
+                    FluentIcons.add_24_regular,
+                    color: Colors.white,
+                  ),
+                )
+              : null,
       body: TabBarView(
         controller: tabController,
         children: tabs
@@ -230,11 +230,10 @@ class TasksScreen extends HookConsumerWidget {
                                 tab.emptyStateText ?? 'אין ${tab.title} לבצע',
                           )
                     : Opacity(
-                        opacity:
-                            (auth.value?.role.isProgramDirector ?? false) &&
-                                    tabIndex == tabs.length
-                                ? .6
-                                : 1,
+                        opacity: (auth.value?.role.isAhraiTohnit ?? false) &&
+                                tabIndex == tabs.length
+                            ? .6
+                            : 1,
                         child: ListView.builder(
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.all(16),

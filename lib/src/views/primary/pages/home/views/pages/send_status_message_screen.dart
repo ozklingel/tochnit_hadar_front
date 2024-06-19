@@ -58,7 +58,7 @@ class SendStatusMessagecreen extends HookConsumerWidget {
                     isRequired: true,
                     child: Column(
                       children: [
-                        if (auth.role == UserRole.ahraiTohnit)
+                        if (auth.role.isAhraiTohnit)
                           CheckboxListTile(
                             value: isRakazEshkol.value,
                             onChanged: (_) =>

@@ -5,6 +5,7 @@ import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
+import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/message/message.dto.dart';
 import 'package:hadar_program/src/services/api/messegaes_form/get_messages.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
@@ -14,6 +15,7 @@ import 'package:hadar_program/src/views/primary/pages/messages/views/widgets/mes
 import 'package:hadar_program/src/views/widgets/appbars/search_appbar.dart';
 import 'package:hadar_program/src/views/widgets/chips/filter_chip.dart';
 import 'package:hadar_program/src/views/widgets/states/empty_state.dart';
+import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -46,6 +48,13 @@ class MessagesScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
+    final user = auth.valueOrNull ?? const AuthDto();
+    final role = user.role;
+
+    if (auth.isLoading) {
+      return const LoadingState();
+    }
+
     final msgsController = ref.watch(messagesControllerProvider);
     final msgsControllerState = msgsController.valueOrNull ?? [];
     final isSearchOpen = useState(false);
@@ -134,8 +143,10 @@ class MessagesScreen extends HookConsumerWidget {
       },
     ).toList();
 
-    switch (auth.valueOrNull?.role) {
+    switch (role) {
       case UserRole.ahraiTohnit:
+      case UserRole.rakazEshkol:
+      case UserRole.rakazMosad:
         return Scaffold(
           appBar: SearchAppBar(
             controller: searchController,
@@ -155,15 +166,25 @@ class MessagesScreen extends HookConsumerWidget {
                 Tab(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('פניות שירות'),
-                      if (msgsControllerState.any(
-                        (element) =>
-                            !element.allreadyRead &&
-                            element.type == MessageType.customerService,
-                      ))
-                        const _NewNotifIndicator(),
-                    ],
+                    children: role.isAhraiTohnit
+                        ? [
+                            const Text('פניות שירות'),
+                            if (msgsControllerState.any(
+                              (element) =>
+                                  !element.allreadyRead &&
+                                  element.type == MessageType.customerService,
+                            ))
+                              const _NewNotifIndicator(),
+                          ]
+                        : [
+                            const Text('נכנסות'),
+                            if (msgsControllerState.any(
+                              (element) =>
+                                  !element.allreadyRead &&
+                                  element.type == MessageType.incoming,
+                            ))
+                              const _NewNotifIndicator(),
+                          ],
                   ),
                 ),
                 const Tab(text: 'יוצאות'),
@@ -184,7 +205,7 @@ class MessagesScreen extends HookConsumerWidget {
           ),
           floatingActionButton: (tabController.animation?.value ?? 0) < .5
               ? null
-              : auth.valueOrNull?.role == UserRole.ahraiTohnit
+              : role.isAhraiTohnit
                   ? FloatingActionButton(
                       onPressed: () =>
                           const NewMessageRouteData().push(context),
@@ -207,114 +228,140 @@ class MessagesScreen extends HookConsumerWidget {
               children: [
                 Column(
                   children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 52,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          children: msgsController.isLoading
-                              ? List.generate(
-                                  10,
-                                  (index) => MessageWidget.collapsed(
-                                    message: MessageDto(
-                                      title: 'titletitletitletitle',
-                                      content: 'contentcontentcontent',
-                                      dateTime:
-                                          DateTime.now().toIso8601String(),
-                                      attachments: ['549247615'],
-                                      from: '549247615',
-                                    ),
-                                  ),
-                                )
-                              : [
-                                  FilterChipWidget(
-                                    text: _TagFilter.data.name,
-                                    isSelected: filter.value == _TagFilter.data,
-                                    onTap: () {
-                                      if (filter.value == _TagFilter.data) {
-                                        filter.value = _TagFilter.all;
-                                      } else {
-                                        filter.value = _TagFilter.data;
-                                      }
-                                    },
-                                  ),
-                                  FilterChipWidget(
-                                    text: _TagFilter.technical.name,
-                                    isSelected:
-                                        filter.value == _TagFilter.technical,
-                                    onTap: () {
-                                      if (filter.value ==
-                                          _TagFilter.technical) {
-                                        filter.value = _TagFilter.all;
-                                      } else {
-                                        filter.value = _TagFilter.technical;
-                                      }
-                                    },
-                                  ),
-                                  FilterChipWidget(
-                                    text: _TagFilter.users.name,
-                                    isSelected:
-                                        filter.value == _TagFilter.users,
-                                    onTap: () {
-                                      if (filter.value == _TagFilter.users) {
-                                        filter.value = _TagFilter.all;
-                                      } else {
-                                        filter.value = _TagFilter.users;
-                                      }
-                                    },
-                                  ),
-                                  FilterChipWidget(
-                                    text: _TagFilter.other.name,
-                                    isSelected:
-                                        filter.value == _TagFilter.other,
-                                    onTap: () {
-                                      if (filter.value == _TagFilter.other) {
-                                        filter.value = _TagFilter.all;
-                                      } else {
-                                        filter.value = _TagFilter.other;
-                                      }
-                                    },
-                                  ),
-                                ]
-                                  .map(
-                                    (e) => Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 4,
+                    if (role.isAhraiTohnit)
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: 52,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            children: msgsController.isLoading
+                                ? List.generate(
+                                    10,
+                                    (index) => MessageWidget.collapsed(
+                                      message: MessageDto(
+                                        title: 'titletitletitletitle',
+                                        content: 'contentcontentcontent',
+                                        dateTime:
+                                            DateTime.now().toIso8601String(),
+                                        attachments: ['549247615'],
+                                        from: '549247615',
                                       ),
-                                      child: e,
                                     ),
                                   )
-                                  .toList(),
+                                : [
+                                    FilterChipWidget(
+                                      text: _TagFilter.data.name,
+                                      isSelected:
+                                          filter.value == _TagFilter.data,
+                                      onTap: () {
+                                        if (filter.value == _TagFilter.data) {
+                                          filter.value = _TagFilter.all;
+                                        } else {
+                                          filter.value = _TagFilter.data;
+                                        }
+                                      },
+                                    ),
+                                    FilterChipWidget(
+                                      text: _TagFilter.technical.name,
+                                      isSelected:
+                                          filter.value == _TagFilter.technical,
+                                      onTap: () {
+                                        if (filter.value ==
+                                            _TagFilter.technical) {
+                                          filter.value = _TagFilter.all;
+                                        } else {
+                                          filter.value = _TagFilter.technical;
+                                        }
+                                      },
+                                    ),
+                                    FilterChipWidget(
+                                      text: _TagFilter.users.name,
+                                      isSelected:
+                                          filter.value == _TagFilter.users,
+                                      onTap: () {
+                                        if (filter.value == _TagFilter.users) {
+                                          filter.value = _TagFilter.all;
+                                        } else {
+                                          filter.value = _TagFilter.users;
+                                        }
+                                      },
+                                    ),
+                                    FilterChipWidget(
+                                      text: _TagFilter.other.name,
+                                      isSelected:
+                                          filter.value == _TagFilter.other,
+                                      onTap: () {
+                                        if (filter.value == _TagFilter.other) {
+                                          filter.value = _TagFilter.all;
+                                        } else {
+                                          filter.value = _TagFilter.other;
+                                        }
+                                      },
+                                    ),
+                                  ]
+                                    .map(
+                                      (e) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 4,
+                                        ),
+                                        child: e,
+                                      ),
+                                    )
+                                    .toList(),
+                          ),
                         ),
                       ),
-                    ),
                     Expanded(
-                      child: customerService.isEmpty
-                          ? EmptyState(
-                              image: Assets.illustrations.pointDown.svg(),
-                              topText: 'אין פניות שירות',
-                              bottomText:
-                                  'פניות שירות מכלל המשתמשים, יופיעו כאן',
-                            )
-                          : ListView(
-                              children: customerService
-                                  .map(
-                                    (e) => Skeletonizer(
-                                      enabled: false,
-                                      child: MessageWidget.collapsed(
-                                        message: e,
-                                        hasIcon: true,
-                                        backgroundColor: e.allreadyRead
-                                            ? Colors.white
-                                            : AppColors.blue08,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
+                      child: role.isAhraiTohnit
+                          ? customerService.isEmpty
+                              ? EmptyState(
+                                  image: Assets.illustrations.pointDown.svg(),
+                                  topText: 'אין פניות שירות',
+                                  bottomText:
+                                      'פניות שירות מכלל המשתמשים, יופיעו כאן',
+                                )
+                              : ListView(
+                                  children: customerService
+                                      .map(
+                                        (e) => Skeletonizer(
+                                          enabled: false,
+                                          child: MessageWidget.collapsed(
+                                            message: e,
+                                            hasIcon: true,
+                                            backgroundColor: e.allreadyRead
+                                                ? Colors.white
+                                                : AppColors.blue08,
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                )
+                          : incoming.isEmpty
+                              ? EmptyState(
+                                  image: Assets.illustrations.pointDown.svg(),
+                                  topText: 'אין הודעות נכנסות',
+                                  bottomText:
+                                      'הודעות נכנסות שישלחו, יופיעו כאן',
+                                )
+                              : ListView(
+                                  children: incoming
+                                      .map(
+                                        (e) => Skeletonizer(
+                                          enabled: false,
+                                          child: MessageWidget.collapsed(
+                                            message: e,
+                                            hasIcon: true,
+                                            backgroundColor: e.allreadyRead
+                                                ? Colors.white
+                                                : AppColors.blue08,
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
                     ),
                   ],
                 ),
