@@ -31,25 +31,39 @@ class AuthService extends _$AuthService {
 
     final request = await ref.watch(dioServiceProvider).get(Consts.getAuthUser);
 
-    var user = AuthDto.fromJson(request.data);
+    final user = AuthDto.fromJson(request.data);
+
+    final phone = ref.read(storageServiceProvider.notifier).getUserPhone();
+
+    Logger().d(
+      'original'
+      '\n'
+      'role: ${user.role}'
+      '\n'
+      'phone: $phone',
+    );
 
     if (kDebugMode) {
-      final phone = ref.read(storageServiceProvider.notifier).getUserPhone();
-
-      Logger().d('current phone: $phone');
-
       if (phone == '523301800') {
-        user = user.copyWith(
+        final newUser = user.copyWith(
           role: UserRole.ahraiTohnit,
         );
+
+        Logger().d(
+          'modified'
+          '\n'
+          'role: ${newUser.role}'
+          '\n'
+          'phone: $phone',
+        );
+
+        return newUser;
       }
     }
 
     if (kReleaseMode) {
       ref.keepAlive();
     }
-
-    Logger().d('current role: ${user.role}');
 
     return user;
   }

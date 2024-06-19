@@ -370,13 +370,16 @@ class GiftScreen extends HookConsumerWidget {
                           }
 
                           if (result["result"] == 'success') {
+                            // TODO(yam): make this properly strongly typed pls
                             someRecordsFail.value =
                                 result["not_commited"].toString();
                             showFancyCustomDialogUploadExcel(
                               context: context,
-                              isSucces:
-                                  result["not_commited"].toString() == "[]",
-                              errMsg: 'קודי מתנה הוזנו בהצלחה',
+                              apiResponse:
+                                  result["not_commited"].toString() == "[]"
+                                      ? ApiResponse.success
+                                      : ApiResponse.failure,
+                              error: 'קודי מתנה הוזנו בהצלחה',
                             );
                           } else {
                             showAlertDialog(context);

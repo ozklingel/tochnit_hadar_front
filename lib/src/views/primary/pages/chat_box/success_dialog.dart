@@ -20,7 +20,9 @@ void showFancyCustomDialog(BuildContext context, phone, contant, subject) {
       }
     }
   });
+
   Size size = MediaQuery.of(context).size;
+
   Dialog fancyDialog = Dialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12.0),

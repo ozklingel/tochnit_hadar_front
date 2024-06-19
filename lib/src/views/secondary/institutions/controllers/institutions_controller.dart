@@ -103,7 +103,7 @@ class InstitutionsController extends _$InstitutionsController {
     return false;
   }
 
-  Future<bool> addFromExcel(PlatformFile file) async {
+  Future<List<String>> addFromExcel(PlatformFile file) async {
     if (file.bytes == null) {
       throw ArgumentError('missing param bytes');
     }
@@ -128,18 +128,26 @@ class InstitutionsController extends _$InstitutionsController {
             data: formData,
           );
       if (result.data['result'] == 'success') {
-        Toaster.error('הושלם בהצלחה');
         ref.invalidate(getInstitutionsProvider);
 
-        return true;
+        final uncommited =
+            List<String>.from(result.data['not_commited'] as List);
+
+        if (uncommited.isEmpty) {
+          return [];
+        } else {
+          return uncommited;
+        }
       }
     } catch (e) {
       Logger().e('failed to add institution excel', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
+
+      return [e.toString()];
     }
 
-    return false;
+    return ['unknown error'];
   }
 
   Future<bool> delete(String id) async {

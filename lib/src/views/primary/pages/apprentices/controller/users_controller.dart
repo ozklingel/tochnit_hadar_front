@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
@@ -123,7 +124,7 @@ class UsersController extends _$UsersController {
     return false;
   }
 
-  Future<String> createExcel({
+  Future<List<String>> importFromExcel({
     required PlatformFile file,
     required UserRole userType,
   }) async {
@@ -137,28 +138,44 @@ class UsersController extends _$UsersController {
                 ? Consts.putApprenticeExcel
                 : Consts.putAddUserExcel,
             data: FormData.fromMap({
-              'file': await MultipartFile.fromFile(
-                file.path!,
-                filename: file.name,
-                contentType: MediaType.parse('multipart/form-data'),
-              ),
+              'file': kIsWeb
+                  ? MultipartFile.fromBytes(
+                      file.bytes as List<int>,
+                      filename: file.name,
+                      contentType: MediaType.parse('multipart/form-data'),
+                    )
+                  : await MultipartFile.fromFile(
+                      file.path!,
+                      filename: file.name,
+                      contentType: MediaType.parse('multipart/form-data'),
+                    ),
             }),
           );
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getPersonasProvider);
 
-        ref.read(goRouterServiceProvider).go('/personas');
+        // ref.read(goRouterServiceProvider).go('/personas');
 
-        return result.data;
+        final uncommited = result.data['uncommited_ids'];
+
+        if (uncommited is List<String>) {
+          if (uncommited.isEmpty) {
+            return [];
+          } else {
+            return uncommited;
+          }
+        }
       }
     } catch (e) {
       Logger().e('failed to add ${userType.name} excel', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
+
+      return [e.toString()];
     }
 
-    return '';
+    return ['unknown error'];
   }
 
   // Future<bool> addUser() {}

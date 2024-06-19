@@ -4,17 +4,44 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 
-void showFancyCustomDialogUploadExcel({
+enum ApiResponse {
+  success,
+  partialSuccess,
+  failure,
+}
+
+typedef ShowError = bool;
+
+Future<T?> showFancyCustomDialogUploadExcel<T>({
   required BuildContext context,
-  required bool isSucces,
-  required String errMsg,
+  required ApiResponse apiResponse,
+  required String error,
 }) {
-  var fancyDialog = Dialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+  return showDialog<T?>(
+    context: context,
+    useRootNavigator: true,
+    builder: (BuildContext context) => _Dialog(
+      apiResponse: apiResponse,
+      error: error,
     ),
-    child: SizedBox(
-      height: MediaQuery.of(context).size.height * 0.7,
+  );
+}
+
+class _Dialog extends StatelessWidget {
+  const _Dialog({
+    required this.apiResponse,
+    required this.error,
+  });
+
+  final ApiResponse apiResponse;
+  final String error;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -29,7 +56,7 @@ void showFancyCustomDialogUploadExcel({
               ),
             ),
             const SizedBox(height: 8),
-            isSucces
+            apiResponse == ApiResponse.success
                 ? Expanded(
                     child: Assets.illustrations.clap.svg(),
                   )
@@ -37,9 +64,9 @@ void showFancyCustomDialogUploadExcel({
                     child: Assets.illustrations.thinking.svg(),
                   ),
             const SizedBox(height: 24),
-            isSucces
+            apiResponse == ApiResponse.success
                 ? Text(
-                    errMsg,
+                    error,
                     textAlign: TextAlign.center,
                     style: TextStyles.s20w500,
                   )
@@ -53,10 +80,15 @@ void showFancyCustomDialogUploadExcel({
               //rossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                !isSucces
-                    ? TextButton(
+                apiResponse == ApiResponse.success
+                    ? const Text(
+                        '',
+                        textAlign: TextAlign.center,
+                        style: TextStyles.s20w500,
+                      )
+                    : TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(true);
                         },
                         child: Align(
                           alignment: Alignment.centerRight,
@@ -67,15 +99,12 @@ void showFancyCustomDialogUploadExcel({
                             ),
                           ),
                         ),
-                      )
-                    : const Text(
-                        '',
-                        textAlign: TextAlign.center,
-                        style: TextStyles.s20w500,
                       ),
                 TextButton(
                   onPressed: () {
-                    const HomeRouteData().go(context);
+                    final navContext = Navigator.of(context);
+                    navContext.pop();
+                    const HomeRouteData().go(navContext.context);
                   },
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -92,7 +121,6 @@ void showFancyCustomDialogUploadExcel({
           ],
         ),
       ),
-    ),
-  );
-  showDialog(context: context, builder: (BuildContext context) => fancyDialog);
+    );
+  }
 }
