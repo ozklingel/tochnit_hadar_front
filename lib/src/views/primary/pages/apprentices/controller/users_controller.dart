@@ -32,7 +32,6 @@ enum Sort {
 @Riverpod(
   dependencies: [
     GetMapsApprentices,
-    GoRouterService,
     DioService,
   ],
 )

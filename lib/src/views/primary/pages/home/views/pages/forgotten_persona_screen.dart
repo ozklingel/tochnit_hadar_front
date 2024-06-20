@@ -1,4 +1,3 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
@@ -15,6 +14,7 @@ import 'package:hadar_program/src/views/primary/pages/home/models/forgotten_mosa
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_message_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/export_excel_bar.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/institutions_view.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/performance_total_counter_bar.dart';
 import 'package:hadar_program/src/views/widgets/cards/list_tile_with_tags_card.dart';
 import 'package:hadar_program/src/views/widgets/states/loading_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -83,7 +83,8 @@ class ForgottenApprenticesScreen extends HookConsumerWidget {
                           institutions: (institutions.valueOrNull ?? []),
                           onTap: (val) =>
                               selectedApprenticeStatusItem.value = val,
-                          topWidget: _TotalCounterBar(
+                          topWidget: PerformanceTotalCounterBar(
+                            label: 'חניכים שעברו מעל 100 יום מיצירת קשר איתם',
                             total: forgottenPersonas.total,
                           ),
                         )
@@ -93,62 +94,6 @@ class ForgottenApprenticesScreen extends HookConsumerWidget {
                 ),
               ],
             ),
-    );
-  }
-}
-
-class _TotalCounterBar extends StatelessWidget {
-  const _TotalCounterBar({
-    required this.total,
-    this.percent = 0,
-  });
-
-  final int total;
-  final int percent;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'חניכים שעברו מעל 100 יום מיצירת קשר איתם',
-            style: TextStyles.s16w500cGrey2,
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Text(
-                'סה"כ'
-                ' '
-                '$total',
-                style: TextStyles.s14w300cGray5,
-              ),
-              if (percent != 0) ...[
-                const SizedBox(width: 8),
-                if (percent > 0)
-                  const Icon(
-                    FluentIcons.arrow_trending_24_regular,
-                    color: AppColors.green1,
-                    size: 16,
-                  )
-                else
-                  const Icon(
-                    FluentIcons.arrow_trending_down_24_regular,
-                    color: AppColors.red1,
-                    size: 16,
-                  ),
-                Text(
-                  '$percent%',
-                  style: TextStyles.s12w300cGray5,
-                ),
-              ],
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
@@ -186,7 +131,8 @@ class _PersonasView extends HookConsumerWidget {
         : Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _TotalCounterBar(
+              PerformanceTotalCounterBar(
+                label: 'חניכים שעברו מעל 100 יום מיצירת קשר איתם',
                 total: filteredPersonas.length,
                 percent: forgottenApprentices.percentage,
               ),

@@ -9,6 +9,7 @@ import 'package:hadar_program/src/views/primary/pages/home/controllers/apprentic
 import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/export_excel_bar.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/institutions_view.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/performance_total_counter_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 enum _SortBy {
@@ -29,7 +30,7 @@ class PersonaPerformanceScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final selectedPerformanceItem = useState('');
+    final selectedPerformanceItem = useState(const ApprenticeStatusItemDto());
     final institutions = ref.watch(getInstitutionsProvider).valueOrNull ?? [];
     final screenController =
         ref.watch(apprenticesStatusControllerProvider).valueOrNull ??
@@ -47,25 +48,29 @@ class PersonaPerformanceScreen extends HookConsumerWidget {
           IconButton(
             icon: const Icon(Icons.close),
             // TODO(noga)
-            onPressed: () => selectedPerformanceItem.value.isEmpty
+            onPressed: () => selectedPerformanceItem.value.id.isEmpty
                 ? Navigator.of(context).pop()
-                : selectedPerformanceItem.value = '',
+                : selectedPerformanceItem.value =
+                    const ApprenticeStatusItemDto(),
           ),
           const SizedBox(width: 8),
         ],
       ),
       body: Column(
         children: [
-          Text(subtitle),
           const ExportToExcelBar(),
+          PerformanceTotalCounterBar(
+            label: 'מלווים מכלל המוסדות',
+            total: screenController.total,
+          ),
           Expanded(
             child: AnimatedSwitcher(
               duration: Consts.defaultDurationXL,
-              child: selectedPerformanceItem.value.isEmpty
+              child: selectedPerformanceItem.value.id.isEmpty
                   ? InstitutionsView(
                       items: screenController.items,
                       institutions: institutions,
-                      onTap: (val) => selectedPerformanceItem.value = val.id,
+                      onTap: (val) => selectedPerformanceItem.value = val,
                     )
                   : const _PerformanceBody(),
             ),

@@ -124,7 +124,7 @@ class _AhraiTohnitBody extends ConsumerWidget {
           title: 'תפקוד מלווים',
           data: ahraiTohnitController.melaveScore,
           onTap: () => const PersonaPerformanceRouteData(
-            title: 'סטטוס חניכים',
+            title: 'תפקוד מלווים',
             subtitle: 'מלווים מכלל המוסדות',
           ).push(context),
         ),
