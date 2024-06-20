@@ -47,10 +47,7 @@ class TasksScreen extends HookConsumerWidget {
       );
     }
 
-    final tabs = switch (auth.value?.role) {
-      UserRole.ahraiTohnit => _programDirectorTabs,
-      _ => _mentorTabs,
-    };
+    final tabs = _roleTabs(auth.value?.role ?? UserRole.other);
     final tabController = useTabController(initialLength: tabs.length);
     useListenable(tabController);
 
@@ -180,7 +177,7 @@ class TasksScreen extends HookConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        tab.title,
+                        tab.label,
                         style: TextStyles.s14w400cGrey2,
                       ),
                       if (taskLists[index].isNotEmpty) ...[
@@ -198,7 +195,7 @@ class TasksScreen extends HookConsumerWidget {
         ),
       ),
       floatingActionButton:
-          (auth.value?.role.isAhraiTohnit ?? false) && tabController.index == 0
+          (auth.value?.role.isAhraiTohnit ?? false) && tabController.index != 0
               ? FloatingActionButton(
                   onPressed: () => const NewTaskRouteData().push(context),
                   heroTag: UniqueKey(),
@@ -227,51 +224,45 @@ class TasksScreen extends HookConsumerWidget {
                                 ? 'איזה יופי!'
                                 : null,
                             bottomText:
-                                tab.emptyStateText ?? 'אין ${tab.title} לבצע',
+                                tab.emptyStateText ?? 'אין ${tab.label} לבצע',
                           )
-                    : Opacity(
-                        opacity: (auth.value?.role.isAhraiTohnit ?? false) &&
-                                tabIndex == tabs.length
-                            ? .6
-                            : 1,
-                        child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          padding: const EdgeInsets.all(16),
-                          itemCount: taskLists[tabIndex].length,
-                          itemBuilder: (context, index) {
-                            final task = taskLists[tabIndex].elementAt(index);
-                            return TaskCard(
-                              task: task,
-                              isSelected: selectedTasks.value.contains(task),
-                              onTap: selectedTasks.value.isEmpty
-                                  ? task.subject.isEmpty
-                                      ? () => TaskDetailsRouteData(id: task.id)
-                                          .push(context)
-                                      : () => PersonaDetailsRouteData(
-                                            id: task.subject.first,
-                                          ).push(context)
-                                  : () => _selectTask(
-                                        selectedTasks: selectedTasks,
-                                        e: task,
+                    : ListView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(16),
+                        itemCount: taskLists[tabIndex].length,
+                        itemBuilder: (context, index) {
+                          final task = taskLists[tabIndex].elementAt(index);
+                          return TaskCard(
+                            task: task,
+                            isSelected: selectedTasks.value.contains(task),
+                            onTap: selectedTasks.value.isEmpty
+                                ? task.subject.isEmpty
+                                    ? () => TaskDetailsRouteData(id: task.id)
+                                        .push(context)
+                                    : () => PersonaDetailsRouteData(
+                                          id: task.subject.first,
+                                        ).push(context)
+                                : () => _selectTask(
+                                      selectedTasks: selectedTasks,
+                                      e: task,
+                                    ),
+                            onLongPress: () => _selectTask(
+                              selectedTasks: selectedTasks,
+                              e: task,
+                            ),
+                            onCheckboxTap: tab.checkboxTasks
+                                ? (_) => ref
+                                    .read(tasksControllerProvider.notifier)
+                                    .edit(
+                                      task.copyWith(
+                                        status: task.status == TaskStatus.done
+                                            ? TaskStatus.todo
+                                            : TaskStatus.done,
                                       ),
-                              onLongPress: () => _selectTask(
-                                selectedTasks: selectedTasks,
-                                e: task,
-                              ),
-                              onCheckboxTap: tab.checkboxTasks
-                                  ? (_) => ref
-                                      .read(tasksControllerProvider.notifier)
-                                      .edit(
-                                        task.copyWith(
-                                          status: task.status == TaskStatus.done
-                                              ? TaskStatus.todo
-                                              : TaskStatus.done,
-                                        ),
-                                      )
-                                  : null,
-                            );
-                          },
-                        ),
+                                    )
+                                : null,
+                          );
+                        },
                       ),
               ),
             )
@@ -282,49 +273,81 @@ class TasksScreen extends HookConsumerWidget {
 }
 
 class _TaskTab {
-  final String title;
+  final String label;
   final bool Function(TaskDto) filter;
   final SvgPicture emptyStateImage;
   final String? emptyStateText;
   final bool checkboxTasks;
 
   _TaskTab({
-    required this.title,
+    required this.label,
     required this.filter,
-    emptyStateImage,
+    SvgPicture? emptyStateImage,
     this.emptyStateText,
     this.checkboxTasks = false,
   }) : emptyStateImage = emptyStateImage ?? Assets.illustrations.clap.svg();
 }
 
-final _programDirectorTabs = [
-  _TaskTab(
-    title: 'לביצוע',
-    filter: (task) => task.status == TaskStatus.todo,
-    emptyStateImage: Assets.illustrations.thumbsUpFullBody.svg(height: 400),
-    emptyStateText: 'אין משימות לביצוע',
-    checkboxTasks: true,
-  ),
-  _TaskTab(
-    title: 'הושלמו',
-    filter: (task) => task.status == TaskStatus.done,
-    emptyStateImage: Assets.illustrations.thinking.svg(height: 400),
-    emptyStateText: 'אין משימות שהושלמו',
-    checkboxTasks: true,
-  ),
-];
+List<_TaskTab> _roleTabs(UserRole userRole) {
+  final roleLabel = switch (userRole) {
+    UserRole.ahraiTohnit => 'אישי',
+    UserRole.rakazEshkol => 'מוסדות',
+    UserRole.rakazMosad => 'רכזים',
+    UserRole.melave => 'MENTOR_ONLY',
+    _ => 'USER.ROLE.ERROR',
+  };
 
-final _mentorTabs = [
-  _TaskTab(
-    title: 'שיחות',
-    filter: (task) => task.event.isCall,
-  ),
-  _TaskTab(
-    title: 'מפגשים',
-    filter: (task) => task.event.isMeeting,
-  ),
-  _TaskTab(
-    title: 'שיחות להורים',
-    filter: (task) => task.event.isParents,
-  ),
-];
+  if (roleLabel == 'MENTOR_ONLY') {
+    return [
+      _TaskTab(
+        label: 'שיחות',
+        filter: (task) => task.event.isCall,
+      ),
+      _TaskTab(
+        label: 'מפגשים',
+        filter: (task) => task.event.isMeeting,
+      ),
+      _TaskTab(
+        label: 'שיחות להורים',
+        filter: (task) => task.event.isParents,
+      ),
+    ];
+  }
+
+  final isProgramDirector = userRole.isAhraiTohnit;
+  taskFilter(task) => (task.event.val ~/ 100 == userRole.val + 1);
+  todoTask(task) => (!isProgramDirector || task.status == TaskStatus.todo);
+  final roleTabs = [
+    _TaskTab(
+      label: roleLabel,
+      filter: (task) => taskFilter(task) && todoTask(task),
+      emptyStateText: 'אין משימות לביצוע',
+      emptyStateImage: isProgramDirector
+          ? Assets.illustrations.thumbsUpFullBody.svg(height: 400)
+          : null,
+      checkboxTasks: isProgramDirector,
+    ),
+    _TaskTab(
+      label: 'כללי',
+      filter: (task) => !taskFilter(task) && todoTask(task),
+      emptyStateText: 'אין משימות לביצוע',
+      emptyStateImage: isProgramDirector
+          ? Assets.illustrations.thumbsUpFullBody.svg(height: 400)
+          : null,
+      checkboxTasks: isProgramDirector,
+    ),
+  ];
+
+  return !isProgramDirector
+      ? roleTabs
+      : [
+          ...roleTabs.reversed,
+          _TaskTab(
+            label: 'הושלם',
+            filter: (task) => task.status == TaskStatus.done,
+            emptyStateImage: Assets.illustrations.thinking.svg(height: 400),
+            emptyStateText: 'אין משימות שהושלמו',
+            checkboxTasks: true,
+          ),
+        ];
+}

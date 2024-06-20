@@ -548,18 +548,7 @@ class ReportDetailsScreen extends HookConsumerWidget {
                         ),
                         items: Event.values
                             .where((x) => x != Event.other)
-                            .where((x) {
-                              switch (role) {
-                                case UserRole.melave:
-                                  return x.val < 200;
-                                case UserRole.rakazMosad:
-                                  return x.val < 300;
-                                case UserRole.rakazEshkol:
-                                  return x.val < 400;
-                                default:
-                                  return true;
-                              }
-                            })
+                            .where((x) => (role.val + 1) >= x.val ~/ 100)
                             .map(
                               (e) => DropdownMenuItem(
                                 value: e,
