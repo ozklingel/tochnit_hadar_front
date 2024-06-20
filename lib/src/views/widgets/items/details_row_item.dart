@@ -8,7 +8,8 @@ class DetailsRowItem extends StatelessWidget {
     required this.label,
     required this.data,
     this.labelWidth = 80,
-    this.dataWidth = 190,
+    this.dataWrapperWidth = 190,
+    this.dataWidth = 176,
     this.contactName = '',
     this.contactPhone = '',
     this.onTapPhone,
@@ -18,6 +19,7 @@ class DetailsRowItem extends StatelessWidget {
   final String label;
   final String data;
   final double labelWidth;
+  final double dataWrapperWidth;
   final double dataWidth;
   final String contactName;
   final String contactPhone;
@@ -39,15 +41,18 @@ class DetailsRowItem extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         SizedBox(
-          width: dataWidth,
+          width: dataWrapperWidth,
           child: contactName.isEmpty
               ? Builder(
                   builder: (context) {
-                    final child = Text(
-                      data,
-                      style: TextStyles.s14w400,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 4,
+                    final child = SizedBox(
+                      width: dataWidth,
+                      child: Text(
+                        data,
+                        style: TextStyles.s14w400,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 4,
+                      ),
                     );
 
                     return Row(

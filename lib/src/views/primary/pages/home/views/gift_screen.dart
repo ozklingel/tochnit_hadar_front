@@ -14,8 +14,10 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/core/utils/functions/launch_url.dart';
 import 'package:hadar_program/src/gen/assets.gen.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
+import 'package:hadar_program/src/models/event/event.dto.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
+import 'package:hadar_program/src/services/api/home_page/get_closest_events.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/networking/http_service.dart';
@@ -54,7 +56,7 @@ class GiftScreen extends HookConsumerWidget {
           error: (error, stack) => ErrorState(error),
           data: (auth) => switch (auth.role) {
             UserRole.melave => _MelaveBody(eventId: eventId),
-            UserRole.ahraiTohnit => _AhraiTohnitBody(eventId: eventId),
+            UserRole.ahraiTohnit => const _AhraiTohnitBody(),
             _ => throw ArgumentError(),
           },
         );
@@ -62,11 +64,7 @@ class GiftScreen extends HookConsumerWidget {
 }
 
 class _AhraiTohnitBody extends HookConsumerWidget {
-  const _AhraiTohnitBody({
-    required this.eventId,
-  });
-
-  final String eventId;
+  const _AhraiTohnitBody();
 
   @override
   Widget build(BuildContext context, ref) {
@@ -202,11 +200,18 @@ class _MelaveBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
+    final event =
+        (ref.watch(getClosestEventsProvider).valueOrNull ?? []).singleWhere(
+      (element) {
+        return element.id == eventId;
+      },
+      orElse: () => const EventDto(),
+    );
     final couponCode = useState('');
     final apprentice =
         (ref.watch(getPersonasProvider).valueOrNull ?? []).firstWhere(
       (element) {
-        return element.events.any((e) => e.id == eventId);
+        return element.id == event.subject;
       },
       orElse: () => const PersonaDto(),
     );
@@ -254,12 +259,14 @@ class _MelaveBody extends HookConsumerWidget {
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              DetailsRowItem(
-                                label: 'בסיס',
-                                data: compound.name,
-                                dataWidth: 100,
+                              Expanded(
+                                child: DetailsRowItem(
+                                  label: 'בסיס',
+                                  data: compound.name,
+                                  dataWidth: 80,
+                                  dataWrapperWidth: 100,
+                                ),
                               ),
-                              const Spacer(),
                               Text.rich(
                                 TextSpan(
                                   style: TextStyles.s14w400.copyWith(
@@ -280,12 +287,12 @@ class _MelaveBody extends HookConsumerWidget {
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              DetailsRowItem(
-                                label: 'ת”ז',
-                                data: apprentice.teudatZehut,
-                                dataWidth: 100,
+                              Expanded(
+                                child: DetailsRowItem(
+                                  label: 'ת”ז',
+                                  data: apprentice.teudatZehut,
+                                ),
                               ),
-                              const Spacer(),
                               IconButton(
                                 icon: const Icon(FluentIcons.copy_24_regular),
                                 color: AppColors.blue03,
@@ -311,7 +318,7 @@ class _MelaveBody extends HookConsumerWidget {
                               const DetailsRowItem(
                                 label: 'קוד קופון למתנה',
                                 data: '',
-                                dataWidth: 0,
+                                dataWrapperWidth: 0,
                               ),
                               if (couponCode.value.isNotEmpty) ...[
                                 Expanded(
@@ -347,12 +354,22 @@ class _MelaveBody extends HookConsumerWidget {
                                     ),
                                   ),
                                   onPressed: () async {
-                                    couponCode.value =
-                                        await HttpService.getGift(
-                                      auth.valueOrNull!.phone,
-                                      compound,
-                                      apprentice.teudatZehut,
-                                    );
+                                    Toaster.isLoading(true);
+                                    try {
+                                      couponCode.value =
+                                          await HttpService.getGift(
+                                        auth.valueOrNull!.phone,
+                                        compound.id,
+                                        apprentice.teudatZehut,
+                                      );
+                                    } catch (e) {
+                                      Logger()
+                                          .e('failed get gift code', error: e);
+                                      Sentry.captureException(e);
+                                      Toaster.error(e);
+                                    } finally {
+                                      Toaster.isLoading(false);
+                                    }
                                     Logger()
                                         .d("gift code : ${couponCode.value}");
                                   },
