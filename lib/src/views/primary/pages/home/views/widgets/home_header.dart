@@ -11,69 +11,47 @@ class HomeHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
+    final currentTime = DateTime.now();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(16),
-        ),
-        child: SizedBox(
-          height: 140,
-          child: DecoratedBox(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF5083bb),
-                  Color(0xFF34547c),
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(
+        Radius.circular(16),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            child: currentTime.hour > 5 && currentTime.hour < 12
+                ? Assets.animations.goodMorningV02.image()
+                : currentTime.hour < 21
+                    ? Assets.animations.goodAfternoonV02.image(
+                        fit: BoxFit.contain,
+                      )
+                    : Assets.animations.goodEveningV02B.image(),
+          ),
+          Positioned(
+            right: 48,
+            top: 40,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: currentTime.hour > 5 && currentTime.hour < 12
+                        ? 'בוקר טוב'
+                        : currentTime.hour < 21
+                            ? 'צהריים טובים'
+                            : 'ערב טוב',
+                    style: TextStyles.s20w300cWhite,
+                  ),
+                  const TextSpan(text: '\n\n'),
+                  TextSpan(
+                    text: auth.valueOrNull?.fullName,
+                    style: TextStyles.s32w500cWhite,
+                  ),
                 ],
               ),
             ),
-            child: Stack(
-              children: [
-                Positioned(
-                  left: MediaQuery.of(context).size.width * -0.06,
-                  right: MediaQuery.of(context).size.width * -0.06,
-                  child: Assets.images.homePageHeader.svg(
-                    fit: BoxFit.cover,
-                    // colorFilter: const ColorFilter.mode(
-                    //   Colors.red,
-                    //   BlendMode.colorBurn,
-                    // ),
-                  ),
-                ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: DateTime.now().hour > 3 &&
-                                      DateTime.now().hour < 11
-                                  ? 'בוקר טוב'
-                                  : DateTime.now().hour < 21
-                                      ? 'ערב טוב'
-                                      : 'לילה טוב',
-                              style: TextStyles.s20w300cWhite,
-                            ),
-                            const TextSpan(text: '\n\n'),
-                            TextSpan(
-                              text: auth.valueOrNull?.fullName,
-                              style: TextStyles.s32w500cWhite,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
-        ),
+        ],
       ),
     );
   }

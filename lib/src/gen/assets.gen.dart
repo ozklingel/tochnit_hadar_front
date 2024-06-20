@@ -12,6 +12,26 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
+class $AssetsAnimationsGen {
+  const $AssetsAnimationsGen();
+
+  /// File path: assets/animations/good_afternoon_v02.gif
+  AssetGenImage get goodAfternoonV02 =>
+      const AssetGenImage('assets/animations/good_afternoon_v02.gif');
+
+  /// File path: assets/animations/good_evening_v02_b.gif
+  AssetGenImage get goodEveningV02B =>
+      const AssetGenImage('assets/animations/good_evening_v02_b.gif');
+
+  /// File path: assets/animations/good_morning_v02.gif
+  AssetGenImage get goodMorningV02 =>
+      const AssetGenImage('assets/animations/good_morning_v02.gif');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [goodAfternoonV02, goodEveningV02B, goodMorningV02];
+}
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
@@ -240,6 +260,7 @@ class $AssetsImagesGen {
 class Assets {
   Assets._();
 
+  static const $AssetsAnimationsGen animations = $AssetsAnimationsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsIllustrationsGen illustrations =
       $AssetsIllustrationsGen();

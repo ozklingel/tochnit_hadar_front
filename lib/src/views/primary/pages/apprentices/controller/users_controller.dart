@@ -11,7 +11,6 @@ import 'package:hadar_program/src/services/api/apprentice/get_maps_apprentices.d
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/models/personas_screen.dto.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:logger/logger.dart';
