@@ -72,7 +72,9 @@ class PersonaPerformanceScreen extends HookConsumerWidget {
                       institutions: institutions,
                       onTap: (val) => selectedPerformanceItem.value = val,
                     )
-                  : const _PerformanceBody(),
+                  : _PerformanceBody(
+                      institutionId: selectedPerformanceItem.value.id,
+                    ),
             ),
           ),
         ],
@@ -82,7 +84,11 @@ class PersonaPerformanceScreen extends HookConsumerWidget {
 }
 
 class _PerformanceBody extends HookConsumerWidget {
-  const _PerformanceBody();
+  const _PerformanceBody({
+    required this.institutionId,
+  });
+
+  final String institutionId;
 
   @override
   Widget build(BuildContext context, ref) {

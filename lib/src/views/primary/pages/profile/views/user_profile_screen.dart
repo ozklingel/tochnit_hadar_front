@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -29,6 +27,7 @@ import 'package:hadar_program/src/views/widgets/dialogs/missing_details_dialog.d
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/items/details_row_item.dart';
+import 'package:hadar_program/src/views/widgets/sheets/image_selector_sheet.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -36,11 +35,10 @@ import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/enums/address_region.dart';
-import '../../../../models/persona/persona.dto.dart';
-import '../../../../services/api/export_import/upload_file.dart';
-import '../../../../services/api/onboarding_form/city_list.dart';
-import '../../../../services/routing/go_router_provider.dart';
+import '../../../../../core/enums/address_region.dart';
+import '../../../../../models/persona/persona.dto.dart';
+import '../../../../../services/api/onboarding_form/city_list.dart';
+import '../../../../../services/routing/go_router_provider.dart';
 
 class UserProfileScreen extends StatefulHookConsumerWidget {
   const UserProfileScreen({
@@ -112,38 +110,18 @@ class _UserDetailsScreenState extends ConsumerState<UserProfileScreen> {
                       avatar: auth.valueOrNull!.avatar,
                       name: auth.valueOrNull!.fullName,
                       phone: "0${auth.valueOrNull!.phone}",
-                      onTapEditAvatar: () async {
-                        final result = await FilePicker.platform.pickFiles(
-                          allowMultiple: false,
-                          withData: true,
-                        );
+                      onTapEditAvatar: () => showImageSelector(
+                        context: context,
+                        onImageUploaded: (url) async {
+                          final result = await ref
+                              .read(
+                                authServiceProvider.notifier,
+                              )
+                              .updateAvatar(avatarUrl: url);
 
-                        if (result == null) {
-                          return;
-                        }
-
-                        final uploadUrl = await ref.read(
-                          uploadFileProvider(result.files.first).future,
-                        );
-
-                        final user = auth.valueOrNull ?? const AuthDto();
-
-                        final result2 = await ref.read(dioServiceProvider).put(
-                              Consts.updateUser,
-                              queryParameters: {
-                                'userId': user.id,
-                              },
-                              data: jsonEncode({
-                                'avatar': uploadUrl,
-                              }),
-                            );
-
-                        if (result2.data['result'] == 'success') {
-                          Logger().d("success upload");
-                          ref.invalidate(authServiceProvider);
-                          setState(() {});
-                        }
-                      },
+                          return result;
+                        },
+                      ),
                       bottom: const Column(
                         children: [
                           SizedBox(height: 24),
@@ -672,8 +650,10 @@ class _TohnitHadarTabView extends ConsumerWidget {
               DetailsRowItem(
                 label: 'שיוך מוסד',
                 data: institution.name,
-                onTapData: () =>
-                    InstitutionDetailsRouteData(id: institution.id).go(context),
+                onTapData: institution.isEmpty
+                    ? null
+                    : () => InstitutionDetailsRouteData(id: institution.id)
+                        .go(context),
               ),
               const SizedBox(height: 12),
               // if ([

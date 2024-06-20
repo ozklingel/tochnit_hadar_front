@@ -8,7 +8,7 @@ class DetailsRowItem extends StatelessWidget {
     required this.label,
     required this.data,
     this.labelWidth = 80,
-    this.dataWrapperWidth = 190,
+    this.dataWrapperWidth = 220,
     this.dataWidth = 176,
     this.contactName = '',
     this.contactPhone = '',

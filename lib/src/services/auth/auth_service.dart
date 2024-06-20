@@ -5,10 +5,12 @@ import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/services/arch/flags_service.dart';
 import 'package:hadar_program/src/services/networking/dio_service/dio_service.dart';
+import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'auth_service.g.dart';
 
@@ -100,5 +102,35 @@ class AuthService extends _$AuthService {
           .navigatorKey
           .currentContext!,
     );
+  }
+
+  FutureOr<bool> updateAvatar({
+    required String avatarUrl,
+  }) async {
+    try {
+      final userId = ref.read(storageServiceProvider.notifier).getUserPhone();
+
+      final result = await ref.read(dioServiceProvider).put(
+        Consts.updateUser,
+        queryParameters: {
+          'userId': userId,
+        },
+        data: {
+          'photo_path': avatarUrl,
+        },
+      );
+
+      if (result.data['result'] == 'success') {
+        ref.invalidateSelf();
+
+        return true;
+      }
+    } catch (e) {
+      Logger().e('failed to update user avatar', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
+
+    return false;
   }
 }
