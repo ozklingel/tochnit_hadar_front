@@ -100,6 +100,7 @@ dev_dependencies:
   flutter_gen_runner: ^5.5.0+1
   json_serializable: ^6.8.0
   go_router_builder: ^2.7.0
+  flutter_launcher_icons: ^0.13.1
   
 dependency_overrides:
   # flutter_gen_core:
@@ -171,3 +172,14 @@ flutter_native_splash:
   color: "#FFFFFF"
   android: true
   ios: true
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/app_logo.png"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/images/app_logo.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
