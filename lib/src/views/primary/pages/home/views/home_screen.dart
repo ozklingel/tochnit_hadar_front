@@ -122,6 +122,7 @@ class _AhraiTohnitBody extends ConsumerWidget {
         ),
         PerformanceWidget(
           title: 'תפקוד מלווים',
+          yAxisTitle: 'כמות מלווים',
           data: ahraiTohnitController.melaveScore,
           onTap: () => const PersonaPerformanceRouteData(
             title: 'תפקוד מלווים',
@@ -130,6 +131,7 @@ class _AhraiTohnitBody extends ConsumerWidget {
         ),
         PerformanceWidget(
           title: 'תפקוד רכזים',
+          yAxisTitle: 'כמות רכזים',
           data: ahraiTohnitController.rakazimScore,
           onTap: () => const PersonaPerformanceRouteData(
             title: 'תפקוד רכזים',
@@ -139,6 +141,7 @@ class _AhraiTohnitBody extends ConsumerWidget {
         if (role.isAhraiTohnit)
           PerformanceWidget(
             title: 'תפקוד רכזי אשכול',
+            yAxisTitle: 'כמות רכזים',
             data: ahraiTohnitController.eshkolScore,
             onTap: () => const PersonaPerformanceRouteData(
               title: 'תפקוד רכזים',

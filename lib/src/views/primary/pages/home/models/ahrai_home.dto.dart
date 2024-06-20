@@ -64,6 +64,7 @@ class AhraiHomeDto with _$AhraiHomeDto {
     @Default(0)
     @JsonKey(
       defaultValue: 0,
+      name: 'redvisitmeetings',
     )
     double redVisitMeetings,
     @Default(0)
@@ -126,7 +127,7 @@ String _extractId(String? data) {
 }
 
 List<(double, double)> _extractScore(List<dynamic>? data) {
-  if (data == null || data.isEmpty || data.first!.isEmpty || data.length == 1) {
+  if (data == null || data.length != 2) {
     Sentry.captureMessage(
       'bad backend _extractScore data type',
       params: [
@@ -140,19 +141,19 @@ List<(double, double)> _extractScore(List<dynamic>? data) {
     ];
   }
 
-  return data
-      .map<(num, num)>((e) {
-        if ((e as List<dynamic>).length < 2) {
-          Sentry.captureMessage(
-            'bad backend _extractScore data length',
-            params: [data],
-          );
+  final firstList = List<num>.from(data[0]);
+  final secondList = List<num>.from(data[1]);
 
-          return (0, 0);
-        }
+  final result = <(double, double)>[];
 
-        return (e[0], e[1]);
-      })
-      .map<(double, double)>((e) => (e.$1.toDouble(), e.$2.toDouble()))
-      .toList();
+  for (int i = 0; i < firstList.length; i++) {
+    result.add(
+      (
+        firstList[i].toDouble(),
+        secondList[i].toDouble(),
+      ),
+    );
+  }
+
+  return result;
 }

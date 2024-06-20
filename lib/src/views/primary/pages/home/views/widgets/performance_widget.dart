@@ -6,6 +6,7 @@ class PerformanceWidget extends StatelessWidget {
   const PerformanceWidget({
     super.key,
     required this.title,
+    required this.yAxisTitle,
     required this.data,
     required this.onTap,
   });
@@ -13,6 +14,7 @@ class PerformanceWidget extends StatelessWidget {
   final String title;
   final List<(double, double)> data;
   final VoidCallback onTap;
+  final String yAxisTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class PerformanceWidget extends StatelessWidget {
         CartesianLineChart(
           onTap: onTap,
           xAxisTitle: 'ציון',
-          yAxisTitle: 'כמות מלווים',
+          yAxisTitle: yAxisTitle,
           interval: 20,
           max: 100,
           data: data,
