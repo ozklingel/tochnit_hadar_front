@@ -597,7 +597,7 @@ class _GeneralTab extends ConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'טלפון רכז מוסד',
-                data: institution.rakazPhoneNumber,
+                data: institution.rakazContactPhoneNumber,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(
@@ -622,7 +622,7 @@ class _GeneralTab extends ConsumerWidget {
               const SizedBox(height: 12),
               DetailsRowItem(
                 label: 'טלפון ראש מכינה',
-                data: institution.roshMehinaPhoneNumber,
+                data: institution.roshYeshivaPhoneNumber,
               ),
               const SizedBox(height: 12),
               DetailsRowItem(

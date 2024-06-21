@@ -77,13 +77,13 @@ class InstitutionsController extends _$InstitutionsController {
           "city": obj.address.city,
           "name": obj.name,
           "eshcol": obj.address.region,
-          "contact_phone": obj.rakazPhoneNumber,
+          "contact_phone": obj.rakazContactPhoneNumber,
           "contact_name": obj.roshMehinaName,
           "admin_name": obj.adminName,
           "admin_phone": obj.adminPhoneNumber,
           "roshYeshiva_name": obj.roshMehinaName,
           "shluha": obj.shluha,
-          "roshYeshiva_phone": obj.roshMehinaPhoneNumber,
+          "roshYeshiva_phone": obj.roshYeshivaPhoneNumber,
         },
       );
 

@@ -63,7 +63,7 @@ final _institutions = List.generate(
     id: Consts.mockInstitutionsGuids[index],
     name: faker.company.name(),
     rakazId: faker.person.name(),
-    rakazPhoneNumber: faker.phoneNumber.de(),
+    rakazContactPhoneNumber: faker.phoneNumber.de(),
     address: AddressDto(
       city: faker.address.city(),
       apartment: faker.randomGenerator.integer(99999, min: 1).toString(),
@@ -76,7 +76,7 @@ final _institutions = List.generate(
     ),
     adminPhoneNumber: faker.phoneNumber.de(),
     roshMehinaName: faker.person.name(),
-    roshMehinaPhoneNumber: faker.phoneNumber.us(),
+    roshYeshivaPhoneNumber: faker.phoneNumber.us(),
     adminName: faker.person.name(),
     apprentices: Consts.mockApprenticeGuids
         .take(

@@ -38,7 +38,9 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
     );
     final name = useTextEditingController(text: institution.name);
     final rakazPhone =
-        useTextEditingController(text: institution.rakazPhoneNumber);
+        useTextEditingController(text: institution.rakazContactPhoneNumber);
+    final institutionPhoneNumber =
+        useTextEditingController(text: institution.phoneNumber);
     final city = useState(institution.address.city);
     final citySearchController = useTextEditingController();
     final rakazName =
@@ -49,7 +51,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
     final roshMehina =
         useTextEditingController(text: institution.roshMehinaName);
     final roshPhoneNumber =
-        useTextEditingController(text: institution.roshMehinaPhoneNumber);
+        useTextEditingController(text: institution.roshYeshivaPhoneNumber);
     final menahelAdministrativi =
         useTextEditingController(text: institution.adminName);
     final menahelAdministrativiPhone = useTextEditingController(
@@ -114,12 +116,26 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       // ),
       InputFieldContainer(
         label: 'מספר טלפון של רכז המוסד',
-        child: TextField(
-          controller: rakazPhone,
-          decoration: const InputDecoration(
-            hintText: 'הזן מספר טלפון',
-            hintStyle: TextStyles.s16w400cGrey5,
-          ),
+        isRequired: true,
+        child: Column(
+          children: [
+            TextField(
+              controller: rakazPhone,
+              decoration: const InputDecoration(
+                hintText: 'הזן מספר טלפון',
+                hintStyle: TextStyles.s16w400cGrey5,
+              ),
+            ),
+            const SizedBox(height: 6),
+            const Row(
+              children: [
+                Text(
+                  'הזן מספרים בלבד, ללא רווחים',
+                  style: TextStyles.s12w500cGray5,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
       InputFieldContainer(
@@ -167,31 +183,31 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
           ),
         ),
       ),
-      // InputFieldContainer(
-      //   label: 'טלפון מוסד',
-      //   // isRequired: true,
-      //   child: TextField(
-      //     controller: rakazPhone,
-      //     decoration: const InputDecoration(
-      //       hintText: 'הזן מספר טלפון',
-      //       hintStyle: TextStyles.s16w400cGrey5,
-      //     ),
-      //     buildCounter: (
-      //       context, {
-      //       required currentLength,
-      //       required isFocused,
-      //       maxLength,
-      //     }) =>
-      //         const Row(
-      //       children: [
-      //         Text(
-      //           'הזן מספרים בלבד, ללא רווחים',
-      //           style: TextStyles.s12w500cGray5,
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
+      InputFieldContainer(
+        label: 'טלפון מוסד',
+        // isRequired: true,
+        child: TextField(
+          controller: institutionPhoneNumber,
+          decoration: const InputDecoration(
+            hintText: 'הזן מספר טלפון',
+            hintStyle: TextStyles.s16w400cGrey5,
+          ),
+          buildCounter: (
+            context, {
+            required currentLength,
+            required isFocused,
+            maxLength,
+          }) =>
+              const Row(
+            children: [
+              Text(
+                'הזן מספרים בלבד, ללא רווחים',
+                style: TextStyles.s12w500cGray5,
+              ),
+            ],
+          ),
+        ),
+      ),
       InputFieldContainer(
         label: 'שם ראש מכינה',
         // isRequired: true,
@@ -342,11 +358,12 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
                   .create(
                     institution.copyWith(
                       name: name.text,
-                      rakazPhoneNumber: rakazPhone.text,
+                      rakazContactPhoneNumber: rakazPhone.text,
                       adminName: rakazName.text,
                       adminPhoneNumber: rakazPhone.text,
                       roshMehinaName: roshMehina.text,
-                      roshMehinaPhoneNumber: roshPhoneNumber.text,
+                      phoneNumber: institutionPhoneNumber.text,
+                      roshYeshivaPhoneNumber: roshPhoneNumber.text,
                       address: institution.address.copyWith(city: city.value),
                       rakazFirstName: rakazName.text,
                       // rakazLastName: rakazLastName.text,

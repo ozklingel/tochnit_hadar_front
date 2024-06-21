@@ -42,7 +42,13 @@ class InstitutionDto with _$InstitutionDto {
       defaultValue: '',
       name: 'contact_phone',
     )
-    String rakazPhoneNumber,
+    String rakazContactPhoneNumber,
+    @Default('')
+    @JsonKey(
+      defaultValue: '',
+      name: 'phone',
+    )
+    String phoneNumber,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -66,7 +72,7 @@ class InstitutionDto with _$InstitutionDto {
       defaultValue: '',
       name: 'roshYeshiva_phone',
     )
-    String roshMehinaPhoneNumber,
+    String roshYeshivaPhoneNumber,
     @Default([])
     @JsonKey(
       defaultValue: [],
