@@ -4,10 +4,8 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/string.dart';
-import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/eshkol/get_eshkols.dart';
-import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/users_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/view/new_user_pages/new_persona_appbar.dart';
@@ -27,8 +25,8 @@ class NewRakazEshkolPage extends HookConsumerWidget {
     final firstNameController = useTextEditingController();
     final lastNameController = useTextEditingController();
     final phoneController = useTextEditingController();
-    final institutionController = useState(const InstitutionDto());
-    final thInstitutionSearch = useTextEditingController();
+    // final institutionController = useState(const InstitutionDto());
+    // final thInstitutionSearch = useTextEditingController();
     final eshkol = useState('');
 
     final children = [
@@ -96,34 +94,34 @@ class NewRakazEshkolPage extends HookConsumerWidget {
           ],
         ),
       ),
-      InputFieldContainer(
-        label: 'מוסד לימודים',
-        isRequired: true,
-        child: ref.watch(getInstitutionsProvider).when(
-              loading: () => const Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
-              error: (error, stack) => Center(child: Text(error.toString())),
-              data: (institutions) => GeneralDropdownButton<InstitutionDto>(
-                stringMapper: (p0) => p0.name,
-                value: institutionController.value.name.ifEmpty ??
-                    'בחר מוסד לימודים',
-                onChanged: (value) => institutionController.value =
-                    value ?? const InstitutionDto(),
-                items: institutions,
-                onMenuStateChange: (isOpen) {
-                  if (!isOpen) {
-                    thInstitutionSearch.clear();
-                  }
-                },
-                searchController: thInstitutionSearch,
-                searchMatchFunction: (item, searchValue) =>
-                    item.value.toString().toLowerCase().trim().contains(
-                          searchValue.toLowerCase().trim(),
-                        ),
-              ),
-            ),
-      ),
+      // InputFieldContainer(
+      //   label: 'מוסד לימודים',
+      //   isRequired: true,
+      //   child: ref.watch(getInstitutionsProvider).when(
+      //         loading: () => const Center(
+      //           child: CircularProgressIndicator.adaptive(),
+      //         ),
+      //         error: (error, stack) => Center(child: Text(error.toString())),
+      //         data: (institutions) => GeneralDropdownButton<InstitutionDto>(
+      //           stringMapper: (p0) => p0.name,
+      //           value: institutionController.value.name.ifEmpty ??
+      //               'בחר מוסד לימודים',
+      //           onChanged: (value) => institutionController.value =
+      //               value ?? const InstitutionDto(),
+      //           items: institutions,
+      //           onMenuStateChange: (isOpen) {
+      //             if (!isOpen) {
+      //               thInstitutionSearch.clear();
+      //             }
+      //           },
+      //           searchController: thInstitutionSearch,
+      //           searchMatchFunction: (item, searchValue) =>
+      //               item.value.toString().toLowerCase().trim().contains(
+      //                     searchValue.toLowerCase().trim(),
+      //                   ),
+      //         ),
+      //       ),
+      // ),
       InputFieldContainer(
         label: 'שיוך אשכול',
         isRequired: true,
@@ -159,7 +157,8 @@ class NewRakazEshkolPage extends HookConsumerWidget {
                 if (firstNameController.text.isEmpty ||
                     lastNameController.text.isEmpty ||
                     phoneController.text.isEmpty ||
-                    institutionController.value.isEmpty) {
+                    // institutionController.value.isEmpty
+                    eshkol.value.isEmpty) {
                   showMissingInfoDialog(context);
 
                   return;
