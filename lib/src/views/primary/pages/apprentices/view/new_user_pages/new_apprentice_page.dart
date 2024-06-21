@@ -1191,6 +1191,8 @@ class NewApprenticePage extends HookConsumerWidget {
               ),
             ),
             AcceptCancelButtons(
+              showCancelButton: false,
+              okText: 'שמירה',
               onPressedOk: () async {
                 if (generalFirstName.text.isEmpty ||
                     generalLastName.text.isEmpty ||

@@ -136,6 +136,8 @@ class NewRakazMosadPage extends HookConsumerWidget {
               ),
             ),
             AcceptCancelButtons(
+              showCancelButton: false,
+              okText: 'שמירה',
               onPressedOk: () async {
                 if (firstNameController.text.isEmpty ||
                     lastNameController.text.isEmpty ||

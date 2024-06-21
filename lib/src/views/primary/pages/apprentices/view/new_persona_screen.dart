@@ -148,6 +148,7 @@ class NewPersonaScreen extends HookConsumerWidget {
             ),
             const Spacer(),
             AcceptCancelButtons(
+              okText: 'הבא',
               onPressedOk: () => selectedUserType.value == UserRole.other
                   ? const InstitutionTypePickerRouteData().push(context)
                   : Navigator.of(context).push(
@@ -212,6 +213,7 @@ class _SelectDataFillTypeScreen extends HookWidget {
             ),
             const Spacer(),
             AcceptCancelButtons(
+              okText: 'הבא',
               onPressedOk: () => isManual.value
                   ? Navigator.of(context).push(
                       MaterialPageRoute(

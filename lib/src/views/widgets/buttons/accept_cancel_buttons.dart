@@ -9,8 +9,10 @@ class AcceptCancelButtons extends StatelessWidget {
     this.cancelText = 'ביטול',
     this.onPressedOk,
     this.onPressedCancel,
+    this.showCancelButton = true,
   });
 
+  final bool showCancelButton;
   final String okText;
   final String cancelText;
   final VoidCallback? onPressedOk;
@@ -26,13 +28,15 @@ class AcceptCancelButtons extends StatelessWidget {
             onPressed: onPressedOk,
           ),
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: LargeFilledRoundedButton.cancel(
-            label: cancelText,
-            onPressed: onPressedCancel ?? () => Toaster.unimplemented(),
+        if (showCancelButton) ...[
+          const SizedBox(width: 12),
+          Expanded(
+            child: LargeFilledRoundedButton.cancel(
+              label: cancelText,
+              onPressed: onPressedCancel ?? () => Toaster.unimplemented(),
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
