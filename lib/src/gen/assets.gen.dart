@@ -15,29 +15,42 @@ import 'package:vector_graphics/vector_graphics.dart';
 class $AssetsAnimationsGen {
   const $AssetsAnimationsGen();
 
-  /// File path: assets/animations/good_afternoon_v02.gif
+  /// File path: assets/animations/good-afternoon-v02.gif
   AssetGenImage get goodAfternoonV02 =>
-      const AssetGenImage('assets/animations/good_afternoon_v02.gif');
+      const AssetGenImage('assets/animations/good-afternoon-v02.gif');
 
-  /// File path: assets/animations/good_evening_v02_b.gif
+  /// File path: assets/animations/good-evening-v02-b.gif
   AssetGenImage get goodEveningV02B =>
-      const AssetGenImage('assets/animations/good_evening_v02_b.gif');
+      const AssetGenImage('assets/animations/good-evening-v02-b.gif');
 
-  /// File path: assets/animations/good_morning_v02.gif
+  /// File path: assets/animations/good-morning-v02.gif
   AssetGenImage get goodMorningV02 =>
-      const AssetGenImage('assets/animations/good_morning_v02.gif');
+      const AssetGenImage('assets/animations/good-morning-v02.gif');
+
+  /// File path: assets/animations/good-shabbat-v01.gif
+  AssetGenImage get goodShabbatV01 =>
+      const AssetGenImage('assets/animations/good-shabbat-v01.gif');
+
+  /// File path: assets/animations/good-week-v01.gif
+  AssetGenImage get goodWeekV01 =>
+      const AssetGenImage('assets/animations/good-week-v01.gif');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [goodAfternoonV02, goodEveningV02B, goodMorningV02];
+  List<AssetGenImage> get values => [
+        goodAfternoonV02,
+        goodEveningV02B,
+        goodMorningV02,
+        goodShabbatV01,
+        goodWeekV01
+      ];
 }
 
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
-  /// File path: assets/icons/data_trending_down.svg
+  /// File path: assets/icons/data-trending-down.svg
   SvgGenImage get dataTrendingDown =>
-      const SvgGenImage('assets/icons/data_trending_down.svg');
+      const SvgGenImage('assets/icons/data-trending-down.svg');
 
   /// File path: assets/icons/whatsapp.svg
   SvgGenImage get whatsapp => const SvgGenImage('assets/icons/whatsapp.svg');
@@ -49,13 +62,13 @@ class $AssetsIconsGen {
 class $AssetsIllustrationsGen {
   const $AssetsIllustrationsGen();
 
-  /// File path: assets/illustrations/alarm_bell.svg
-  SvgGenImage get alarmBell =>
-      const SvgGenImage('assets/illustrations/alarm_bell.svg');
-
-  /// File path: assets/illustrations/alarm_bell_alert.svg
+  /// File path: assets/illustrations/alarm-bell-alert.svg
   SvgGenImage get alarmBellAlert =>
-      const SvgGenImage('assets/illustrations/alarm_bell_alert.svg');
+      const SvgGenImage('assets/illustrations/alarm-bell-alert.svg');
+
+  /// File path: assets/illustrations/alarm-bell.svg
+  SvgGenImage get alarmBell =>
+      const SvgGenImage('assets/illustrations/alarm-bell.svg');
 
   /// File path: assets/illustrations/clap.svg
   SvgGenImage get clap => const SvgGenImage('assets/illustrations/clap.svg');
@@ -102,8 +115,8 @@ class $AssetsIllustrationsGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
-        alarmBell,
         alarmBellAlert,
+        alarmBell,
         clap,
         envelop,
         holdSign,
@@ -120,6 +133,10 @@ class $AssetsIllustrationsGen {
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
+
+  /// File path: assets/images/app_logo.png
+  AssetGenImage get appLogo =>
+      const AssetGenImage('assets/images/app_logo.png');
 
   /// File path: assets/images/backhome.png
   AssetGenImage get backhome =>
@@ -224,6 +241,7 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
+        appLogo,
         backhome,
         call,
         delete,

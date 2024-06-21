@@ -12,6 +12,11 @@ class HomeHeader extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
     final currentTime = DateTime.now();
+    final isGoodSabbath = currentTime.weekday == 5;
+    final isGoodWeek = currentTime.weekday == 6 ||
+        (currentTime.weekday == 7 && currentTime.hour < 5);
+    final isMorning = currentTime.hour > 5 && currentTime.hour < 12;
+    final isAfternoon = currentTime.hour < 21;
 
     return ClipRRect(
       borderRadius: const BorderRadius.all(
@@ -20,13 +25,18 @@ class HomeHeader extends ConsumerWidget {
       child: Stack(
         children: [
           Positioned(
-            child: currentTime.hour > 5 && currentTime.hour < 12
-                ? Assets.animations.goodMorningV02.image()
-                : currentTime.hour < 21
-                    ? Assets.animations.goodAfternoonV02.image(
-                        fit: BoxFit.contain,
-                      )
-                    : Assets.animations.goodEveningV02B.image(),
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: isGoodSabbath
+                  ? Assets.animations.goodShabbatV01.image()
+                  : isGoodWeek
+                      ? Assets.animations.goodWeekV01.image()
+                      : isMorning
+                          ? Assets.animations.goodMorningV02.image()
+                          : isAfternoon
+                              ? Assets.animations.goodAfternoonV02.image()
+                              : Assets.animations.goodEveningV02B.image(),
+            ),
           ),
           Positioned(
             right: 48,
@@ -35,11 +45,15 @@ class HomeHeader extends ConsumerWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: currentTime.hour > 5 && currentTime.hour < 12
-                        ? 'בוקר טוב'
-                        : currentTime.hour < 21
-                            ? 'צהריים טובים'
-                            : 'ערב טוב',
+                    text: isGoodSabbath
+                        ? 'שבת שלום'
+                        : isGoodWeek
+                            ? 'שבוע טוב'
+                            : isMorning
+                                ? 'בוקר טוב'
+                                : isAfternoon
+                                    ? 'צהריים טובים'
+                                    : 'ערב טוב',
                     style: TextStyles.s20w300cWhite,
                   ),
                   const TextSpan(text: '\n\n'),
