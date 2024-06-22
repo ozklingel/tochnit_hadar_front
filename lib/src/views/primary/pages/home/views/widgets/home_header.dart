@@ -22,50 +22,54 @@ class HomeHeader extends ConsumerWidget {
       borderRadius: const BorderRadius.all(
         Radius.circular(16),
       ),
-      child: Stack(
-        children: [
-          Positioned(
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: isGoodSabbath
-                  ? Assets.animations.goodShabbatV01.image()
-                  : isGoodWeek
-                      ? Assets.animations.goodWeekV01.image()
-                      : isMorning
-                          ? Assets.animations.goodMorningV02.image()
-                          : isAfternoon
-                              ? Assets.animations.goodAfternoonV02.image()
-                              : Assets.animations.goodEveningV02B.image(),
-            ),
-          ),
-          Positioned(
-            right: 48,
-            top: 40,
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: isGoodSabbath
-                        ? 'שבת שלום'
-                        : isGoodWeek
-                            ? 'שבוע טוב'
-                            : isMorning
-                                ? 'בוקר טוב'
-                                : isAfternoon
-                                    ? 'צהריים טובים'
-                                    : 'ערב טוב',
-                    style: TextStyles.s20w300cWhite,
-                  ),
-                  const TextSpan(text: '\n\n'),
-                  TextSpan(
-                    text: auth.valueOrNull?.fullName,
-                    style: TextStyles.s32w500cWhite,
-                  ),
-                ],
+      child: SizedBox(
+        width: 420,
+        height: 160,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: isGoodSabbath
+                    ? Assets.animations.goodShabbatV01.image()
+                    : isGoodWeek
+                        ? Assets.animations.goodWeekV01.image()
+                        : isMorning
+                            ? Assets.animations.goodMorningV02.image()
+                            : isAfternoon
+                                ? Assets.animations.goodAfternoonV02.image()
+                                : Assets.animations.goodEveningV02B.image(),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              right: 48,
+              top: 40,
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: isGoodSabbath
+                          ? 'שבת שלום'
+                          : isGoodWeek
+                              ? 'שבוע טוב'
+                              : isMorning
+                                  ? 'בוקר טוב'
+                                  : isAfternoon
+                                      ? 'צהריים טובים'
+                                      : 'ערב טוב',
+                      style: TextStyles.s20w300cWhite,
+                    ),
+                    const TextSpan(text: '\n\n'),
+                    TextSpan(
+                      text: auth.valueOrNull?.fullName,
+                      style: TextStyles.s32w500cWhite,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

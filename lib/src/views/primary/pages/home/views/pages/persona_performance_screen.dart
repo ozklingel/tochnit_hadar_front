@@ -135,7 +135,9 @@ class _PerformanceBody extends HookConsumerWidget {
             ],
           ),
           Expanded(
-            child: ListView(),
+            child: ListView(
+              children: const [],
+            ),
           ),
         ],
       ),
