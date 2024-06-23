@@ -65,7 +65,7 @@ class InstitutionsView extends StatelessWidget {
                               ),
                               const Spacer(),
                               Text(
-                                '${e.value} חניכים',
+                                '${e.value} מלווים',
                                 style: TextStyles.s14w400cGrey1,
                               ),
                             ],
