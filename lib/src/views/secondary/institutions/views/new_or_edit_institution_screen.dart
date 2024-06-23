@@ -149,7 +149,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
                 child: Text(error.toString()),
               ),
               data: (cities) => GeneralDropdownButton<String>(
-                value: city.value,
+                value: city.value.isEmpty ? 'עיר/יישוב' : city.value,
                 items: cities,
                 onMenuStateChange: (isOpen) {
                   if (!isOpen) {
