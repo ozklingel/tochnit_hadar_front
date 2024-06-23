@@ -79,6 +79,7 @@ class ForgottenApprenticesScreen extends HookConsumerWidget {
                 Expanded(
                   child: selectedApprenticeStatusItem.value.id.isEmpty
                       ? InstitutionsView(
+                          label: 'מלווים',
                           items: forgottenPersonas.items,
                           institutions: (institutions.valueOrNull ?? []),
                           onTap: (val) =>

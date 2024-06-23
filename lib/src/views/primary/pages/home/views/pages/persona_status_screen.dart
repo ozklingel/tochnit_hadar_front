@@ -163,6 +163,7 @@ class PersonaStatusScreen extends HookConsumerWidget {
                   Expanded(
                     child: selectedApprenticeStatusItem.value.id.isEmpty
                         ? InstitutionsView(
+                            label: 'חניכים',
                             institutions: institutions,
                             items: screenController.items,
                             onTap: (apprentice) =>

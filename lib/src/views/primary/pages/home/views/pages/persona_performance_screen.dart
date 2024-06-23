@@ -55,6 +55,7 @@ class PersonaPerformanceScreen extends HookConsumerWidget {
             child: AnimatedSwitcher(
               duration: Consts.defaultDurationXL,
               child: InstitutionsView(
+                label: 'מלווים',
                 items: screenController.items,
                 institutions: institutions,
                 onTap: (val) => PersonaPerformanceByInstitutionRouteData(

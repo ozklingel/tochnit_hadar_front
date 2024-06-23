@@ -10,6 +10,7 @@ class InstitutionsView extends StatelessWidget {
     required this.items,
     required this.institutions,
     required this.onTap,
+    required this.label,
     this.topWidget,
   });
 
@@ -17,6 +18,7 @@ class InstitutionsView extends StatelessWidget {
   final List<InstitutionDto> institutions;
   final void Function(ApprenticeStatusItemDto apprentice) onTap;
   final Widget? topWidget;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,7 @@ class InstitutionsView extends StatelessWidget {
                               ),
                               const Spacer(),
                               Text(
-                                '${e.value} מלווים',
+                                '${e.value} $label',
                                 style: TextStyles.s14w400cGrey1,
                               ),
                             ],
