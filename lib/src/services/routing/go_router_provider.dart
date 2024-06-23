@@ -13,7 +13,7 @@ import 'package:hadar_program/src/views/primary/pages/apprentices/view/personas_
 import 'package:hadar_program/src/views/primary/pages/home/views/gift_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/home_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/forgotten_persona_screen.dart';
-import 'package:hadar_program/src/views/primary/pages/home/views/pages/persona_performance_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/melave_performance_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/persona_status_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/rakazim_performance_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/persona_performance_screen_institution.dart';
@@ -710,7 +710,7 @@ class MelavePerformanceRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return PersonaPerformanceScreen(
+    return MelavePerformanceScreen(
       title: title,
       subtitle: subtitle,
     );

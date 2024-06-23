@@ -10,8 +10,8 @@ import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/i
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/performance_total_counter_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class PersonaPerformanceScreen extends HookConsumerWidget {
-  const PersonaPerformanceScreen({
+class MelavePerformanceScreen extends HookConsumerWidget {
+  const MelavePerformanceScreen({
     super.key,
     required this.title,
     required this.subtitle,
