@@ -47,7 +47,7 @@ class TasksScreen extends HookConsumerWidget {
       );
     }
 
-    final tabs = _roleTabs(auth.value?.role ?? UserRole.other);
+    final tabs = _roleTabs(auth.value?.role ?? UserRole.unknown);
     final tabController = useTabController(initialLength: tabs.length);
     useListenable(tabController);
 

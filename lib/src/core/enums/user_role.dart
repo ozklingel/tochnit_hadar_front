@@ -1,5 +1,5 @@
 enum UserRole {
-  other(-2),
+  unknown(-2),
   apprentice(-1),
   melave(0),
   rakazMosad(1),
@@ -11,6 +11,7 @@ enum UserRole {
   final int val;
 
   String get name => switch (this) {
+        UserRole.apprentice => 'חניך',
         UserRole.melave => 'מלווה',
         UserRole.rakazMosad => 'רכז מוסד',
         UserRole.rakazEshkol => 'רכז אשכול',

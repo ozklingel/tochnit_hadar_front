@@ -10,14 +10,18 @@ import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
+import 'package:hadar_program/src/core/utils/extensions/string.dart';
 import 'package:hadar_program/src/models/compound/compound.dto.dart';
 import 'package:hadar_program/src/models/filter/filter.dto.dart';
+import 'package:hadar_program/src/models/institution/institution.dto.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/report/report.dto.dart';
 import 'package:hadar_program/src/services/api/base/get_bases.dart';
 import 'package:hadar_program/src/services/api/eshkol/get_eshkols.dart';
 import 'package:hadar_program/src/services/api/hativa/get_hativot.dart';
+import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/api/onboarding_form/city_list.dart';
+import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
 import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -128,6 +132,8 @@ class FiltersScreen extends HookConsumerWidget {
     final hativaController = useTextEditingController();
     final citySearchController = useTextEditingController();
     final dateRange = useState<DateTimeRange?>(null);
+    final thInstitutionSearch = useTextEditingController();
+    final institutionController = useState(const InstitutionDto());
 
     final ramim = _RamimYear.values
         .map(
@@ -180,7 +186,7 @@ class FiltersScreen extends HookConsumerWidget {
         .toList();
 
     final roles = UserRole.values
-        .whereNot((element) => element == UserRole.other)
+        .whereNot((element) => element == UserRole.unknown)
         .map(
           (role) => ChoiceChip(
             showCheckmark: false,
@@ -433,63 +439,37 @@ class FiltersScreen extends HookConsumerWidget {
                         InputFieldContainer(
                           label: 'שם מוסד',
                           labelStyle: TextStyles.s16w400cGrey2,
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton2<String>(
-                              value: '',
-                              hint: const Text('בחירת מוסד'),
-                              style: TextStyles.s16w400cGrey5,
-                              selectedItemBuilder: (context) {
-                                return [];
-                              },
-                              onMenuStateChange: (isOpen) {},
-                              dropdownSearchData: const DropdownSearchData(
-                                searchInnerWidgetHeight: 50,
-                                searchInnerWidget: TextField(
-                                  decoration: InputDecoration(
-                                    focusedBorder: UnderlineInputBorder(),
-                                    enabledBorder: InputBorder.none,
-                                    prefixIcon: Icon(Icons.search),
-                                    hintText: 'חיפוש',
-                                    hintStyle: TextStyles.s14w400,
-                                  ),
+                          child: ref.watch(getInstitutionsProvider).when(
+                                loading: () => const Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                ),
+                                error: (error, stack) =>
+                                    Center(child: Text(error.toString())),
+                                data: (institutions) =>
+                                    GeneralDropdownButton<InstitutionDto>(
+                                  stringMapper: (p0) => p0.name,
+                                  value: institutionController
+                                          .value.name.ifEmpty ??
+                                      'בחירת מוסד',
+                                  onChanged: (value) => institutionController
+                                      .value = value ?? const InstitutionDto(),
+                                  items: institutions,
+                                  onMenuStateChange: (isOpen) {
+                                    if (!isOpen) {
+                                      thInstitutionSearch.clear();
+                                    }
+                                  },
+                                  searchController: thInstitutionSearch,
+                                  searchMatchFunction: (item, searchValue) =>
+                                      item.value
+                                          .toString()
+                                          .toLowerCase()
+                                          .trim()
+                                          .contains(
+                                            searchValue.toLowerCase().trim(),
+                                          ),
                                 ),
                               ),
-                              buttonStyleData: ButtonStyleData(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(36),
-                                  border: Border.all(
-                                    color: AppColors.shades300,
-                                  ),
-                                ),
-                                elevation: 0,
-                                padding: const EdgeInsets.only(right: 8),
-                              ),
-                              onChanged: (value) {},
-                              dropdownStyleData: const DropdownStyleData(
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(16)),
-                                ),
-                              ),
-                              iconStyleData: const IconStyleData(
-                                icon: Padding(
-                                  padding: EdgeInsets.only(left: 16),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: AppColors.grey6,
-                                  ),
-                                ),
-                                openMenuIcon: Padding(
-                                  padding: EdgeInsets.only(left: 16),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_up,
-                                    color: AppColors.grey6,
-                                  ),
-                                ),
-                              ),
-                              items: const [],
-                            ),
-                          ),
                         ),
                       ],
                       const SizedBox(height: 24),

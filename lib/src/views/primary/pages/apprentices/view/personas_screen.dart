@@ -58,7 +58,7 @@ class PersonasScreen extends HookConsumerWidget {
       filters.value,
       (_, __) async {
         final roleList = UserRole.values
-            .whereNot((element) => element == UserRole.other)
+            .whereNot((element) => element == UserRole.unknown)
             .map((e) => e.name)
             .toList();
         // The search api won't return anything if the roles are empty

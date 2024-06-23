@@ -44,7 +44,7 @@ class AuthDto with _$AuthDto {
       defaultValue: '',
     )
     String email,
-    @Default(UserRole.other)
+    @Default(UserRole.unknown)
     @JsonKey(
       fromJson: _extractUserRole,
       name: 'role_ids',
@@ -103,7 +103,7 @@ UserRole _extractUserRole(dynamic role) {
   if (role == null || role.isEmpty || role is! List) {
     Logger().w('empty user role');
     Sentry.captureException(Exception('failed to extract role from string'));
-    return UserRole.other;
+    return UserRole.unknown;
   }
 
   final roleIndex = int.tryParse(role.first.toString());
@@ -111,7 +111,7 @@ UserRole _extractUserRole(dynamic role) {
   if (roleIndex == null) {
     Logger().w('bad user role index');
     Sentry.captureException(Exception('failed to extract role from index'));
-    return UserRole.other;
+    return UserRole.unknown;
   }
 
   final result = UserRole.values.firstWhere(

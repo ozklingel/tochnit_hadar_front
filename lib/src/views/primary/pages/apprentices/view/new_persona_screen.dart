@@ -140,7 +140,7 @@ class NewPersonaScreen extends HookConsumerWidget {
                     ),
                   if (auth.role.isAhraiTohnit)
                     const DropdownMenuItem(
-                      value: UserRole.other,
+                      value: UserRole.unknown,
                       child: Text('מוסד'),
                     ),
                 ],
@@ -149,7 +149,7 @@ class NewPersonaScreen extends HookConsumerWidget {
             const Spacer(),
             AcceptCancelButtons(
               okText: 'הבא',
-              onPressedOk: () => selectedUserType.value == UserRole.other
+              onPressedOk: () => selectedUserType.value == UserRole.unknown
                   ? const InstitutionTypePickerRouteData().push(context)
                   : Navigator.of(context).push(
                       MaterialPageRoute(
