@@ -14,6 +14,7 @@ import 'package:hadar_program/src/views/primary/pages/home/views/home_screen.dar
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/forgotten_persona_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/persona_performance_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/persona_status_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/persona_performance_screen_institution.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/messages_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/new_or_edit_message_screen.dart';
@@ -156,6 +157,11 @@ class GoRouterService extends _$GoRouterService {
             ),
             TypedGoRoute<PersonaPerformanceRouteData>(
               path: 'performance',
+              routes: [
+                TypedGoRoute<PersonaPerformanceByInstitutionRouteData>(
+                  path: 'institution/:id',
+                ),
+              ],
             ),
             TypedGoRoute<ForgottenApprenticesRouteData>(
               path: 'forgotten',
@@ -699,6 +705,26 @@ class PersonaPerformanceRouteData extends GoRouteData {
     return PersonaPerformanceScreen(
       title: title,
       subtitle: subtitle,
+    );
+  }
+}
+
+class PersonaPerformanceByInstitutionRouteData extends GoRouteData {
+  const PersonaPerformanceByInstitutionRouteData({
+    required this.title,
+    required this.id,
+  });
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  final String title;
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return PersonaPerformanceByInstitutionScreen(
+      title: title,
+      institutionId: id,
     );
   }
 }
