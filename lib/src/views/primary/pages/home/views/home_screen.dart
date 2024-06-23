@@ -124,21 +124,25 @@ class _AhraiTohnitBody extends ConsumerWidget {
           title: 'תפקוד מלווים',
           yAxisTitle: 'כמות מלווים',
           data: ahraiTohnitController.melaveScore,
-          onTap: () => const PersonaPerformanceRouteData(
-            title: 'תפקוד מלווים',
-            subtitle: 'מלווים מכלל המוסדות',
-          ).push(context),
+          onTap: () => role.isRakazMosad
+              ? MelavePerformanceByInstitutionRouteData(id: user.institution)
+                  .push(context)
+              : const MelavePerformanceRouteData(
+                  title: 'תפקוד מלווים',
+                  subtitle: 'מלווים מכלל המוסדות',
+                ).push(context),
         ),
-        PerformanceWidget(
-          title: 'תפקוד רכזים',
-          yAxisTitle: 'כמות רכזים',
-          data: ahraiTohnitController.rakazimScore,
-          onTap: () => const RakazimMosadPerformanceRouteData(
-                  // title: 'תפקוד רכזים',
-                  // subtitle: 'רכזי מוסד מכלל המוסדות',
-                  )
-              .push(context),
-        ),
+        if (role.isRakazEshkolPlus)
+          PerformanceWidget(
+            title: 'תפקוד רכזים',
+            yAxisTitle: 'כמות רכזים',
+            data: ahraiTohnitController.rakazimScore,
+            onTap: () => const RakazimMosadPerformanceRouteData(
+                    // title: 'תפקוד רכזים',
+                    // subtitle: 'רכזי מוסד מכלל המוסדות',
+                    )
+                .push(context),
+          ),
         if (role.isAhraiTohnit)
           PerformanceWidget(
             title: 'תפקוד רכזי אשכול',

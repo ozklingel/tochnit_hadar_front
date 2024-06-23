@@ -523,6 +523,7 @@ class NewOrEditMessageScreen extends HookConsumerWidget {
                                 method: method.value,
                                 title: title.text,
                                 content: body.text,
+                                type: MessageType.sent,
                               );
                               final result = id.isEmpty || isDupe
                                   ? await controllerNotifier.create(newMsg)

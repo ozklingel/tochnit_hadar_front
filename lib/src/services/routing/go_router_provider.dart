@@ -157,7 +157,7 @@ class GoRouterService extends _$GoRouterService {
             TypedGoRoute<PersonaStatusRouteData>(
               path: 'status',
             ),
-            TypedGoRoute<PersonaPerformanceRouteData>(
+            TypedGoRoute<MelavePerformanceRouteData>(
               path: 'performance',
               routes: [
                 TypedGoRoute<MelavePerformanceByInstitutionRouteData>(
@@ -697,8 +697,8 @@ class PersonaStatusRouteData extends GoRouteData {
   }
 }
 
-class PersonaPerformanceRouteData extends GoRouteData {
-  const PersonaPerformanceRouteData({
+class MelavePerformanceRouteData extends GoRouteData {
+  const MelavePerformanceRouteData({
     this.title = '',
     this.subtitle = '',
   });
