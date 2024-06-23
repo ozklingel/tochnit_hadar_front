@@ -29,24 +29,20 @@ class TasksController extends _$TasksController {
   }
 
   Future<bool> create({
-    required String apprenticeId,
     required TaskDto task,
+    required String? subject, // the subject of the task, i.e. apprentice id
   }) async {
     try {
       final result = await ref.read(dioServiceProvider).post(
         Consts.createTask,
         data: {
-          'userId': ref.read(storageServiceProvider.notifier).getUserPhone(),
-          'apprenticeid': apprenticeId,
-          'subject': task.subject,
-          'date': task.dateTime,
-          'description': task.details,
+          'user_id': ref.read(storageServiceProvider.notifier).getUserPhone(),
+          'subject': subject ?? task.subject.join(','),
+          'event': task.event.isOther ? task.title : task.event.name,
           'details': task.details,
-          'event': task.event.name,
+          'date': task.dateTime,
           'frequency_end': task.frequencyEnd.name,
           'frequency_meta': task.frequencyMeta.name,
-          'title': task.title.isEmpty ? task.event.name : task.title,
-          'status': task.status.name,
         },
       );
 
@@ -72,16 +68,15 @@ class TasksController extends _$TasksController {
       final result = await ref.read(dioServiceProvider).put(
         Consts.editTask,
         queryParameters: {
-          'taskId': task.id,
+          'task_id': task.id,
         },
         data: {
-          'subject': task.subject,
+          'subject': task.subject.join(','),
           'date': task.dateTime,
-          'description': task.details,
-          'event': task.event.name,
+          'details': task.details,
+          'event': task.event.isOther ? task.title : task.event.name,
           'frequency_end': task.frequencyEnd.name,
           'frequency_meta': task.frequencyMeta.name,
-          'title': task.title.isEmpty ? task.event.name : task.title,
           'status': task.status.name,
         },
       );
@@ -107,7 +102,7 @@ class TasksController extends _$TasksController {
       final result = await ref.read(dioServiceProvider).post(
         Consts.deleteTask,
         data: {
-          'taskId': task.id,
+          'task_id': task.id,
         },
       );
 

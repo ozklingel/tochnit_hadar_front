@@ -1,9 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hadar_program/src/services/notifications/toaster.dart';
-import 'package:logger/logger.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'report.dto.f.dart';
 part 'report.dto.g.dart';
@@ -97,7 +94,6 @@ enum Event {
   failedAttempt(108), // נסיון שכשל
   birthday(109), // יום הולדת
   forgottenApprentices(110), // חניכים נשכחים
-  beretMarch(111), // מסע כומתה
   // rakaz mosad
   matsbarGathering(200), // ישיבת מצב”ר
   recurringSabbath(201), // שבת מחזור
@@ -133,7 +129,6 @@ enum Event {
         failedAttempt => "נסיון כושל",
         birthday => "יום הולדת",
         forgottenApprentices => "חניכים נשכחים",
-        beretMarch => "מסע כומתה",
         // rakaz mosad
         matsbarGathering => "ישיבת מצב”ר",
         recurringSabbath => "שבת מחזור",
@@ -166,6 +161,7 @@ enum Event {
   bool get isCall => this == call;
   bool get isMeeting => this == meeting || this == groupMeeting;
   bool get isParents => this == meetingParents || this == callParents;
+  bool get isOther => this == other;
 }
 
 Event extractEventType(String? val) {
@@ -176,14 +172,6 @@ Event extractEventType(String? val) {
     if (event.name == val) return event;
   }
   if (val?.contains(' הודעות') ?? false) return Event.fiveMessages;
-  if (val?.contains('כומתה') ?? false) return Event.beretMarch;
   if (val == 'שיחה') return Event.call;
-  if (val == 'none') return Event.other;
-
-  const err = 'failed to extract report type';
-  Logger().i(err, error: val);
-  Sentry.captureException(Exception(err));
-  Toaster.error(err);
-
   return Event.other;
 }

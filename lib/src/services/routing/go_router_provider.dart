@@ -323,11 +323,15 @@ class TasksRouteData extends GoRouteData {
 }
 
 class NewTaskRouteData extends GoRouteData {
-  const NewTaskRouteData();
+  const NewTaskRouteData([this.subjectId]);
+  final String? subjectId;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const NewOrEditTaskScreen(id: '');
+    return NewOrEditTaskScreen(
+      id: '',
+      subjectId: subjectId,
+    );
   }
 }
 

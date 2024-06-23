@@ -47,7 +47,7 @@ class TasksScreen extends HookConsumerWidget {
       );
     }
 
-    final tabs = _roleTabs(auth.value?.role ?? UserRole.unknown);
+    final tabs = _roleTabs(auth.value?.id, auth.value?.role);
     final tabController = useTabController(initialLength: tabs.length);
     useListenable(tabController);
 
@@ -194,19 +194,19 @@ class TasksScreen extends HookConsumerWidget {
               .toList(),
         ),
       ),
-      floatingActionButton:
-          (auth.value?.role.isAhraiTohnit ?? false) && tabController.index != 0
-              ? FloatingActionButton(
-                  onPressed: () => const NewTaskRouteData().push(context),
-                  heroTag: UniqueKey(),
-                  shape: const CircleBorder(),
-                  backgroundColor: AppColors.blue02,
-                  child: const Icon(
-                    FluentIcons.add_24_regular,
-                    color: Colors.white,
-                  ),
-                )
-              : null,
+      floatingActionButton: (auth.value?.role.isAhraiTohnit ?? false) &&
+              tabController.index == 1
+          ? FloatingActionButton(
+              onPressed: () => NewTaskRouteData(auth.value?.id).push(context),
+              heroTag: UniqueKey(),
+              shape: const CircleBorder(),
+              backgroundColor: AppColors.blue02,
+              child: const Icon(
+                FluentIcons.add_24_regular,
+                color: Colors.white,
+              ),
+            )
+          : null,
       body: TabBarView(
         controller: tabController,
         children: tabs
@@ -288,7 +288,8 @@ class _TaskTab {
   }) : emptyStateImage = emptyStateImage ?? Assets.illustrations.clap.svg();
 }
 
-List<_TaskTab> _roleTabs(UserRole userRole) {
+List<_TaskTab> _roleTabs(String? userId, UserRole? userRole) {
+  if (userId == null || userRole == null) return [];
   final roleLabel = switch (userRole) {
     UserRole.ahraiTohnit => 'אישי',
     UserRole.rakazEshkol => 'מוסדות',
@@ -314,40 +315,43 @@ List<_TaskTab> _roleTabs(UserRole userRole) {
     ];
   }
 
-  final isProgramDirector = userRole.isAhraiTohnit;
+  if (userRole == UserRole.ahraiTohnit) {
+    taskFilter(TaskDto task) => task.subject.firstOrNull != userId;
+    return [
+      _TaskTab(
+        label: 'כללי',
+        filter: (task) => taskFilter(task),
+        emptyStateText: 'אין משימות לביצוע',
+        emptyStateImage: Assets.illustrations.thumbsUpFullBody.svg(height: 400),
+      ),
+      _TaskTab(
+        label: roleLabel,
+        filter: (task) => !taskFilter(task) && task.status != TaskStatus.done,
+        emptyStateText: 'אין משימות לביצוע',
+        emptyStateImage: Assets.illustrations.thumbsUpFullBody.svg(height: 400),
+        checkboxTasks: true,
+      ),
+      _TaskTab(
+        label: 'הושלם',
+        filter: (task) => !taskFilter(task) && task.status == TaskStatus.done,
+        emptyStateImage: Assets.illustrations.thinking.svg(height: 400),
+        emptyStateText: 'אין משימות שהושלמו',
+        checkboxTasks: true,
+      ),
+    ];
+  }
+
   taskFilter(task) => (task.event.val ~/ 100 == userRole.val + 1);
-  todoTask(task) => (!isProgramDirector || task.status == TaskStatus.todo);
-  final roleTabs = [
+  return [
     _TaskTab(
       label: roleLabel,
-      filter: (task) => taskFilter(task) && todoTask(task),
+      filter: (task) => taskFilter(task),
       emptyStateText: 'אין משימות לביצוע',
-      emptyStateImage: isProgramDirector
-          ? Assets.illustrations.thumbsUpFullBody.svg(height: 400)
-          : null,
-      checkboxTasks: isProgramDirector,
     ),
     _TaskTab(
       label: 'כללי',
-      filter: (task) => !taskFilter(task) && todoTask(task),
+      filter: (task) => !taskFilter(task),
       emptyStateText: 'אין משימות לביצוע',
-      emptyStateImage: isProgramDirector
-          ? Assets.illustrations.thumbsUpFullBody.svg(height: 400)
-          : null,
-      checkboxTasks: isProgramDirector,
     ),
   ];
-
-  return !isProgramDirector
-      ? roleTabs
-      : [
-          ...roleTabs.reversed,
-          _TaskTab(
-            label: 'הושלם',
-            filter: (task) => task.status == TaskStatus.done,
-            emptyStateImage: Assets.illustrations.thinking.svg(height: 400),
-            emptyStateText: 'אין משימות שהושלמו',
-            checkboxTasks: true,
-          ),
-        ];
 }

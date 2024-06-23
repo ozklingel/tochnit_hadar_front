@@ -61,7 +61,6 @@ class TaskDto with _$TaskDto {
     @Default('')
     @JsonKey(
       defaultValue: '',
-      name: 'description',
     )
     String details,
     @Default('')
@@ -105,13 +104,17 @@ class TaskDto with _$TaskDto {
     @Default(false)
     @JsonKey(
       defaultValue: false,
-      name: 'allreadyread',
+      name: 'already_read',
     )
     bool alreadyRead,
   }) = _TaskDto;
 
-  factory TaskDto.fromJson(Map<String, dynamic> json) =>
-      _$TaskDtoFromJson(json);
+  factory TaskDto.fromJson(Map<String, dynamic> json) {
+    final task = _$TaskDtoFromJson(json);
+    // In case of an 'other' event, the title is the event name
+    final title = task.event.isOther ? json['event'] : task.event.name;
+    return task.copyWith(title: title);
+  }
 }
 
 List<String> _extractSubject(dynamic data) {

@@ -17,9 +17,11 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
   const NewOrEditTaskScreen({
     super.key,
     required this.id,
+    this.subjectId,
   });
 
   final String id;
+  final String? subjectId;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -28,8 +30,6 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
       orElse: () => const TaskDto(),
       (element) => element.id == id,
     );
-
-    // Logger().d(task.dateTime);
 
     final titleController = useTextEditingController(
       text: task.event == Event.other ? '' : task.event.name,
@@ -173,8 +173,8 @@ class NewOrEditTaskScreen extends HookConsumerWidget {
 
                           final result = task.id.isEmpty
                               ? await providerNotifier.create(
-                                  apprenticeId: '',
                                   task: newTask,
+                                  subject: subjectId,
                                 )
                               : await providerNotifier.edit(newTask);
 
