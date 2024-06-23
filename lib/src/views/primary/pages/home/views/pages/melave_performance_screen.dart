@@ -4,7 +4,7 @@ import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/apprentices_status_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/home/models/forgotten_apprentice.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/export_excel_bar.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/institutions_view.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/performance_total_counter_bar.dart';

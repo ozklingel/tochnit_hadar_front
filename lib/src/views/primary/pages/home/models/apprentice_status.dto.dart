@@ -5,42 +5,66 @@ part 'apprentice_status.dto.g.dart';
 
 @JsonSerializable()
 @Freezed(fromJson: false)
-class ForgottenApprenticeDto with _$ForgottenApprenticeDto {
-  const factory ForgottenApprenticeDto({
+class ApprenticeStatusDto with _$ApprenticeStatusDto {
+  const factory ApprenticeStatusDto({
     @Default(0)
     @JsonKey(
-      name: 'forgotenApprentice_total',
+      name: 'lowScoreApprentice_Count',
       defaultValue: 0,
     )
-    int total,
+    int generalApprenticeCount,
     @Default([])
     @JsonKey(
-      name: 'forgotenApprentice_count',
+      name: 'lowScoreApprentice_List',
       defaultValue: [],
     )
-    List<ForgottenApprenticeItemDto> items,
-  }) = _ForgottenApprenticeDto;
+    List<ApprenticeStatusItemDto> generalApprentices,
+    @Default(0)
+    @JsonKey(
+      name: 'missingCallApprentice_total',
+      defaultValue: 0,
+    )
+    int missingCallApprenticeCount,
+    @Default([])
+    @JsonKey(
+      name: 'missingCalleApprentice_count',
+      defaultValue: [],
+    )
+    List<ApprenticeStatusItemDto> missingCallApprentices,
+    @Default(0)
+    @JsonKey(
+      name: 'missingmeetApprentice_total',
+      defaultValue: 0,
+    )
+    int missingMeetApprenticeCount,
+    @Default([])
+    @JsonKey(
+      name: 'missingmeetApprentice_count',
+      defaultValue: [],
+    )
+    List<ApprenticeStatusItemDto> missingMeetApprentices,
+  }) = _ApprenticeStatusDto;
 
-  factory ForgottenApprenticeDto.fromJson(Map<String, dynamic> json) =>
-      _$ForgottenApprenticeDtoFromJson(json);
+  factory ApprenticeStatusDto.fromJson(Map<String, dynamic> json) =>
+      _$ApprenticeStatusDtoFromJson(json);
 }
 
 @JsonSerializable()
 @Freezed(fromJson: false)
-class ForgottenApprenticeItemDto with _$ForgottenApprenticeItemDto {
-  const factory ForgottenApprenticeItemDto({
+class ApprenticeStatusItemDto with _$ApprenticeStatusItemDto {
+  const factory ApprenticeStatusItemDto({
     @Default('')
     @JsonKey(
       defaultValue: '',
     )
-    String id,
+    String name,
     @Default(0)
     @JsonKey(
       defaultValue: 0,
     )
     int value,
-  }) = _ForgottenApprenticeItem;
+  }) = _ApprenticeStatusItemDto;
 
-  factory ForgottenApprenticeItemDto.fromJson(Map<String, dynamic> json) =>
-      _$ForgottenApprenticeItemDtoFromJson(json);
+  factory ApprenticeStatusItemDto.fromJson(Map<String, dynamic> json) =>
+      _$ApprenticeStatusItemDtoFromJson(json);
 }

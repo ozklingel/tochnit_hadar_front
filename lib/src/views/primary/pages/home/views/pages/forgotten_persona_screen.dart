@@ -9,7 +9,7 @@ import 'package:hadar_program/src/services/api/institutions/get_institutions.dar
 import 'package:hadar_program/src/services/api/madadim/get_forgotten_apprentices.dart';
 import 'package:hadar_program/src/services/api/madadim/get_forgotten_apprentices_by_institution.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
-import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/home/models/forgotten_apprentice.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/models/forgotten_mosad_apprentices.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_message_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/export_excel_bar.dart';

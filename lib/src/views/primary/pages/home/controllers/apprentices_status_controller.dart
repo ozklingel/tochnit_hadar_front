@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:file_saver/file_saver.dart';
 import 'package:hadar_program/src/services/api/madadim/get_forgotten_apprentices.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
-import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/home/models/forgotten_apprentice.dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../../services/networking/http_service.dart';

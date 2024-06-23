@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
-import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/home/models/forgotten_apprentice.dto.dart';
 
 class InstitutionsView extends StatelessWidget {
   const InstitutionsView({

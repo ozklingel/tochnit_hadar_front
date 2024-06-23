@@ -11,7 +11,7 @@ import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/api/institutions/get_institutions.dart';
 import 'package:hadar_program/src/services/api/user_profile_form/get_personas.dart';
 import 'package:hadar_program/src/views/primary/pages/home/controllers/apprentices_status_controller.dart';
-import 'package:hadar_program/src/views/primary/pages/home/models/apprentice_status.dto.dart';
+import 'package:hadar_program/src/views/primary/pages/home/models/forgotten_apprentice.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/send_status_message_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/export_excel_bar.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/institutions_view.dart';
@@ -32,7 +32,7 @@ class PersonaStatusScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final screenController =
+    final forgottenApprenticesController =
         ref.watch(apprenticesStatusControllerProvider).valueOrNull ??
             const ForgottenApprenticeDto();
     final institutions = ref.watch(getInstitutionsProvider).valueOrNull ?? [];
@@ -145,7 +145,7 @@ class PersonaStatusScreen extends HookConsumerWidget {
                     Row(
                       children: [
                         Text(
-                          'סה”כ ${screenController.total}',
+                          'סה”כ ${forgottenApprenticesController.total}',
                           style: TextStyles.s14w300cGray5,
                         ),
                         if (selectedApprenticeStatusItem
@@ -165,7 +165,7 @@ class PersonaStatusScreen extends HookConsumerWidget {
                         ? InstitutionsView(
                             label: 'חניכים',
                             institutions: institutions,
-                            items: screenController.items,
+                            items: forgottenApprenticesController.items,
                             onTap: (apprentice) =>
                                 selectedApprenticeStatusItem.value = apprentice,
                           )
