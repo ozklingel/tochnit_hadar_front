@@ -97,6 +97,7 @@ enum Event {
   failedAttempt(108), // נסיון שכשל
   birthday(109), // יום הולדת
   forgottenApprentices(110), // חניכים נשכחים
+  beretMarch(111), // מסע כומתה
   // rakaz mosad
   matsbarGathering(200), // ישיבת מצב”ר
   recurringSabbath(201), // שבת מחזור
@@ -132,6 +133,7 @@ enum Event {
         failedAttempt => "נסיון כושל",
         birthday => "יום הולדת",
         forgottenApprentices => "חניכים נשכחים",
+        beretMarch => "מסע כומתה",
         // rakaz mosad
         matsbarGathering => "ישיבת מצב”ר",
         recurringSabbath => "שבת מחזור",
@@ -174,6 +176,7 @@ Event extractEventType(String? val) {
     if (event.name == val) return event;
   }
   if (val?.contains(' הודעות') ?? false) return Event.fiveMessages;
+  if (val?.contains('כומתה') ?? false) return Event.beretMarch;
   if (val == 'שיחה') return Event.call;
   if (val == 'none') return Event.other;
 

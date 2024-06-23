@@ -89,7 +89,7 @@ class TaskCard extends HookConsumerWidget {
               style: TextStyles.s18w500cGray1,
             ),
             subtitle: Text(
-              "${task.dateTime.asDateTime.asTimeAgo.replaceAll("לפני ", "")} מאז ${task.event.name}",
+              "עברו ${DateTime.now().difference(task.dateTime.asDateTime).inDays} ימים מ${task.event.name}",
               style: TextStyles.s16w300cGray2,
             ),
             trailing: onCheckboxTap == null
