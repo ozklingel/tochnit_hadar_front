@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/institution/institution.dto.dart';
+import 'package:hadar_program/src/services/api/eshkol/get_eshkols.dart';
 import 'package:hadar_program/src/services/api/export_import/upload_file.dart';
 import 'package:hadar_program/src/services/api/onboarding_form/city_list.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
@@ -47,7 +48,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
         useTextEditingController(text: institution.rakazFirstName);
     // final rakazLastName =
     //     useTextEditingController(text: institution.rakazLastName);
-    final shluha = useTextEditingController(text: institution.shluha);
+    final eshkol = useState(institution.eshkol);
     final roshMehina =
         useTextEditingController(text: institution.roshMehinaName);
     final roshPhoneNumber =
@@ -168,20 +169,24 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
       InputFieldContainer(
         label: 'שלוחה/אשכול',
         isRequired: true,
-        child: TextFormField(
-          controller: shluha,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return _kEmptyFieldErrorMessage;
-            }
-
-            return null;
-          },
-          decoration: const InputDecoration(
-            hintText: 'שלוחה',
-            hintStyle: TextStyles.s16w400cGrey5,
-          ),
-        ),
+        child: ref.watch(getEshkolListProvider).when(
+              loading: () => const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+              error: (error, stack) => Center(
+                child: Text(error.toString()),
+              ),
+              data: (eshkols) => GeneralDropdownButton<String>(
+                value: eshkol.value.isEmpty ? 'שלוחה' : eshkol.value,
+                items: eshkols,
+                onMenuStateChange: (isOpen) {
+                  if (!isOpen) {
+                    citySearchController.clear();
+                  }
+                },
+                onChanged: (value) => eshkol.value = value ?? '',
+              ),
+            ),
       ),
       InputFieldContainer(
         label: 'טלפון מוסד',
@@ -342,7 +347,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
               if (name.text.isEmpty ||
                   rakazName.text.isEmpty ||
                   rakazPhone.text.isEmpty ||
-                  shluha.text.isEmpty) {
+                  eshkol.value.isEmpty) {
                 showDialog(
                   context: context,
                   builder: (_) => const MissingInformationDialog(),
@@ -367,7 +372,7 @@ class NewOrEditInstitutionScreen extends HookConsumerWidget {
                       address: institution.address.copyWith(city: city.value),
                       rakazFirstName: rakazName.text,
                       // rakazLastName: rakazLastName.text,
-                      shluha: shluha.text,
+                      eshkol: eshkol.value,
                       logo: logo.value,
                     ),
                   );
