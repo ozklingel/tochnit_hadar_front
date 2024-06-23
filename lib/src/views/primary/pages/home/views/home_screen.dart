@@ -133,20 +133,22 @@ class _AhraiTohnitBody extends ConsumerWidget {
           title: 'תפקוד רכזים',
           yAxisTitle: 'כמות רכזים',
           data: ahraiTohnitController.rakazimScore,
-          onTap: () => const PersonaPerformanceRouteData(
-            title: 'תפקוד רכזים',
-            subtitle: 'מלווים מכלל המוסדות',
-          ).push(context),
+          onTap: () => const RakazimMosadPerformanceRouteData(
+                  // title: 'תפקוד רכזים',
+                  // subtitle: 'רכזי מוסד מכלל המוסדות',
+                  )
+              .push(context),
         ),
         if (role.isAhraiTohnit)
           PerformanceWidget(
             title: 'תפקוד רכזי אשכול',
             yAxisTitle: 'כמות רכזים',
             data: ahraiTohnitController.eshkolScore,
-            onTap: () => const PersonaPerformanceRouteData(
-              title: 'תפקוד רכזים',
-              subtitle: 'מלווים מכלל המוסדות',
-            ).push(context),
+            onTap: () => const RakazimEshkolPerformanceRouteData(
+                    // title: 'תפקוד רכזים',
+                    // subtitle: 'מלווים מכלל המוסדות',
+                    )
+                .push(context),
           ),
         const _ForgottenApprentices(),
       ],

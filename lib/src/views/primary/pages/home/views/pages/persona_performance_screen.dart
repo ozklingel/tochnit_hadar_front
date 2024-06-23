@@ -58,9 +58,8 @@ class PersonaPerformanceScreen extends HookConsumerWidget {
                 label: 'מלווים',
                 items: screenController.items,
                 institutions: institutions,
-                onTap: (val) => PersonaPerformanceByInstitutionRouteData(
+                onTap: (val) => MelavePerformanceByInstitutionRouteData(
                   id: val.id,
-                  title: title,
                 ).push(context),
               ),
             ),

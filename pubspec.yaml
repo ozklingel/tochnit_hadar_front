@@ -46,7 +46,7 @@ dependencies:
   kosher_dart: ^2.0.16
 
   # routing
-  go_router: ^14.1.4
+  go_router: ^14.2.0
 
   # networking
   dio: ^5.4.3+1

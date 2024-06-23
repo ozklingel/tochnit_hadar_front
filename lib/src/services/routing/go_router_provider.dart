@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
+import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
 import 'package:hadar_program/src/views/primary/bottom_bar/ui/dashboard_screen.dart';
@@ -14,6 +15,7 @@ import 'package:hadar_program/src/views/primary/pages/home/views/home_screen.dar
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/forgotten_persona_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/persona_performance_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/persona_status_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/home/views/pages/rakazim_performance_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/persona_performance_screen_institution.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/messages_screen.dart';
@@ -158,8 +160,14 @@ class GoRouterService extends _$GoRouterService {
             TypedGoRoute<PersonaPerformanceRouteData>(
               path: 'performance',
               routes: [
-                TypedGoRoute<PersonaPerformanceByInstitutionRouteData>(
+                TypedGoRoute<MelavePerformanceByInstitutionRouteData>(
                   path: 'institution/:id',
+                ),
+                TypedGoRoute<RakazimMosadPerformanceRouteData>(
+                  path: 'rakazim-mosad',
+                ),
+                TypedGoRoute<RakazimEshkolPerformanceRouteData>(
+                  path: 'rakazim-eshkol',
                 ),
               ],
             ),
@@ -691,8 +699,8 @@ class PersonaStatusRouteData extends GoRouteData {
 
 class PersonaPerformanceRouteData extends GoRouteData {
   const PersonaPerformanceRouteData({
-    required this.title,
-    required this.subtitle,
+    this.title = '',
+    this.subtitle = '',
   });
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
@@ -709,22 +717,48 @@ class PersonaPerformanceRouteData extends GoRouteData {
   }
 }
 
-class PersonaPerformanceByInstitutionRouteData extends GoRouteData {
-  const PersonaPerformanceByInstitutionRouteData({
-    required this.title,
+class MelavePerformanceByInstitutionRouteData extends GoRouteData {
+  const MelavePerformanceByInstitutionRouteData({
     required this.id,
   });
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
 
-  final String title;
   final String id;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return PersonaPerformanceByInstitutionScreen(
-      title: title,
+      title: 'תפקוד מלווים',
       institutionId: id,
+    );
+  }
+}
+
+class RakazimMosadPerformanceRouteData extends GoRouteData {
+  const RakazimMosadPerformanceRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const RakazimPerformanceScreen(
+      title: 'תפקוד רכזים',
+      type: UserRole.rakazMosad,
+    );
+  }
+}
+
+class RakazimEshkolPerformanceRouteData extends GoRouteData {
+  const RakazimEshkolPerformanceRouteData();
+
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = _rootNavKey;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const RakazimPerformanceScreen(
+      title: 'תפקוד רכזים',
+      type: UserRole.rakazEshkol,
     );
   }
 }
