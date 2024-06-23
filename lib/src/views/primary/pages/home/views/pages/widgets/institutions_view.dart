@@ -14,9 +14,9 @@ class InstitutionsView extends StatelessWidget {
     this.topWidget,
   });
 
-  final List<ApprenticeStatusItemDto> items;
+  final List<ForgottenApprenticeItemDto> items;
   final List<InstitutionDto> institutions;
-  final void Function(ApprenticeStatusItemDto apprentice) onTap;
+  final void Function(ForgottenApprenticeItemDto apprentice) onTap;
   final Widget? topWidget;
   final String label;
 

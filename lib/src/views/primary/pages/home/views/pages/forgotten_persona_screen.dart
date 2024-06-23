@@ -28,11 +28,11 @@ class ForgottenApprenticesScreen extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final forgottenPersonas =
         ref.watch(getForgottenApprenticesProvider).valueOrNull ??
-            const ApprenticeStatusDto();
+            const ForgottenApprenticeDto();
 
     final institutions = ref.watch(getInstitutionsProvider);
     final selectedApprenticeStatusItem =
-        useState(const ApprenticeStatusItemDto());
+        useState(const ForgottenApprenticeItemDto());
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +48,7 @@ class ForgottenApprenticesScreen extends HookConsumerWidget {
             onPressed: () => selectedApprenticeStatusItem.value.id.isEmpty
                 ? Navigator.of(context).pop()
                 : selectedApprenticeStatusItem.value =
-                    const ApprenticeStatusItemDto(),
+                    const ForgottenApprenticeItemDto(),
           ),
           const SizedBox(width: 8),
         ],
@@ -204,7 +204,7 @@ class _PersonasView extends HookConsumerWidget {
                                       forgottenApprentices.items.singleWhere(
                                     (element) => element.id == e.id,
                                     orElse: () =>
-                                        const ForgottenApprenticeDto(),
+                                        const ForgottenMosadApprenticeItemDto(),
                                   );
 
                                   void selectPersona() {

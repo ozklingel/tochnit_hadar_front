@@ -25,7 +25,7 @@ class MelavePerformanceScreen extends HookConsumerWidget {
     final institutions = ref.watch(getInstitutionsProvider).valueOrNull ?? [];
     final screenController =
         ref.watch(apprenticesStatusControllerProvider).valueOrNull ??
-            const ApprenticeStatusDto();
+            const ForgottenApprenticeDto();
 
     return Scaffold(
       appBar: AppBar(

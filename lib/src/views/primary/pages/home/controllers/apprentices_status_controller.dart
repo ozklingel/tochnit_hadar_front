@@ -19,7 +19,7 @@ part 'apprentices_status_controller.g.dart';
 )
 class ApprenticesStatusController extends _$ApprenticesStatusController {
   @override
-  FutureOr<ApprenticeStatusDto> build() async {
+  FutureOr<ForgottenApprenticeDto> build() async {
     final result = await ref.watch(getForgottenApprenticesProvider.future);
 
     return result;

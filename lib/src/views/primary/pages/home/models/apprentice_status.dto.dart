@@ -5,8 +5,8 @@ part 'apprentice_status.dto.g.dart';
 
 @JsonSerializable()
 @Freezed(fromJson: false)
-class ApprenticeStatusDto with _$ApprenticeStatusDto {
-  const factory ApprenticeStatusDto({
+class ForgottenApprenticeDto with _$ForgottenApprenticeDto {
+  const factory ForgottenApprenticeDto({
     @Default(0)
     @JsonKey(
       name: 'forgotenApprentice_total',
@@ -18,17 +18,17 @@ class ApprenticeStatusDto with _$ApprenticeStatusDto {
       name: 'forgotenApprentice_count',
       defaultValue: [],
     )
-    List<ApprenticeStatusItemDto> items,
-  }) = _ApprenticeStatusDto;
+    List<ForgottenApprenticeItemDto> items,
+  }) = _ForgottenApprenticeDto;
 
-  factory ApprenticeStatusDto.fromJson(Map<String, dynamic> json) =>
-      _$ApprenticeStatusDtoFromJson(json);
+  factory ForgottenApprenticeDto.fromJson(Map<String, dynamic> json) =>
+      _$ForgottenApprenticeDtoFromJson(json);
 }
 
 @JsonSerializable()
 @Freezed(fromJson: false)
-class ApprenticeStatusItemDto with _$ApprenticeStatusItemDto {
-  const factory ApprenticeStatusItemDto({
+class ForgottenApprenticeItemDto with _$ForgottenApprenticeItemDto {
+  const factory ForgottenApprenticeItemDto({
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -39,8 +39,8 @@ class ApprenticeStatusItemDto with _$ApprenticeStatusItemDto {
       defaultValue: 0,
     )
     int value,
-  }) = _ApprenticeStatusItemDto;
+  }) = _ForgottenApprenticeItem;
 
-  factory ApprenticeStatusItemDto.fromJson(Map<String, dynamic> json) =>
-      _$ApprenticeStatusItemDtoFromJson(json);
+  factory ForgottenApprenticeItemDto.fromJson(Map<String, dynamic> json) =>
+      _$ForgottenApprenticeItemDtoFromJson(json);
 }

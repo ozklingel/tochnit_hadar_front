@@ -33,7 +33,7 @@ part 'get_forgotten_apprentices.g.dart';
 )
 class GetForgottenApprentices extends _$GetForgottenApprentices {
   @override
-  FutureOr<ApprenticeStatusDto> build() async {
+  FutureOr<ForgottenApprenticeDto> build() async {
     // final flags = ref.watch(flagsServiceProvider);
 
     // if (flags.isMock) {
@@ -43,7 +43,7 @@ class GetForgottenApprentices extends _$GetForgottenApprentices {
     final request =
         await ref.watch(dioServiceProvider).get(Consts.getForgotenApprentices);
 
-    final parsed = ApprenticeStatusDto.fromJson(request.data);
+    final parsed = ForgottenApprenticeDto.fromJson(request.data);
 
     ref.keepAlive();
 

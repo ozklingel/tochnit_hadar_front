@@ -34,7 +34,7 @@ class PersonaStatusScreen extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final screenController =
         ref.watch(apprenticesStatusControllerProvider).valueOrNull ??
-            const ApprenticeStatusDto();
+            const ForgottenApprenticeDto();
     final institutions = ref.watch(getInstitutionsProvider).valueOrNull ?? [];
     final personas = ref.watch(getPersonasProvider).valueOrNull ?? [];
     final tabController = useTabController(
@@ -42,7 +42,7 @@ class PersonaStatusScreen extends HookConsumerWidget {
       initialIndex: initIndex,
     );
     final selectedApprenticeStatusItem =
-        useState(const ApprenticeStatusItemDto());
+        useState(const ForgottenApprenticeItemDto());
     useListenable(tabController);
     final selectedInstitution = institutions.singleWhere(
       (element) => element.id == selectedApprenticeStatusItem.value.id,
@@ -67,7 +67,7 @@ class PersonaStatusScreen extends HookConsumerWidget {
             onPressed: () => selectedApprenticeStatusItem.value.id.isEmpty
                 ? Navigator.of(context).pop()
                 : selectedApprenticeStatusItem.value =
-                    const ApprenticeStatusItemDto(),
+                    const ForgottenApprenticeItemDto(),
           ),
           const SizedBox(width: 8),
         ],
@@ -195,7 +195,7 @@ class _ApprenticeStatusView extends StatelessWidget {
   });
 
   final TabController tabController;
-  final ValueNotifier<ApprenticeStatusItemDto> selectedApprenticeStatusItem;
+  final ValueNotifier<ForgottenApprenticeItemDto> selectedApprenticeStatusItem;
   final List<PersonaDto> selectedPersonas;
 
   @override

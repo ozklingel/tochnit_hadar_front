@@ -17,7 +17,7 @@ class ForgottenMosadApprenticesDto with _$ForgottenMosadApprenticesDto {
       name: 'apprentice_list',
       defaultValue: [],
     )
-    List<ForgottenApprenticeDto> items,
+    List<ForgottenMosadApprenticeItemDto> items,
   }) = _ForgottenMosadApprenticesDto;
 
   factory ForgottenMosadApprenticesDto.fromJson(Map<String, dynamic> json) =>
@@ -26,8 +26,8 @@ class ForgottenMosadApprenticesDto with _$ForgottenMosadApprenticesDto {
 
 @JsonSerializable()
 @Freezed(fromJson: false)
-class ForgottenApprenticeDto with _$ForgottenApprenticeDto {
-  const factory ForgottenApprenticeDto({
+class ForgottenMosadApprenticeItemDto with _$ForgottenMosadApprenticeItemDto {
+  const factory ForgottenMosadApprenticeItemDto({
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -39,10 +39,10 @@ class ForgottenApprenticeDto with _$ForgottenApprenticeDto {
       defaultValue: 0,
     )
     int gap,
-  }) = _ForgottenApprenticeDto;
+  }) = _ForgottenMosadApprenticeItemDto;
 
-  factory ForgottenApprenticeDto.fromJson(Map<String, dynamic> json) =>
-      _$ForgottenApprenticeDtoFromJson(json);
+  factory ForgottenMosadApprenticeItemDto.fromJson(Map<String, dynamic> json) =>
+      _$ForgottenMosadApprenticeItemDtoFromJson(json);
 }
 
 String _extractId(dynamic val) {
