@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
+import 'package:hadar_program/src/services/auth/auth_service.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
+import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -23,8 +25,8 @@ class TaskDetailsScreen extends ConsumerWidget {
       (element) => element.id == id,
       orElse: () => const TaskDto(),
     );
-
-    // Logger().d(task, error: id);
+    final isAhraiTohnit =
+        ref.watch(authServiceProvider).value?.role.isAhraiTohnit ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -89,6 +91,23 @@ class TaskDetailsScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
+                if (isAhraiTohnit) ...[
+                  const Spacer(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: LargeFilledRoundedButton(
+                      label: task.status.isDone
+                          ? 'סימון כ״לא הושלמה״'
+                          : 'סימון כ״הושלמה״',
+                      onPressed: () async {
+                        await ref
+                            .read(tasksControllerProvider.notifier)
+                            .toggleTodo(task);
+                        if (context.mounted) Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

@@ -22,11 +22,8 @@ part 'tasks_controller.g.dart';
 )
 class TasksController extends _$TasksController {
   @override
-  Future<List<TaskDto>> build() async {
-    final tasks = await ref.watch(getTasksProvider.future);
-
-    return tasks;
-  }
+  Future<List<TaskDto>> build() async =>
+      await ref.watch(getTasksProvider.future);
 
   Future<bool> create({
     required TaskDto task,
@@ -48,10 +45,7 @@ class TasksController extends _$TasksController {
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getTasksProvider);
-
-        // ref.read(goRouterServiceProvider).go(TasksScreen.path);
         ref.read(goRouterServiceProvider).pop();
-
         return true;
       }
     } catch (e) {
@@ -59,7 +53,6 @@ class TasksController extends _$TasksController {
       Sentry.captureException(e);
       Toaster.error(e);
     }
-
     return false;
   }
 
@@ -83,9 +76,7 @@ class TasksController extends _$TasksController {
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getTasksProvider);
-
         ref.read(goRouterServiceProvider).go(TasksScreen.path);
-
         return true;
       }
     } catch (e) {
@@ -93,7 +84,32 @@ class TasksController extends _$TasksController {
       Sentry.captureException(e);
       Toaster.error(e);
     }
+    return false;
+  }
 
+  Future<bool> toggleTodo(TaskDto task) async {
+    try {
+      final status = task.status.isDone ? TaskStatus.todo : TaskStatus.done;
+      final result = await ref.read(dioServiceProvider).put(
+        Consts.editTask,
+        queryParameters: {
+          'task_id': task.id,
+        },
+        data: {
+          'status': status.name,
+        },
+      );
+
+      if (result.data['result'] == 'success') {
+        ref.invalidate(getTasksProvider);
+        ref.read(goRouterServiceProvider).go(TasksScreen.path);
+        return true;
+      }
+    } catch (e) {
+      Logger().e('failed to update task', error: e);
+      Sentry.captureException(e);
+      Toaster.error(e);
+    }
     return false;
   }
 
@@ -108,9 +124,7 @@ class TasksController extends _$TasksController {
 
       if (result.data['result'] == 'success') {
         ref.invalidate(getTasksProvider);
-
         ref.read(goRouterServiceProvider).pop();
-
         return true;
       }
     } catch (e) {
@@ -118,7 +132,6 @@ class TasksController extends _$TasksController {
       Sentry.captureException(e);
       Toaster.error(e);
     }
-
     return false;
   }
 

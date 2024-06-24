@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
@@ -23,10 +22,6 @@ class DioService extends _$DioService {
 
     final authToken = ref.read(storageServiceProvider.notifier).getAuthToken();
     final userPhone = ref.read(storageServiceProvider.notifier).getUserPhone();
-    //final userPhone="528827064";
-
-    // for debugging as admin
-    // const userId = '506795170';
     final userId = userPhone;
 
     Logger().d('userId::$userId');
@@ -44,12 +39,7 @@ class DioService extends _$DioService {
           if (authToken.isNotEmpty) 'Authorization': 'Bearer $authToken',
         },
         queryParameters: {
-          if (userPhone.isNotEmpty)
-            'userId': switch (userPhone) {
-              // for testing persona roles
-              '523301800' => kDebugMode ? userId : userPhone,
-              _ => userPhone,
-            },
+          if (userPhone.isNotEmpty) 'userId': userPhone,
         },
       ),
     );

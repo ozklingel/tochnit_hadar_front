@@ -45,24 +45,6 @@ class AuthService extends _$AuthService {
       'phone: $phone',
     );
 
-    if (kDebugMode) {
-      if (phone == '523301800') {
-        final newUser = user.copyWith(
-          role: UserRole.ahraiTohnit,
-        );
-
-        Logger().d(
-          'modified'
-          '\n'
-          'role: ${newUser.role}'
-          '\n'
-          'phone: $phone',
-        );
-
-        return newUser;
-      }
-    }
-
     if (kReleaseMode) {
       ref.keepAlive();
     }

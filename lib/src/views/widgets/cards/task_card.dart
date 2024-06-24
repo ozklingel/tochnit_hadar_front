@@ -7,6 +7,7 @@ import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
 import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/models/task/task.dto.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:hadar_program/src/views/widgets/images/avatar_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -17,14 +18,14 @@ class TaskCard extends HookConsumerWidget {
     required this.onLongPress,
     required this.isSelected,
     this.onTap,
-    this.onCheckboxTap,
+    this.showCheckbox = false,
   });
 
   final bool isSelected;
   final TaskDto task;
   final VoidCallback onLongPress;
   final VoidCallback? onTap;
-  final Function(bool?)? onCheckboxTap;
+  final bool showCheckbox;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -37,20 +38,21 @@ class TaskCard extends HookConsumerWidget {
     final apprenticeName = apprentice?.fullName ?? '';
 
     return Opacity(
-      opacity:
-          onCheckboxTap != null && status.value == TaskStatus.done ? .6 : 1,
+      opacity: showCheckbox && status.value.isDone ? .6 : 1,
       child: Material(
         color: isSelected ? AppColors.blue07 : Colors.transparent,
         child: InkWell(
           onLongPress: onLongPress,
           onTap: onTap,
           child: ListTile(
-            leading: onCheckboxTap != null
+            leading: showCheckbox
                 ? Checkbox(
-                    value: status.value == TaskStatus.done,
+                    value: status.value.isDone,
                     onChanged: (value) {
                       status.value = value! ? TaskStatus.done : TaskStatus.todo;
-                      onCheckboxTap!(value);
+                      ref
+                          .read(tasksControllerProvider.notifier)
+                          .toggleTodo(task);
                     },
                   )
                 : Stack(
@@ -92,9 +94,8 @@ class TaskCard extends HookConsumerWidget {
               "עברו ${DateTime.now().difference(task.dateTime.asDateTime).inDays} ימים מ${task.title}",
               style: TextStyles.s16w300cGray2,
             ),
-            trailing: onCheckboxTap == null
-                ? null
-                : DefaultTextStyle(
+            trailing: showCheckbox
+                ? DefaultTextStyle(
                     style: TextStyles.s12w400cGrey5fRoboto,
                     child: Column(
                       children: [
@@ -112,7 +113,8 @@ class TaskCard extends HookConsumerWidget {
                         ),
                       ],
                     ),
-                  ),
+                  )
+                : null,
           ),
         ),
       ),

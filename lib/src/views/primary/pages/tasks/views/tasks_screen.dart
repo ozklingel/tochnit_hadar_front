@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
@@ -219,7 +218,7 @@ class TasksScreen extends HookConsumerWidget {
                             'לא נמצאו תוצאות עבור ${searchController.text}',
                           )
                         : EmptyState(
-                            image: tab.emptyStateImage,
+                            image: Assets.illustrations.clap.svg(),
                             topText: tab.emptyStateText == null
                                 ? 'איזה יופי!'
                                 : null,
@@ -236,7 +235,9 @@ class TasksScreen extends HookConsumerWidget {
                             task: task,
                             isSelected: selectedTasks.value.contains(task),
                             onTap: selectedTasks.value.isEmpty
-                                ? task.subject.isEmpty
+                                ? task.subject.isEmpty ||
+                                        task.subject.firstOrNull ==
+                                            auth.value?.id
                                     ? () => TaskDetailsRouteData(id: task.id)
                                         .push(context)
                                     : () => PersonaDetailsRouteData(
@@ -250,17 +251,7 @@ class TasksScreen extends HookConsumerWidget {
                               selectedTasks: selectedTasks,
                               e: task,
                             ),
-                            onCheckboxTap: tab.checkboxTasks
-                                ? (_) => ref
-                                    .read(tasksControllerProvider.notifier)
-                                    .edit(
-                                      task.copyWith(
-                                        status: task.status == TaskStatus.done
-                                            ? TaskStatus.todo
-                                            : TaskStatus.done,
-                                      ),
-                                    )
-                                : null,
+                            showCheckbox: tab.checkboxTasks,
                           );
                         },
                       ),
@@ -275,17 +266,15 @@ class TasksScreen extends HookConsumerWidget {
 class _TaskTab {
   final String label;
   final bool Function(TaskDto) filter;
-  final SvgPicture emptyStateImage;
   final String? emptyStateText;
   final bool checkboxTasks;
 
   _TaskTab({
     required this.label,
     required this.filter,
-    SvgPicture? emptyStateImage,
     this.emptyStateText,
     this.checkboxTasks = false,
-  }) : emptyStateImage = emptyStateImage ?? Assets.illustrations.clap.svg();
+  });
 }
 
 List<_TaskTab> _roleTabs(String? userId, UserRole? userRole) {
@@ -322,19 +311,16 @@ List<_TaskTab> _roleTabs(String? userId, UserRole? userRole) {
         label: 'כללי',
         filter: (task) => taskFilter(task),
         emptyStateText: 'אין משימות לביצוע',
-        emptyStateImage: Assets.illustrations.thumbsUpFullBody.svg(height: 400),
       ),
       _TaskTab(
         label: roleLabel,
         filter: (task) => !taskFilter(task) && task.status != TaskStatus.done,
         emptyStateText: 'אין משימות לביצוע',
-        emptyStateImage: Assets.illustrations.thumbsUpFullBody.svg(height: 400),
         checkboxTasks: true,
       ),
       _TaskTab(
         label: 'הושלם',
         filter: (task) => !taskFilter(task) && task.status == TaskStatus.done,
-        emptyStateImage: Assets.illustrations.thinking.svg(height: 400),
         emptyStateText: 'אין משימות שהושלמו',
         checkboxTasks: true,
       ),

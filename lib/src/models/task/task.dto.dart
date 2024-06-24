@@ -7,7 +7,9 @@ part 'task.dto.g.dart';
 enum TaskStatus {
   unknown,
   todo,
-  done,
+  done;
+
+  bool get isDone => this == TaskStatus.done;
 }
 
 enum TaskFrequencyMeta {
