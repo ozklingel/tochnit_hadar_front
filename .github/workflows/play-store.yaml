@@ -9,7 +9,7 @@ on:
 
 jobs:
   store_deploy_android:
-    name: android store release
+    name: Deploy Android app
     runs-on: ubuntu-latest
     env:
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup Java to compile the Android project
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17.0
