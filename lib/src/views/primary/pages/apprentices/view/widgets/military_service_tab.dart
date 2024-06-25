@@ -11,8 +11,8 @@ import 'package:hadar_program/src/models/persona/persona.dto.dart';
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/compound_controller.dart';
 import 'package:hadar_program/src/views/primary/pages/apprentices/controller/personas_controller.dart';
+import 'package:hadar_program/src/views/widgets/buttons/accept_cancel_buttons.dart';
 import 'package:hadar_program/src/views/widgets/buttons/general_dropdown_button.dart';
-import 'package:hadar_program/src/views/widgets/buttons/large_filled_rounded_button.dart';
 import 'package:hadar_program/src/views/widgets/cards/details_card.dart';
 import 'package:hadar_program/src/views/widgets/fields/input_label.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -133,13 +133,14 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                     const SizedBox(height: 32),
                     InputFieldContainer(
                       label: 'סוג שירות',
+                      isRequired: true,
                       data: isEditMode.value
                           ? null
                           : selectedServiceType.value.hebrewName,
                       child: GeneralDropdownButton<MilitaryServiceType>(
                         value: selectedServiceType.value.hebrewName,
                         textStyle: TextStyles.s16w400cGrey5,
-                        items: MilitaryServiceType.values,
+                        items: MilitaryServiceType.services,
                         stringMapper: (e) => e.hebrewName,
                         onChanged: (value) =>
                             selectedServiceType.value = value!,
@@ -199,7 +200,6 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                           ? null
                           : persona.militaryDateOfEnlistment.asDateTime
                               .asDayMonthYearShortDot,
-                      isRequired: true,
                       child: InkWell(
                         onTap: () async {
                           final newDate = await showDatePicker(
@@ -283,61 +283,43 @@ class MilitaryServiceTabView extends HookConsumerWidget {
                     ),
                     if (isEditMode.value) ...[
                       const SizedBox(height: 32),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: LargeFilledRoundedButton(
-                              label: 'שמירה',
-                              onPressed: (unitController.text.isEmpty ||
-                                      positionOldController.text.isEmpty ||
-                                      positionNewController.text.isEmpty)
-                                  ? null
-                                  : () async {
-                                      final result = await ref
-                                          .read(
-                                            personasControllerProvider.notifier,
-                                          )
-                                          .edit(
-                                            persona: persona.copyWith(
-                                              militaryCompoundId:
-                                                  selectedCompound.value.id,
-                                              militaryServiceType:
-                                                  unitController.text,
-                                              militaryPositionNew:
-                                                  positionNewController.text,
-                                              militaryPositionOld:
-                                                  positionOldController.text,
-                                              militaryDateOfEnlistment:
-                                                  enrollmentDate.value
-                                                      .toIso8601String(),
-                                              militaryDateOfDischarge:
-                                                  dischargeDate.value
-                                                      .toIso8601String(),
-                                            ),
-                                          );
+                      AcceptCancelButtons(
+                        okText: 'שמירה',
+                        onPressedCancel: () => isEditMode.value = false,
+                        onPressedOk: (unitController.text.isEmpty)
+                            ? null
+                            : () async {
+                                final result = await ref
+                                    .read(
+                                      personasControllerProvider.notifier,
+                                    )
+                                    .edit(
+                                      persona: persona.copyWith(
+                                        militaryCompoundId:
+                                            selectedCompound.value.id,
+                                        militaryServiceType:
+                                            unitController.text,
+                                        militaryPositionNew:
+                                            positionNewController.text,
+                                        militaryPositionOld:
+                                            positionOldController.text,
+                                        militaryDateOfEnlistment: enrollmentDate
+                                            .value
+                                            .toIso8601String(),
+                                        militaryDateOfDischarge: dischargeDate
+                                            .value
+                                            .toIso8601String(),
+                                      ),
+                                    );
 
-                                      if (result) {
-                                        isEditMode.value = false;
-                                      } else {
-                                        Toaster.show(
-                                          'שגיאה בעת שמירת השינויים',
-                                        );
-                                      }
-                                    },
-                              textStyle: TextStyles.s14w500,
-                            ),
-                          ),
-                          const SizedBox(width: 24),
-                          Expanded(
-                            child: LargeFilledRoundedButton(
-                              label: 'ביטול',
-                              onPressed: () => isEditMode.value = false,
-                              backgroundColor: Colors.white,
-                              foregroundColor: AppColors.blue02,
-                              textStyle: TextStyles.s14w500,
-                            ),
-                          ),
-                        ],
+                                if (result) {
+                                  isEditMode.value = false;
+                                } else {
+                                  Toaster.show(
+                                    'שגיאה בעת שמירת השינויים',
+                                  );
+                                }
+                              },
                       ),
                     ],
                   ],

@@ -276,11 +276,10 @@ class _GeneralSection extends HookConsumerWidget {
               icon: const Icon(Icons.check),
               label: Text(persona.isPaying ? 'משלם' : 'לא משלם'),
             ),
-          if (!auth.role.isAhraiTohnit)
-            IconButton(
-              icon: const Icon(FluentIcons.edit_24_regular),
-              onPressed: () => isEditMode.value = !isEditMode.value,
-            ),
+          IconButton(
+            icon: const Icon(FluentIcons.edit_24_regular),
+            onPressed: () => isEditMode.value = !isEditMode.value,
+          ),
         ],
       ),
       child: Column(
@@ -638,15 +637,12 @@ class _EventBottomSheet extends HookConsumerWidget {
                                         DateTime.now().toIso8601String(),
                                   );
 
-                                  final result = event.id.isEmpty
-                                      ? await notifier.addEvent(
-                                          apprenticeId: persona.id,
-                                          event: newEvent,
-                                        )
-                                      : await notifier.editEvent(
-                                          apprenticeId: persona.id,
-                                          event: newEvent,
-                                        );
+                                  final result = await notifier.addEvent(
+                                    apprenticeId: persona.id,
+                                    event: newEvent,
+                                    isEdit: event.id.isEmpty,
+                                  );
+
                                   if (!result) {
                                     Toaster.show('שגיאה בעת שמירת האירוע');
                                   } else if (context.mounted) {

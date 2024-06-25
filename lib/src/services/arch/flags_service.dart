@@ -5,6 +5,7 @@ import 'package:hadar_program/src/core/constants/consts.dart';
 import 'package:hadar_program/src/core/enums/marital_status.dart';
 import 'package:hadar_program/src/core/enums/relationship.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
+import 'package:hadar_program/src/core/enums/work_status.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/auth/auth.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
@@ -210,7 +211,8 @@ final _apprentices = List.generate(
     educationalInstitution: faker.lorem.word(),
     workOccupation: faker.lorem.word(),
     workPlace: faker.lorem.word(),
-    workStatus: faker.lorem.word(),
+    workStatus: WorkStatus
+        .values[faker.randomGenerator.integer(WorkStatus.values.length)],
     workType: faker.lorem.word(),
     highSchoolInstitution: faker.lorem.word(),
     highSchoolRavMelamedName: faker.person.name(),

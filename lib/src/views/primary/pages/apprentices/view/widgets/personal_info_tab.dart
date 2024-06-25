@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/enums/address_region.dart';
 import 'package:hadar_program/src/core/enums/marital_status.dart';
 import 'package:hadar_program/src/core/enums/relationship.dart';
+import 'package:hadar_program/src/core/enums/work_status.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/datetime.dart';
@@ -58,7 +59,7 @@ class _WorkSection extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(authServiceProvider);
     final isEditMode = useState(false);
-    final workStatus = useTextEditingController(text: persona.workStatus);
+    final workStatus = useState(persona.workStatus);
     final workOccupation =
         useTextEditingController(text: persona.workOccupation);
     final workPlace = useTextEditingController(text: persona.workPlace);
@@ -76,9 +77,12 @@ class _WorkSection extends HookConsumerWidget {
         children: [
           InputFieldContainer(
             label: 'סטטוס',
-            data: isEditMode.value ? null : persona.workStatus,
-            child: TextField(
-              controller: workStatus,
+            data: isEditMode.value ? null : persona.workStatus.name,
+            child: GeneralDropdownButton<WorkStatus>(
+              items: WorkStatus.statuses,
+              value: workStatus.value.name,
+              stringMapper: (e) => e.name,
+              onChanged: (value) => workStatus.value = value!,
             ),
           ),
           const SizedBox(height: 12),
@@ -130,7 +134,7 @@ class _WorkSection extends HookConsumerWidget {
                 final result =
                     await ref.read(personasControllerProvider.notifier).edit(
                           persona: persona.copyWith(
-                            workStatus: workStatus.text,
+                            workStatus: workStatus.value,
                             workOccupation: workOccupation.text,
                             workPlace: workPlace.text,
                             workType: workType.text,

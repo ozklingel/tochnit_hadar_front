@@ -74,21 +74,30 @@ class PersonasController extends _$PersonasController {
   FutureOr<bool> addEvent({
     required EventDto event,
     required String apprenticeId,
+    bool isEdit = false,
   }) async {
     try {
-      final req = await ref.read(dioServiceProvider).post(
-        Consts.addNotification,
-        data: {
+      final data = {
+        if (!isEdit)
           'userId': ref.read(storageServiceProvider.notifier).getUserPhone(),
-          'apprenticeid': apprenticeId,
-          'event': event.eventType,
-          'details': event.description,
-          'frequency': 'frequency',
-          'date': event.datetime,
-          // this is due to backend bug
-          'subject': apprenticeId,
-        },
-      );
+        'event': event.eventType,
+        'details': event.description,
+        'frequency': 'frequency',
+        'date': event.datetime,
+        'subject': apprenticeId,
+      };
+      final req = isEdit
+          ? await ref.read(dioServiceProvider).put(
+                Consts.updateNotification,
+                queryParameters: {
+                  'NotificationId': event.id,
+                },
+                data: data,
+              )
+          : await ref.read(dioServiceProvider).post(
+                Consts.addNotification,
+                data: data,
+              );
 
       if (req.data['result'] == 'success') {
         ref.invalidate(getPersonasProvider);
@@ -96,7 +105,7 @@ class PersonasController extends _$PersonasController {
         return true;
       }
     } catch (e) {
-      Logger().e('failed to add event', error: e);
+      Logger().e('failed to ${isEdit ? 'edit' : 'add'} event', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
     }
@@ -123,45 +132,6 @@ class PersonasController extends _$PersonasController {
       }
     } catch (e) {
       Logger().e('failed to delete event', error: e);
-      Sentry.captureException(e);
-      Toaster.error(e);
-    }
-
-    return false;
-  }
-
-  FutureOr<bool> editEvent({
-    required String apprenticeId,
-    required EventDto event,
-  }) async {
-    try {
-      final req = await ref.read(dioServiceProvider).put(
-        Consts.updateNotification,
-        queryParameters: {
-          'NotificationId': event.id,
-        },
-        data: {
-          // 'userId': ref.read(storageServiceProvider.notifier).getUserPhone(),
-          'apprenticeId': apprenticeId,
-          'date': event.datetime,
-          'details': event.description,
-          'event': event.eventType,
-          'frequency': 'frequency',
-          "numOfLinesDisplay": 2,
-          // this is due to backend bug
-          'subject': apprenticeId,
-          // "title": event.title,
-        },
-      );
-
-      if (req.data['result'] == 'success') {
-        ref.invalidate(getPersonasProvider);
-        ref.invalidate(getMapsApprenticesProvider);
-
-        return true;
-      }
-    } catch (e) {
-      Logger().e('failed to edit event', error: e);
       Sentry.captureException(e);
       Toaster.error(e);
     }

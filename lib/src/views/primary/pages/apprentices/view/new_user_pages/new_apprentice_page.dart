@@ -9,6 +9,7 @@ import 'package:hadar_program/src/core/enums/matsbar_status.dart';
 import 'package:hadar_program/src/core/enums/military_service_type.dart';
 import 'package:hadar_program/src/core/enums/relationship.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
+import 'package:hadar_program/src/core/enums/work_status.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
 import 'package:hadar_program/src/core/theming/text_styles.dart';
 import 'package:hadar_program/src/core/utils/extensions/string.dart';
@@ -94,7 +95,7 @@ class NewApprenticePage extends HookConsumerWidget {
     final highSchoolRoshMosadName = useTextEditingController();
     final highSchoolRoshMosadPhone = useTextEditingController();
     // occupation
-    final workStatus = useTextEditingController();
+    final workStatus = useState(WorkStatus.unknown);
     final workName = useTextEditingController();
     final workPlace = useTextEditingController();
     final workType = useTextEditingController();
@@ -1111,18 +1112,11 @@ class NewApprenticePage extends HookConsumerWidget {
         ),
         InputFieldContainer(
           label: 'סטטוס',
-          child: TextFormField(
-            controller: workStatus,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'empty';
-              }
-
-              return null;
-            },
-            decoration: const InputDecoration(
-              hintText: 'הזן סטטוס',
-            ),
+          child: GeneralDropdownButton<WorkStatus>(
+            stringMapper: (p0) => p0.name,
+            value: workStatus.value.name,
+            onChanged: (value) => workStatus.value = value!,
+            items: WorkStatus.statuses,
           ),
         ),
         InputFieldContainer(
@@ -1274,7 +1268,7 @@ class NewApprenticePage extends HookConsumerWidget {
                         highSchoolRavMelamedName: highSchoolRoshMosadName.text,
                         highSchoolRavMelamedPhone:
                             highSchoolRoshMosadPhone.text,
-                        workStatus: workStatus.text,
+                        workStatus: workStatus.value,
                         workOccupation: workName.text,
                         workPlace: workPlace.text,
                         workType: workType.text,

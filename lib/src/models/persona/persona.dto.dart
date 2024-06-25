@@ -4,6 +4,7 @@ import 'package:hadar_program/src/core/enums/matsbar_status.dart';
 import 'package:hadar_program/src/core/enums/relationship.dart';
 import 'package:hadar_program/src/core/enums/status_color.dart';
 import 'package:hadar_program/src/core/enums/user_role.dart';
+import 'package:hadar_program/src/core/enums/work_status.dart';
 import 'package:hadar_program/src/core/utils/convert/extract_from_json.dart';
 import 'package:hadar_program/src/models/address/address.dto.dart';
 import 'package:hadar_program/src/models/event/event.dto.dart';
@@ -269,11 +270,11 @@ class PersonaDto with _$PersonaDto {
       defaultValue: '',
     )
     String workPlace,
-    @Default('')
+    @Default(WorkStatus.unknown)
     @JsonKey(
-      defaultValue: '',
+      fromJson: _extractWorkStatus,
     )
-    String workStatus,
+    WorkStatus workStatus,
     @Default('')
     @JsonKey(
       defaultValue: '',
@@ -410,18 +411,17 @@ List<UserRole> _extractRole(List<dynamic>? data) {
 bool _extractPaying(String? data) => data == 'משלם';
 
 MaritalStatus _extractMaritalStatus(String? data) {
-  switch (data) {
-    case 'רווק':
-      return MaritalStatus.single;
-    case 'נשוי':
-      return MaritalStatus.married;
-    case 'אלמן':
-      return MaritalStatus.widow;
-    case 'גרוש':
-      return MaritalStatus.divorced;
-    default:
-      return MaritalStatus.unknown;
-  }
+  return MaritalStatus.values.singleWhere(
+    (element) => element.name == data,
+    orElse: () => MaritalStatus.unknown,
+  );
+}
+
+WorkStatus _extractWorkStatus(String? data) {
+  return WorkStatus.values.singleWhere(
+    (element) => element.name == data,
+    orElse: () => WorkStatus.unknown,
+  );
 }
 
 int _extractActivityScore(dynamic val) {

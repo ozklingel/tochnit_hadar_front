@@ -18,7 +18,6 @@ import 'package:hadar_program/src/views/widgets/dialogs/missing_details_dialog.d
 import 'package:hadar_program/src/views/widgets/headers/details_page_header.dart';
 import 'package:hadar_program/src/views/widgets/sheets/image_selector_sheet.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PersonaDetailsScreen extends StatefulHookConsumerWidget {
   const PersonaDetailsScreen({
@@ -156,14 +155,7 @@ class _ApprenticeDetailsScreenState
 
                                     return;
                                   }
-
-                                  final url =
-                                      Uri.tryParse('tel:${persona.phone}') ??
-                                          Uri.parse('');
-
-                                  if (!await launchUrl(url)) {
-                                    throw Exception('לא ניתן להתקשר למספר זה');
-                                  }
+                                  launchCall(phone: persona.phone);
                                 },
                               ),
                               _ActionButton(
