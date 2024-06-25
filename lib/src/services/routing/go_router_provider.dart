@@ -20,6 +20,7 @@ import 'package:hadar_program/src/views/primary/pages/home/views/pages/widgets/p
 import 'package:hadar_program/src/views/primary/pages/messages/views/message_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/messages_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/messages/views/new_message_screen/new_or_edit_message_screen.dart';
+import 'package:hadar_program/src/views/primary/pages/notifications/views/notification_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/report/view/report_details_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/report/view/reports_screen.dart';
 import 'package:hadar_program/src/views/primary/pages/tasks/views/new_or_edit_task_screen.dart';
@@ -393,11 +394,9 @@ class NotificationDetailsRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    // Temporarily disable this, due to a build bug
-    return const Text('NotificationDetailsRouteData');
-    // return NotificationDetailsScreen(
-    //   id: id,
-    // );
+    return NotificationDetailsScreen(
+      id: id,
+    );
   }
 }
 
