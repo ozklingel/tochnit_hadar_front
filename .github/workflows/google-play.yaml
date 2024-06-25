@@ -1,0 +1,58 @@
+name: Deploy to Google Play Store
+
+on:
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  store_deploy_android:
+    name: android store release
+    runs-on: ubuntu-latest
+    env:
+      AAB_PATH: build/app/outputs/bundle/release/app-release.aab
+      SERVICE_ACCOUNT_PATH: store_credentials.json
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Setup Java to compile the Android project
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: 12.0
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.22.2
+
+      - name: Decode Android keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > android/upload-keystore.jks
+
+      - name: Decode Android key properties
+        run: echo "${{ secrets.ANDROID_KEY_PROPERTIES }}" | base64 --decode > android/key.properties
+
+      - name: Decode Android Service Account
+        run: echo "${{ secrets.ANDROID_SERVICE_ACCOUNT }}" | base64 --decode > ${{ env.SERVICE_ACCOUNT_PATH }}
+
+      - run: flutter pub get
+      - name: Build aab
+        run: |
+          flutter build appbundle 
+          --release
+
+      - name: Upload generated aab to the artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: aab-stores
+          path: {{ env.AAB_PATH }}
+
+      - name: Deploy to Play Store (Internal testing)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: {{ env.SERVICE_ACCOUNT_PATH }}
+          packageName: dev.dewam.hadar_program
+          releaseFiles: {{ env.AAB_PATH }}
+          track: internal
