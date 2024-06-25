@@ -38,7 +38,6 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../views/primary/pages/chat_box/support_screen.dart';
-import '../../views/primary/pages/notifications/views/notification_details_screen.dart';
 import '../../views/primary/pages/notifications/views/notifications_screen.dart';
 import '../../views/primary/pages/notifications/views/notifications_setting_page.dart';
 import '../../views/primary/pages/profile/views/user_profile_screen.dart';
@@ -394,9 +393,11 @@ class NotificationDetailsRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return NotificationDetailsScreen(
-      id: id,
-    );
+    // Temporarily disable this, due to a build bug
+    return const Text('NotificationDetailsRouteData');
+    // return NotificationDetailsScreen(
+    //   id: id,
+    // );
   }
 }
 
