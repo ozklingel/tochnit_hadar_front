@@ -2,7 +2,7 @@ name: Deploy to Google Play Store
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
   workflow_dispatch:
 
@@ -38,10 +38,8 @@ jobs:
         run: echo "${{ secrets.ANDROID_SERVICE_ACCOUNT }}" | base64 --decode > ${{ env.SERVICE_ACCOUNT_PATH }}
 
       - run: flutter pub get
-      - name: Build aab
-        run: |
-          flutter build appbundle 
-          --release
+      - run: dart run build_runner build -d
+      - run: flutter build appbundle --release
 
       - name: Upload generated aab to the artifacts
         uses: actions/upload-artifact@master
