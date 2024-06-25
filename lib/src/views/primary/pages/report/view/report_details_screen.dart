@@ -689,18 +689,14 @@ class ReportDetailsScreen extends HookConsumerWidget {
                                     event: selectedEventType.value,
                                     description: descriptionController.text,
                                   );
-
                                   final result = reportId.isEmpty || isDupe
                                       ? await controllerNotifier.create(
                                           processedReport,
                                           redirect: false,
+                                          taskIds: taskIds,
                                         )
                                       : await controllerNotifier
                                           .edit(processedReport);
-
-                                  ref
-                                      .read(tasksControllerProvider.notifier)
-                                      .deleteMany(taskIds);
 
                                   if (result && context.mounted) {
                                     final dialog = await showDialog<bool>(

@@ -14,6 +14,7 @@ import 'package:hadar_program/src/services/networking/dio_service/dio_service.da
 import 'package:hadar_program/src/services/notifications/toaster.dart';
 import 'package:hadar_program/src/services/routing/go_router_provider.dart';
 import 'package:hadar_program/src/services/storage/storage_service.dart';
+import 'package:hadar_program/src/views/primary/pages/tasks/controller/tasks_controller.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -72,9 +73,8 @@ class ReportsController extends _$ReportsController {
   Future<bool> create(
     ReportDto report, {
     bool redirect = true,
+    List<String>? taskIds,
   }) async {
-    Logger().d('start creating report', error: report);
-
     try {
       final result = await ref.read(dioServiceProvider).post(
             Consts.addReport,
@@ -92,6 +92,8 @@ class ReportsController extends _$ReportsController {
       if (result.data['result'] == 'success') {
         ref.invalidate(getReportsProvider);
         ref.invalidate(getInitMasterProvider);
+
+        await ref.read(tasksControllerProvider.notifier).deleteMany(taskIds);
         ref.invalidate(getTasksProvider);
 
         // if (redirect) {

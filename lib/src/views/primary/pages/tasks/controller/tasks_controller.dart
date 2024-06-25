@@ -147,7 +147,7 @@ class TasksController extends _$TasksController {
         final result = await ref.read(dioServiceProvider).post(
           Consts.deleteTask,
           data: {
-            'taskId': task.id,
+            'task_id': task.id,
           },
         );
 
