@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hadar_program/src/core/theming/colors.dart';
@@ -215,7 +217,7 @@ class OnboardingPagePinCode extends HookConsumerWidget {
                             phone: phone,
                             otp: pinCodeController.text,
                           );
-
+                      log(result.toString());
                       if (!result.isResponseSuccess) {
                         // TODO(yeo):
                         // 'state' is deprecated and shouldn't be used. Will be removed in 3.0.0. Use either `ref.watch(provider)` or `ref.read(provider.notifier)` instead.

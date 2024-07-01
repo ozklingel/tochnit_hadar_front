@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:hadar_program/src/core/constants/consts.dart';
@@ -29,11 +30,13 @@ part 'personas_controller.g.dart';
 )
 class PersonasController extends _$PersonasController {
   var _filters = const FilterDto();
+  List<PersonaDto> personas = [];
 
   @override
   FutureOr<List<PersonaDto>> build() async {
     final mapApprentices = await ref.watch(getMapsApprenticesProvider.future);
     final personas2 = await ref.watch(getPersonasProvider.future);
+    personas = personas2;
 
     ref.keepAlive();
 
@@ -45,6 +48,9 @@ class PersonasController extends _$PersonasController {
 
     return mapApprentices + uniquePersonas;
   }
+
+  Future<List<PersonaDto>> getMyPersonas() async =>
+      await ref.watch(getPersonasProvider.future);
 
   FutureOr<bool> deletePersona(String personaId) async {
     try {

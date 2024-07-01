@@ -1,6 +1,7 @@
 // ignore_for_file: unused_element
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -53,6 +54,8 @@ class PersonasScreen extends HookConsumerWidget {
     final institutions = ref.watch(institutionsControllerProvider).valueOrNull;
     final searchController = useTextEditingController();
     useListenable(searchController);
+    List<PersonaDto> myPersonas =
+        ref.read(personasControllerProvider.notifier).personas;
 
     useValueChanged<FilterDto, Future<void>>(
       filters.value,
@@ -69,7 +72,6 @@ class PersonasScreen extends HookConsumerWidget {
             .read(personasControllerProvider.notifier)
             .filterUsers(filter);
         filtersResult.value = request;
-
         return;
       },
     );
@@ -78,7 +80,7 @@ class PersonasScreen extends HookConsumerWidget {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
 
-    final filteredUsers = allUsers
+    final filteredUsers = myPersonas
         .where(
       (element) =>
           element.fullName.contains(searchController.value.text.toLowerCase()),
