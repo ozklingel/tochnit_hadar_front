@@ -18,7 +18,7 @@ abstract class Consts {
 
   // base url
   static const baseUrl =
-      'https://mis11ka38j.execute-api.us-east-1.amazonaws.com/';
+      'https://mis11ka38j.execute-api.us-east-1.amazonaws12.com/';
 
   // onboarding
   static const getAllCities = 'onboarding_form/get_CitiesDB';
